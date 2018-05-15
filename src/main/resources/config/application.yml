@@ -1,0 +1,23 @@
+# 应用端口号
+server.port: 8150
+
+spring:
+  profiles.active: dev # 环境
+  application.name: springboot-demo
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://10.10.30.30:3306/hzed_test2?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
+    url: jdbc:mysql://119.23.156.86:4657/sp2p_hzcf?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
+    username: query
+    password: Dikdk251df5sdEFD2DFDe # TODO 密码加密 https://blog.csdn.net/linhongwangok/article/details/79076178;https://github.com/ulisesbocchio/jasypt-spring-boot
+# <!--<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://119.23.156.9:4657/sp2p_hzcf" userId="query" password="Dikdk251df5sdEFD2DFDe"/>-->
+# 日志文件配置
+logging:
+  logHome: D:/logs/safekeep-report # 日志路径
+  appNameCN: springBoot整合项目 # 应用中文名
+  devNameCN: 开发环境 # 环境中文名
+  emailTo: guichang@hzed.com # 邮件接收者，多个用逗号隔开
+
+#======================================= 系统参数 开始 =======================================#
+
+#======================================= 系统参数 结束 =======================================#

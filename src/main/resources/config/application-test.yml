@@ -1,0 +1,21 @@
+# 应用端口号
+server.port: 8060
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://10.10.30.30:3306/hzed_test2?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
+    username: tester2
+    password: asdeikdiekal9j3j
+# 日志文件配置
+logging:
+  logHome: D:/logs/safekeep-report # 日志路径
+  appNameCN: springBoot整合项目 # 应用中文名
+  devNameCN: 测试环境 # 环境中文名
+  emailTo: guichang@hzed.com # 邮件接收者，多个用逗号隔开
+
+#======================================= 系统参数 开始 =======================================#
+
+#======================================= 系统参数 结束 =======================================#
+
+

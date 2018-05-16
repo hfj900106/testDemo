@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <context id="jobs" targetRuntime="MyBatis3" defaultModelType="flat">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <plugin type="org.mybatis.config.generator.plugins.CaseInsensitiveLikePlugin"/>
+        <plugin type="org.mybatis.config.generator.plugins.SerializablePlugin">
+            <property name="suppressJavaInterface" value="false" />
+        </plugin>
+        <plugin type="org.mybatis.config.generator.plugins.ToStringPlugin"/>
+
+        <!-- 参考地址 https://github.com/itfsw/mybatis-generator-plugin -->
+        <!-- 增加 SelectOneByExample 方法的插件 -->
+        <plugin type="com.itfsw.mybatis.config.generator.plugins.SelectOneByExamplePlugin"/>
+        <!-- MySQL分页插件 -->
+        <plugin type="com.itfsw.mybatis.config.generator.plugins.LimitPlugin"/>
+        <!-- 数据Model链式构建插件 -->
+        <plugin type="com.itfsw.mybatis.config.generator.plugins.ModelBuilderPlugin"/>
+        <!-- Example Criteria 增强插件 -->
+        <plugin type="com.itfsw.mybatis.config.generator.plugins.ExampleEnhancedPlugin"/>
+        <!-- Example 目标包修改插件 -->
+        <plugin type="com.itfsw.mybatis.config.generator.plugins.ExampleTargetPlugin">
+            <!-- 修改Example类生成到目标包下 -->
+            <property name="targetPackage" value="com.hzed.easyget.persistence.auto.entity.example"/>
+        </plugin>
+        <!-- 自定义注释插件 -->
+        <plugin type="com.itfsw.mybatis.config.generator.plugins.CommentPlugin">
+            <!-- 自定义模板路径 -->
+            <property name="template" value="src/main/resources/config/generator/mybatis-generator-comment.ftl" />
+        </plugin>
+        <!-- 查询结果选择性返回插件 -->
+        <plugin type="com.itfsw.mybatis.config.generator.plugins.SelectSelectivePlugin" />
+        <!-- 数据Model属性对应Column获取插件 -->
+        <plugin type="com.itfsw.mybatis.config.generator.plugins.ModelColumnPlugin"/>
+        <!-- 批量插入插件 -->
+        <plugin type="com.itfsw.mybatis.config.generator.plugins.BatchInsertPlugin"/>
+
+        <!--<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://10.10.30.33:3306/test_hzed" userId="root" password="rootroot3033"/>-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://119.23.156.86:4657/sp2p_hzcf" userId="query" password="Dikdk251df5sdEFD2DFDe"/>
+
+        <javaModelGenerator targetPackage="com.demo.hzed.persistence.auto.entity" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="com.demo.hzed.persistence.auto.mapping" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator targetPackage="com.demo.hzed.persistence.auto.mapper" targetProject="src/main/java" type="XMLMAPPER">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--<table tableName="t_bills" domainObjectName="Bill">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<columnOverride column="repayment_interest" javaType="java.math.BigDecimal" jdbcType="DOUBLE"/>-->
+        <!--</table>-->
+
+        <!--<table tableName="t_sequences" domainObjectName="Sequence">-->
+        <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
+        <!--<table tableName="t_users" domainObjectName="User">-->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
+        <table tableName="t_bids" domainObjectName="Bid">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <!--<table tableName="t_products" domainObjectName="Product">-->
+        <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
+        <!--<table tableName="t_transaction_advance" domainObjectName="TransactionAdvance">-->
+        <!--<columnOverride column="amount" javaType="java.math.BigDecimal" jdbcType="DECIMAL"/>-->
+        <!--<columnOverride column="corpus" javaType="java.math.BigDecimal" jdbcType="DECIMAL"/>-->
+        <!--<columnOverride column="interest" javaType="java.math.BigDecimal" jdbcType="DECIMAL"/>-->
+        <!--</table>-->
+        <!--<table tableName="t_safekeep_report" domainObjectName="SafekeepReport"/>-->
+        <!--<table tableName="t_user_events" domainObjectName="UserEvent" />-->
+
+    </context>
+</generatorConfiguration>

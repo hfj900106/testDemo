@@ -1,0 +1,1837 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzed.easyget.persistence.auto.mapper.BidMapper">
+  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.Bid">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
+    <result column="mer_bill_no" jdbcType="VARCHAR" property="merBillNo" />
+    <result column="bid_no" jdbcType="VARCHAR" property="bidNo" />
+    <result column="ips_bill_no" jdbcType="VARCHAR" property="ipsBillNo" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="loan_purpose_id" jdbcType="INTEGER" property="loanPurposeId" />
+    <result column="repayment_type_id" jdbcType="TINYINT" property="repaymentTypeId" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="period_unit" jdbcType="INTEGER" property="periodUnit" />
+    <result column="period" jdbcType="INTEGER" property="period" />
+    <result column="min_invest_amount" jdbcType="DECIMAL" property="minInvestAmount" />
+    <result column="average_invest_amount" jdbcType="DECIMAL" property="averageInvestAmount" />
+    <result column="invest_period" jdbcType="INTEGER" property="investPeriod" />
+    <result column="invest_expire_time" jdbcType="TIMESTAMP" property="investExpireTime" />
+    <result column="real_invest_expire_time" jdbcType="TIMESTAMP" property="realInvestExpireTime" />
+    <result column="apr" jdbcType="DECIMAL" property="apr" />
+    <result column="bank_account_id" jdbcType="BIGINT" property="bankAccountId" />
+    <result column="bonus_type" jdbcType="TINYINT" property="bonusType" />
+    <result column="bonus" jdbcType="DECIMAL" property="bonus" />
+    <result column="award_scale" jdbcType="DECIMAL" property="awardScale" />
+    <result column="image_filename" jdbcType="VARCHAR" property="imageFilename" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="item" jdbcType="VARCHAR" property="item" />
+    <result column="is_sec_bid" jdbcType="BIT" property="isSecBid" />
+    <result column="is_deal_password" jdbcType="BIT" property="isDealPassword" />
+    <result column="show_type" jdbcType="INTEGER" property="showType" />
+    <result column="bail" jdbcType="DECIMAL" property="bail" />
+    <result column="service_fees" jdbcType="DECIMAL" property="serviceFees" />
+    <result column="is_quality" jdbcType="BIT" property="isQuality" />
+    <result column="is_hot" jdbcType="BIT" property="isHot" />
+    <result column="is_agency" jdbcType="BIT" property="isAgency" />
+    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+    <result column="is_show_agency_name" jdbcType="BIT" property="isShowAgencyName" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="loan_schedule" jdbcType="DECIMAL" property="loanSchedule" />
+    <result column="has_invested_amount" jdbcType="DECIMAL" property="hasInvestedAmount" />
+    <result column="read_count" jdbcType="INTEGER" property="readCount" />
+    <result column="allocation_supervisor_id" jdbcType="BIGINT" property="allocationSupervisorId" />
+    <result column="manage_supervisor_id" jdbcType="BIGINT" property="manageSupervisorId" />
+    <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime" />
+    <result column="audit_suggest" jdbcType="VARCHAR" property="auditSuggest" />
+    <result column="repayment_time" jdbcType="TIMESTAMP" property="repaymentTime" />
+    <result column="last_repay_time" jdbcType="TIMESTAMP" property="lastRepayTime" />
+    <result column="is_auditmatic_invest_bid" jdbcType="BIT" property="isAuditmaticInvestBid" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="mark" jdbcType="VARCHAR" property="mark" />
+    <result column="qr_code" jdbcType="VARCHAR" property="qrCode" />
+    <result column="invest_rate" jdbcType="DOUBLE" property="investRate" />
+    <result column="overdue_rate" jdbcType="DOUBLE" property="overdueRate" />
+    <result column="is_register_guarantor" jdbcType="BIT" property="isRegisterGuarantor" />
+    <result column="apply_amount" jdbcType="DECIMAL" property="applyAmount" />
+    <result column="client" jdbcType="TINYINT" property="client" />
+    <result column="ips_status" jdbcType="TINYINT" property="ipsStatus" />
+    <result column="bid_type" jdbcType="BIT" property="bidType" />
+    <result column="release_supervisor_id" jdbcType="BIGINT" property="releaseSupervisorId" />
+    <result column="relevance_id" jdbcType="BIGINT" property="relevanceId" />
+    <result column="collect_supervisor_id" jdbcType="BIGINT" property="collectSupervisorId" />
+    <result column="begin_run_time" jdbcType="DATE" property="beginRunTime" />
+    <result column="run_time" jdbcType="DATE" property="runTime" />
+    <result column="run_rate" jdbcType="DOUBLE" property="runRate" />
+    <result column="run_credit" jdbcType="BIGINT" property="runCredit" />
+    <result column="run_rate_times" jdbcType="TINYINT" property="runRateTimes" />
+    <result column="run_credit_times" jdbcType="TINYINT" property="runCreditTimes" />
+    <result column="times" jdbcType="TINYINT" property="times" />
+    <result column="product_id_flag" jdbcType="BIGINT" property="productIdFlag" />
+    <result column="push_status" jdbcType="TINYINT" property="pushStatus" />
+    <result column="push_error_message" jdbcType="VARCHAR" property="pushErrorMessage" />
+    <result column="push_time" jdbcType="TIMESTAMP" property="pushTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.hzed.easyget.persistence.auto.entity.Bid">
+    <result column="intermediary_agreement" jdbcType="LONGVARCHAR" property="intermediaryAgreement" />
+    <result column="pact" jdbcType="LONGVARCHAR" property="pact" />
+    <result column="guarantee_bid" jdbcType="LONGVARCHAR" property="guaranteeBid" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, user_id, time, mer_bill_no, bid_no, ips_bill_no, product_id, title, loan_purpose_id, 
+    repayment_type_id, amount, period_unit, period, min_invest_amount, average_invest_amount, 
+    invest_period, invest_expire_time, real_invest_expire_time, apr, bank_account_id, 
+    bonus_type, bonus, award_scale, image_filename, description, item, is_sec_bid, is_deal_password, 
+    show_type, bail, service_fees, is_quality, is_hot, is_agency, agency_id, is_show_agency_name, 
+    status, loan_schedule, has_invested_amount, read_count, allocation_supervisor_id, 
+    manage_supervisor_id, audit_time, audit_suggest, repayment_time, last_repay_time, 
+    is_auditmatic_invest_bid, version, mark, qr_code, invest_rate, overdue_rate, is_register_guarantor, 
+    apply_amount, client, ips_status, bid_type, release_supervisor_id, relevance_id, 
+    collect_supervisor_id, begin_run_time, run_time, run_rate, run_credit, run_rate_times, 
+    run_credit_times, times, product_id_flag, push_status, push_error_message, push_time
+  </sql>
+  <sql id="Blob_Column_List">
+    intermediary_agreement, pact, guarantee_bid
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.hzed.easyget.persistence.auto.entity.example.BidExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_bids
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="rows != null">
+      <if test="offset != null">
+        limit ${offset}, ${rows}
+      </if>
+      <if test="offset == null">
+        limit ${rows}
+      </if>
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.BidExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_bids
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="rows != null">
+      <if test="offset != null">
+        limit ${offset}, ${rows}
+      </if>
+      <if test="offset == null">
+        limit ${rows}
+      </if>
+    </if>
+  </select>
+  <select id="selectByExampleSelective" parameterType="map" resultMap="BaseResultMap">
+    select
+    <if test="example.distinct">
+      distinct
+    </if>
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    from t_bids
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+    <if test="example.orderByClause != null">
+      order by ${example.orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_bids
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
+    select
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    from t_bids
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_bids
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.BidExample">
+    delete from t_bids
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.Bid">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_bids (user_id, time, mer_bill_no, 
+      bid_no, ips_bill_no, product_id, 
+      title, loan_purpose_id, repayment_type_id, 
+      amount, period_unit, period, 
+      min_invest_amount, average_invest_amount, invest_period, 
+      invest_expire_time, real_invest_expire_time, 
+      apr, bank_account_id, bonus_type, 
+      bonus, award_scale, image_filename, 
+      description, item, is_sec_bid, 
+      is_deal_password, show_type, bail, 
+      service_fees, is_quality, is_hot, 
+      is_agency, agency_id, is_show_agency_name, 
+      status, loan_schedule, has_invested_amount, 
+      read_count, allocation_supervisor_id, manage_supervisor_id, 
+      audit_time, audit_suggest, repayment_time, 
+      last_repay_time, is_auditmatic_invest_bid, version, 
+      mark, qr_code, invest_rate, 
+      overdue_rate, is_register_guarantor, apply_amount, 
+      client, ips_status, bid_type, 
+      release_supervisor_id, relevance_id, collect_supervisor_id, 
+      begin_run_time, run_time, run_rate, 
+      run_credit, run_rate_times, run_credit_times, 
+      times, product_id_flag, push_status, 
+      push_error_message, push_time, intermediary_agreement, 
+      pact, guarantee_bid)
+    values (#{userId,jdbcType=BIGINT}, #{time,jdbcType=TIMESTAMP}, #{merBillNo,jdbcType=VARCHAR}, 
+      #{bidNo,jdbcType=VARCHAR}, #{ipsBillNo,jdbcType=VARCHAR}, #{productId,jdbcType=INTEGER}, 
+      #{title,jdbcType=VARCHAR}, #{loanPurposeId,jdbcType=INTEGER}, #{repaymentTypeId,jdbcType=TINYINT}, 
+      #{amount,jdbcType=DECIMAL}, #{periodUnit,jdbcType=INTEGER}, #{period,jdbcType=INTEGER}, 
+      #{minInvestAmount,jdbcType=DECIMAL}, #{averageInvestAmount,jdbcType=DECIMAL}, #{investPeriod,jdbcType=INTEGER}, 
+      #{investExpireTime,jdbcType=TIMESTAMP}, #{realInvestExpireTime,jdbcType=TIMESTAMP}, 
+      #{apr,jdbcType=DECIMAL}, #{bankAccountId,jdbcType=BIGINT}, #{bonusType,jdbcType=TINYINT}, 
+      #{bonus,jdbcType=DECIMAL}, #{awardScale,jdbcType=DECIMAL}, #{imageFilename,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{item,jdbcType=VARCHAR}, #{isSecBid,jdbcType=BIT}, 
+      #{isDealPassword,jdbcType=BIT}, #{showType,jdbcType=INTEGER}, #{bail,jdbcType=DECIMAL}, 
+      #{serviceFees,jdbcType=DECIMAL}, #{isQuality,jdbcType=BIT}, #{isHot,jdbcType=BIT}, 
+      #{isAgency,jdbcType=BIT}, #{agencyId,jdbcType=INTEGER}, #{isShowAgencyName,jdbcType=BIT}, 
+      #{status,jdbcType=TINYINT}, #{loanSchedule,jdbcType=DECIMAL}, #{hasInvestedAmount,jdbcType=DECIMAL}, 
+      #{readCount,jdbcType=INTEGER}, #{allocationSupervisorId,jdbcType=BIGINT}, #{manageSupervisorId,jdbcType=BIGINT}, 
+      #{auditTime,jdbcType=TIMESTAMP}, #{auditSuggest,jdbcType=VARCHAR}, #{repaymentTime,jdbcType=TIMESTAMP}, 
+      #{lastRepayTime,jdbcType=TIMESTAMP}, #{isAuditmaticInvestBid,jdbcType=BIT}, #{version,jdbcType=INTEGER}, 
+      #{mark,jdbcType=VARCHAR}, #{qrCode,jdbcType=VARCHAR}, #{investRate,jdbcType=DOUBLE}, 
+      #{overdueRate,jdbcType=DOUBLE}, #{isRegisterGuarantor,jdbcType=BIT}, #{applyAmount,jdbcType=DECIMAL}, 
+      #{client,jdbcType=TINYINT}, #{ipsStatus,jdbcType=TINYINT}, #{bidType,jdbcType=BIT}, 
+      #{releaseSupervisorId,jdbcType=BIGINT}, #{relevanceId,jdbcType=BIGINT}, #{collectSupervisorId,jdbcType=BIGINT}, 
+      #{beginRunTime,jdbcType=DATE}, #{runTime,jdbcType=DATE}, #{runRate,jdbcType=DOUBLE}, 
+      #{runCredit,jdbcType=BIGINT}, #{runRateTimes,jdbcType=TINYINT}, #{runCreditTimes,jdbcType=TINYINT}, 
+      #{times,jdbcType=TINYINT}, #{productIdFlag,jdbcType=BIGINT}, #{pushStatus,jdbcType=TINYINT}, 
+      #{pushErrorMessage,jdbcType=VARCHAR}, #{pushTime,jdbcType=TIMESTAMP}, #{intermediaryAgreement,jdbcType=LONGVARCHAR}, 
+      #{pact,jdbcType=LONGVARCHAR}, #{guaranteeBid,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.Bid">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_bids
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+      <if test="merBillNo != null">
+        mer_bill_no,
+      </if>
+      <if test="bidNo != null">
+        bid_no,
+      </if>
+      <if test="ipsBillNo != null">
+        ips_bill_no,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="loanPurposeId != null">
+        loan_purpose_id,
+      </if>
+      <if test="repaymentTypeId != null">
+        repayment_type_id,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="periodUnit != null">
+        period_unit,
+      </if>
+      <if test="period != null">
+        period,
+      </if>
+      <if test="minInvestAmount != null">
+        min_invest_amount,
+      </if>
+      <if test="averageInvestAmount != null">
+        average_invest_amount,
+      </if>
+      <if test="investPeriod != null">
+        invest_period,
+      </if>
+      <if test="investExpireTime != null">
+        invest_expire_time,
+      </if>
+      <if test="realInvestExpireTime != null">
+        real_invest_expire_time,
+      </if>
+      <if test="apr != null">
+        apr,
+      </if>
+      <if test="bankAccountId != null">
+        bank_account_id,
+      </if>
+      <if test="bonusType != null">
+        bonus_type,
+      </if>
+      <if test="bonus != null">
+        bonus,
+      </if>
+      <if test="awardScale != null">
+        award_scale,
+      </if>
+      <if test="imageFilename != null">
+        image_filename,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="item != null">
+        item,
+      </if>
+      <if test="isSecBid != null">
+        is_sec_bid,
+      </if>
+      <if test="isDealPassword != null">
+        is_deal_password,
+      </if>
+      <if test="showType != null">
+        show_type,
+      </if>
+      <if test="bail != null">
+        bail,
+      </if>
+      <if test="serviceFees != null">
+        service_fees,
+      </if>
+      <if test="isQuality != null">
+        is_quality,
+      </if>
+      <if test="isHot != null">
+        is_hot,
+      </if>
+      <if test="isAgency != null">
+        is_agency,
+      </if>
+      <if test="agencyId != null">
+        agency_id,
+      </if>
+      <if test="isShowAgencyName != null">
+        is_show_agency_name,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="loanSchedule != null">
+        loan_schedule,
+      </if>
+      <if test="hasInvestedAmount != null">
+        has_invested_amount,
+      </if>
+      <if test="readCount != null">
+        read_count,
+      </if>
+      <if test="allocationSupervisorId != null">
+        allocation_supervisor_id,
+      </if>
+      <if test="manageSupervisorId != null">
+        manage_supervisor_id,
+      </if>
+      <if test="auditTime != null">
+        audit_time,
+      </if>
+      <if test="auditSuggest != null">
+        audit_suggest,
+      </if>
+      <if test="repaymentTime != null">
+        repayment_time,
+      </if>
+      <if test="lastRepayTime != null">
+        last_repay_time,
+      </if>
+      <if test="isAuditmaticInvestBid != null">
+        is_auditmatic_invest_bid,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="mark != null">
+        mark,
+      </if>
+      <if test="qrCode != null">
+        qr_code,
+      </if>
+      <if test="investRate != null">
+        invest_rate,
+      </if>
+      <if test="overdueRate != null">
+        overdue_rate,
+      </if>
+      <if test="isRegisterGuarantor != null">
+        is_register_guarantor,
+      </if>
+      <if test="applyAmount != null">
+        apply_amount,
+      </if>
+      <if test="client != null">
+        client,
+      </if>
+      <if test="ipsStatus != null">
+        ips_status,
+      </if>
+      <if test="bidType != null">
+        bid_type,
+      </if>
+      <if test="releaseSupervisorId != null">
+        release_supervisor_id,
+      </if>
+      <if test="relevanceId != null">
+        relevance_id,
+      </if>
+      <if test="collectSupervisorId != null">
+        collect_supervisor_id,
+      </if>
+      <if test="beginRunTime != null">
+        begin_run_time,
+      </if>
+      <if test="runTime != null">
+        run_time,
+      </if>
+      <if test="runRate != null">
+        run_rate,
+      </if>
+      <if test="runCredit != null">
+        run_credit,
+      </if>
+      <if test="runRateTimes != null">
+        run_rate_times,
+      </if>
+      <if test="runCreditTimes != null">
+        run_credit_times,
+      </if>
+      <if test="times != null">
+        times,
+      </if>
+      <if test="productIdFlag != null">
+        product_id_flag,
+      </if>
+      <if test="pushStatus != null">
+        push_status,
+      </if>
+      <if test="pushErrorMessage != null">
+        push_error_message,
+      </if>
+      <if test="pushTime != null">
+        push_time,
+      </if>
+      <if test="intermediaryAgreement != null">
+        intermediary_agreement,
+      </if>
+      <if test="pact != null">
+        pact,
+      </if>
+      <if test="guaranteeBid != null">
+        guarantee_bid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="merBillNo != null">
+        #{merBillNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bidNo != null">
+        #{bidNo,jdbcType=VARCHAR},
+      </if>
+      <if test="ipsBillNo != null">
+        #{ipsBillNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="loanPurposeId != null">
+        #{loanPurposeId,jdbcType=INTEGER},
+      </if>
+      <if test="repaymentTypeId != null">
+        #{repaymentTypeId,jdbcType=TINYINT},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="periodUnit != null">
+        #{periodUnit,jdbcType=INTEGER},
+      </if>
+      <if test="period != null">
+        #{period,jdbcType=INTEGER},
+      </if>
+      <if test="minInvestAmount != null">
+        #{minInvestAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="averageInvestAmount != null">
+        #{averageInvestAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="investPeriod != null">
+        #{investPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="investExpireTime != null">
+        #{investExpireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="realInvestExpireTime != null">
+        #{realInvestExpireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="apr != null">
+        #{apr,jdbcType=DECIMAL},
+      </if>
+      <if test="bankAccountId != null">
+        #{bankAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="bonusType != null">
+        #{bonusType,jdbcType=TINYINT},
+      </if>
+      <if test="bonus != null">
+        #{bonus,jdbcType=DECIMAL},
+      </if>
+      <if test="awardScale != null">
+        #{awardScale,jdbcType=DECIMAL},
+      </if>
+      <if test="imageFilename != null">
+        #{imageFilename,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="item != null">
+        #{item,jdbcType=VARCHAR},
+      </if>
+      <if test="isSecBid != null">
+        #{isSecBid,jdbcType=BIT},
+      </if>
+      <if test="isDealPassword != null">
+        #{isDealPassword,jdbcType=BIT},
+      </if>
+      <if test="showType != null">
+        #{showType,jdbcType=INTEGER},
+      </if>
+      <if test="bail != null">
+        #{bail,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceFees != null">
+        #{serviceFees,jdbcType=DECIMAL},
+      </if>
+      <if test="isQuality != null">
+        #{isQuality,jdbcType=BIT},
+      </if>
+      <if test="isHot != null">
+        #{isHot,jdbcType=BIT},
+      </if>
+      <if test="isAgency != null">
+        #{isAgency,jdbcType=BIT},
+      </if>
+      <if test="agencyId != null">
+        #{agencyId,jdbcType=INTEGER},
+      </if>
+      <if test="isShowAgencyName != null">
+        #{isShowAgencyName,jdbcType=BIT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="loanSchedule != null">
+        #{loanSchedule,jdbcType=DECIMAL},
+      </if>
+      <if test="hasInvestedAmount != null">
+        #{hasInvestedAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="readCount != null">
+        #{readCount,jdbcType=INTEGER},
+      </if>
+      <if test="allocationSupervisorId != null">
+        #{allocationSupervisorId,jdbcType=BIGINT},
+      </if>
+      <if test="manageSupervisorId != null">
+        #{manageSupervisorId,jdbcType=BIGINT},
+      </if>
+      <if test="auditTime != null">
+        #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditSuggest != null">
+        #{auditSuggest,jdbcType=VARCHAR},
+      </if>
+      <if test="repaymentTime != null">
+        #{repaymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastRepayTime != null">
+        #{lastRepayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isAuditmaticInvestBid != null">
+        #{isAuditmaticInvestBid,jdbcType=BIT},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="mark != null">
+        #{mark,jdbcType=VARCHAR},
+      </if>
+      <if test="qrCode != null">
+        #{qrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="investRate != null">
+        #{investRate,jdbcType=DOUBLE},
+      </if>
+      <if test="overdueRate != null">
+        #{overdueRate,jdbcType=DOUBLE},
+      </if>
+      <if test="isRegisterGuarantor != null">
+        #{isRegisterGuarantor,jdbcType=BIT},
+      </if>
+      <if test="applyAmount != null">
+        #{applyAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="client != null">
+        #{client,jdbcType=TINYINT},
+      </if>
+      <if test="ipsStatus != null">
+        #{ipsStatus,jdbcType=TINYINT},
+      </if>
+      <if test="bidType != null">
+        #{bidType,jdbcType=BIT},
+      </if>
+      <if test="releaseSupervisorId != null">
+        #{releaseSupervisorId,jdbcType=BIGINT},
+      </if>
+      <if test="relevanceId != null">
+        #{relevanceId,jdbcType=BIGINT},
+      </if>
+      <if test="collectSupervisorId != null">
+        #{collectSupervisorId,jdbcType=BIGINT},
+      </if>
+      <if test="beginRunTime != null">
+        #{beginRunTime,jdbcType=DATE},
+      </if>
+      <if test="runTime != null">
+        #{runTime,jdbcType=DATE},
+      </if>
+      <if test="runRate != null">
+        #{runRate,jdbcType=DOUBLE},
+      </if>
+      <if test="runCredit != null">
+        #{runCredit,jdbcType=BIGINT},
+      </if>
+      <if test="runRateTimes != null">
+        #{runRateTimes,jdbcType=TINYINT},
+      </if>
+      <if test="runCreditTimes != null">
+        #{runCreditTimes,jdbcType=TINYINT},
+      </if>
+      <if test="times != null">
+        #{times,jdbcType=TINYINT},
+      </if>
+      <if test="productIdFlag != null">
+        #{productIdFlag,jdbcType=BIGINT},
+      </if>
+      <if test="pushStatus != null">
+        #{pushStatus,jdbcType=TINYINT},
+      </if>
+      <if test="pushErrorMessage != null">
+        #{pushErrorMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="pushTime != null">
+        #{pushTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="intermediaryAgreement != null">
+        #{intermediaryAgreement,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="pact != null">
+        #{pact,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="guaranteeBid != null">
+        #{guaranteeBid,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.BidExample" resultType="java.lang.Long">
+    select count(*) from t_bids
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_bids
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.time != null">
+        time = #{record.time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.merBillNo != null">
+        mer_bill_no = #{record.merBillNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bidNo != null">
+        bid_no = #{record.bidNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ipsBillNo != null">
+        ips_bill_no = #{record.ipsBillNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productId != null">
+        product_id = #{record.productId,jdbcType=INTEGER},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loanPurposeId != null">
+        loan_purpose_id = #{record.loanPurposeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.repaymentTypeId != null">
+        repayment_type_id = #{record.repaymentTypeId,jdbcType=TINYINT},
+      </if>
+      <if test="record.amount != null">
+        amount = #{record.amount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.periodUnit != null">
+        period_unit = #{record.periodUnit,jdbcType=INTEGER},
+      </if>
+      <if test="record.period != null">
+        period = #{record.period,jdbcType=INTEGER},
+      </if>
+      <if test="record.minInvestAmount != null">
+        min_invest_amount = #{record.minInvestAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.averageInvestAmount != null">
+        average_invest_amount = #{record.averageInvestAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investPeriod != null">
+        invest_period = #{record.investPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="record.investExpireTime != null">
+        invest_expire_time = #{record.investExpireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.realInvestExpireTime != null">
+        real_invest_expire_time = #{record.realInvestExpireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.apr != null">
+        apr = #{record.apr,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bankAccountId != null">
+        bank_account_id = #{record.bankAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="record.bonusType != null">
+        bonus_type = #{record.bonusType,jdbcType=TINYINT},
+      </if>
+      <if test="record.bonus != null">
+        bonus = #{record.bonus,jdbcType=DECIMAL},
+      </if>
+      <if test="record.awardScale != null">
+        award_scale = #{record.awardScale,jdbcType=DECIMAL},
+      </if>
+      <if test="record.imageFilename != null">
+        image_filename = #{record.imageFilename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.item != null">
+        item = #{record.item,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isSecBid != null">
+        is_sec_bid = #{record.isSecBid,jdbcType=BIT},
+      </if>
+      <if test="record.isDealPassword != null">
+        is_deal_password = #{record.isDealPassword,jdbcType=BIT},
+      </if>
+      <if test="record.showType != null">
+        show_type = #{record.showType,jdbcType=INTEGER},
+      </if>
+      <if test="record.bail != null">
+        bail = #{record.bail,jdbcType=DECIMAL},
+      </if>
+      <if test="record.serviceFees != null">
+        service_fees = #{record.serviceFees,jdbcType=DECIMAL},
+      </if>
+      <if test="record.isQuality != null">
+        is_quality = #{record.isQuality,jdbcType=BIT},
+      </if>
+      <if test="record.isHot != null">
+        is_hot = #{record.isHot,jdbcType=BIT},
+      </if>
+      <if test="record.isAgency != null">
+        is_agency = #{record.isAgency,jdbcType=BIT},
+      </if>
+      <if test="record.agencyId != null">
+        agency_id = #{record.agencyId,jdbcType=INTEGER},
+      </if>
+      <if test="record.isShowAgencyName != null">
+        is_show_agency_name = #{record.isShowAgencyName,jdbcType=BIT},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.loanSchedule != null">
+        loan_schedule = #{record.loanSchedule,jdbcType=DECIMAL},
+      </if>
+      <if test="record.hasInvestedAmount != null">
+        has_invested_amount = #{record.hasInvestedAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.readCount != null">
+        read_count = #{record.readCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.allocationSupervisorId != null">
+        allocation_supervisor_id = #{record.allocationSupervisorId,jdbcType=BIGINT},
+      </if>
+      <if test="record.manageSupervisorId != null">
+        manage_supervisor_id = #{record.manageSupervisorId,jdbcType=BIGINT},
+      </if>
+      <if test="record.auditTime != null">
+        audit_time = #{record.auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.auditSuggest != null">
+        audit_suggest = #{record.auditSuggest,jdbcType=VARCHAR},
+      </if>
+      <if test="record.repaymentTime != null">
+        repayment_time = #{record.repaymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastRepayTime != null">
+        last_repay_time = #{record.lastRepayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isAuditmaticInvestBid != null">
+        is_auditmatic_invest_bid = #{record.isAuditmaticInvestBid,jdbcType=BIT},
+      </if>
+      <if test="record.version != null">
+        version = #{record.version,jdbcType=INTEGER},
+      </if>
+      <if test="record.mark != null">
+        mark = #{record.mark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qrCode != null">
+        qr_code = #{record.qrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.investRate != null">
+        invest_rate = #{record.investRate,jdbcType=DOUBLE},
+      </if>
+      <if test="record.overdueRate != null">
+        overdue_rate = #{record.overdueRate,jdbcType=DOUBLE},
+      </if>
+      <if test="record.isRegisterGuarantor != null">
+        is_register_guarantor = #{record.isRegisterGuarantor,jdbcType=BIT},
+      </if>
+      <if test="record.applyAmount != null">
+        apply_amount = #{record.applyAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.client != null">
+        client = #{record.client,jdbcType=TINYINT},
+      </if>
+      <if test="record.ipsStatus != null">
+        ips_status = #{record.ipsStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.bidType != null">
+        bid_type = #{record.bidType,jdbcType=BIT},
+      </if>
+      <if test="record.releaseSupervisorId != null">
+        release_supervisor_id = #{record.releaseSupervisorId,jdbcType=BIGINT},
+      </if>
+      <if test="record.relevanceId != null">
+        relevance_id = #{record.relevanceId,jdbcType=BIGINT},
+      </if>
+      <if test="record.collectSupervisorId != null">
+        collect_supervisor_id = #{record.collectSupervisorId,jdbcType=BIGINT},
+      </if>
+      <if test="record.beginRunTime != null">
+        begin_run_time = #{record.beginRunTime,jdbcType=DATE},
+      </if>
+      <if test="record.runTime != null">
+        run_time = #{record.runTime,jdbcType=DATE},
+      </if>
+      <if test="record.runRate != null">
+        run_rate = #{record.runRate,jdbcType=DOUBLE},
+      </if>
+      <if test="record.runCredit != null">
+        run_credit = #{record.runCredit,jdbcType=BIGINT},
+      </if>
+      <if test="record.runRateTimes != null">
+        run_rate_times = #{record.runRateTimes,jdbcType=TINYINT},
+      </if>
+      <if test="record.runCreditTimes != null">
+        run_credit_times = #{record.runCreditTimes,jdbcType=TINYINT},
+      </if>
+      <if test="record.times != null">
+        times = #{record.times,jdbcType=TINYINT},
+      </if>
+      <if test="record.productIdFlag != null">
+        product_id_flag = #{record.productIdFlag,jdbcType=BIGINT},
+      </if>
+      <if test="record.pushStatus != null">
+        push_status = #{record.pushStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.pushErrorMessage != null">
+        push_error_message = #{record.pushErrorMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pushTime != null">
+        push_time = #{record.pushTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.intermediaryAgreement != null">
+        intermediary_agreement = #{record.intermediaryAgreement,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.pact != null">
+        pact = #{record.pact,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.guaranteeBid != null">
+        guarantee_bid = #{record.guaranteeBid,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update t_bids
+    set id = #{record.id,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      time = #{record.time,jdbcType=TIMESTAMP},
+      mer_bill_no = #{record.merBillNo,jdbcType=VARCHAR},
+      bid_no = #{record.bidNo,jdbcType=VARCHAR},
+      ips_bill_no = #{record.ipsBillNo,jdbcType=VARCHAR},
+      product_id = #{record.productId,jdbcType=INTEGER},
+      title = #{record.title,jdbcType=VARCHAR},
+      loan_purpose_id = #{record.loanPurposeId,jdbcType=INTEGER},
+      repayment_type_id = #{record.repaymentTypeId,jdbcType=TINYINT},
+      amount = #{record.amount,jdbcType=DECIMAL},
+      period_unit = #{record.periodUnit,jdbcType=INTEGER},
+      period = #{record.period,jdbcType=INTEGER},
+      min_invest_amount = #{record.minInvestAmount,jdbcType=DECIMAL},
+      average_invest_amount = #{record.averageInvestAmount,jdbcType=DECIMAL},
+      invest_period = #{record.investPeriod,jdbcType=INTEGER},
+      invest_expire_time = #{record.investExpireTime,jdbcType=TIMESTAMP},
+      real_invest_expire_time = #{record.realInvestExpireTime,jdbcType=TIMESTAMP},
+      apr = #{record.apr,jdbcType=DECIMAL},
+      bank_account_id = #{record.bankAccountId,jdbcType=BIGINT},
+      bonus_type = #{record.bonusType,jdbcType=TINYINT},
+      bonus = #{record.bonus,jdbcType=DECIMAL},
+      award_scale = #{record.awardScale,jdbcType=DECIMAL},
+      image_filename = #{record.imageFilename,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      item = #{record.item,jdbcType=VARCHAR},
+      is_sec_bid = #{record.isSecBid,jdbcType=BIT},
+      is_deal_password = #{record.isDealPassword,jdbcType=BIT},
+      show_type = #{record.showType,jdbcType=INTEGER},
+      bail = #{record.bail,jdbcType=DECIMAL},
+      service_fees = #{record.serviceFees,jdbcType=DECIMAL},
+      is_quality = #{record.isQuality,jdbcType=BIT},
+      is_hot = #{record.isHot,jdbcType=BIT},
+      is_agency = #{record.isAgency,jdbcType=BIT},
+      agency_id = #{record.agencyId,jdbcType=INTEGER},
+      is_show_agency_name = #{record.isShowAgencyName,jdbcType=BIT},
+      status = #{record.status,jdbcType=TINYINT},
+      loan_schedule = #{record.loanSchedule,jdbcType=DECIMAL},
+      has_invested_amount = #{record.hasInvestedAmount,jdbcType=DECIMAL},
+      read_count = #{record.readCount,jdbcType=INTEGER},
+      allocation_supervisor_id = #{record.allocationSupervisorId,jdbcType=BIGINT},
+      manage_supervisor_id = #{record.manageSupervisorId,jdbcType=BIGINT},
+      audit_time = #{record.auditTime,jdbcType=TIMESTAMP},
+      audit_suggest = #{record.auditSuggest,jdbcType=VARCHAR},
+      repayment_time = #{record.repaymentTime,jdbcType=TIMESTAMP},
+      last_repay_time = #{record.lastRepayTime,jdbcType=TIMESTAMP},
+      is_auditmatic_invest_bid = #{record.isAuditmaticInvestBid,jdbcType=BIT},
+      version = #{record.version,jdbcType=INTEGER},
+      mark = #{record.mark,jdbcType=VARCHAR},
+      qr_code = #{record.qrCode,jdbcType=VARCHAR},
+      invest_rate = #{record.investRate,jdbcType=DOUBLE},
+      overdue_rate = #{record.overdueRate,jdbcType=DOUBLE},
+      is_register_guarantor = #{record.isRegisterGuarantor,jdbcType=BIT},
+      apply_amount = #{record.applyAmount,jdbcType=DECIMAL},
+      client = #{record.client,jdbcType=TINYINT},
+      ips_status = #{record.ipsStatus,jdbcType=TINYINT},
+      bid_type = #{record.bidType,jdbcType=BIT},
+      release_supervisor_id = #{record.releaseSupervisorId,jdbcType=BIGINT},
+      relevance_id = #{record.relevanceId,jdbcType=BIGINT},
+      collect_supervisor_id = #{record.collectSupervisorId,jdbcType=BIGINT},
+      begin_run_time = #{record.beginRunTime,jdbcType=DATE},
+      run_time = #{record.runTime,jdbcType=DATE},
+      run_rate = #{record.runRate,jdbcType=DOUBLE},
+      run_credit = #{record.runCredit,jdbcType=BIGINT},
+      run_rate_times = #{record.runRateTimes,jdbcType=TINYINT},
+      run_credit_times = #{record.runCreditTimes,jdbcType=TINYINT},
+      times = #{record.times,jdbcType=TINYINT},
+      product_id_flag = #{record.productIdFlag,jdbcType=BIGINT},
+      push_status = #{record.pushStatus,jdbcType=TINYINT},
+      push_error_message = #{record.pushErrorMessage,jdbcType=VARCHAR},
+      push_time = #{record.pushTime,jdbcType=TIMESTAMP},
+      intermediary_agreement = #{record.intermediaryAgreement,jdbcType=LONGVARCHAR},
+      pact = #{record.pact,jdbcType=LONGVARCHAR},
+      guarantee_bid = #{record.guaranteeBid,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_bids
+    set id = #{record.id,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      time = #{record.time,jdbcType=TIMESTAMP},
+      mer_bill_no = #{record.merBillNo,jdbcType=VARCHAR},
+      bid_no = #{record.bidNo,jdbcType=VARCHAR},
+      ips_bill_no = #{record.ipsBillNo,jdbcType=VARCHAR},
+      product_id = #{record.productId,jdbcType=INTEGER},
+      title = #{record.title,jdbcType=VARCHAR},
+      loan_purpose_id = #{record.loanPurposeId,jdbcType=INTEGER},
+      repayment_type_id = #{record.repaymentTypeId,jdbcType=TINYINT},
+      amount = #{record.amount,jdbcType=DECIMAL},
+      period_unit = #{record.periodUnit,jdbcType=INTEGER},
+      period = #{record.period,jdbcType=INTEGER},
+      min_invest_amount = #{record.minInvestAmount,jdbcType=DECIMAL},
+      average_invest_amount = #{record.averageInvestAmount,jdbcType=DECIMAL},
+      invest_period = #{record.investPeriod,jdbcType=INTEGER},
+      invest_expire_time = #{record.investExpireTime,jdbcType=TIMESTAMP},
+      real_invest_expire_time = #{record.realInvestExpireTime,jdbcType=TIMESTAMP},
+      apr = #{record.apr,jdbcType=DECIMAL},
+      bank_account_id = #{record.bankAccountId,jdbcType=BIGINT},
+      bonus_type = #{record.bonusType,jdbcType=TINYINT},
+      bonus = #{record.bonus,jdbcType=DECIMAL},
+      award_scale = #{record.awardScale,jdbcType=DECIMAL},
+      image_filename = #{record.imageFilename,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      item = #{record.item,jdbcType=VARCHAR},
+      is_sec_bid = #{record.isSecBid,jdbcType=BIT},
+      is_deal_password = #{record.isDealPassword,jdbcType=BIT},
+      show_type = #{record.showType,jdbcType=INTEGER},
+      bail = #{record.bail,jdbcType=DECIMAL},
+      service_fees = #{record.serviceFees,jdbcType=DECIMAL},
+      is_quality = #{record.isQuality,jdbcType=BIT},
+      is_hot = #{record.isHot,jdbcType=BIT},
+      is_agency = #{record.isAgency,jdbcType=BIT},
+      agency_id = #{record.agencyId,jdbcType=INTEGER},
+      is_show_agency_name = #{record.isShowAgencyName,jdbcType=BIT},
+      status = #{record.status,jdbcType=TINYINT},
+      loan_schedule = #{record.loanSchedule,jdbcType=DECIMAL},
+      has_invested_amount = #{record.hasInvestedAmount,jdbcType=DECIMAL},
+      read_count = #{record.readCount,jdbcType=INTEGER},
+      allocation_supervisor_id = #{record.allocationSupervisorId,jdbcType=BIGINT},
+      manage_supervisor_id = #{record.manageSupervisorId,jdbcType=BIGINT},
+      audit_time = #{record.auditTime,jdbcType=TIMESTAMP},
+      audit_suggest = #{record.auditSuggest,jdbcType=VARCHAR},
+      repayment_time = #{record.repaymentTime,jdbcType=TIMESTAMP},
+      last_repay_time = #{record.lastRepayTime,jdbcType=TIMESTAMP},
+      is_auditmatic_invest_bid = #{record.isAuditmaticInvestBid,jdbcType=BIT},
+      version = #{record.version,jdbcType=INTEGER},
+      mark = #{record.mark,jdbcType=VARCHAR},
+      qr_code = #{record.qrCode,jdbcType=VARCHAR},
+      invest_rate = #{record.investRate,jdbcType=DOUBLE},
+      overdue_rate = #{record.overdueRate,jdbcType=DOUBLE},
+      is_register_guarantor = #{record.isRegisterGuarantor,jdbcType=BIT},
+      apply_amount = #{record.applyAmount,jdbcType=DECIMAL},
+      client = #{record.client,jdbcType=TINYINT},
+      ips_status = #{record.ipsStatus,jdbcType=TINYINT},
+      bid_type = #{record.bidType,jdbcType=BIT},
+      release_supervisor_id = #{record.releaseSupervisorId,jdbcType=BIGINT},
+      relevance_id = #{record.relevanceId,jdbcType=BIGINT},
+      collect_supervisor_id = #{record.collectSupervisorId,jdbcType=BIGINT},
+      begin_run_time = #{record.beginRunTime,jdbcType=DATE},
+      run_time = #{record.runTime,jdbcType=DATE},
+      run_rate = #{record.runRate,jdbcType=DOUBLE},
+      run_credit = #{record.runCredit,jdbcType=BIGINT},
+      run_rate_times = #{record.runRateTimes,jdbcType=TINYINT},
+      run_credit_times = #{record.runCreditTimes,jdbcType=TINYINT},
+      times = #{record.times,jdbcType=TINYINT},
+      product_id_flag = #{record.productIdFlag,jdbcType=BIGINT},
+      push_status = #{record.pushStatus,jdbcType=TINYINT},
+      push_error_message = #{record.pushErrorMessage,jdbcType=VARCHAR},
+      push_time = #{record.pushTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.Bid">
+    update t_bids
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="merBillNo != null">
+        mer_bill_no = #{merBillNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bidNo != null">
+        bid_no = #{bidNo,jdbcType=VARCHAR},
+      </if>
+      <if test="ipsBillNo != null">
+        ips_bill_no = #{ipsBillNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="loanPurposeId != null">
+        loan_purpose_id = #{loanPurposeId,jdbcType=INTEGER},
+      </if>
+      <if test="repaymentTypeId != null">
+        repayment_type_id = #{repaymentTypeId,jdbcType=TINYINT},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="periodUnit != null">
+        period_unit = #{periodUnit,jdbcType=INTEGER},
+      </if>
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
+      </if>
+      <if test="minInvestAmount != null">
+        min_invest_amount = #{minInvestAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="averageInvestAmount != null">
+        average_invest_amount = #{averageInvestAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="investPeriod != null">
+        invest_period = #{investPeriod,jdbcType=INTEGER},
+      </if>
+      <if test="investExpireTime != null">
+        invest_expire_time = #{investExpireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="realInvestExpireTime != null">
+        real_invest_expire_time = #{realInvestExpireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="apr != null">
+        apr = #{apr,jdbcType=DECIMAL},
+      </if>
+      <if test="bankAccountId != null">
+        bank_account_id = #{bankAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="bonusType != null">
+        bonus_type = #{bonusType,jdbcType=TINYINT},
+      </if>
+      <if test="bonus != null">
+        bonus = #{bonus,jdbcType=DECIMAL},
+      </if>
+      <if test="awardScale != null">
+        award_scale = #{awardScale,jdbcType=DECIMAL},
+      </if>
+      <if test="imageFilename != null">
+        image_filename = #{imageFilename,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="item != null">
+        item = #{item,jdbcType=VARCHAR},
+      </if>
+      <if test="isSecBid != null">
+        is_sec_bid = #{isSecBid,jdbcType=BIT},
+      </if>
+      <if test="isDealPassword != null">
+        is_deal_password = #{isDealPassword,jdbcType=BIT},
+      </if>
+      <if test="showType != null">
+        show_type = #{showType,jdbcType=INTEGER},
+      </if>
+      <if test="bail != null">
+        bail = #{bail,jdbcType=DECIMAL},
+      </if>
+      <if test="serviceFees != null">
+        service_fees = #{serviceFees,jdbcType=DECIMAL},
+      </if>
+      <if test="isQuality != null">
+        is_quality = #{isQuality,jdbcType=BIT},
+      </if>
+      <if test="isHot != null">
+        is_hot = #{isHot,jdbcType=BIT},
+      </if>
+      <if test="isAgency != null">
+        is_agency = #{isAgency,jdbcType=BIT},
+      </if>
+      <if test="agencyId != null">
+        agency_id = #{agencyId,jdbcType=INTEGER},
+      </if>
+      <if test="isShowAgencyName != null">
+        is_show_agency_name = #{isShowAgencyName,jdbcType=BIT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="loanSchedule != null">
+        loan_schedule = #{loanSchedule,jdbcType=DECIMAL},
+      </if>
+      <if test="hasInvestedAmount != null">
+        has_invested_amount = #{hasInvestedAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="readCount != null">
+        read_count = #{readCount,jdbcType=INTEGER},
+      </if>
+      <if test="allocationSupervisorId != null">
+        allocation_supervisor_id = #{allocationSupervisorId,jdbcType=BIGINT},
+      </if>
+      <if test="manageSupervisorId != null">
+        manage_supervisor_id = #{manageSupervisorId,jdbcType=BIGINT},
+      </if>
+      <if test="auditTime != null">
+        audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditSuggest != null">
+        audit_suggest = #{auditSuggest,jdbcType=VARCHAR},
+      </if>
+      <if test="repaymentTime != null">
+        repayment_time = #{repaymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastRepayTime != null">
+        last_repay_time = #{lastRepayTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isAuditmaticInvestBid != null">
+        is_auditmatic_invest_bid = #{isAuditmaticInvestBid,jdbcType=BIT},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="mark != null">
+        mark = #{mark,jdbcType=VARCHAR},
+      </if>
+      <if test="qrCode != null">
+        qr_code = #{qrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="investRate != null">
+        invest_rate = #{investRate,jdbcType=DOUBLE},
+      </if>
+      <if test="overdueRate != null">
+        overdue_rate = #{overdueRate,jdbcType=DOUBLE},
+      </if>
+      <if test="isRegisterGuarantor != null">
+        is_register_guarantor = #{isRegisterGuarantor,jdbcType=BIT},
+      </if>
+      <if test="applyAmount != null">
+        apply_amount = #{applyAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="client != null">
+        client = #{client,jdbcType=TINYINT},
+      </if>
+      <if test="ipsStatus != null">
+        ips_status = #{ipsStatus,jdbcType=TINYINT},
+      </if>
+      <if test="bidType != null">
+        bid_type = #{bidType,jdbcType=BIT},
+      </if>
+      <if test="releaseSupervisorId != null">
+        release_supervisor_id = #{releaseSupervisorId,jdbcType=BIGINT},
+      </if>
+      <if test="relevanceId != null">
+        relevance_id = #{relevanceId,jdbcType=BIGINT},
+      </if>
+      <if test="collectSupervisorId != null">
+        collect_supervisor_id = #{collectSupervisorId,jdbcType=BIGINT},
+      </if>
+      <if test="beginRunTime != null">
+        begin_run_time = #{beginRunTime,jdbcType=DATE},
+      </if>
+      <if test="runTime != null">
+        run_time = #{runTime,jdbcType=DATE},
+      </if>
+      <if test="runRate != null">
+        run_rate = #{runRate,jdbcType=DOUBLE},
+      </if>
+      <if test="runCredit != null">
+        run_credit = #{runCredit,jdbcType=BIGINT},
+      </if>
+      <if test="runRateTimes != null">
+        run_rate_times = #{runRateTimes,jdbcType=TINYINT},
+      </if>
+      <if test="runCreditTimes != null">
+        run_credit_times = #{runCreditTimes,jdbcType=TINYINT},
+      </if>
+      <if test="times != null">
+        times = #{times,jdbcType=TINYINT},
+      </if>
+      <if test="productIdFlag != null">
+        product_id_flag = #{productIdFlag,jdbcType=BIGINT},
+      </if>
+      <if test="pushStatus != null">
+        push_status = #{pushStatus,jdbcType=TINYINT},
+      </if>
+      <if test="pushErrorMessage != null">
+        push_error_message = #{pushErrorMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="pushTime != null">
+        push_time = #{pushTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="intermediaryAgreement != null">
+        intermediary_agreement = #{intermediaryAgreement,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="pact != null">
+        pact = #{pact,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="guaranteeBid != null">
+        guarantee_bid = #{guaranteeBid,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hzed.easyget.persistence.auto.entity.Bid">
+    update t_bids
+    set user_id = #{userId,jdbcType=BIGINT},
+      time = #{time,jdbcType=TIMESTAMP},
+      mer_bill_no = #{merBillNo,jdbcType=VARCHAR},
+      bid_no = #{bidNo,jdbcType=VARCHAR},
+      ips_bill_no = #{ipsBillNo,jdbcType=VARCHAR},
+      product_id = #{productId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      loan_purpose_id = #{loanPurposeId,jdbcType=INTEGER},
+      repayment_type_id = #{repaymentTypeId,jdbcType=TINYINT},
+      amount = #{amount,jdbcType=DECIMAL},
+      period_unit = #{periodUnit,jdbcType=INTEGER},
+      period = #{period,jdbcType=INTEGER},
+      min_invest_amount = #{minInvestAmount,jdbcType=DECIMAL},
+      average_invest_amount = #{averageInvestAmount,jdbcType=DECIMAL},
+      invest_period = #{investPeriod,jdbcType=INTEGER},
+      invest_expire_time = #{investExpireTime,jdbcType=TIMESTAMP},
+      real_invest_expire_time = #{realInvestExpireTime,jdbcType=TIMESTAMP},
+      apr = #{apr,jdbcType=DECIMAL},
+      bank_account_id = #{bankAccountId,jdbcType=BIGINT},
+      bonus_type = #{bonusType,jdbcType=TINYINT},
+      bonus = #{bonus,jdbcType=DECIMAL},
+      award_scale = #{awardScale,jdbcType=DECIMAL},
+      image_filename = #{imageFilename,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      item = #{item,jdbcType=VARCHAR},
+      is_sec_bid = #{isSecBid,jdbcType=BIT},
+      is_deal_password = #{isDealPassword,jdbcType=BIT},
+      show_type = #{showType,jdbcType=INTEGER},
+      bail = #{bail,jdbcType=DECIMAL},
+      service_fees = #{serviceFees,jdbcType=DECIMAL},
+      is_quality = #{isQuality,jdbcType=BIT},
+      is_hot = #{isHot,jdbcType=BIT},
+      is_agency = #{isAgency,jdbcType=BIT},
+      agency_id = #{agencyId,jdbcType=INTEGER},
+      is_show_agency_name = #{isShowAgencyName,jdbcType=BIT},
+      status = #{status,jdbcType=TINYINT},
+      loan_schedule = #{loanSchedule,jdbcType=DECIMAL},
+      has_invested_amount = #{hasInvestedAmount,jdbcType=DECIMAL},
+      read_count = #{readCount,jdbcType=INTEGER},
+      allocation_supervisor_id = #{allocationSupervisorId,jdbcType=BIGINT},
+      manage_supervisor_id = #{manageSupervisorId,jdbcType=BIGINT},
+      audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      audit_suggest = #{auditSuggest,jdbcType=VARCHAR},
+      repayment_time = #{repaymentTime,jdbcType=TIMESTAMP},
+      last_repay_time = #{lastRepayTime,jdbcType=TIMESTAMP},
+      is_auditmatic_invest_bid = #{isAuditmaticInvestBid,jdbcType=BIT},
+      version = #{version,jdbcType=INTEGER},
+      mark = #{mark,jdbcType=VARCHAR},
+      qr_code = #{qrCode,jdbcType=VARCHAR},
+      invest_rate = #{investRate,jdbcType=DOUBLE},
+      overdue_rate = #{overdueRate,jdbcType=DOUBLE},
+      is_register_guarantor = #{isRegisterGuarantor,jdbcType=BIT},
+      apply_amount = #{applyAmount,jdbcType=DECIMAL},
+      client = #{client,jdbcType=TINYINT},
+      ips_status = #{ipsStatus,jdbcType=TINYINT},
+      bid_type = #{bidType,jdbcType=BIT},
+      release_supervisor_id = #{releaseSupervisorId,jdbcType=BIGINT},
+      relevance_id = #{relevanceId,jdbcType=BIGINT},
+      collect_supervisor_id = #{collectSupervisorId,jdbcType=BIGINT},
+      begin_run_time = #{beginRunTime,jdbcType=DATE},
+      run_time = #{runTime,jdbcType=DATE},
+      run_rate = #{runRate,jdbcType=DOUBLE},
+      run_credit = #{runCredit,jdbcType=BIGINT},
+      run_rate_times = #{runRateTimes,jdbcType=TINYINT},
+      run_credit_times = #{runCreditTimes,jdbcType=TINYINT},
+      times = #{times,jdbcType=TINYINT},
+      product_id_flag = #{productIdFlag,jdbcType=BIGINT},
+      push_status = #{pushStatus,jdbcType=TINYINT},
+      push_error_message = #{pushErrorMessage,jdbcType=VARCHAR},
+      push_time = #{pushTime,jdbcType=TIMESTAMP},
+      intermediary_agreement = #{intermediaryAgreement,jdbcType=LONGVARCHAR},
+      pact = #{pact,jdbcType=LONGVARCHAR},
+      guarantee_bid = #{guaranteeBid,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.Bid">
+    update t_bids
+    set user_id = #{userId,jdbcType=BIGINT},
+      time = #{time,jdbcType=TIMESTAMP},
+      mer_bill_no = #{merBillNo,jdbcType=VARCHAR},
+      bid_no = #{bidNo,jdbcType=VARCHAR},
+      ips_bill_no = #{ipsBillNo,jdbcType=VARCHAR},
+      product_id = #{productId,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      loan_purpose_id = #{loanPurposeId,jdbcType=INTEGER},
+      repayment_type_id = #{repaymentTypeId,jdbcType=TINYINT},
+      amount = #{amount,jdbcType=DECIMAL},
+      period_unit = #{periodUnit,jdbcType=INTEGER},
+      period = #{period,jdbcType=INTEGER},
+      min_invest_amount = #{minInvestAmount,jdbcType=DECIMAL},
+      average_invest_amount = #{averageInvestAmount,jdbcType=DECIMAL},
+      invest_period = #{investPeriod,jdbcType=INTEGER},
+      invest_expire_time = #{investExpireTime,jdbcType=TIMESTAMP},
+      real_invest_expire_time = #{realInvestExpireTime,jdbcType=TIMESTAMP},
+      apr = #{apr,jdbcType=DECIMAL},
+      bank_account_id = #{bankAccountId,jdbcType=BIGINT},
+      bonus_type = #{bonusType,jdbcType=TINYINT},
+      bonus = #{bonus,jdbcType=DECIMAL},
+      award_scale = #{awardScale,jdbcType=DECIMAL},
+      image_filename = #{imageFilename,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      item = #{item,jdbcType=VARCHAR},
+      is_sec_bid = #{isSecBid,jdbcType=BIT},
+      is_deal_password = #{isDealPassword,jdbcType=BIT},
+      show_type = #{showType,jdbcType=INTEGER},
+      bail = #{bail,jdbcType=DECIMAL},
+      service_fees = #{serviceFees,jdbcType=DECIMAL},
+      is_quality = #{isQuality,jdbcType=BIT},
+      is_hot = #{isHot,jdbcType=BIT},
+      is_agency = #{isAgency,jdbcType=BIT},
+      agency_id = #{agencyId,jdbcType=INTEGER},
+      is_show_agency_name = #{isShowAgencyName,jdbcType=BIT},
+      status = #{status,jdbcType=TINYINT},
+      loan_schedule = #{loanSchedule,jdbcType=DECIMAL},
+      has_invested_amount = #{hasInvestedAmount,jdbcType=DECIMAL},
+      read_count = #{readCount,jdbcType=INTEGER},
+      allocation_supervisor_id = #{allocationSupervisorId,jdbcType=BIGINT},
+      manage_supervisor_id = #{manageSupervisorId,jdbcType=BIGINT},
+      audit_time = #{auditTime,jdbcType=TIMESTAMP},
+      audit_suggest = #{auditSuggest,jdbcType=VARCHAR},
+      repayment_time = #{repaymentTime,jdbcType=TIMESTAMP},
+      last_repay_time = #{lastRepayTime,jdbcType=TIMESTAMP},
+      is_auditmatic_invest_bid = #{isAuditmaticInvestBid,jdbcType=BIT},
+      version = #{version,jdbcType=INTEGER},
+      mark = #{mark,jdbcType=VARCHAR},
+      qr_code = #{qrCode,jdbcType=VARCHAR},
+      invest_rate = #{investRate,jdbcType=DOUBLE},
+      overdue_rate = #{overdueRate,jdbcType=DOUBLE},
+      is_register_guarantor = #{isRegisterGuarantor,jdbcType=BIT},
+      apply_amount = #{applyAmount,jdbcType=DECIMAL},
+      client = #{client,jdbcType=TINYINT},
+      ips_status = #{ipsStatus,jdbcType=TINYINT},
+      bid_type = #{bidType,jdbcType=BIT},
+      release_supervisor_id = #{releaseSupervisorId,jdbcType=BIGINT},
+      relevance_id = #{relevanceId,jdbcType=BIGINT},
+      collect_supervisor_id = #{collectSupervisorId,jdbcType=BIGINT},
+      begin_run_time = #{beginRunTime,jdbcType=DATE},
+      run_time = #{runTime,jdbcType=DATE},
+      run_rate = #{runRate,jdbcType=DOUBLE},
+      run_credit = #{runCredit,jdbcType=BIGINT},
+      run_rate_times = #{runRateTimes,jdbcType=TINYINT},
+      run_credit_times = #{runCreditTimes,jdbcType=TINYINT},
+      times = #{times,jdbcType=TINYINT},
+      product_id_flag = #{productIdFlag,jdbcType=BIGINT},
+      push_status = #{pushStatus,jdbcType=TINYINT},
+      push_error_message = #{pushErrorMessage,jdbcType=VARCHAR},
+      push_time = #{pushTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.BidExample" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_bids
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 1
+  </select>
+  <select id="selectOneByExampleSelective" parameterType="map" resultMap="BaseResultMap">
+    select
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    from t_bids
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+    <if test="example.orderByClause != null">
+      order by ${example.orderByClause}
+    </if>
+    limit 1
+  </select>
+  <select id="selectOneByExampleWithBLOBs" parameterType="com.hzed.easyget.persistence.auto.entity.example.BidExample" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_bids
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 1
+  </select>
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    insert into t_bids
+    (user_id, time, mer_bill_no, bid_no, ips_bill_no, product_id, title, loan_purpose_id, 
+      repayment_type_id, amount, period_unit, period, min_invest_amount, average_invest_amount, 
+      invest_period, invest_expire_time, real_invest_expire_time, apr, bank_account_id, 
+      bonus_type, bonus, award_scale, image_filename, description, item, is_sec_bid, 
+      is_deal_password, show_type, bail, service_fees, is_quality, is_hot, is_agency, 
+      agency_id, is_show_agency_name, status, loan_schedule, has_invested_amount, read_count, 
+      allocation_supervisor_id, manage_supervisor_id, audit_time, audit_suggest, repayment_time, 
+      last_repay_time, is_auditmatic_invest_bid, version, mark, qr_code, invest_rate, 
+      overdue_rate, is_register_guarantor, apply_amount, client, ips_status, bid_type, 
+      release_supervisor_id, relevance_id, collect_supervisor_id, begin_run_time, run_time, 
+      run_rate, run_credit, run_rate_times, run_credit_times, times, product_id_flag, 
+      push_status, push_error_message, push_time, intermediary_agreement, pact, guarantee_bid
+      )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.userId,jdbcType=BIGINT}, #{item.time,jdbcType=TIMESTAMP}, #{item.merBillNo,jdbcType=VARCHAR}, 
+        #{item.bidNo,jdbcType=VARCHAR}, #{item.ipsBillNo,jdbcType=VARCHAR}, #{item.productId,jdbcType=INTEGER}, 
+        #{item.title,jdbcType=VARCHAR}, #{item.loanPurposeId,jdbcType=INTEGER}, #{item.repaymentTypeId,jdbcType=TINYINT}, 
+        #{item.amount,jdbcType=DECIMAL}, #{item.periodUnit,jdbcType=INTEGER}, #{item.period,jdbcType=INTEGER}, 
+        #{item.minInvestAmount,jdbcType=DECIMAL}, #{item.averageInvestAmount,jdbcType=DECIMAL}, 
+        #{item.investPeriod,jdbcType=INTEGER}, #{item.investExpireTime,jdbcType=TIMESTAMP}, 
+        #{item.realInvestExpireTime,jdbcType=TIMESTAMP}, #{item.apr,jdbcType=DECIMAL}, 
+        #{item.bankAccountId,jdbcType=BIGINT}, #{item.bonusType,jdbcType=TINYINT}, #{item.bonus,jdbcType=DECIMAL}, 
+        #{item.awardScale,jdbcType=DECIMAL}, #{item.imageFilename,jdbcType=VARCHAR}, #{item.description,jdbcType=VARCHAR}, 
+        #{item.item,jdbcType=VARCHAR}, #{item.isSecBid,jdbcType=BIT}, #{item.isDealPassword,jdbcType=BIT}, 
+        #{item.showType,jdbcType=INTEGER}, #{item.bail,jdbcType=DECIMAL}, #{item.serviceFees,jdbcType=DECIMAL}, 
+        #{item.isQuality,jdbcType=BIT}, #{item.isHot,jdbcType=BIT}, #{item.isAgency,jdbcType=BIT}, 
+        #{item.agencyId,jdbcType=INTEGER}, #{item.isShowAgencyName,jdbcType=BIT}, #{item.status,jdbcType=TINYINT}, 
+        #{item.loanSchedule,jdbcType=DECIMAL}, #{item.hasInvestedAmount,jdbcType=DECIMAL}, 
+        #{item.readCount,jdbcType=INTEGER}, #{item.allocationSupervisorId,jdbcType=BIGINT}, 
+        #{item.manageSupervisorId,jdbcType=BIGINT}, #{item.auditTime,jdbcType=TIMESTAMP}, 
+        #{item.auditSuggest,jdbcType=VARCHAR}, #{item.repaymentTime,jdbcType=TIMESTAMP}, 
+        #{item.lastRepayTime,jdbcType=TIMESTAMP}, #{item.isAuditmaticInvestBid,jdbcType=BIT}, 
+        #{item.version,jdbcType=INTEGER}, #{item.mark,jdbcType=VARCHAR}, #{item.qrCode,jdbcType=VARCHAR}, 
+        #{item.investRate,jdbcType=DOUBLE}, #{item.overdueRate,jdbcType=DOUBLE}, #{item.isRegisterGuarantor,jdbcType=BIT}, 
+        #{item.applyAmount,jdbcType=DECIMAL}, #{item.client,jdbcType=TINYINT}, #{item.ipsStatus,jdbcType=TINYINT}, 
+        #{item.bidType,jdbcType=BIT}, #{item.releaseSupervisorId,jdbcType=BIGINT}, #{item.relevanceId,jdbcType=BIGINT}, 
+        #{item.collectSupervisorId,jdbcType=BIGINT}, #{item.beginRunTime,jdbcType=DATE}, 
+        #{item.runTime,jdbcType=DATE}, #{item.runRate,jdbcType=DOUBLE}, #{item.runCredit,jdbcType=BIGINT}, 
+        #{item.runRateTimes,jdbcType=TINYINT}, #{item.runCreditTimes,jdbcType=TINYINT}, 
+        #{item.times,jdbcType=TINYINT}, #{item.productIdFlag,jdbcType=BIGINT}, #{item.pushStatus,jdbcType=TINYINT}, 
+        #{item.pushErrorMessage,jdbcType=VARCHAR}, #{item.pushTime,jdbcType=TIMESTAMP}, 
+        #{item.intermediaryAgreement,jdbcType=LONGVARCHAR}, #{item.pact,jdbcType=LONGVARCHAR}, 
+        #{item.guaranteeBid,jdbcType=LONGVARCHAR})
+    </foreach>
+  </insert>
+  <insert id="batchInsertSelective" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    insert into t_bids (
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (
+      <foreach collection="selective" item="column" separator=",">
+        <if test="'user_id' == column.value">
+          #{item.userId,jdbcType=BIGINT}
+        </if>
+        <if test="'time' == column.value">
+          #{item.time,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'mer_bill_no' == column.value">
+          #{item.merBillNo,jdbcType=VARCHAR}
+        </if>
+        <if test="'bid_no' == column.value">
+          #{item.bidNo,jdbcType=VARCHAR}
+        </if>
+        <if test="'ips_bill_no' == column.value">
+          #{item.ipsBillNo,jdbcType=VARCHAR}
+        </if>
+        <if test="'product_id' == column.value">
+          #{item.productId,jdbcType=INTEGER}
+        </if>
+        <if test="'title' == column.value">
+          #{item.title,jdbcType=VARCHAR}
+        </if>
+        <if test="'loan_purpose_id' == column.value">
+          #{item.loanPurposeId,jdbcType=INTEGER}
+        </if>
+        <if test="'repayment_type_id' == column.value">
+          #{item.repaymentTypeId,jdbcType=TINYINT}
+        </if>
+        <if test="'amount' == column.value">
+          #{item.amount,jdbcType=DECIMAL}
+        </if>
+        <if test="'period_unit' == column.value">
+          #{item.periodUnit,jdbcType=INTEGER}
+        </if>
+        <if test="'period' == column.value">
+          #{item.period,jdbcType=INTEGER}
+        </if>
+        <if test="'min_invest_amount' == column.value">
+          #{item.minInvestAmount,jdbcType=DECIMAL}
+        </if>
+        <if test="'average_invest_amount' == column.value">
+          #{item.averageInvestAmount,jdbcType=DECIMAL}
+        </if>
+        <if test="'invest_period' == column.value">
+          #{item.investPeriod,jdbcType=INTEGER}
+        </if>
+        <if test="'invest_expire_time' == column.value">
+          #{item.investExpireTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'real_invest_expire_time' == column.value">
+          #{item.realInvestExpireTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'apr' == column.value">
+          #{item.apr,jdbcType=DECIMAL}
+        </if>
+        <if test="'bank_account_id' == column.value">
+          #{item.bankAccountId,jdbcType=BIGINT}
+        </if>
+        <if test="'bonus_type' == column.value">
+          #{item.bonusType,jdbcType=TINYINT}
+        </if>
+        <if test="'bonus' == column.value">
+          #{item.bonus,jdbcType=DECIMAL}
+        </if>
+        <if test="'award_scale' == column.value">
+          #{item.awardScale,jdbcType=DECIMAL}
+        </if>
+        <if test="'image_filename' == column.value">
+          #{item.imageFilename,jdbcType=VARCHAR}
+        </if>
+        <if test="'description' == column.value">
+          #{item.description,jdbcType=VARCHAR}
+        </if>
+        <if test="'item' == column.value">
+          #{item.item,jdbcType=VARCHAR}
+        </if>
+        <if test="'is_sec_bid' == column.value">
+          #{item.isSecBid,jdbcType=BIT}
+        </if>
+        <if test="'is_deal_password' == column.value">
+          #{item.isDealPassword,jdbcType=BIT}
+        </if>
+        <if test="'show_type' == column.value">
+          #{item.showType,jdbcType=INTEGER}
+        </if>
+        <if test="'bail' == column.value">
+          #{item.bail,jdbcType=DECIMAL}
+        </if>
+        <if test="'service_fees' == column.value">
+          #{item.serviceFees,jdbcType=DECIMAL}
+        </if>
+        <if test="'is_quality' == column.value">
+          #{item.isQuality,jdbcType=BIT}
+        </if>
+        <if test="'is_hot' == column.value">
+          #{item.isHot,jdbcType=BIT}
+        </if>
+        <if test="'is_agency' == column.value">
+          #{item.isAgency,jdbcType=BIT}
+        </if>
+        <if test="'agency_id' == column.value">
+          #{item.agencyId,jdbcType=INTEGER}
+        </if>
+        <if test="'is_show_agency_name' == column.value">
+          #{item.isShowAgencyName,jdbcType=BIT}
+        </if>
+        <if test="'status' == column.value">
+          #{item.status,jdbcType=TINYINT}
+        </if>
+        <if test="'loan_schedule' == column.value">
+          #{item.loanSchedule,jdbcType=DECIMAL}
+        </if>
+        <if test="'has_invested_amount' == column.value">
+          #{item.hasInvestedAmount,jdbcType=DECIMAL}
+        </if>
+        <if test="'read_count' == column.value">
+          #{item.readCount,jdbcType=INTEGER}
+        </if>
+        <if test="'allocation_supervisor_id' == column.value">
+          #{item.allocationSupervisorId,jdbcType=BIGINT}
+        </if>
+        <if test="'manage_supervisor_id' == column.value">
+          #{item.manageSupervisorId,jdbcType=BIGINT}
+        </if>
+        <if test="'audit_time' == column.value">
+          #{item.auditTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'audit_suggest' == column.value">
+          #{item.auditSuggest,jdbcType=VARCHAR}
+        </if>
+        <if test="'repayment_time' == column.value">
+          #{item.repaymentTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'last_repay_time' == column.value">
+          #{item.lastRepayTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'is_auditmatic_invest_bid' == column.value">
+          #{item.isAuditmaticInvestBid,jdbcType=BIT}
+        </if>
+        <if test="'version' == column.value">
+          #{item.version,jdbcType=INTEGER}
+        </if>
+        <if test="'mark' == column.value">
+          #{item.mark,jdbcType=VARCHAR}
+        </if>
+        <if test="'qr_code' == column.value">
+          #{item.qrCode,jdbcType=VARCHAR}
+        </if>
+        <if test="'invest_rate' == column.value">
+          #{item.investRate,jdbcType=DOUBLE}
+        </if>
+        <if test="'overdue_rate' == column.value">
+          #{item.overdueRate,jdbcType=DOUBLE}
+        </if>
+        <if test="'is_register_guarantor' == column.value">
+          #{item.isRegisterGuarantor,jdbcType=BIT}
+        </if>
+        <if test="'apply_amount' == column.value">
+          #{item.applyAmount,jdbcType=DECIMAL}
+        </if>
+        <if test="'client' == column.value">
+          #{item.client,jdbcType=TINYINT}
+        </if>
+        <if test="'ips_status' == column.value">
+          #{item.ipsStatus,jdbcType=TINYINT}
+        </if>
+        <if test="'bid_type' == column.value">
+          #{item.bidType,jdbcType=BIT}
+        </if>
+        <if test="'release_supervisor_id' == column.value">
+          #{item.releaseSupervisorId,jdbcType=BIGINT}
+        </if>
+        <if test="'relevance_id' == column.value">
+          #{item.relevanceId,jdbcType=BIGINT}
+        </if>
+        <if test="'collect_supervisor_id' == column.value">
+          #{item.collectSupervisorId,jdbcType=BIGINT}
+        </if>
+        <if test="'begin_run_time' == column.value">
+          #{item.beginRunTime,jdbcType=DATE}
+        </if>
+        <if test="'run_time' == column.value">
+          #{item.runTime,jdbcType=DATE}
+        </if>
+        <if test="'run_rate' == column.value">
+          #{item.runRate,jdbcType=DOUBLE}
+        </if>
+        <if test="'run_credit' == column.value">
+          #{item.runCredit,jdbcType=BIGINT}
+        </if>
+        <if test="'run_rate_times' == column.value">
+          #{item.runRateTimes,jdbcType=TINYINT}
+        </if>
+        <if test="'run_credit_times' == column.value">
+          #{item.runCreditTimes,jdbcType=TINYINT}
+        </if>
+        <if test="'times' == column.value">
+          #{item.times,jdbcType=TINYINT}
+        </if>
+        <if test="'product_id_flag' == column.value">
+          #{item.productIdFlag,jdbcType=BIGINT}
+        </if>
+        <if test="'push_status' == column.value">
+          #{item.pushStatus,jdbcType=TINYINT}
+        </if>
+        <if test="'push_error_message' == column.value">
+          #{item.pushErrorMessage,jdbcType=VARCHAR}
+        </if>
+        <if test="'push_time' == column.value">
+          #{item.pushTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'intermediary_agreement' == column.value">
+          #{item.intermediaryAgreement,jdbcType=LONGVARCHAR}
+        </if>
+        <if test="'pact' == column.value">
+          #{item.pact,jdbcType=LONGVARCHAR}
+        </if>
+        <if test="'guarantee_bid' == column.value">
+          #{item.guaranteeBid,jdbcType=LONGVARCHAR}
+        </if>
+      </foreach>
+      )
+    </foreach>
+  </insert>
+</mapper>

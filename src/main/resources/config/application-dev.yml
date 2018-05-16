@@ -10,8 +10,7 @@ spring:
 # 日志文件配置
 logging:
   logHome: D:/logs/safekeep-report # 日志路径
-  appNameCN: springBoot整合项目 # 应用中文名
-  devNameCN: 开发环境 # 环境中文名
+  envNameCN: 开发环境 # 环境中文名
   emailTo: guichang@hzed.com # 邮件接收者，多个用逗号隔开
 
 #======================================= 系统参数 开始 =======================================#

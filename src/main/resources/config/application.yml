@@ -3,7 +3,7 @@ server.port: 8150
 
 spring:
   profiles.active: dev # 环境
-  application.name: springboot-demo
+  application.name: easy-get
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
 #    url: jdbc:mysql://10.10.30.30:3306/hzed_test2?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
@@ -14,8 +14,8 @@ spring:
 # 日志文件配置
 logging:
   logHome: D:/logs/safekeep-report # 日志路径
-  appNameCN: springBoot整合项目 # 应用中文名
-  devNameCN: 开发环境 # 环境中文名
+  appNameCN: 印尼借贷项目 # 应用中文名
+  envNameCN: 开发环境 # 环境中文名
   emailTo: guichang@hzed.com # 邮件接收者，多个用逗号隔开
 
 #======================================= 系统参数 开始 =======================================#

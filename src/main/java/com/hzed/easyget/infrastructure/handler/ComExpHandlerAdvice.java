@@ -21,6 +21,7 @@ public class ComExpHandlerAdvice {
     @ExceptionHandler(Exception.class)
     public Response handler(Exception ex, HandlerMethod handler) {
 
+        // 模块名
         String moduleLog = "";
         ModuleLog moduleDetailLog = handler.getMethodAnnotation(ModuleLog.class);
         if (moduleDetailLog != null) {

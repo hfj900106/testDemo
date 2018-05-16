@@ -6,8 +6,8 @@ spring:
   application.name: easy-get
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://10.10.30.30:3306/hzed_test2?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
-    url: jdbc:mysql://119.23.156.86:4657/sp2p_hzcf?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
+    url: jdbc:mysql://10.10.30.30:3306/hzed_test2?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
+#    url: jdbc:mysql://119.23.156.86:4657/sp2p_hzcf?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
     username: query
     password: Dikdk251df5sdEFD2DFDe # TODO 密码加密 https://blog.csdn.net/linhongwangok/article/details/79076178;https://github.com/ulisesbocchio/jasypt-spring-boot
 # <!--<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://119.23.156.9:4657/sp2p_hzcf" userId="query" password="Dikdk251df5sdEFD2DFDe"/>-->

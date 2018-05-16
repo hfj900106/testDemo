@@ -21,7 +21,7 @@ public class WarnException extends BaseBizException {
      * @param codeEnum 错误码
      */
     public WarnException(BizCodeEnum codeEnum) {
-        super(codeEnum.getCode(), codeEnum.getMsg());
+        super(codeEnum.getCode(), codeEnum.getMessage());
     }
 
     /**
@@ -31,7 +31,7 @@ public class WarnException extends BaseBizException {
      * @param extraMsg 错误描述
      */
     public WarnException(BizCodeEnum codeEnum, String extraMsg) {
-        super(codeEnum.getCode(), codeEnum.getMsg(), extraMsg);
+        super(codeEnum.getCode(), codeEnum.getMessage(), extraMsg);
     }
 
     /**
@@ -45,7 +45,7 @@ public class WarnException extends BaseBizException {
     }
 
     public WarnException(BizCodeEnum codeEnum, Throwable cause, String extraMsg) {
-        super(codeEnum.getCode(), codeEnum.getMsg(), cause, extraMsg);
+        super(codeEnum.getCode(), codeEnum.getMessage(), cause, extraMsg);
     }
 
 

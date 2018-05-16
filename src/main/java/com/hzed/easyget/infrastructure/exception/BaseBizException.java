@@ -3,6 +3,11 @@ package com.hzed.easyget.infrastructure.exception;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * 异常基本类
+ * @author guichang
+ */
+
 @Data
 public class BaseBizException extends RuntimeException {
 

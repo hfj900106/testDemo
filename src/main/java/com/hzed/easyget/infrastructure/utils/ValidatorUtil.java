@@ -10,6 +10,10 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
+/**
+ * 参数校验
+ * @author guichang
+ */
 @Slf4j
 public class ValidatorUtil {
 

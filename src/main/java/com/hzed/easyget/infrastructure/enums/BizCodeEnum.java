@@ -4,6 +4,8 @@ import lombok.Getter;
 
 /**
  * 错误枚举
+ *
+ * @author guichang
  */
 @Getter
 public enum BizCodeEnum {
@@ -27,10 +29,10 @@ public enum BizCodeEnum {
     /**
      * 错误信息
      */
-    private final String msg;
+    private final String message;
 
-    BizCodeEnum(String code, String msg) {
+    BizCodeEnum(String code, String message) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
     }
 }

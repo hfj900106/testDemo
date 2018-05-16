@@ -3,6 +3,9 @@ package com.hzed.easyget.infrastructure.model;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import lombok.Data;
 
+/**
+ * @author guichang
+ */
 @Data
 public class Response<T> {
     private String code;
@@ -23,7 +26,7 @@ public class Response<T> {
     }
 
     public static <T> Response getSuccessResponse(T data) {
-        return new Response(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMsg(), data);
+        return new Response(BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.SUCCESS.getMessage(), data);
     }
 
     public static <T> Response getSuccessResponse(T data, String message) {
@@ -35,7 +38,7 @@ public class Response<T> {
     }
 
     public static Response getFailResponse() {
-        Response response = new Response(BizCodeEnum.UNKNOWN_EXCEPTION.getCode(), BizCodeEnum.UNKNOWN_EXCEPTION.getMsg());
+        Response response = new Response(BizCodeEnum.UNKNOWN_EXCEPTION.getCode(), BizCodeEnum.UNKNOWN_EXCEPTION.getMessage());
         return response;
     }
 

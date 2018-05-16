@@ -3,6 +3,12 @@ package com.hzed.easyget.infrastructure.exception;
 
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 
+/**
+ * 业务异常，对外
+ *
+ * @author guichang
+ * @since 2018/05/16
+ */
 public class ComBizException extends BaseBizException {
 
     /**
@@ -11,7 +17,7 @@ public class ComBizException extends BaseBizException {
      * @param codeEnum 错误码
      */
     public ComBizException(BizCodeEnum codeEnum) {
-        super(codeEnum.getCode(),codeEnum.getMsg());
+        super(codeEnum.getCode(), codeEnum.getMessage());
     }
 
     /**
@@ -21,7 +27,7 @@ public class ComBizException extends BaseBizException {
      * @param extraMsg 错误描述
      */
     public ComBizException(BizCodeEnum codeEnum, String extraMsg) {
-        super(codeEnum.getCode(),codeEnum.getMsg(), extraMsg);
+        super(codeEnum.getCode(), codeEnum.getMessage(), extraMsg);
     }
 
     /**
@@ -34,7 +40,7 @@ public class ComBizException extends BaseBizException {
         super(codeEnum, cause);
     }
 
-    public ComBizException( String cause) {
+    public ComBizException(String cause) {
         super(BizCodeEnum.SERVICE_EXCEPTION.getCode(), cause);
     }
 

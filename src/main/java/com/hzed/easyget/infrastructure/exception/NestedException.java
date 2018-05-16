@@ -3,7 +3,7 @@ package com.hzed.easyget.infrastructure.exception;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 
 /**
- * 内部异常
+ * 内部异常 不对外
  *
  * @author guichang
  * @since 2017/11/18
@@ -20,7 +20,7 @@ public class NestedException extends BaseBizException {
      * @param codeEnum 错误码
      */
     public NestedException(BizCodeEnum codeEnum) {
-        super(codeEnum.getCode(), codeEnum.getMsg());
+        super(codeEnum.getCode(), codeEnum.getMessage());
     }
 
     /**
@@ -30,7 +30,7 @@ public class NestedException extends BaseBizException {
      * @param extraMsg 错误描述
      */
     public NestedException(BizCodeEnum codeEnum, String extraMsg) {
-        super(codeEnum.getCode(), codeEnum.getMsg(), extraMsg);
+        super(codeEnum.getCode(), codeEnum.getMessage(), extraMsg);
     }
 
     /**
@@ -44,7 +44,7 @@ public class NestedException extends BaseBizException {
     }
 
     public NestedException(BizCodeEnum codeEnum, Throwable cause, String extraMsg) {
-        super(codeEnum.getCode(), codeEnum.getMsg(), cause, extraMsg);
+        super(codeEnum.getCode(), codeEnum.getMessage(), cause, extraMsg);
     }
 
 

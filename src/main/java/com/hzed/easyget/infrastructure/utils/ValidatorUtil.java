@@ -25,7 +25,7 @@ public class ValidatorUtil {
 
     public static <T> void validateWithNull(T t) {
         // 空校验
-        checkComBizExcep(t == null, BizCodeEnum.REQUEST_PARAM_ILLEGAL);
+        checkComBizExcep(t == null, BizCodeEnum.ILLEGAL_PARAM);
         validate(t);
     }
 
@@ -41,7 +41,7 @@ public class ValidatorUtil {
                 errors.append(constraintViolation.getMessage() + (++i == size ? "" : "、"));
             }
             log.warn("==========参数验证出错！==========={}", errors);
-            throw new ComBizException(BizCodeEnum.REQUEST_PARAM_ILLEGAL, errors.toString());
+            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, errors.toString());
         }
     }
 }

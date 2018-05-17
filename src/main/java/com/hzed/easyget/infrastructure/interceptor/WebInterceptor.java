@@ -2,7 +2,13 @@ package com.hzed.easyget.infrastructure.interceptor;
 
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.consts.LogConsts;
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.model.GlobalHeadr;
+import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.utils.JwtUtil;
+import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -30,16 +36,37 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         // 日志加入trace
         MDC.put(LogConsts.TRACE, UUID.randomUUID().toString().replaceAll("-", "").substring(3, 20));
 
-        // 方法拦截
-        HandlerMethod mHandler = (HandlerMethod) handler;
+        // header中一些必要参数校验
+        GlobalHeadr globalHead = RequestUtil.getGlobalHead();
 
-        // 忽略Token验证
-        TokenIgnore tokenIgnore = mHandler.getMethodAnnotation(TokenIgnore.class);
-        if(tokenIgnore == null) {
-            return true;
+        if (StringUtils.isBlank(globalHead.getAppKey())) {
+            RequestUtil.render(BizCodeEnum.ILLEGAL_APPKEY);
+            return false;
+        }
+        if (StringUtils.isBlank(globalHead.getPlatform())) {
+            RequestUtil.render(BizCodeEnum.ILLEGAL_PLATFORM);
+            return false;
+        }
+        if (StringUtils.isBlank(globalHead.getVersion())) {
+            RequestUtil.render(BizCodeEnum.ILLEGAL_VERSION);
+            return false;
         }
 
+        // token验证
+        TokenIgnore tokenIgnore = ((HandlerMethod) handler).getMethodAnnotation(TokenIgnore.class);
+        if(tokenIgnore == null) {
+            String token = globalHead.getToken();
+            if (StringUtils.isBlank(token)) {
+                RequestUtil.render(BizCodeEnum.ILLEGAL_TOKEN);
+                return false;
+            }
 
+            GlobalUser globalUser = JwtUtil.verify(token, GlobalUser.class);
+            if(globalUser == null) {
+                RequestUtil.render(BizCodeEnum.ILLEGAL_TOKEN);
+                return false;
+            }
+        }
 
         return true;
     }

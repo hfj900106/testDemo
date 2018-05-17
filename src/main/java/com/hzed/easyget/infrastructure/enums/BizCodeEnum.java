@@ -18,8 +18,13 @@ public enum BizCodeEnum {
     SERVICE_EXCEPTION("9998", "内部服务处理异常"),
     INVALID_REQUEST("9997", "无效的请求"),
 
-    //1-请求业务校验
-    REQUEST_PARAM_ILLEGAL("1001", "请求参数非法");
+
+    // 1-请求业务校验
+    ILLEGAL_PARAM("1000", "请求参数非法"),
+    ILLEGAL_APPKEY("1001", "无效的appkey"),
+    ILLEGAL_PLATFORM("1002", "无效的platform"),
+    ILLEGAL_VERSION("1003", "无效的version"),
+    ILLEGAL_TOKEN("1004", "无效的token");
 
     /**
      * 错误码

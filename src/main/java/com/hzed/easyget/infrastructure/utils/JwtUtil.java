@@ -7,7 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.common.collect.Maps;
-import com.hzed.easyget.infrastructure.model.LoginUser;
+import com.hzed.easyget.infrastructure.model.GlobalUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -62,7 +62,7 @@ public class JwtUtil {
     }
 
     public static void main(String[] args) {
-        LoginUser user = new LoginUser();
+        GlobalUser user = new GlobalUser();
         user.setMobile("19919878790");
         user.setUserId(1233333L);
 
@@ -70,7 +70,7 @@ public class JwtUtil {
         System.out.println(token);
 
 
-        user = verify(token, LoginUser.class);
+        user = verify(token, GlobalUser.class);
         System.out.println(JSON.toJSONString(user));
 
     }

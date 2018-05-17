@@ -1,9 +1,5 @@
 package com.hzed.easyget.infrastructure.consts;
 
-import com.google.common.collect.Maps;
-
-import java.util.Map;
-
 /**
  * 公共常量
  *
@@ -12,5 +8,8 @@ import java.util.Map;
  */
 
 public class ComConsts {
-
+    public static final String APPKEY = "appKey";
+    public static final String PLATFORM = "platform";
+    public static final String TOKEN = "token";
+    public static final String VERSION = "version";
 }

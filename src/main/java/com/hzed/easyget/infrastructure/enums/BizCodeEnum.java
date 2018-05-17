@@ -11,7 +11,7 @@ import lombok.Getter;
 public enum BizCodeEnum {
 
     // 0-成功
-    SUCCESS("0000", "受理成功"),
+    SUCCESS("0000", "处理成功"),
 
     // 9-系统服务异常
     UNKNOWN_EXCEPTION("9999", "系统未知错误"),

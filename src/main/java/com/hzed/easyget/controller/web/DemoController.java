@@ -7,7 +7,6 @@ import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.model.Response;
-import com.hzed.easyget.persistence.auto.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,12 +33,10 @@ public class DemoController {
     @TokenIgnore
     @ModuleFunc("查询用户")
     @PostMapping("/user")
-    public Response<User> user(@RequestBody UserRequest request) {
+    public Response<UserResponse> user(@RequestBody UserRequest request) {
         UserResponse response = demoService.getUserByMobileAndIdcard(request);
         return Response.getSuccessResponse(response);
     }
-
-
 
 
 }

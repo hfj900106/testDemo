@@ -8,7 +8,5 @@ package com.hzed.easyget.infrastructure.consts;
  */
 
 public class RedisConsts {
-    public static final String MODULE_NAME = "moduleName";
-    public static final String TRACE = "trace";
 
 }

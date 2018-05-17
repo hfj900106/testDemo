@@ -36,10 +36,10 @@ public class JwtUtil {
     public static <T> String createToken(T t) {
         try {
             Map<String, Object> map = Maps.newHashMap();
-            Date ExpiresAtDate = DateUtils.addDays(new Date(), EXPIRE_DAYS);
+            Date expireDate = DateUtils.addDays(new Date(), EXPIRE_DAYS);
             map.put(ALG, HS256);
             map.put(TYP, TYP_JWT);
-            return JWT.create().withHeader(map).withClaim(PAYLOAD, JSON.toJSONString(t)).withExpiresAt(ExpiresAtDate).sign(Algorithm.HMAC256(SECRET));
+            return JWT.create().withHeader(map).withClaim(PAYLOAD, JSON.toJSONString(t)).withExpiresAt(expireDate).sign(Algorithm.HMAC256(SECRET));
         } catch (Exception e) {
             log.error("创建token失败，用户信息：{}", JSON.toJSONString(t), e);
             return null;

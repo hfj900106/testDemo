@@ -1,7 +1,7 @@
 package com.hzed.easyget.infrastructure.handler;
 
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
-import com.hzed.easyget.infrastructure.annotation.ModuleLog;
+import com.hzed.easyget.infrastructure.annotation.ModuleAnno;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.NestedException;
 import com.hzed.easyget.infrastructure.model.Response;
@@ -23,7 +23,7 @@ public class ComExpHandlerAdvice {
 
         // 模块名
         String moduleLog = "";
-        ModuleLog moduleDetailLog = handler.getMethodAnnotation(ModuleLog.class);
+        ModuleAnno moduleDetailLog = handler.getMethodAnnotation(ModuleAnno.class);
         if (moduleDetailLog != null) {
             moduleLog = moduleDetailLog.value();
         }

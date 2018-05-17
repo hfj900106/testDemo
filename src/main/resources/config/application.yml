@@ -1,19 +1,20 @@
 # 应用端口号
 server.port: 8150
 
+# TODO 密码加密 https://blog.csdn.net/linhongwangok/article/details/79076178;https://github.com/ulisesbocchio/jasypt-spring-boot
 spring:
   profiles.active: dev # 环境
   application.name: easy-get
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://10.10.30.30:3306/hzed_test2?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
-#    url: jdbc:mysql://119.23.156.86:4657/sp2p_hzcf?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
-    username: query
-    password: Dikdk251df5sdEFD2DFDe # TODO 密码加密 https://blog.csdn.net/linhongwangok/article/details/79076178;https://github.com/ulisesbocchio/jasypt-spring-boot
-# <!--<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://119.23.156.9:4657/sp2p_hzcf" userId="query" password="Dikdk251df5sdEFD2DFDe"/>-->
+    username: tester2
+    password: asdeikdiekal9j3j
+
 # 日志文件配置
 logging:
-  logHome: D:/logs/safekeep-report # 日志路径
+  config: classpath:config/logback-spring.xml # 配置文件路径
+  logHome: D:/logs/easy-get # 日志路径
   appNameCN: 印尼借贷项目 # 应用中文名
   envNameCN: 开发环境 # 环境中文名
   emailTo: guichang@hzed.com # 邮件接收者，多个用逗号隔开

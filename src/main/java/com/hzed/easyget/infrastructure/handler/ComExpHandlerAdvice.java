@@ -1,6 +1,7 @@
 package com.hzed.easyget.infrastructure.handler;
 
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.NestedException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
@@ -39,6 +40,13 @@ public class ComExpHandlerAdvice {
             resp.setCode(nEx.getErrorCode());
             resp.setMessage(nEx.getSerializeMsg());
         } else {
+            // 单独处理不传请求参数的情况
+            String required_request_body_is_missing = "Required request body is missing";
+            if (ex.toString().indexOf(required_request_body_is_missing) > 0) {
+                resp.setCode(BizCodeEnum.ILLEGAL_PARAM.getCode());
+                resp.setMessage(BizCodeEnum.ILLEGAL_PARAM.getMessage());
+            }
+
             log.error("其他异常：", ex);
         }
         return resp;

@@ -1,7 +1,7 @@
 package com.hzed.easyget.infrastructure.interceptor;
 
 import com.alibaba.fastjson.JSON;
-import com.hzed.easyget.infrastructure.annotation.ModuleAnno;
+import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.consts.LogConsts;
 import com.hzed.easyget.infrastructure.utils.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class MethodAspect {
 
     @Around("@annotation(moduleAnno)")
-    public Object aroundMethod(ProceedingJoinPoint joinPoint, ModuleAnno moduleAnno) throws Throwable {
+    public Object aroundMethod(ProceedingJoinPoint joinPoint, ModuleFunc moduleAnno) throws Throwable {
         MDC.put(LogConsts.MODULE_NAME, moduleAnno.value());
 
         // 打印请求和返回参数的标志

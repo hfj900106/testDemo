@@ -4,7 +4,7 @@ import com.hzed.easyget.application.service.DemoService;
 import com.hzed.easyget.controller.model.UserRequest;
 import com.hzed.easyget.controller.model.UserResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
-import com.hzed.easyget.infrastructure.annotation.ModuleAnno;
+import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.persistence.auto.entity.User;
@@ -32,7 +32,7 @@ public class DemoController {
     private DemoService demoService;
 
     @TokenIgnore
-    @ModuleAnno("查询用户")
+    @ModuleFunc("查询用户")
     @PostMapping("/user")
     public Response<User> user(@RequestBody UserRequest request) {
         UserResponse response = demoService.getUserByMobileAndIdcard(request);

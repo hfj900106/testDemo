@@ -3,6 +3,7 @@ package com.hzed.easyget.infrastructure.interceptor;
 import com.alibaba.fastjson.JSON;
 import com.hzed.easyget.infrastructure.annotation.ModuleAnno;
 import com.hzed.easyget.infrastructure.consts.LogConsts;
+import com.hzed.easyget.infrastructure.utils.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -26,14 +27,26 @@ public class MethodAspect {
         MDC.put(LogConsts.MODULE_NAME, moduleAnno.value());
 
         // 打印请求和返回参数的标志
-        boolean printParameter = moduleAnno.isPrintParameter();
+        boolean printParameter = moduleAnno.isParameterPrint();
+        // 校验请求参数的标志
+        boolean parameterValidate = moduleAnno.isParameterValidate();
+
+        // 请求参数
+        Object[] args = joinPoint.getArgs();
 
         // 打印请求报文
         if (printParameter) {
-            Object[] args = joinPoint.getArgs();
             log.info("请求报文：{}", JSON.toJSONString(args.length == 0 ? "无请求参数" : (args.length == 1 ? args[0] : args)));
         }
 
+        // 校验请求参数
+        if (parameterValidate) {
+            for (Object obj : args) {
+                ValidatorUtil.validateWithNull(obj);
+            }
+        }
+
+        // 执行请求
         Object result = joinPoint.proceed();
 
         // 打印返回报文

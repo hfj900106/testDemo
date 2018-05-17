@@ -12,8 +12,19 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ModuleAnno {
-    // 模块名
+    /**
+     * 模块名
+     */
     String value() default "未命名模块";
-    // 打印请求和返回参数的标志 默认打印
-    boolean isPrintParameter() default true;
+
+    /**
+     * 打印请求和返回参数的标志 默认true-打印
+     */
+    boolean isParameterPrint() default true;
+
+    /**
+     * 校验请求参数的标志 默认true-校验
+     */
+    boolean isParameterValidate() default true;
+
 }

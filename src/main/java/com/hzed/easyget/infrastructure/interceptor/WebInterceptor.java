@@ -20,6 +20,7 @@ import java.util.UUID;
 
 /**
  * 统一请求拦截
+ *
  * @author guichang
  */
 @Slf4j
@@ -54,7 +55,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 
         // token验证
         TokenIgnore tokenIgnore = ((HandlerMethod) handler).getMethodAnnotation(TokenIgnore.class);
-        if(tokenIgnore == null) {
+        if (tokenIgnore == null) {
             String token = globalHead.getToken();
             if (StringUtils.isBlank(token)) {
                 RequestUtil.render(BizCodeEnum.ILLEGAL_TOKEN);
@@ -62,7 +63,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
             }
 
             GlobalUser globalUser = JwtUtil.verify(token, GlobalUser.class);
-            if(globalUser == null) {
+            if (globalUser == null) {
                 RequestUtil.render(BizCodeEnum.ILLEGAL_TOKEN);
                 return false;
             }

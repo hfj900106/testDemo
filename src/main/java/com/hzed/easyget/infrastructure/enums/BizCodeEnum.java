@@ -21,7 +21,7 @@ public enum BizCodeEnum {
 
     // 1-请求业务校验
     ILLEGAL_PARAM("1000", "请求参数非法"),
-    ILLEGAL_APPKEY("1001", "无效的appkey"),
+    ILLEGAL_APPKEY("1001", "无效的appKey"),
     ILLEGAL_PLATFORM("1002", "无效的platform"),
     ILLEGAL_VERSION("1003", "无效的version"),
     ILLEGAL_TOKEN("1004", "无效的token");

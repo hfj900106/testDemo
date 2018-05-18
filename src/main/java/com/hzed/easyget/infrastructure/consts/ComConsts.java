@@ -8,6 +8,7 @@ package com.hzed.easyget.infrastructure.consts;
  */
 
 public class ComConsts {
+    public static final String I18N = "i18n";
     public static final String APPKEY = "appKey";
     public static final String PLATFORM = "platform";
     public static final String TOKEN = "token";

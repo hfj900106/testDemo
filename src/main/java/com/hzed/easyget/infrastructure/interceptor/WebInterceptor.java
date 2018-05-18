@@ -52,6 +52,10 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
             RequestUtil.render(BizCodeEnum.ILLEGAL_VERSION);
             return false;
         }
+        if (StringUtils.isBlank(globalHead.getI18n())) {
+            RequestUtil.render(BizCodeEnum.ILLEGAL_I18N);
+            return false;
+        }
 
         // token验证
         TokenIgnore tokenIgnore = ((HandlerMethod) handler).getMethodAnnotation(TokenIgnore.class);

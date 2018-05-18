@@ -24,7 +24,8 @@ public enum BizCodeEnum {
     ILLEGAL_APPKEY("1001", "无效的appKey"),
     ILLEGAL_PLATFORM("1002", "无效的platform"),
     ILLEGAL_VERSION("1003", "无效的version"),
-    ILLEGAL_TOKEN("1004", "无效的token");
+    ILLEGAL_TOKEN("1004", "无效的token"),
+    ILLEGAL_I18N("1005", "无效的i18n");
 
     /**
      * 错误码

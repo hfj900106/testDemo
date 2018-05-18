@@ -43,6 +43,7 @@ public class RequestUtil {
         header.setPlatform(request.getHeader(ComConsts.PLATFORM));
         header.setToken(request.getHeader(ComConsts.TOKEN));
         header.setVersion(request.getHeader(ComConsts.VERSION));
+        header.setI18n(request.getHeader(ComConsts.I18N));
         return header;
     }
 

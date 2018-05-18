@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Data
 public class GlobalHeadr {
+    private String i18n;
     private String appKey;
     private String platform;
     private String token;

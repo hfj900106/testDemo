@@ -22,14 +22,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class MethodAspect {
 
-    @Around("@annotation(moduleAnno)")
-    public Object aroundMethod(ProceedingJoinPoint joinPoint, ModuleFunc moduleAnno) throws Throwable {
-        MDC.put(LogConsts.MODULE_NAME, moduleAnno.value());
+    @Around("@annotation(moduleFunc)")
+    public Object aroundMethod(ProceedingJoinPoint joinPoint, ModuleFunc moduleFunc) throws Throwable {
+        MDC.put(LogConsts.MODULE_NAME, moduleFunc.value());
 
         // 打印请求和返回参数的标志
-        boolean printParameter = moduleAnno.isParameterPrint();
+        boolean printParameter = moduleFunc.isParameterPrint();
         // 校验请求参数的标志
-        boolean parameterValidate = moduleAnno.isParameterValidate();
+        boolean parameterValidate = moduleFunc.isParameterValidate();
 
         // 请求参数
         Object[] args = joinPoint.getArgs();

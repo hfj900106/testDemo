@@ -1,7 +1,7 @@
 package com.hzed.easyget.persistence.auto.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class SmsLog implements Serializable {
     /**
@@ -24,7 +24,7 @@ public class SmsLog implements Serializable {
 
     /**
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      */
@@ -32,7 +32,7 @@ public class SmsLog implements Serializable {
 
     /**
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 备注 如：登录时发送验证码
@@ -73,11 +73,11 @@ public class SmsLog implements Serializable {
         this.createBy = createBy;
     }
 
-    public Date getCreateTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
@@ -89,11 +89,11 @@ public class SmsLog implements Serializable {
         this.updateBy = updateBy;
     }
 
-    public Date getUpdateTime() {
+    public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -155,7 +155,7 @@ public class SmsLog implements Serializable {
             return this;
         }
 
-        public Builder createTime(Date createTime) {
+        public Builder createTime(LocalDateTime createTime) {
             obj.setCreateTime(createTime);
             return this;
         }
@@ -165,7 +165,7 @@ public class SmsLog implements Serializable {
             return this;
         }
 
-        public Builder updateTime(Date updateTime) {
+        public Builder updateTime(LocalDateTime updateTime) {
             obj.setUpdateTime(updateTime);
             return this;
         }

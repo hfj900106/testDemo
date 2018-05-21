@@ -56,30 +56,16 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <!--<table tableName="t_bills" domainObjectName="Bill">-->
-            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-            <!--<columnOverride column="repayment_interest" javaType="java.math.BigDecimal" jdbcType="DOUBLE"/>-->
-        <!--</table>-->
+        <table tableName="t_sms_log" domainObjectName="SmsLog" >
+            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+            <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        </table>
 
-        <!--<table tableName="t_sequences" domainObjectName="Sequence">-->
-        <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-        <!--</table>-->
-        <!--<table tableName="t_users" domainObjectName="User">-->
-            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-        <!--</table>-->
-        <!--<table tableName="t_bids" domainObjectName="Bid">-->
-            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-        <!--</table>-->
-        <!--<table tableName="t_products" domainObjectName="Product">-->
-        <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-        <!--</table>-->
-        <!--<table tableName="t_transaction_advance" domainObjectName="TransactionAdvance">-->
-        <!--<columnOverride column="amount" javaType="java.math.BigDecimal" jdbcType="DECIMAL"/>-->
-        <!--<columnOverride column="corpus" javaType="java.math.BigDecimal" jdbcType="DECIMAL"/>-->
-        <!--<columnOverride column="interest" javaType="java.math.BigDecimal" jdbcType="DECIMAL"/>-->
-        <!--</table>-->
-        <!--<table tableName="t_safekeep_report" domainObjectName="SafekeepReport"/>-->
-        <table tableName="t_sms_log" domainObjectName="SmsLog" />
+        <table tableName="t_user" domainObjectName="User" >
+            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+            <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+            <columnOverride column="last_login_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        </table>
 
     </context>
 </generatorConfiguration>

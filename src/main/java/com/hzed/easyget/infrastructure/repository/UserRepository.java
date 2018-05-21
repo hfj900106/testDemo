@@ -28,4 +28,7 @@ public class UserRepository {
         return ObjUtil.isEmpty(users) ? null : users.get(0);
     }
 
+    public void updateLastLoginTime(User user) {
+        userMapper.updateByPrimaryKeySelective(user);
+    }
 }

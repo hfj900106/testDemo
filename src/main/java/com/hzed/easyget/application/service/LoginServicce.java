@@ -5,10 +5,13 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
+import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.persistence.auto.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -35,6 +38,11 @@ public class LoginServicce {
         if(!SmsCodeService.cheSmsCode(mobile,smsCode)){
             throw new WarnException(BizCodeEnum.ERROR_SMSCODE);
         }
+        //更新用户最后登录时间
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        String strDate=sdf.format(new Date());
+        user.setLastLoginTime(DateUtil.strToLocalDateTime(strDate));
+        userRepository.updateLastLoginTime(user);
         return Response.getSuccessResponse();
     }
 }

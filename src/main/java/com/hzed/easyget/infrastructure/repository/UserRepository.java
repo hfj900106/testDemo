@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserRepository {
+
     @Autowired
     private UserMapper userMapper;
 
@@ -26,5 +27,10 @@ public class UserRepository {
 
     public void updateLastLoginTime(User user) {
         userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    public void insert(User user) {
+
+        userMapper.insertSelective(user);
     }
 }

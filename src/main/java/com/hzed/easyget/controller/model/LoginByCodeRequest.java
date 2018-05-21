@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @since 2018/5/21
  */
 @Data
-public class LoginBycodeRequest {
+public class LoginByCodeRequest {
     @NotBlank(message = "手机号不能为空")
     private String mobile;
     @NotBlank(message = "短信验证码不能为空")

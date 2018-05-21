@@ -2,9 +2,15 @@ package com.hzed.easyget.controller.web;
 
 
 import com.hzed.easyget.application.service.LoginServicce;
+import com.hzed.easyget.application.service.LoginService;
 import com.hzed.easyget.controller.model.LoginBycodeRequest;
+<<<<<<< HEAD
 import com.hzed.easyget.controller.model.SmsCodRequest;
 import com.hzed.easyget.controller.model.SmsCodResponse;
+=======
+import com.hzed.easyget.application.service.LoginService;
+import com.hzed.easyget.controller.model.LoginByCodeRequest;
+>>>>>>> f2953eedcd28ca46782435d5581d0e1bfa8ee388
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
@@ -32,11 +38,12 @@ public class LoginController {
 
 
     @Autowired
-    private LoginServicce loginServicce;
+    private LoginService loginService;
 
     @TokenIgnore
     @ModuleFunc("发送短信验证码")
     @PostMapping("/sendSmsCode")
+<<<<<<< HEAD
     public Response<SmsCodResponse> sendSmsCode(@RequestBody SmsCodRequest request) {
 
         //获取短信验证码
@@ -46,6 +53,14 @@ public class LoginController {
         //保存到Redis
 
         return Response.getSuccessResponse(smsCodResponse);
+=======
+    public static void sendSmsCode(String mobile) {
+
+
+        loginService.sendSmsCode(mobile);
+        Response.getSuccessResponse();
+        return;
+>>>>>>> f2953eedcd28ca46782435d5581d0e1bfa8ee388
     }
 
     /**
@@ -56,9 +71,9 @@ public class LoginController {
     @TokenIgnore
     @ModuleFunc("验证码登录")
     @PostMapping("/loginByCode")
-    public Response loginByCode(@RequestBody LoginBycodeRequest params){
+    public Response loginByCode(@RequestBody LoginByCodeRequest params){
 
 
-        return loginServicce.loginByCode(params);
+        return loginService.loginByCode(params);
     }
 }

@@ -39,8 +39,8 @@
         <!-- 批量插入插件 -->
         <plugin type="com.itfsw.mybatis.config.generator.plugins.BatchInsertPlugin"/>
 
-        <!--<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://10.10.30.33:3306/test_hzed" userId="root" password="rootroot3033"/>-->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://119.23.156.86:4657/sp2p_hzcf" userId="query" password="Dikdk251df5sdEFD2DFDe"/>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://10.10.30.91:3306/easy-get" userId="root" password="123456"/>
+        <!--<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://119.23.156.86:4657/sp2p_hzcf" userId="query" password="Dikdk251df5sdEFD2DFDe"/>-->
 
         <javaModelGenerator targetPackage="com.hzed.easyget.persistence.auto.entity" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
@@ -66,7 +66,7 @@
         <!--<table tableName="t_users" domainObjectName="User">-->
             <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
         <!--</table>-->
-        <table tableName="t_bids" domainObjectName="Bid">
+        <table tableName="t_sms_log" domainObjectName="SmsLog">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
         <!--<table tableName="t_products" domainObjectName="Product">-->

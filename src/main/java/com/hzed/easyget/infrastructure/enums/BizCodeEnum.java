@@ -25,8 +25,9 @@ public enum BizCodeEnum {
     ILLEGAL_PLATFORM("1002", "无效的platform"),
     ILLEGAL_VERSION("1003", "无效的version"),
     ILLEGAL_TOKEN("1004", "无效的token"),
-    ILLEGAL_I18N("1005", "无效的i18n");
-
+    ILLEGAL_I18N("1005", "无效的i18n"),
+    ERROR_SMSCODE("1006","验证码错误或已过期"),
+    USER_NOT_EXISTS("1007", "用户不存在");
     /**
      * 错误码
      */

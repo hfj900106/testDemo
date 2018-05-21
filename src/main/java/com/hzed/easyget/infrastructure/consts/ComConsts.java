@@ -13,4 +13,6 @@ public class ComConsts {
     public static final String PLATFORM = "platform";
     public static final String TOKEN = "token";
     public static final String VERSION = "version";
+    public static final String SMS_CODE = "sms_code";
+
 }

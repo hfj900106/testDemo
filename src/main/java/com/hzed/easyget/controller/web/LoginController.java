@@ -2,6 +2,7 @@ package com.hzed.easyget.controller.web;
 
 
 import com.hzed.easyget.application.service.LoginServicce;
+import com.hzed.easyget.application.service.LoginService;
 import com.hzed.easyget.controller.model.LoginBycodeRequest;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
@@ -42,22 +43,9 @@ public class LoginController {
     @PostMapping("/sendSmsCode")
     public static void sendSmsCode(String mobile) {
 
-        if(StringUtils.isBlank(mobile) ) {
-            Response.getSuccessResponse(new WarnException("-1", "手机号码不能为空"));
-            return;
-        }
 
-        if(!RegexUtils.isMobileNum(mobile)) {
-            Response.getSuccessResponse(new WarnException("-1", "手机号格式有误"));
-            return;
-        }
-        //获取短信验证码
-        int code = SMSUtil.sendCode(mobile);
-        //保存到数据库
-
-        //保存到Redis
-
-        Response.getSuccessResponse("验证码发送成功");
+        LoginService.sendSmsCode(mobile);
+        Response.getSuccessResponse();
         return;
     }
 

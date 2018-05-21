@@ -1,8 +1,8 @@
 package com.hzed.easyget.controller.web;
 
 
-import com.hzed.easyget.application.service.LoginServicce;
-import com.hzed.easyget.controller.model.LoginBycodeRequest;
+import com.hzed.easyget.application.service.LoginService;
+import com.hzed.easyget.controller.model.LoginByCodeRequest;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
@@ -31,7 +31,7 @@ public class LoginController {
 
 
     @Autowired
-    private LoginServicce loginServicce;
+    private LoginService loginServicce;
 
     /**
      * 发送短信验证码
@@ -69,7 +69,7 @@ public class LoginController {
     @TokenIgnore
     @ModuleFunc("验证码登录")
     @PostMapping("/loginByCode")
-    public Response loginByCode(@RequestBody LoginBycodeRequest params){
+    public Response loginByCode(@RequestBody LoginByCodeRequest params){
 
 
         return loginServicce.loginByCode(params);

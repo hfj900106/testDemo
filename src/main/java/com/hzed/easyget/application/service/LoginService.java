@@ -1,6 +1,6 @@
 package com.hzed.easyget.application.service;
 
-import com.hzed.easyget.controller.model.LoginBycodeRequest;
+import com.hzed.easyget.controller.model.LoginByCodeRequest;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.Response;
@@ -16,15 +16,15 @@ import java.util.Objects;
 
 /**
  * @author wuchengwu
- * @since 2018/5/21
+ * @date 2018/5/21
  */
 @Service
-public class LoginServicce {
+public class LoginService {
 
     @Autowired
     private UserRepository userRepository;
 
-    public Response loginByCode(LoginBycodeRequest params) {
+    public Response loginByCode(LoginByCodeRequest params) {
 
         String mobile = params.getMobile();
         String smsCode = params.getSmsCode();

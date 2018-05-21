@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hzed.easyget.persistence.auto.mapper.SafekeepReportMapper">
-  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.SafekeepReport">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="bid_no" jdbcType="VARCHAR" property="bidNo" />
-    <result column="bid_status" jdbcType="INTEGER" property="bidStatus" />
-    <result column="request_no" jdbcType="VARCHAR" property="requestNo" />
-    <result column="fy_status" jdbcType="VARCHAR" property="fyStatus" />
-    <result column="push_status" jdbcType="INTEGER" property="pushStatus" />
+<mapper namespace="com.hzed.easyget.persistence.auto.mapper.SmsLogMapper">
+  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.SmsLog">
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -73,16 +70,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, bid_no, bid_status, request_no, fy_status, push_status, create_by, create_time, 
-    update_by, update_time, remark
+    id, mobile, content, create_by, create_time, update_by, update_time, remark
   </sql>
-  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.SafekeepReportExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.SmsLogExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_safekeep_report
+    from t_sms_log
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -106,7 +102,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_safekeep_report
+    from t_sms_log
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -114,60 +110,31 @@
       order by ${example.orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_safekeep_report
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
-    select
-    <foreach collection="selective" item="column" separator=",">
-      ${column.value}
-    </foreach>
-    from t_safekeep_report
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_safekeep_report
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.SafekeepReportExample">
-    delete from t_safekeep_report
+  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.SmsLogExample">
+    delete from t_sms_log
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.SafekeepReport">
-    insert into t_safekeep_report (id, bid_no, bid_status, 
-      request_no, fy_status, push_status, 
+  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.SmsLog">
+    insert into t_sms_log (id, mobile, content, 
       create_by, create_time, update_by, 
       update_time, remark)
-    values (#{id,jdbcType=BIGINT}, #{bidNo,jdbcType=VARCHAR}, #{bidStatus,jdbcType=INTEGER}, 
-      #{requestNo,jdbcType=VARCHAR}, #{fyStatus,jdbcType=VARCHAR}, #{pushStatus,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=BIGINT}, #{mobile,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
       #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.SafekeepReport">
-    insert into t_safekeep_report
+  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.SmsLog">
+    insert into t_sms_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="bidNo != null">
-        bid_no,
+      <if test="mobile != null">
+        mobile,
       </if>
-      <if test="bidStatus != null">
-        bid_status,
-      </if>
-      <if test="requestNo != null">
-        request_no,
-      </if>
-      <if test="fyStatus != null">
-        fy_status,
-      </if>
-      <if test="pushStatus != null">
-        push_status,
+      <if test="content != null">
+        content,
       </if>
       <if test="createBy != null">
         create_by,
@@ -189,20 +156,11 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="bidNo != null">
-        #{bidNo,jdbcType=VARCHAR},
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
       </if>
-      <if test="bidStatus != null">
-        #{bidStatus,jdbcType=INTEGER},
-      </if>
-      <if test="requestNo != null">
-        #{requestNo,jdbcType=VARCHAR},
-      </if>
-      <if test="fyStatus != null">
-        #{fyStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="pushStatus != null">
-        #{pushStatus,jdbcType=INTEGER},
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -221,32 +179,23 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.SafekeepReportExample" resultType="java.lang.Long">
-    select count(*) from t_safekeep_report
+  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.SmsLogExample" resultType="java.lang.Long">
+    select count(*) from t_sms_log
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_safekeep_report
+    update t_sms_log
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.bidNo != null">
-        bid_no = #{record.bidNo,jdbcType=VARCHAR},
+      <if test="record.mobile != null">
+        mobile = #{record.mobile,jdbcType=VARCHAR},
       </if>
-      <if test="record.bidStatus != null">
-        bid_status = #{record.bidStatus,jdbcType=INTEGER},
-      </if>
-      <if test="record.requestNo != null">
-        request_no = #{record.requestNo,jdbcType=VARCHAR},
-      </if>
-      <if test="record.fyStatus != null">
-        fy_status = #{record.fyStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="record.pushStatus != null">
-        push_status = #{record.pushStatus,jdbcType=INTEGER},
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=VARCHAR},
       </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
@@ -269,13 +218,10 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_safekeep_report
+    update t_sms_log
     set id = #{record.id,jdbcType=BIGINT},
-      bid_no = #{record.bidNo,jdbcType=VARCHAR},
-      bid_status = #{record.bidStatus,jdbcType=INTEGER},
-      request_no = #{record.requestNo,jdbcType=VARCHAR},
-      fy_status = #{record.fyStatus,jdbcType=VARCHAR},
-      push_status = #{record.pushStatus,jdbcType=INTEGER},
+      mobile = #{record.mobile,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -285,60 +231,10 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.SafekeepReport">
-    update t_safekeep_report
-    <set>
-      <if test="bidNo != null">
-        bid_no = #{bidNo,jdbcType=VARCHAR},
-      </if>
-      <if test="bidStatus != null">
-        bid_status = #{bidStatus,jdbcType=INTEGER},
-      </if>
-      <if test="requestNo != null">
-        request_no = #{requestNo,jdbcType=VARCHAR},
-      </if>
-      <if test="fyStatus != null">
-        fy_status = #{fyStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="pushStatus != null">
-        push_status = #{pushStatus,jdbcType=INTEGER},
-      </if>
-      <if test="createBy != null">
-        create_by = #{createBy,jdbcType=BIGINT},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateBy != null">
-        update_by = #{updateBy,jdbcType=BIGINT},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="remark != null">
-        remark = #{remark,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.SafekeepReport">
-    update t_safekeep_report
-    set bid_no = #{bidNo,jdbcType=VARCHAR},
-      bid_status = #{bidStatus,jdbcType=INTEGER},
-      request_no = #{requestNo,jdbcType=VARCHAR},
-      fy_status = #{fyStatus,jdbcType=VARCHAR},
-      push_status = #{pushStatus,jdbcType=INTEGER},
-      create_by = #{createBy,jdbcType=BIGINT},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_by = #{updateBy,jdbcType=BIGINT},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      remark = #{remark,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.SafekeepReportExample" resultMap="BaseResultMap">
+  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.SmsLogExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_safekeep_report
+    from t_sms_log
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -352,7 +248,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_safekeep_report
+    from t_sms_log
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -361,20 +257,25 @@
     </if>
     limit 1
   </select>
+  <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
+    select
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    from t_sms_log
+  </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_safekeep_report
-    (id, bid_no, bid_status, request_no, fy_status, push_status, create_by, create_time, 
-      update_by, update_time, remark)
+    insert into t_sms_log
+    (id, mobile, content, create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.bidNo,jdbcType=VARCHAR}, #{item.bidStatus,jdbcType=INTEGER}, 
-        #{item.requestNo,jdbcType=VARCHAR}, #{item.fyStatus,jdbcType=VARCHAR}, #{item.pushStatus,jdbcType=INTEGER}, 
+      (#{item.id,jdbcType=BIGINT}, #{item.mobile,jdbcType=VARCHAR}, #{item.content,jdbcType=VARCHAR}, 
         #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
         #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_safekeep_report (
+    insert into t_sms_log (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
@@ -386,20 +287,11 @@
         <if test="'id' == column.value">
           #{item.id,jdbcType=BIGINT}
         </if>
-        <if test="'bid_no' == column.value">
-          #{item.bidNo,jdbcType=VARCHAR}
+        <if test="'mobile' == column.value">
+          #{item.mobile,jdbcType=VARCHAR}
         </if>
-        <if test="'bid_status' == column.value">
-          #{item.bidStatus,jdbcType=INTEGER}
-        </if>
-        <if test="'request_no' == column.value">
-          #{item.requestNo,jdbcType=VARCHAR}
-        </if>
-        <if test="'fy_status' == column.value">
-          #{item.fyStatus,jdbcType=VARCHAR}
-        </if>
-        <if test="'push_status' == column.value">
-          #{item.pushStatus,jdbcType=INTEGER}
+        <if test="'content' == column.value">
+          #{item.content,jdbcType=VARCHAR}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SafekeepReportExample {
+public class SmsLogExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,7 +15,7 @@ public class SafekeepReportExample {
 
     protected Integer rows;
 
-    public SafekeepReportExample() {
+    public SmsLogExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -86,29 +86,29 @@ public class SafekeepReportExample {
         return this.rows;
     }
 
-    public SafekeepReportExample limit(Integer rows) {
+    public SmsLogExample limit(Integer rows) {
         this.rows = rows;
         return this;
     }
 
-    public SafekeepReportExample limit(Integer offset, Integer rows) {
+    public SmsLogExample limit(Integer offset, Integer rows) {
         this.offset = offset;
         this.rows = rows;
         return this;
     }
 
-    public SafekeepReportExample page(Integer page, Integer pageSize) {
+    public SmsLogExample page(Integer page, Integer pageSize) {
         this.offset = page * pageSize;
         this.rows = pageSize;
         return this;
     }
 
-    public SafekeepReportExample orderBy(String orderByClause) {
+    public SmsLogExample orderBy(String orderByClause) {
         this.setOrderByClause(orderByClause);
         return this;
     }
 
-    public SafekeepReportExample orderBy(String ... orderByClauses) {
+    public SmsLogExample orderBy(String ... orderByClauses) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < orderByClauses.length; i++) {
             sb.append(orderByClauses[i]);
@@ -221,333 +221,143 @@ public class SafekeepReportExample {
             return (Criteria) this;
         }
 
-        public Criteria andBidNoIsNull() {
-            addCriterion("bid_no is null");
+        public Criteria andMobileIsNull() {
+            addCriterion("mobile is null");
             return (Criteria) this;
         }
 
-        public Criteria andBidNoIsNotNull() {
-            addCriterion("bid_no is not null");
+        public Criteria andMobileIsNotNull() {
+            addCriterion("mobile is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBidNoEqualTo(String value) {
-            addCriterion("bid_no =", value, "bidNo");
+        public Criteria andMobileEqualTo(String value) {
+            addCriterion("mobile =", value, "mobile");
             return (Criteria) this;
         }
 
-        public Criteria andBidNoNotEqualTo(String value) {
-            addCriterion("bid_no <>", value, "bidNo");
+        public Criteria andMobileNotEqualTo(String value) {
+            addCriterion("mobile <>", value, "mobile");
             return (Criteria) this;
         }
 
-        public Criteria andBidNoGreaterThan(String value) {
-            addCriterion("bid_no >", value, "bidNo");
+        public Criteria andMobileGreaterThan(String value) {
+            addCriterion("mobile >", value, "mobile");
             return (Criteria) this;
         }
 
-        public Criteria andBidNoGreaterThanOrEqualTo(String value) {
-            addCriterion("bid_no >=", value, "bidNo");
+        public Criteria andMobileGreaterThanOrEqualTo(String value) {
+            addCriterion("mobile >=", value, "mobile");
             return (Criteria) this;
         }
 
-        public Criteria andBidNoLessThan(String value) {
-            addCriterion("bid_no <", value, "bidNo");
+        public Criteria andMobileLessThan(String value) {
+            addCriterion("mobile <", value, "mobile");
             return (Criteria) this;
         }
 
-        public Criteria andBidNoLessThanOrEqualTo(String value) {
-            addCriterion("bid_no <=", value, "bidNo");
+        public Criteria andMobileLessThanOrEqualTo(String value) {
+            addCriterion("mobile <=", value, "mobile");
             return (Criteria) this;
         }
 
-        public Criteria andBidNoLike(String value) {
-            addCriterion("bid_no like", value, "bidNo");
+        public Criteria andMobileLike(String value) {
+            addCriterion("mobile like", value, "mobile");
             return (Criteria) this;
         }
 
-        public Criteria andBidNoNotLike(String value) {
-            addCriterion("bid_no not like", value, "bidNo");
+        public Criteria andMobileNotLike(String value) {
+            addCriterion("mobile not like", value, "mobile");
             return (Criteria) this;
         }
 
-        public Criteria andBidNoIn(List<String> values) {
-            addCriterion("bid_no in", values, "bidNo");
+        public Criteria andMobileIn(List<String> values) {
+            addCriterion("mobile in", values, "mobile");
             return (Criteria) this;
         }
 
-        public Criteria andBidNoNotIn(List<String> values) {
-            addCriterion("bid_no not in", values, "bidNo");
+        public Criteria andMobileNotIn(List<String> values) {
+            addCriterion("mobile not in", values, "mobile");
             return (Criteria) this;
         }
 
-        public Criteria andBidNoBetween(String value1, String value2) {
-            addCriterion("bid_no between", value1, value2, "bidNo");
+        public Criteria andMobileBetween(String value1, String value2) {
+            addCriterion("mobile between", value1, value2, "mobile");
             return (Criteria) this;
         }
 
-        public Criteria andBidNoNotBetween(String value1, String value2) {
-            addCriterion("bid_no not between", value1, value2, "bidNo");
+        public Criteria andMobileNotBetween(String value1, String value2) {
+            addCriterion("mobile not between", value1, value2, "mobile");
             return (Criteria) this;
         }
 
-        public Criteria andBidStatusIsNull() {
-            addCriterion("bid_status is null");
+        public Criteria andContentIsNull() {
+            addCriterion("content is null");
             return (Criteria) this;
         }
 
-        public Criteria andBidStatusIsNotNull() {
-            addCriterion("bid_status is not null");
+        public Criteria andContentIsNotNull() {
+            addCriterion("content is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBidStatusEqualTo(Integer value) {
-            addCriterion("bid_status =", value, "bidStatus");
+        public Criteria andContentEqualTo(String value) {
+            addCriterion("content =", value, "content");
             return (Criteria) this;
         }
 
-        public Criteria andBidStatusNotEqualTo(Integer value) {
-            addCriterion("bid_status <>", value, "bidStatus");
+        public Criteria andContentNotEqualTo(String value) {
+            addCriterion("content <>", value, "content");
             return (Criteria) this;
         }
 
-        public Criteria andBidStatusGreaterThan(Integer value) {
-            addCriterion("bid_status >", value, "bidStatus");
+        public Criteria andContentGreaterThan(String value) {
+            addCriterion("content >", value, "content");
             return (Criteria) this;
         }
 
-        public Criteria andBidStatusGreaterThanOrEqualTo(Integer value) {
-            addCriterion("bid_status >=", value, "bidStatus");
+        public Criteria andContentGreaterThanOrEqualTo(String value) {
+            addCriterion("content >=", value, "content");
             return (Criteria) this;
         }
 
-        public Criteria andBidStatusLessThan(Integer value) {
-            addCriterion("bid_status <", value, "bidStatus");
+        public Criteria andContentLessThan(String value) {
+            addCriterion("content <", value, "content");
             return (Criteria) this;
         }
 
-        public Criteria andBidStatusLessThanOrEqualTo(Integer value) {
-            addCriterion("bid_status <=", value, "bidStatus");
+        public Criteria andContentLessThanOrEqualTo(String value) {
+            addCriterion("content <=", value, "content");
             return (Criteria) this;
         }
 
-        public Criteria andBidStatusIn(List<Integer> values) {
-            addCriterion("bid_status in", values, "bidStatus");
+        public Criteria andContentLike(String value) {
+            addCriterion("content like", value, "content");
             return (Criteria) this;
         }
 
-        public Criteria andBidStatusNotIn(List<Integer> values) {
-            addCriterion("bid_status not in", values, "bidStatus");
+        public Criteria andContentNotLike(String value) {
+            addCriterion("content not like", value, "content");
             return (Criteria) this;
         }
 
-        public Criteria andBidStatusBetween(Integer value1, Integer value2) {
-            addCriterion("bid_status between", value1, value2, "bidStatus");
+        public Criteria andContentIn(List<String> values) {
+            addCriterion("content in", values, "content");
             return (Criteria) this;
         }
 
-        public Criteria andBidStatusNotBetween(Integer value1, Integer value2) {
-            addCriterion("bid_status not between", value1, value2, "bidStatus");
+        public Criteria andContentNotIn(List<String> values) {
+            addCriterion("content not in", values, "content");
             return (Criteria) this;
         }
 
-        public Criteria andRequestNoIsNull() {
-            addCriterion("request_no is null");
+        public Criteria andContentBetween(String value1, String value2) {
+            addCriterion("content between", value1, value2, "content");
             return (Criteria) this;
         }
 
-        public Criteria andRequestNoIsNotNull() {
-            addCriterion("request_no is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestNoEqualTo(String value) {
-            addCriterion("request_no =", value, "requestNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestNoNotEqualTo(String value) {
-            addCriterion("request_no <>", value, "requestNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestNoGreaterThan(String value) {
-            addCriterion("request_no >", value, "requestNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestNoGreaterThanOrEqualTo(String value) {
-            addCriterion("request_no >=", value, "requestNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestNoLessThan(String value) {
-            addCriterion("request_no <", value, "requestNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestNoLessThanOrEqualTo(String value) {
-            addCriterion("request_no <=", value, "requestNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestNoLike(String value) {
-            addCriterion("request_no like", value, "requestNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestNoNotLike(String value) {
-            addCriterion("request_no not like", value, "requestNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestNoIn(List<String> values) {
-            addCriterion("request_no in", values, "requestNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestNoNotIn(List<String> values) {
-            addCriterion("request_no not in", values, "requestNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestNoBetween(String value1, String value2) {
-            addCriterion("request_no between", value1, value2, "requestNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestNoNotBetween(String value1, String value2) {
-            addCriterion("request_no not between", value1, value2, "requestNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusIsNull() {
-            addCriterion("fy_status is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusIsNotNull() {
-            addCriterion("fy_status is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusEqualTo(String value) {
-            addCriterion("fy_status =", value, "fyStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusNotEqualTo(String value) {
-            addCriterion("fy_status <>", value, "fyStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusGreaterThan(String value) {
-            addCriterion("fy_status >", value, "fyStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusGreaterThanOrEqualTo(String value) {
-            addCriterion("fy_status >=", value, "fyStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusLessThan(String value) {
-            addCriterion("fy_status <", value, "fyStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusLessThanOrEqualTo(String value) {
-            addCriterion("fy_status <=", value, "fyStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusLike(String value) {
-            addCriterion("fy_status like", value, "fyStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusNotLike(String value) {
-            addCriterion("fy_status not like", value, "fyStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusIn(List<String> values) {
-            addCriterion("fy_status in", values, "fyStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusNotIn(List<String> values) {
-            addCriterion("fy_status not in", values, "fyStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusBetween(String value1, String value2) {
-            addCriterion("fy_status between", value1, value2, "fyStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusNotBetween(String value1, String value2) {
-            addCriterion("fy_status not between", value1, value2, "fyStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPushStatusIsNull() {
-            addCriterion("push_status is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPushStatusIsNotNull() {
-            addCriterion("push_status is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPushStatusEqualTo(Integer value) {
-            addCriterion("push_status =", value, "pushStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPushStatusNotEqualTo(Integer value) {
-            addCriterion("push_status <>", value, "pushStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPushStatusGreaterThan(Integer value) {
-            addCriterion("push_status >", value, "pushStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPushStatusGreaterThanOrEqualTo(Integer value) {
-            addCriterion("push_status >=", value, "pushStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPushStatusLessThan(Integer value) {
-            addCriterion("push_status <", value, "pushStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPushStatusLessThanOrEqualTo(Integer value) {
-            addCriterion("push_status <=", value, "pushStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPushStatusIn(List<Integer> values) {
-            addCriterion("push_status in", values, "pushStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPushStatusNotIn(List<Integer> values) {
-            addCriterion("push_status not in", values, "pushStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPushStatusBetween(Integer value1, Integer value2) {
-            addCriterion("push_status between", value1, value2, "pushStatus");
-            return (Criteria) this;
-        }
-
-        public Criteria andPushStatusNotBetween(Integer value1, Integer value2) {
-            addCriterion("push_status not between", value1, value2, "pushStatus");
+        public Criteria andContentNotBetween(String value1, String value2) {
+            addCriterion("content not between", value1, value2, "content");
             return (Criteria) this;
         }
 
@@ -861,18 +671,13 @@ public class SafekeepReportExample {
             return (Criteria) this;
         }
 
-        public Criteria andBidNoLikeInsensitive(String value) {
-            addCriterion("upper(bid_no) like", value.toUpperCase(), "bidNo");
+        public Criteria andMobileLikeInsensitive(String value) {
+            addCriterion("upper(mobile) like", value.toUpperCase(), "mobile");
             return (Criteria) this;
         }
 
-        public Criteria andRequestNoLikeInsensitive(String value) {
-            addCriterion("upper(request_no) like", value.toUpperCase(), "requestNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andFyStatusLikeInsensitive(String value) {
-            addCriterion("upper(fy_status) like", value.toUpperCase(), "fyStatus");
+        public Criteria andContentLikeInsensitive(String value) {
+            addCriterion("upper(content) like", value.toUpperCase(), "content");
             return (Criteria) this;
         }
 
@@ -883,14 +688,14 @@ public class SafekeepReportExample {
     }
 
     public static class Criteria extends GeneratedCriteria {
-        private SafekeepReportExample example;
+        private SmsLogExample example;
 
-        protected Criteria(SafekeepReportExample example) {
+        protected Criteria(SmsLogExample example) {
             super();
             this.example = example;
         }
 
-        public SafekeepReportExample example() {
+        public SmsLogExample example() {
             return this.example;
         }
 

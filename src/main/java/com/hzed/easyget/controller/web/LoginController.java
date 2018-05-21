@@ -34,7 +34,7 @@ public class LoginController {
 
 
     @Autowired
-    private LoginService loginServicce;
+    private LoginService loginService;
 
     /**
      * 发送短信验证码
@@ -46,7 +46,7 @@ public class LoginController {
     public static void sendSmsCode(String mobile) {
 
 
-        LoginService.sendSmsCode(mobile);
+        loginService.sendSmsCode(mobile);
         Response.getSuccessResponse();
         return;
     }
@@ -62,6 +62,6 @@ public class LoginController {
     public Response loginByCode(@RequestBody LoginByCodeRequest params){
 
 
-        return loginServicce.loginByCode(params);
+        return loginService.loginByCode(params);
     }
 }

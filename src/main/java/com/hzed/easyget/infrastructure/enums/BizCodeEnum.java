@@ -28,6 +28,14 @@ public enum BizCodeEnum {
     ILLEGAL_I18N("1005", "无效的i18n"),
     ERROR_SMSCODE("1006","验证码错误或已过期"),
     USER_NOT_EXISTS("1007", "用户不存在");
+
+    // 20-
+
+    // 21-
+
+    // 3-
+
+
     /**
      * 错误码
      */

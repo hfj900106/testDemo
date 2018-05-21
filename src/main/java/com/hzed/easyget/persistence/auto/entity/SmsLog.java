@@ -3,36 +3,20 @@ package com.hzed.easyget.persistence.auto.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-public class SafekeepReport implements Serializable {
+public class SmsLog implements Serializable {
     /**
-     * 主键
      */
     private Long id;
 
     /**
-     * 标的no
+     * 手机号
      */
-    private String bidNo;
+    private String mobile;
 
     /**
-     * 2-借款中(审核通过);3-待放款(放款审核通过);4-还款中(财务放款);APP显示是使用中5-已还款;app显示是已结清
+     * 短信内容
      */
-    private Integer bidStatus;
-
-    /**
-     * 流水号
-     */
-    private String requestNo;
-
-    /**
-     * 富有状态 00-筹标中 01-满标放款 02-还款 03-正常完结 04-逾期 05-流标 06-逾期完结
-     */
-    private String fyStatus;
-
-    /**
-     * 推送状态 0-待推送 1-已推送
-     */
-    private Integer pushStatus;
+    private String content;
 
     /**
      */
@@ -51,6 +35,7 @@ public class SafekeepReport implements Serializable {
     private Date updateTime;
 
     /**
+     * 备注 如：登录时发送验证码
      */
     private String remark;
 
@@ -64,44 +49,20 @@ public class SafekeepReport implements Serializable {
         this.id = id;
     }
 
-    public String getBidNo() {
-        return bidNo;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setBidNo(String bidNo) {
-        this.bidNo = bidNo == null ? null : bidNo.trim();
+    public void setMobile(String mobile) {
+        this.mobile = mobile == null ? null : mobile.trim();
     }
 
-    public Integer getBidStatus() {
-        return bidStatus;
+    public String getContent() {
+        return content;
     }
 
-    public void setBidStatus(Integer bidStatus) {
-        this.bidStatus = bidStatus;
-    }
-
-    public String getRequestNo() {
-        return requestNo;
-    }
-
-    public void setRequestNo(String requestNo) {
-        this.requestNo = requestNo == null ? null : requestNo.trim();
-    }
-
-    public String getFyStatus() {
-        return fyStatus;
-    }
-
-    public void setFyStatus(String fyStatus) {
-        this.fyStatus = fyStatus == null ? null : fyStatus.trim();
-    }
-
-    public Integer getPushStatus() {
-        return pushStatus;
-    }
-
-    public void setPushStatus(Integer pushStatus) {
-        this.pushStatus = pushStatus;
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
     }
 
     public Long getCreateBy() {
@@ -151,11 +112,8 @@ public class SafekeepReport implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", bidNo=").append(bidNo);
-        sb.append(", bidStatus=").append(bidStatus);
-        sb.append(", requestNo=").append(requestNo);
-        sb.append(", fyStatus=").append(fyStatus);
-        sb.append(", pushStatus=").append(pushStatus);
+        sb.append(", mobile=").append(mobile);
+        sb.append(", content=").append(content);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -166,15 +124,15 @@ public class SafekeepReport implements Serializable {
         return sb.toString();
     }
 
-    public static SafekeepReport.Builder builder() {
-        return new SafekeepReport.Builder();
+    public static SmsLog.Builder builder() {
+        return new SmsLog.Builder();
     }
 
     public static class Builder {
-        private SafekeepReport obj;
+        private SmsLog obj;
 
         public Builder() {
-            this.obj = new SafekeepReport();
+            this.obj = new SmsLog();
         }
 
         public Builder id(Long id) {
@@ -182,28 +140,13 @@ public class SafekeepReport implements Serializable {
             return this;
         }
 
-        public Builder bidNo(String bidNo) {
-            obj.setBidNo(bidNo);
+        public Builder mobile(String mobile) {
+            obj.setMobile(mobile);
             return this;
         }
 
-        public Builder bidStatus(Integer bidStatus) {
-            obj.setBidStatus(bidStatus);
-            return this;
-        }
-
-        public Builder requestNo(String requestNo) {
-            obj.setRequestNo(requestNo);
-            return this;
-        }
-
-        public Builder fyStatus(String fyStatus) {
-            obj.setFyStatus(fyStatus);
-            return this;
-        }
-
-        public Builder pushStatus(Integer pushStatus) {
-            obj.setPushStatus(pushStatus);
+        public Builder content(String content) {
+            obj.setContent(content);
             return this;
         }
 
@@ -232,18 +175,15 @@ public class SafekeepReport implements Serializable {
             return this;
         }
 
-        public SafekeepReport build() {
+        public SmsLog build() {
             return this.obj;
         }
     }
 
     public enum Column {
         id("id"),
-        bidNo("bid_no"),
-        bidStatus("bid_status"),
-        requestNo("request_no"),
-        fyStatus("fy_status"),
-        pushStatus("push_status"),
+        mobile("mobile"),
+        content("content"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

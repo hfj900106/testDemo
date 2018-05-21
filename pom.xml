@@ -73,6 +73,16 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.mybatis.generator</groupId>-->
+            <!--<artifactId>mybatis-generator-core</artifactId>-->
+            <!--<version>1.3.6</version>-->
+        <!--</dependency>-->
 
         <!-- 发送邮件需要的2个jar -->
         <dependency>
@@ -111,7 +121,6 @@
             <artifactId>java-jwt</artifactId>
             <version>3.1.0</version>
         </dependency>
-
 
 
         <dependency>
@@ -191,21 +200,6 @@
                     <target>${java.version}</target>
                     <encoding>${encoding}</encoding>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <!-- 要绑定到的生命周期的阶段 在verify之后，install之前执行下面指定的goal -->
-                        <phase>verify</phase>
-                        <goals>
-                            <!-- 类似执行mvn source:jar -->
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.mybatis.generator</groupId>

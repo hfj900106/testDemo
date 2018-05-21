@@ -3,11 +3,8 @@ package com.hzed.easyget.infrastructure.repository;
 import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.example.UserExample;
 import com.hzed.easyget.persistence.auto.mapper.UserMapper;
-import com.hzed.service.common.util.ObjUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * demo
@@ -24,8 +21,7 @@ public class UserRepository {
     public User findByMobile(String mobile) {
         UserExample example = new UserExample();
         example.createCriteria().andMobileAccountEqualTo(mobile);
-        List<User> users = userMapper.selectByExample(example);
-        return ObjUtil.isEmpty(users) ? null : users.get(0);
+        return userMapper.selectOneByExample(example);
     }
 
     public void updateLastLoginTime(User user) {

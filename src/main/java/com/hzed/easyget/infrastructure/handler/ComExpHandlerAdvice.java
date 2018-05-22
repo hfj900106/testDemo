@@ -41,8 +41,8 @@ public class ComExpHandlerAdvice {
             resp.setMessage(nEx.getSerializeMsg());
         } else {
             // 单独处理不传请求参数的情况
-            String required_request_body_is_missing = "Required request body is missing";
-            if (ex.toString().indexOf(required_request_body_is_missing) > 0) {
+            String requiredRequestBodyIsMissing = "Required request body is missing";
+            if (ex.toString().indexOf(requiredRequestBodyIsMissing) > 0) {
                 resp.setCode(BizCodeEnum.ILLEGAL_PARAM.getCode());
                 resp.setMessage(BizCodeEnum.ILLEGAL_PARAM.getMessage());
             }

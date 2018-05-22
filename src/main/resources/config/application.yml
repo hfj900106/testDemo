@@ -7,10 +7,11 @@ spring:
   application.name: easy-get
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://10.10.30.30:3306/hzed_test2?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
-    username: tester2
-    password: asdeikdiekal9j3j
-  redis:  # Resid相关配置
+    url: jdbc:mysql://10.10.30.91:3306/easy-get?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
+    username: root
+    password: 123456
+  # Resid相关配置
+  redis:
     database: 0
     host: 10.10.30.37
     port: 3037

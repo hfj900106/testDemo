@@ -19,6 +19,9 @@ public class UserRepository {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private SmsLogRepository smsLogRepository;
+
     public User findByMobile(String mobile) {
         UserExample example = new UserExample();
         example.createCriteria().andMobileAccountEqualTo(mobile);

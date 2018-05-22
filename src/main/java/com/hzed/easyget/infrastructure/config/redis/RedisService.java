@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * redis相关操作类
  * @author guichang
  * @date 2018/5/22
  */

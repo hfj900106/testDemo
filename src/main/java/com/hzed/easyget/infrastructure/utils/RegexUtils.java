@@ -73,8 +73,9 @@ public class RegexUtils {
 	 * 是否是QQ邮箱
 	 */
 	public static boolean isQQEmail(String email){
-		if(null == email)
+		if(null == email) {
 			return false;
+		}
 		
 		return email.matches("^[\\s\\S]*@qq.com$");
 	}

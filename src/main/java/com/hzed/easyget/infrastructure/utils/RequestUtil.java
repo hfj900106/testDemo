@@ -3,7 +3,9 @@ package com.hzed.easyget.infrastructure.utils;
 import com.alibaba.fastjson.JSON;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalHeadr;
+import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -45,6 +47,18 @@ public class RequestUtil {
         header.setVersion(request.getHeader(ComConsts.VERSION));
         header.setI18n(request.getHeader(ComConsts.I18N));
         return header;
+    }
+
+    /**
+     * 获取GlobalUser
+     */
+    public static GlobalUser getGlobalUser() {
+        GlobalHeadr globalHead = getGlobalHead();
+        GlobalUser globalUser = JwtUtil.verify(globalHead.getToken(), GlobalUser.class);
+        if (globalUser == null) {
+            throw new ComBizException(BizCodeEnum.ILLEGAL_TOKEN);
+        }
+        return globalUser;
     }
 
 

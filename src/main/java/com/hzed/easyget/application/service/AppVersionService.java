@@ -42,8 +42,8 @@ public class AppVersionService {
         }
         AppVersionResponse appVersionResponse = new AppVersionResponse();
 
-        Dict verDict = dictService.getAppVersionByDicCode(verDicCode);
-        Dict updateDict = dictService.getAppVersionByDicCode(updateDicCode);
+        Dict verDict = dictService.getDictByCode(verDicCode);
+        Dict updateDict = dictService.getDictByCode(updateDicCode);
         appVersionResponse.setVersion(verDict.getDicValue());
         appVersionResponse.setPath(verDict.getDicLabel());
         appVersionResponse.setIsUpdate(checkIsUpdate(oldVersion,verDict.getDicValue()));

@@ -49,6 +49,9 @@ public class RequestUtil {
         return header;
     }
 
+    /**
+     * 获取GlobalUser
+     */
     public static GlobalUser getGlobalUser() {
         GlobalHeadr globalHead = getGlobalHead();
         GlobalUser globalUser = JwtUtil.verify(globalHead.getToken(), GlobalUser.class);

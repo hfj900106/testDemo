@@ -1,7 +1,6 @@
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import com.alibaba.fastjson.JSON;
+import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.utils.JwtUtil;
 
 /**
  * 暂无描述
@@ -12,31 +11,14 @@ import java.util.Date;
 
 public class MainTest {
     public static void main(String[] args) throws Exception {
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Date date = sdf.parse("2018-01-10 10:10:10");
-        int i = daysBetween(date, new Date());
-        System.out.println(i);
+//        GlobalUser user = GlobalUser.builder().userId(123123L).mobile("123213213213").build();
+//        String token = JwtUtil.createToken(user);
+//        System.out.println(token);
+
+        String userToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIxMjMyMTMyMTMyMTNcIixcInVzZXJJZFwiOjEyMzEyM30iLCJleHAiOjE1Mjc1NjAwNDJ9.AWHcDWdV0UggM1OnXbAI5thWeG9v3uuiUdNQpAv0yOE";
+        GlobalUser user2 = JwtUtil.verify(userToken, GlobalUser.class);
+        System.out.println(JSON.toJSONString(user2));
 
     }
-    public static int daysBetween(Date smdate, Date bdate) {
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            smdate=sdf.parse(sdf.format(smdate));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        try {
-            bdate=sdf.parse(sdf.format(bdate));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(smdate);
-        long time1 = cal.getTimeInMillis();
-        cal.setTime(bdate);
-        long time2 = cal.getTimeInMillis();
-        long between_days=(time2-time1)/(1000*3600*24);
 
-        return Integer.parseInt(String.valueOf(between_days));
-    }
 }

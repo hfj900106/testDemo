@@ -1,6 +1,9 @@
 package com.hzed.easyget.infrastructure.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -11,6 +14,9 @@ import javax.validation.constraints.NotNull;
  * @author guichang
  */
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class GlobalUser {
     @NotNull(message = "[userId]不可为空")
     private Long userId;

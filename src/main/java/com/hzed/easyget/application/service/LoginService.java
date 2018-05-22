@@ -88,6 +88,7 @@ public class LoginService {
         smsLog.setCreateTime(LocalDateTime.now());
         smsLog.setContent(map.get("content"));
         smsLog.setMobile(request.getMobile());
+        smsLog.setRemark("短信验证码");
         smsLogRepository.insertSelective(smsLog);
 
         //保存到Redis

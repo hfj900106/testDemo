@@ -50,13 +50,8 @@ public class LoginController {
 
     }
 
-    /**
-     * 手机验证码登录
-     * @param
-     */
-
     @TokenIgnore
-    @ModuleFunc("验证码登录")
+    @ModuleFunc("手机验证码登录")
     @PostMapping("/loginByCode")
     public Response<LoginByCodeResponse> loginByCode(@RequestBody LoginByCodeRequest params){
 

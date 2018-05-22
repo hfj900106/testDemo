@@ -14,6 +14,562 @@
     <result column="is_locked" jdbcType="BIT" property="isLocked" />
     <result column="is_blacklist" jdbcType="BIT" property="isBlacklist" />
     <result column="client" jdbcType="TINYINT" property="client" />
+    <result column="sms_password" jdbcType="VARCHAR" property="smsPassword" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, mobile_account, password, profile_photo, last_login_time, gender, real_name, 
+    id_card_no, platform, is_locked, is_blacklist, client, sms_password, create_by, create_time, 
+    update_by, update_time, remark
+  </sql>
+  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="rows != null">
+      <if test="offset != null">
+        limit ${offset}, ${rows}
+      </if>
+      <if test="offset == null">
+        limit ${rows}
+      </if>
+    </if>
+  </select>
+  <select id="selectByExampleSelective" parameterType="map" resultMap="BaseResultMap">
+    select
+    <if test="example.distinct">
+      distinct
+    </if>
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    from t_user
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+    <if test="example.orderByClause != null">
+      order by ${example.orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
+    select
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    from t_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserExample">
+    delete from t_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.User">
+    insert into t_user (id, mobile_account, password, 
+      profile_photo, last_login_time, gender, 
+      real_name, id_card_no, platform, 
+      is_locked, is_blacklist, client, 
+      sms_password, create_by, create_time, 
+      update_by, update_time, remark
+      )
+    values (#{id,jdbcType=BIGINT}, #{mobileAccount,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{profilePhoto,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{gender,jdbcType=BIT}, 
+      #{realName,jdbcType=VARCHAR}, #{idCardNo,jdbcType=VARCHAR}, #{platform,jdbcType=VARCHAR}, 
+      #{isLocked,jdbcType=BIT}, #{isBlacklist,jdbcType=BIT}, #{client,jdbcType=TINYINT}, 
+      #{smsPassword,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.User">
+    insert into t_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="mobileAccount != null">
+        mobile_account,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="profilePhoto != null">
+        profile_photo,
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="realName != null">
+        real_name,
+      </if>
+      <if test="idCardNo != null">
+        id_card_no,
+      </if>
+      <if test="platform != null">
+        platform,
+      </if>
+      <if test="isLocked != null">
+        is_locked,
+      </if>
+      <if test="isBlacklist != null">
+        is_blacklist,
+      </if>
+      <if test="client != null">
+        client,
+      </if>
+      <if test="smsPassword != null">
+        sms_password,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="mobileAccount != null">
+        #{mobileAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="profilePhoto != null">
+        #{profilePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null">
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=BIT},
+      </if>
+      <if test="realName != null">
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardNo != null">
+        #{idCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="platform != null">
+        #{platform,jdbcType=VARCHAR},
+      </if>
+      <if test="isLocked != null">
+        #{isLocked,jdbcType=BIT},
+      </if>
+      <if test="isBlacklist != null">
+        #{isBlacklist,jdbcType=BIT},
+      </if>
+      <if test="client != null">
+        #{client,jdbcType=TINYINT},
+      </if>
+      <if test="smsPassword != null">
+        #{smsPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserExample" resultType="java.lang.Long">
+    select count(*) from t_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_user
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.mobileAccount != null">
+        mobile_account = #{record.mobileAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.profilePhoto != null">
+        profile_photo = #{record.profilePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lastLoginTime != null">
+        last_login_time = #{record.lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gender != null">
+        gender = #{record.gender,jdbcType=BIT},
+      </if>
+      <if test="record.realName != null">
+        real_name = #{record.realName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.idCardNo != null">
+        id_card_no = #{record.idCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.platform != null">
+        platform = #{record.platform,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isLocked != null">
+        is_locked = #{record.isLocked,jdbcType=BIT},
+      </if>
+      <if test="record.isBlacklist != null">
+        is_blacklist = #{record.isBlacklist,jdbcType=BIT},
+      </if>
+      <if test="record.client != null">
+        client = #{record.client,jdbcType=TINYINT},
+      </if>
+      <if test="record.smsPassword != null">
+        sms_password = #{record.smsPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null">
+        create_by = #{record.createBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null">
+        update_by = #{record.updateBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_user
+    set id = #{record.id,jdbcType=BIGINT},
+      mobile_account = #{record.mobileAccount,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      profile_photo = #{record.profilePhoto,jdbcType=VARCHAR},
+      last_login_time = #{record.lastLoginTime,jdbcType=TIMESTAMP},
+      gender = #{record.gender,jdbcType=BIT},
+      real_name = #{record.realName,jdbcType=VARCHAR},
+      id_card_no = #{record.idCardNo,jdbcType=VARCHAR},
+      platform = #{record.platform,jdbcType=VARCHAR},
+      is_locked = #{record.isLocked,jdbcType=BIT},
+      is_blacklist = #{record.isBlacklist,jdbcType=BIT},
+      client = #{record.client,jdbcType=TINYINT},
+      sms_password = #{record.smsPassword,jdbcType=VARCHAR},
+      create_by = #{record.createBy,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      remark = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.User">
+    update t_user
+    <set>
+      <if test="mobileAccount != null">
+        mobile_account = #{mobileAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="profilePhoto != null">
+        profile_photo = #{profilePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=BIT},
+      </if>
+      <if test="realName != null">
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardNo != null">
+        id_card_no = #{idCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="platform != null">
+        platform = #{platform,jdbcType=VARCHAR},
+      </if>
+      <if test="isLocked != null">
+        is_locked = #{isLocked,jdbcType=BIT},
+      </if>
+      <if test="isBlacklist != null">
+        is_blacklist = #{isBlacklist,jdbcType=BIT},
+      </if>
+      <if test="client != null">
+        client = #{client,jdbcType=TINYINT},
+      </if>
+      <if test="smsPassword != null">
+        sms_password = #{smsPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.User">
+    update t_user
+    set mobile_account = #{mobileAccount,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      profile_photo = #{profilePhoto,jdbcType=VARCHAR},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      gender = #{gender,jdbcType=BIT},
+      real_name = #{realName,jdbcType=VARCHAR},
+      id_card_no = #{idCardNo,jdbcType=VARCHAR},
+      platform = #{platform,jdbcType=VARCHAR},
+      is_locked = #{isLocked,jdbcType=BIT},
+      is_blacklist = #{isBlacklist,jdbcType=BIT},
+      client = #{client,jdbcType=TINYINT},
+      sms_password = #{smsPassword,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserExample" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 1
+  </select>
+  <select id="selectOneByExampleSelective" parameterType="map" resultMap="BaseResultMap">
+    select
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    from t_user
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+    <if test="example.orderByClause != null">
+      order by ${example.orderByClause}
+    </if>
+    limit 1
+  </select>
+  <insert id="batchInsert" parameterType="map">
+    insert into t_user
+    (id, mobile_account, password, profile_photo, last_login_time, gender, real_name, 
+      id_card_no, platform, is_locked, is_blacklist, client, sms_password, create_by, 
+      create_time, update_by, update_time, remark)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.mobileAccount,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, 
+        #{item.profilePhoto,jdbcType=VARCHAR}, #{item.lastLoginTime,jdbcType=TIMESTAMP}, 
+        #{item.gender,jdbcType=BIT}, #{item.realName,jdbcType=VARCHAR}, #{item.idCardNo,jdbcType=VARCHAR}, 
+        #{item.platform,jdbcType=VARCHAR}, #{item.isLocked,jdbcType=BIT}, #{item.isBlacklist,jdbcType=BIT}, 
+        #{item.client,jdbcType=TINYINT}, #{item.smsPassword,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.remark,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="batchInsertSelective" parameterType="map">
+    insert into t_user (
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (
+      <foreach collection="selective" item="column" separator=",">
+        <if test="'id' == column.value">
+          #{item.id,jdbcType=BIGINT}
+        </if>
+        <if test="'mobile_account' == column.value">
+          #{item.mobileAccount,jdbcType=VARCHAR}
+        </if>
+        <if test="'password' == column.value">
+          #{item.password,jdbcType=VARCHAR}
+        </if>
+        <if test="'profile_photo' == column.value">
+          #{item.profilePhoto,jdbcType=VARCHAR}
+        </if>
+        <if test="'last_login_time' == column.value">
+          #{item.lastLoginTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'gender' == column.value">
+          #{item.gender,jdbcType=BIT}
+        </if>
+        <if test="'real_name' == column.value">
+          #{item.realName,jdbcType=VARCHAR}
+        </if>
+        <if test="'id_card_no' == column.value">
+          #{item.idCardNo,jdbcType=VARCHAR}
+        </if>
+        <if test="'platform' == column.value">
+          #{item.platform,jdbcType=VARCHAR}
+        </if>
+        <if test="'is_locked' == column.value">
+          #{item.isLocked,jdbcType=BIT}
+        </if>
+        <if test="'is_blacklist' == column.value">
+          #{item.isBlacklist,jdbcType=BIT}
+        </if>
+        <if test="'client' == column.value">
+          #{item.client,jdbcType=TINYINT}
+        </if>
+        <if test="'sms_password' == column.value">
+          #{item.smsPassword,jdbcType=VARCHAR}
+        </if>
+        <if test="'create_by' == column.value">
+          #{item.createBy,jdbcType=BIGINT}
+        </if>
+        <if test="'create_time' == column.value">
+          #{item.createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'update_by' == column.value">
+          #{item.updateBy,jdbcType=BIGINT}
+        </if>
+        <if test="'update_time' == column.value">
+          #{item.updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'remark' == column.value">
+          #{item.remark,jdbcType=VARCHAR}
+        </if>
+      </foreach>
+      )
+    </foreach>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.User">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="mobile_account" jdbcType="VARCHAR" property="mobileAccount" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="profile_photo" jdbcType="VARCHAR" property="profilePhoto" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="gender" jdbcType="BIT" property="gender" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="id_card_no" jdbcType="VARCHAR" property="idCardNo" />
+    <result column="platform" jdbcType="VARCHAR" property="platform" />
+    <result column="is_locked" jdbcType="BIT" property="isLocked" />
+    <result column="is_blacklist" jdbcType="BIT" property="isBlacklist" />
+    <result column="client" jdbcType="TINYINT" property="client" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />

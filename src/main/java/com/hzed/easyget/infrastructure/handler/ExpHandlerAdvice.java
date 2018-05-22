@@ -18,7 +18,7 @@ import org.springframework.web.method.HandlerMethod;
  */
 @Slf4j
 @RestControllerAdvice(annotations = ExceptionAnno.class)
-public class ComExpHandlerAdvice {
+public class ExpHandlerAdvice {
 
     @ExceptionHandler(Exception.class)
     public Response handler(Exception ex, HandlerMethod handler) {

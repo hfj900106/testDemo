@@ -56,7 +56,7 @@ public class JwtUtil {
             Map<String, Claim> claims = jwt.getClaims();
             return JSON.parseObject(claims.get(PAYLOAD).asString(), clazz);
         } catch (Exception e) {
-            log.error("校验token异常，token：{}，异常信息：", token, e);
+///            log.error("校验token异常，token：{}，异常信息：", token, e);
             return null;
         }
     }

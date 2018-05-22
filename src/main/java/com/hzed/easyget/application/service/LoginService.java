@@ -24,7 +24,8 @@ public class LoginService {
 
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private SmsCodeService smsCodeService;
     public LoginByCodeResponse loginByCode(LoginByCodeRequest params) {
 
         String mobile = params.getMobile();
@@ -37,7 +38,7 @@ public class LoginService {
             saveUser(mobile);
         }
         //校验验证码
-        if(!SmsCodeService.cheSmsCode(mobile,smsCode)){
+        if(!smsCodeService.checkSmsCode(mobile,smsCode)){
             throw new WarnException(BizCodeEnum.ERROR_SMSCODE);
         }
         //更新用户最后登录时间
@@ -45,8 +46,9 @@ public class LoginService {
         userRepository.updateLastLoginTime(user);
         GlobalUser userToken = GlobalUser.builder().userId(user.getId()).mobile(mobile).build();
         String token = JwtUtil.createToken(userToken);
-
-        return null;
+        LoginByCodeResponse loginByCodeResponse = new LoginByCodeResponse();
+        loginByCodeResponse.setToken(token);
+        return loginByCodeResponse;
     }
 
     private void saveUser(String mobile) {

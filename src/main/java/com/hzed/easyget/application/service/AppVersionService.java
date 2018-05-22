@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * 暂无描述
- *
  * @author wuchengwu
  * @data 2018/5/22
  */

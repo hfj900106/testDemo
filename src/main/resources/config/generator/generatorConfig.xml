@@ -56,10 +56,10 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table tableName="t_sms_log" domainObjectName="SmsLog" >
+       <!-- <table tableName="t_user" domainObjectName="User" >
             <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
             <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-        </table>
+        </table>-->
 
         <table tableName="t_user" domainObjectName="User" >
             <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>

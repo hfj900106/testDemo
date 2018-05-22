@@ -1,8 +1,9 @@
 package com.hzed.easyget.application.service;
+
 import com.hzed.easyget.controller.model.LoginByCodeRequest;
+import com.hzed.easyget.controller.model.LoginByCodeResponse;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
-import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.persistence.auto.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class LoginService {
     @Autowired
     private UserRepository userRepository;
 
-    public Response loginByCode(LoginByCodeRequest params) {
+    public LoginByCodeResponse loginByCode(LoginByCodeRequest params) {
 
         String mobile = params.getMobile();
         String smsCode = params.getSmsCode();
@@ -39,7 +40,8 @@ public class LoginService {
         //更新用户最后登录时间
         user.setLastLoginTime(LocalDateTime.now());
         userRepository.updateLastLoginTime(user);
-        return Response.getSuccessResponse();
+
+        return null;
     }
 
     private void saveUser(String mobile) {

@@ -3,6 +3,7 @@ package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.LoginService;
 import com.hzed.easyget.controller.model.LoginByCodeRequest;
+import com.hzed.easyget.controller.model.LoginByCodeResponse;
 import com.hzed.easyget.controller.model.SmsCodRequest;
 import com.hzed.easyget.controller.model.SmsCodResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
@@ -57,9 +58,9 @@ public class LoginController {
     @TokenIgnore
     @ModuleFunc("验证码登录")
     @PostMapping("/loginByCode")
-    public Response loginByCode(@RequestBody LoginByCodeRequest params){
+    public Response<LoginByCodeResponse> loginByCode(@RequestBody LoginByCodeRequest params){
 
-
-        return loginService.loginByCode(params);
+        LoginByCodeResponse response = loginService.loginByCode(params);
+        return Response.getSuccessResponse(response);
     }
 }

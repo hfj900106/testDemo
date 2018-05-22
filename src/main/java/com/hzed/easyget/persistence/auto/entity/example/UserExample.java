@@ -881,6 +881,66 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andClientIsNull() {
+            addCriterion("client is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientIsNotNull() {
+            addCriterion("client is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientEqualTo(Byte value) {
+            addCriterion("client =", value, "client");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientNotEqualTo(Byte value) {
+            addCriterion("client <>", value, "client");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientGreaterThan(Byte value) {
+            addCriterion("client >", value, "client");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientGreaterThanOrEqualTo(Byte value) {
+            addCriterion("client >=", value, "client");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientLessThan(Byte value) {
+            addCriterion("client <", value, "client");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientLessThanOrEqualTo(Byte value) {
+            addCriterion("client <=", value, "client");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientIn(List<Byte> values) {
+            addCriterion("client in", values, "client");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientNotIn(List<Byte> values) {
+            addCriterion("client not in", values, "client");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientBetween(Byte value1, Byte value2) {
+            addCriterion("client between", value1, value2, "client");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientNotBetween(Byte value1, Byte value2) {
+            addCriterion("client not between", value1, value2, "client");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateByIsNull() {
             addCriterion("create_by is null");
             return (Criteria) this;

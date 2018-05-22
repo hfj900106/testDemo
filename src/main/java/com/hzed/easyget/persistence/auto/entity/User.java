@@ -45,7 +45,7 @@ public class User implements Serializable {
     private String idCardNo;
 
     /**
-     * 注册渠道 android、ios等等
+     * 注册平台 android、ios等等
      */
     private String platform;
 
@@ -58,6 +58,11 @@ public class User implements Serializable {
      * 是否黑名单 0-否 1-是
      */
     private Boolean isBlacklist;
+
+    /**
+     * 注册渠道 1-印尼APP
+     */
+    private Byte client;
 
     /**
      */
@@ -169,6 +174,14 @@ public class User implements Serializable {
         this.isBlacklist = isBlacklist;
     }
 
+    public Byte getClient() {
+        return client;
+    }
+
+    public void setClient(Byte client) {
+        this.client = client;
+    }
+
     public Long getCreateBy() {
         return createBy;
     }
@@ -226,6 +239,7 @@ public class User implements Serializable {
         sb.append(", platform=").append(platform);
         sb.append(", isLocked=").append(isLocked);
         sb.append(", isBlacklist=").append(isBlacklist);
+        sb.append(", client=").append(client);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -302,6 +316,11 @@ public class User implements Serializable {
             return this;
         }
 
+        public Builder client(Byte client) {
+            obj.setClient(client);
+            return this;
+        }
+
         public Builder createBy(Long createBy) {
             obj.setCreateBy(createBy);
             return this;
@@ -344,6 +363,7 @@ public class User implements Serializable {
         platform("platform"),
         isLocked("is_locked"),
         isBlacklist("is_blacklist"),
+        client("client"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

@@ -9,8 +9,7 @@ import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
-import com.hzed.easyget.infrastructure.utils.DateUtil;
-import com.hzed.easyget.infrastructure.utils.SMSUtil;
+import com.hzed.easyget.infrastructure.utils.SmsUtil;
 import com.hzed.easyget.persistence.auto.entity.SmsLog;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
@@ -18,9 +17,7 @@ import com.hzed.easyget.persistence.auto.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
@@ -79,7 +76,7 @@ public class LoginService {
 
     public void sendSmsCode(SmsCodRequest request){
         //获取短信验证码
-        Map<String , String> map = SMSUtil.sendCode(request.getMobile());
+        Map<String , String> map = SmsUtil.sendCode(request.getMobile());
 
         //保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();

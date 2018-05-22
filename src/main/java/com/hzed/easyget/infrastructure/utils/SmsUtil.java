@@ -21,6 +21,7 @@ public class SmsUtil {
         int randomCode = (new Random()).nextInt(8999) + 1000;
         String content = "您的注册验证码是："+randomCode+" ，两分钟内有效，欢迎使用本平台";
         //具体发送接口调用
+        //TODO
         Map<String , String> map  = new HashMap(2);
         map.put("smsCode",String.valueOf(randomCode));
         map.put("content",content);

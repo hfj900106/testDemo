@@ -1,9 +1,13 @@
 package com.hzed.easyget.application.service;
+
 import com.hzed.easyget.controller.model.LoginByCodeRequest;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
+import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
+import com.hzed.easyget.infrastructure.utils.JwtUtil;
+import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,12 +43,14 @@ public class LoginService {
         //更新用户最后登录时间
         user.setLastLoginTime(LocalDateTime.now());
         userRepository.updateLastLoginTime(user);
-        return Response.getSuccessResponse();
+        GlobalUser userToken = GlobalUser.builder().userId(user.getId()).mobile(mobile).build();
+        String token = JwtUtil.createToken(userToken);
+        return Response.getSuccessResponse(token);
     }
 
     private void saveUser(String mobile) {
         User user = new User();
-        user.setId(0L);
+        user.setId(IdentifierGenerator.nextId());
         user.setMobileAccount(mobile);
         user.setPlatform("android");
         user.setIsLocked(false);

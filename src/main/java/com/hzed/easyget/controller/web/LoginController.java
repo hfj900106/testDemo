@@ -10,7 +10,6 @@ import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.model.Response;
-import com.hzed.easyget.infrastructure.utils.SMSUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,13 +39,8 @@ public class LoginController {
     @PostMapping("/sendSmsCode")
     public Response<SmsCodResponse> sendSmsCode(@RequestBody SmsCodRequest request) {
 
-        //获取短信验证码
-        SmsCodResponse smsCodResponse = SMSUtil.sendCode(request.getMobile());
-        //保存到数据库
-
-        //保存到Redis
-
-        return Response.getSuccessResponse(smsCodResponse);
+        loginService.sendSmsCode(request);
+        return Response.getSuccessResponse();
 
     }
 

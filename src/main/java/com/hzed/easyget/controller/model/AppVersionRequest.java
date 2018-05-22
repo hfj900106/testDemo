@@ -13,6 +13,4 @@ import org.hibernate.validator.constraints.NotBlank;
 public class AppVersionRequest {
     @NotBlank(message = "版本号不能为空")
     private String oldVersion;
-    @NotBlank(message = "渠道不能为空")
-    private String channel;
 }

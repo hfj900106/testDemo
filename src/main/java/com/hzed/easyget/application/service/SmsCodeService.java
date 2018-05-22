@@ -28,7 +28,7 @@ public class SmsCodeService {
 
         if(ComConsts.DEFAULT_SMS_CODE.equals(smsCode)&& EnvEnum.isTestEnv(env)){
 
-            log.info("使用测试环境验证码：{}，当前环境是:{}",ComConsts.DEFAULT_SMS_CODE);
+            log.info("使用测试环境验证码：{}，当前环境是:{}",ComConsts.DEFAULT_SMS_CODE,env);
         }else{
             //获取缓冲数据
             String cacheSmsCode = redisService.getCache(ComConsts.SMS_CODE);

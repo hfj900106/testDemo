@@ -80,11 +80,10 @@ public class LoginService {
     public void sendSmsCode(SmsCodRequest request){
         //获取短信验证码
         Map<String , String> map = SMSUtil.sendCode(request.getMobile());
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String strDate=sdf.format(new Date());
+
         //保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();
-        smsLog.setCreateTime(DateUtil.strToLocalDateTime(strDate));
+        smsLog.setCreateTime(LocalDateTime.now());
         smsLog.setContent(map.get("content"));
         smsLog.setMobile(request.getMobile());
         smsLogRepository.insertSelective(smsLog);

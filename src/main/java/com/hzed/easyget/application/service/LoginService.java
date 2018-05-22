@@ -1,10 +1,13 @@
 package com.hzed.easyget.application.service;
 
 import com.hzed.easyget.controller.model.LoginByCodeRequest;
+import com.hzed.easyget.controller.model.LoginByCodeResponse;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
-import com.hzed.easyget.infrastructure.model.Response;
+import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
+import com.hzed.easyget.infrastructure.utils.JwtUtil;
+import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +45,6 @@ public class LoginService {
         userRepository.updateLastLoginTime(user);
         GlobalUser userToken = GlobalUser.builder().userId(user.getId()).mobile(mobile).build();
         String token = JwtUtil.createToken(userToken);
-        return Response.getSuccessResponse(token);
 
         return null;
     }

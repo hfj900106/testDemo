@@ -40,13 +40,8 @@ public class LoginController {
     @PostMapping("/sendSmsCode")
     public Response<SmsCodResponse> sendSmsCode(@RequestBody SmsCodRequest request) {
 
-        //获取短信验证码
-        SmsCodResponse smsCodResponse = SMSUtil.sendCode(request.getMobile());
-        //保存到数据库
-
-        //保存到Redis
-
-        return Response.getSuccessResponse(smsCodResponse);
+        loginService.sendSmsCode(request);
+        return Response.getSuccessResponse();
 
     }
 

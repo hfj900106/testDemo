@@ -7,10 +7,13 @@ import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
+import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.SMSUtil;
 import com.hzed.easyget.persistence.auto.entity.SmsLog;
+import com.hzed.easyget.infrastructure.utils.JwtUtil;
+import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,13 +58,15 @@ public class LoginService {
         //更新用户最后登录时间
         user.setLastLoginTime(LocalDateTime.now());
         userRepository.updateLastLoginTime(user);
+        GlobalUser userToken = GlobalUser.builder().userId(user.getId()).mobile(mobile).build();
+        String token = JwtUtil.createToken(userToken);
 
         return null;
     }
 
     private void saveUser(String mobile) {
         User user = new User();
-        user.setId(0L);
+        user.setId(IdentifierGenerator.nextId());
         user.setMobileAccount(mobile);
         user.setPlatform("android");
         user.setIsLocked(false);

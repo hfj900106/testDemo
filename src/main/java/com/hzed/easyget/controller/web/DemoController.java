@@ -45,6 +45,8 @@ public class DemoController {
     @PostMapping("/user")
     public Response<UserResponse> user(@RequestBody UserRequest request) {
         UserResponse response = demoService.getUserByMobileAndIdcard(request);
+
+
         return Response.getSuccessResponse(response);
     }
 

@@ -10,6 +10,11 @@ spring:
     url: jdbc:mysql://10.10.30.30:3306/hzed_test2?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
     username: tester2
     password: asdeikdiekal9j3j
+  redis:  # Resid相关配置
+    database: 0
+    host: 10.10.30.37
+    port: 3037
+    password: masterpass
 
 # 日志文件配置
 logging:

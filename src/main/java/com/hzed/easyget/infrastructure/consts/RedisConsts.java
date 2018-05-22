@@ -9,4 +9,9 @@ package com.hzed.easyget.infrastructure.consts;
 
 public class RedisConsts {
 
+    /**
+     * redis key分隔符
+     */
+    public static String SPLIT = ":";
+
 }

@@ -80,13 +80,14 @@ public class LoginService {
 
         //保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();
+        smsLog.setId(IdentifierGenerator.nextId());
         smsLog.setCreateTime(LocalDateTime.now());
         smsLog.setContent(map.get("content"));
         smsLog.setMobile(request.getMobile());
         smsLogRepository.insertSelective(smsLog);
 
         //保存到Redis
-        redisService.setCache("smsCode", map.get("content"), 120L);
+        redisService.setCache("smsCode", map.get("smsCode"), 120L);
 
 
     }

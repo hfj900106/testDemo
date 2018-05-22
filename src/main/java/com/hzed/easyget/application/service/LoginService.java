@@ -4,6 +4,7 @@ import com.hzed.easyget.controller.model.LoginByCodeRequest;
 import com.hzed.easyget.controller.model.LoginByCodeResponse;
 import com.hzed.easyget.controller.model.SmsCodRequest;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
+import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
@@ -90,7 +91,7 @@ public class LoginService {
         smsLogRepository.insertSelective(smsLog);
 
         //保存到Redis
-        redisService.setCache("smsCode", map.get("smsCode"), 120L);
+        redisService.setCache(ComConsts.SMS_CODE, map.get("smsCode"), 120L);
 
 
     }

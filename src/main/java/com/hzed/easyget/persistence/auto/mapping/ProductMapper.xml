@@ -5,7 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="code" jdbcType="CHAR" property="code" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="loan_amount_type" jdbcType="BIT" property="loanAmountType" />
+    <result column="loan_amount_type" jdbcType="TINYINT" property="loanAmountType" />
     <result column="loan_amount" jdbcType="VARCHAR" property="loanAmount" />
     <result column="currency" jdbcType="CHAR" property="currency" />
     <result column="loan_time_type" jdbcType="TINYINT" property="loanTimeType" />
@@ -153,7 +153,7 @@
       description, picture, is_use, 
       create_by, create_time, update_by, 
       update_time, remark)
-    values (#{id,jdbcType=BIGINT}, #{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{loanAmountType,jdbcType=BIT}, 
+    values (#{id,jdbcType=BIGINT}, #{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{loanAmountType,jdbcType=TINYINT}, 
       #{loanAmount,jdbcType=VARCHAR}, #{currency,jdbcType=CHAR}, #{loanTimeType,jdbcType=TINYINT}, 
       #{loanTime,jdbcType=VARCHAR}, #{loanTimeDmy,jdbcType=CHAR}, #{apr,jdbcType=DECIMAL}, 
       #{description,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR}, #{isUse,jdbcType=BIT}, 
@@ -229,7 +229,7 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="loanAmountType != null">
-        #{loanAmountType,jdbcType=BIT},
+        #{loanAmountType,jdbcType=TINYINT},
       </if>
       <if test="loanAmount != null">
         #{loanAmount,jdbcType=VARCHAR},
@@ -294,7 +294,7 @@
         name = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.loanAmountType != null">
-        loan_amount_type = #{record.loanAmountType,jdbcType=BIT},
+        loan_amount_type = #{record.loanAmountType,jdbcType=TINYINT},
       </if>
       <if test="record.loanAmount != null">
         loan_amount = #{record.loanAmount,jdbcType=VARCHAR},
@@ -348,7 +348,7 @@
     set id = #{record.id,jdbcType=BIGINT},
       code = #{record.code,jdbcType=CHAR},
       name = #{record.name,jdbcType=VARCHAR},
-      loan_amount_type = #{record.loanAmountType,jdbcType=BIT},
+      loan_amount_type = #{record.loanAmountType,jdbcType=TINYINT},
       loan_amount = #{record.loanAmount,jdbcType=VARCHAR},
       currency = #{record.currency,jdbcType=CHAR},
       loan_time_type = #{record.loanTimeType,jdbcType=TINYINT},
@@ -377,7 +377,7 @@
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="loanAmountType != null">
-        loan_amount_type = #{loanAmountType,jdbcType=BIT},
+        loan_amount_type = #{loanAmountType,jdbcType=TINYINT},
       </if>
       <if test="loanAmount != null">
         loan_amount = #{loanAmount,jdbcType=VARCHAR},
@@ -428,7 +428,7 @@
     update t_product
     set code = #{code,jdbcType=CHAR},
       name = #{name,jdbcType=VARCHAR},
-      loan_amount_type = #{loanAmountType,jdbcType=BIT},
+      loan_amount_type = #{loanAmountType,jdbcType=TINYINT},
       loan_amount = #{loanAmount,jdbcType=VARCHAR},
       currency = #{currency,jdbcType=CHAR},
       loan_time_type = #{loanTimeType,jdbcType=TINYINT},
@@ -479,7 +479,7 @@
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.code,jdbcType=CHAR}, #{item.name,jdbcType=VARCHAR}, 
-        #{item.loanAmountType,jdbcType=BIT}, #{item.loanAmount,jdbcType=VARCHAR}, #{item.currency,jdbcType=CHAR}, 
+        #{item.loanAmountType,jdbcType=TINYINT}, #{item.loanAmount,jdbcType=VARCHAR}, #{item.currency,jdbcType=CHAR}, 
         #{item.loanTimeType,jdbcType=TINYINT}, #{item.loanTime,jdbcType=VARCHAR}, #{item.loanTimeDmy,jdbcType=CHAR}, 
         #{item.apr,jdbcType=DECIMAL}, #{item.description,jdbcType=VARCHAR}, #{item.picture,jdbcType=VARCHAR}, 
         #{item.isUse,jdbcType=BIT}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
@@ -507,7 +507,7 @@
           #{item.name,jdbcType=VARCHAR}
         </if>
         <if test="'loan_amount_type' == column.value">
-          #{item.loanAmountType,jdbcType=BIT}
+          #{item.loanAmountType,jdbcType=TINYINT}
         </if>
         <if test="'loan_amount' == column.value">
           #{item.loanAmount,jdbcType=VARCHAR}

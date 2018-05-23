@@ -24,14 +24,14 @@ import java.util.Objects;
 public class HomeService {
 
     @Autowired
-    private ProductRepository homeRepository;
+    private ProductRepository productRepository;
     @Autowired
     private DictService dictService;
 
     public ProductInfoResponse getProductInfo() {
 
         ProductInfoResponse productInfoResponse = new ProductInfoResponse();
-        Product product = homeRepository.getProductInfo();
+        Product product = productRepository.getProductInfo();
         if(Objects.isNull(product)){
             throw new ComBizException(BizCodeEnum.PRODUT_NOTEXISTS);
         }

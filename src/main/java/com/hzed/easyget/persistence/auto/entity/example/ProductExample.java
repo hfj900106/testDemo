@@ -371,52 +371,52 @@ public class ProductExample {
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeEqualTo(Boolean value) {
+        public Criteria andLoanAmountTypeEqualTo(Byte value) {
             addCriterion("loan_amount_type =", value, "loanAmountType");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeNotEqualTo(Boolean value) {
+        public Criteria andLoanAmountTypeNotEqualTo(Byte value) {
             addCriterion("loan_amount_type <>", value, "loanAmountType");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeGreaterThan(Boolean value) {
+        public Criteria andLoanAmountTypeGreaterThan(Byte value) {
             addCriterion("loan_amount_type >", value, "loanAmountType");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andLoanAmountTypeGreaterThanOrEqualTo(Byte value) {
             addCriterion("loan_amount_type >=", value, "loanAmountType");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeLessThan(Boolean value) {
+        public Criteria andLoanAmountTypeLessThan(Byte value) {
             addCriterion("loan_amount_type <", value, "loanAmountType");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeLessThanOrEqualTo(Boolean value) {
+        public Criteria andLoanAmountTypeLessThanOrEqualTo(Byte value) {
             addCriterion("loan_amount_type <=", value, "loanAmountType");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeIn(List<Boolean> values) {
+        public Criteria andLoanAmountTypeIn(List<Byte> values) {
             addCriterion("loan_amount_type in", values, "loanAmountType");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeNotIn(List<Boolean> values) {
+        public Criteria andLoanAmountTypeNotIn(List<Byte> values) {
             addCriterion("loan_amount_type not in", values, "loanAmountType");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeBetween(Boolean value1, Boolean value2) {
+        public Criteria andLoanAmountTypeBetween(Byte value1, Byte value2) {
             addCriterion("loan_amount_type between", value1, value2, "loanAmountType");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andLoanAmountTypeNotBetween(Byte value1, Byte value2) {
             addCriterion("loan_amount_type not between", value1, value2, "loanAmountType");
             return (Criteria) this;
         }

@@ -24,23 +24,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/hzed/easy-get/home")
 public class HomeController {
-
-
     @Autowired
     private HomeService homeService;
 
     @ModuleFunc("获取产品详情")
     @PostMapping("/getProductInfo")
-    public Response<ProductInfoResponse> getProductInfo(){
-
+    public Response<ProductInfoResponse> getProductInfo() {
         return Response.getSuccessResponse(homeService.getProductInfo());
-
     }
 
     @ModuleFunc("版本号检测是否更新")
     @PostMapping("/getAppVersion")
-    public Response<AppVersionResponse> getAppVersion(@RequestBody AppVersionRequest request){
-
+    public Response<AppVersionResponse> getAppVersion(@RequestBody AppVersionRequest request) {
         return Response.getSuccessResponse(homeService.getAppVersion(request));
 
     }

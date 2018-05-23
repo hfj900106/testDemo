@@ -16,7 +16,7 @@ public class AuthContentRepository {
     private AuthContentMapper authContentMapper;
 
     public void insertSelective(AuthContent authContent) {
-        authContentMapper.insertSelective( authContent);
+        authContentMapper.insertSelective(authContent);
     }
 
 }

@@ -1,7 +1,6 @@
 package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.ContactsService;
-import com.hzed.easyget.application.service.LoginService;
 import com.hzed.easyget.application.service.MessagesService;
 import com.hzed.easyget.application.service.SmsAuthService;
 import com.hzed.easyget.controller.model.ContactsRequest;
@@ -9,11 +8,7 @@ import com.hzed.easyget.controller.model.MessagesRequest;
 import com.hzed.easyget.controller.model.SmsAuthRequest;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-import com.hzed.easyget.infrastructure.model.GlobalHeadr;
-import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.Response;
-import com.hzed.easyget.infrastructure.utils.JwtUtil;
-import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,10 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @ExceptionAnno
 @RestController
-@RequestMapping("/hzed/easy-get/identification")
+@RequestMapping("/hzed/easy-get/auth")
 public class AuthController {
-
-
     @Autowired
     private ContactsService contactsService;
 

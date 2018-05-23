@@ -1,8 +1,6 @@
 package com.hzed.easyget.infrastructure.utils;
 
 
-import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -15,7 +13,6 @@ import java.util.Random;
 
 public class SmsUtil {
 
-    @ModuleFunc("发送短信验证码")
     public static Map<String , String> sendCode(String mobile){
         // 最大值位9999
         int randomCode = (new Random()).nextInt(8999) + 1000;
@@ -26,6 +23,10 @@ public class SmsUtil {
         map.put("smsCode",String.valueOf(randomCode));
         map.put("content",content);
         return  map;
+    }
+
+    public void sendSms(String mobile, String content) {
+//      throw new ComBizException()
     }
 
 

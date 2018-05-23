@@ -26,6 +26,8 @@ public class AuthService {
     private UserAuthStatusRepository userAuthStatusRepository ;
     @Autowired
     private AuthContentRepository authContentRepository ;
+    @Autowired
+    private ContactsService contactsService;
 
     private Long userAuthId = IdentifierGenerator.nextId();
 

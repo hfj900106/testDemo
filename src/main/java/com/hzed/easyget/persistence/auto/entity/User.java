@@ -65,6 +65,11 @@ public class User implements Serializable {
     private Byte client;
 
     /**
+     * 服务运营商密码
+     */
+    private String smsPassword;
+
+    /**
      */
     private Long createBy;
 
@@ -182,6 +187,14 @@ public class User implements Serializable {
         this.client = client;
     }
 
+    public String getSmsPassword() {
+        return smsPassword;
+    }
+
+    public void setSmsPassword(String smsPassword) {
+        this.smsPassword = smsPassword == null ? null : smsPassword.trim();
+    }
+
     public Long getCreateBy() {
         return createBy;
     }
@@ -240,6 +253,7 @@ public class User implements Serializable {
         sb.append(", isLocked=").append(isLocked);
         sb.append(", isBlacklist=").append(isBlacklist);
         sb.append(", client=").append(client);
+        sb.append(", smsPassword=").append(smsPassword);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -321,6 +335,11 @@ public class User implements Serializable {
             return this;
         }
 
+        public Builder smsPassword(String smsPassword) {
+            obj.setSmsPassword(smsPassword);
+            return this;
+        }
+
         public Builder createBy(Long createBy) {
             obj.setCreateBy(createBy);
             return this;
@@ -364,6 +383,7 @@ public class User implements Serializable {
         isLocked("is_locked"),
         isBlacklist("is_blacklist"),
         client("client"),
+        smsPassword("sms_password"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

@@ -14,7 +14,4 @@ import lombok.Data;
 @Data
 public class SmsCodResponse {
     public Integer code;
-    public Integer code1;
-    public Integer code2;
-    public Integer code3;
 }

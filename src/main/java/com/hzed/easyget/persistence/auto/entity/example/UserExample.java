@@ -941,6 +941,76 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andSmsPasswordIsNull() {
+            addCriterion("sms_password is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordIsNotNull() {
+            addCriterion("sms_password is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordEqualTo(String value) {
+            addCriterion("sms_password =", value, "smsPassword");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordNotEqualTo(String value) {
+            addCriterion("sms_password <>", value, "smsPassword");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordGreaterThan(String value) {
+            addCriterion("sms_password >", value, "smsPassword");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordGreaterThanOrEqualTo(String value) {
+            addCriterion("sms_password >=", value, "smsPassword");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordLessThan(String value) {
+            addCriterion("sms_password <", value, "smsPassword");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordLessThanOrEqualTo(String value) {
+            addCriterion("sms_password <=", value, "smsPassword");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordLike(String value) {
+            addCriterion("sms_password like", value, "smsPassword");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordNotLike(String value) {
+            addCriterion("sms_password not like", value, "smsPassword");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordIn(List<String> values) {
+            addCriterion("sms_password in", values, "smsPassword");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordNotIn(List<String> values) {
+            addCriterion("sms_password not in", values, "smsPassword");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordBetween(String value1, String value2) {
+            addCriterion("sms_password between", value1, value2, "smsPassword");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordNotBetween(String value1, String value2) {
+            addCriterion("sms_password not between", value1, value2, "smsPassword");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateByIsNull() {
             addCriterion("create_by is null");
             return (Criteria) this;
@@ -1278,6 +1348,11 @@ public class UserExample {
 
         public Criteria andPlatformLikeInsensitive(String value) {
             addCriterion("upper(platform) like", value.toUpperCase(), "platform");
+            return (Criteria) this;
+        }
+
+        public Criteria andSmsPasswordLikeInsensitive(String value) {
+            addCriterion("upper(sms_password) like", value.toUpperCase(), "smsPassword");
             return (Criteria) this;
         }
 

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 用户登录
+ *
  * @author hfj
  * @date 2018/2132/
  */
@@ -29,8 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/hzed/easy-get/login")
 public class LoginController {
-
-
     @Autowired
     private LoginService loginService;
 
@@ -38,7 +37,6 @@ public class LoginController {
     @ModuleFunc("发送短信验证码")
     @PostMapping("/sendSmsCode")
     public Response<SmsCodResponse> sendSmsCode(@RequestBody SmsCodRequest request) {
-
         loginService.sendSmsCode(request);
         return Response.getSuccessResponse();
 
@@ -47,8 +45,7 @@ public class LoginController {
     @TokenIgnore
     @ModuleFunc("手机验证码登录")
     @PostMapping("/loginByCode")
-    public Response<LoginByCodeResponse> loginByCode(@RequestBody LoginByCodeRequest params){
-
+    public Response<LoginByCodeResponse> loginByCode(@RequestBody LoginByCodeRequest params) {
         LoginByCodeResponse response = loginService.loginByCode(params);
         return Response.getSuccessResponse(response);
     }

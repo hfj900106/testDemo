@@ -15,6 +15,9 @@ import java.util.List;
  *
  * @author wuchengwu
  * @data 2018/5/23
+/**
+ * @author hfj
+ * @date 2018/5/22
  */
 @Repository
 public class UserAuthStatusRepository {
@@ -28,4 +31,10 @@ public class UserAuthStatusRepository {
         example.createCriteria().andUserIdEqualTo(userId);
         return userAuthStatusMapper.selectByExample(example);
     }
+}
+    public void insertSelective(UserAuthStatus userAuthStatus) {
+        userAuthStatusMapper.insertSelective(userAuthStatus);
+    }
+
+
 }

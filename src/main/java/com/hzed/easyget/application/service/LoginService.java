@@ -47,12 +47,12 @@ public class LoginService {
 
         //用户是否存在,不存在去注册
         User user = userRepository.findByMobile(mobile);
-        if (Objects.isNull(user)){
+        if (Objects.isNull(user)) {
             //创建用户
             saveUser(mobile);
         }
         //校验验证码
-        if(!smsCodeService.checkSmsCode(mobile,smsCode)){
+        if (!smsCodeService.checkSmsCode(mobile, smsCode)) {
             throw new WarnException(BizCodeEnum.ERROR_SMSCODE);
         }
         //更新用户最后登录时间
@@ -78,9 +78,9 @@ public class LoginService {
     }
 
 
-    public void sendSmsCode(SmsCodRequest request){
+    public void sendSmsCode(SmsCodRequest request) {
         //获取短信验证码
-        Map<String , String> map = SmsUtil.sendCode(request.getMobile());
+        Map<String, String> map = SmsUtil.sendCode(request.getMobile());
 
         //保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();

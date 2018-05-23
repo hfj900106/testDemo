@@ -4,16 +4,18 @@ import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * demo
+ * 运营商认证
  *
- * @author guichang
- * @since 2018/4/3
+ * @author hfj
+ * @date 2018/5/23
  */
 
 @Data
-public class UserRequest {
+public class SmsAuthRequest {
+
     @NotBlank(message = "[mobile]不能为空")
     private String mobile;
-    @NotBlank(message = "[idCard]不能为空")
-    private String idCard;
+    @NotBlank(message = "[serverKey]不能为空")
+    private String serverKey;
+
 }

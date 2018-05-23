@@ -3,31 +3,16 @@ package com.hzed.easyget.persistence.auto.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class UserAuthStatus implements Serializable {
+public class AuthContent implements Serializable {
     /**
      * 主键
      */
     private Long id;
 
     /**
-     * 用户ID
+     * 用户认证状态id
      */
-    private Long userId;
-
-    /**
-     * 认证代码
-     */
-    private String authCode;
-
-    /**
-     * 认证状态 100-未认证 200-已认证 201-认证中 401-认证失败
-     */
-    private Integer authStatus;
-
-    /**
-     * 认证过期时间
-     */
-    private LocalDateTime expireTime;
+    private Long userAuthStatusId;
 
     /**
      */
@@ -49,6 +34,11 @@ public class UserAuthStatus implements Serializable {
      */
     private String remark;
 
+    /**
+     * 认证返回内容
+     */
+    private String content;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -59,36 +49,12 @@ public class UserAuthStatus implements Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getUserAuthStatusId() {
+        return userAuthStatusId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getAuthCode() {
-        return authCode;
-    }
-
-    public void setAuthCode(String authCode) {
-        this.authCode = authCode == null ? null : authCode.trim();
-    }
-
-    public Integer getAuthStatus() {
-        return authStatus;
-    }
-
-    public void setAuthStatus(Integer authStatus) {
-        this.authStatus = authStatus;
-    }
-
-    public LocalDateTime getExpireTime() {
-        return expireTime;
-    }
-
-    public void setExpireTime(LocalDateTime expireTime) {
-        this.expireTime = expireTime;
+    public void setUserAuthStatusId(Long userAuthStatusId) {
+        this.userAuthStatusId = userAuthStatusId;
     }
 
     public Long getCreateBy() {
@@ -131,6 +97,14 @@ public class UserAuthStatus implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -138,29 +112,27 @@ public class UserAuthStatus implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", userId=").append(userId);
-        sb.append(", authCode=").append(authCode);
-        sb.append(", authStatus=").append(authStatus);
-        sb.append(", expireTime=").append(expireTime);
+        sb.append(", userAuthStatusId=").append(userAuthStatusId);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", remark=").append(remark);
+        sb.append(", content=").append(content);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
     }
 
-    public static UserAuthStatus.Builder builder() {
-        return new UserAuthStatus.Builder();
+    public static AuthContent.Builder builder() {
+        return new AuthContent.Builder();
     }
 
     public static class Builder {
-        private UserAuthStatus obj;
+        private AuthContent obj;
 
         public Builder() {
-            this.obj = new UserAuthStatus();
+            this.obj = new AuthContent();
         }
 
         public Builder id(Long id) {
@@ -168,23 +140,8 @@ public class UserAuthStatus implements Serializable {
             return this;
         }
 
-        public Builder userId(Long userId) {
-            obj.setUserId(userId);
-            return this;
-        }
-
-        public Builder authCode(String authCode) {
-            obj.setAuthCode(authCode);
-            return this;
-        }
-
-        public Builder authStatus(Integer authStatus) {
-            obj.setAuthStatus(authStatus);
-            return this;
-        }
-
-        public Builder expireTime(LocalDateTime expireTime) {
-            obj.setExpireTime(expireTime);
+        public Builder userAuthStatusId(Long userAuthStatusId) {
+            obj.setUserAuthStatusId(userAuthStatusId);
             return this;
         }
 
@@ -213,22 +170,25 @@ public class UserAuthStatus implements Serializable {
             return this;
         }
 
-        public UserAuthStatus build() {
+        public Builder content(String content) {
+            obj.setContent(content);
+            return this;
+        }
+
+        public AuthContent build() {
             return this.obj;
         }
     }
 
     public enum Column {
         id("id"),
-        userId("user_id"),
-        authCode("auth_code"),
-        authStatus("auth_status"),
-        expireTime("expire_time"),
+        userAuthStatusId("user_auth_status_id"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),
         updateTime("update_time"),
-        remark("remark");
+        remark("remark"),
+        content("content");
 
         private final String column;
 

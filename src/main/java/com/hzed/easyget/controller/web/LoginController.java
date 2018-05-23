@@ -32,14 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
     @Autowired
     private LoginService loginService;
-
     @TokenIgnore
     @ModuleFunc("发送短信验证码")
     @PostMapping("/sendSmsCode")
     public Response<SmsCodResponse> sendSmsCode(@RequestBody SmsCodRequest request) {
         loginService.sendSmsCode(request);
         return Response.getSuccessResponse();
-
     }
 
     @TokenIgnore

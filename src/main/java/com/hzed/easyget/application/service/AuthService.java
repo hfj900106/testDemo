@@ -6,9 +6,11 @@ import com.hzed.easyget.controller.model.MessagesRequest;
 import com.hzed.easyget.controller.model.SmsAuthRequest;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.AuthContentRepository;
+import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.AuthContent;
+import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserAuthStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,8 @@ import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 public class AuthService {
     @Autowired
     private AuthContentRepository authContentRepository;
-
+    @Autowired
+    private UserRepository userRepository;
     /**
      * 通讯录认证
      *
@@ -106,9 +109,11 @@ public class AuthService {
      */
     public void authSms(SmsAuthRequest request) {
         GlobalUser user = getGlobalUser();
-        //写入用户授权信息返回值
-        Long userAuthId = IdentifierGenerator.nextId();
-        //未完成
+        //更新用户运营商服务密码
+        User user1 = new User();
+        user1.setId(user.getUserId());
+        user1.setSmsPassword(request.getServerKey());
+        userRepository.updateServerKey(user1);
     }
 
 }

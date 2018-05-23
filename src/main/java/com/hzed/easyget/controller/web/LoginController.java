@@ -4,8 +4,8 @@ package com.hzed.easyget.controller.web;
 import com.hzed.easyget.application.service.LoginService;
 import com.hzed.easyget.controller.model.LoginByCodeRequest;
 import com.hzed.easyget.controller.model.LoginByCodeResponse;
-import com.hzed.easyget.controller.model.SmsCodRequest;
-import com.hzed.easyget.controller.model.SmsCodResponse;
+import com.hzed.easyget.controller.model.SmsCodeRequest;
+import com.hzed.easyget.controller.model.SmsCodeResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
@@ -32,10 +32,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
     @Autowired
     private LoginService loginService;
+
     @TokenIgnore
     @ModuleFunc("发送短信验证码")
     @PostMapping("/sendSmsCode")
-    public Response<SmsCodResponse> sendSmsCode(@RequestBody SmsCodRequest request) {
+    public Response<SmsCodeResponse> sendSmsCode(@RequestBody SmsCodeRequest request) {
         loginService.sendSmsCode(request);
         return Response.getSuccessResponse();
     }

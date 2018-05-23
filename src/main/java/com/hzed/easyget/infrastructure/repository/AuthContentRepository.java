@@ -18,9 +18,10 @@ public class AuthContentRepository {
     private AuthContentMapper authContentMapper;
     @Autowired
     private UserAuthStatusMapper userAuthStatusMapper;
+
     @Transactional(rollbackFor = Exception.class)
     public void insertContactAndUserAuthStatus(AuthContent authContent, UserAuthStatus userAuthStatus) {
-        authContentMapper.insert(authContent);
-        userAuthStatusMapper.insert(userAuthStatus);
+        authContentMapper.insertSelective(authContent);
+        userAuthStatusMapper.insertSelective(userAuthStatus);
     }
 }

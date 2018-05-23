@@ -6,7 +6,6 @@ import com.hzed.easyget.controller.model.MessagesRequest;
 import com.hzed.easyget.controller.model.SmsAuthRequest;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.AuthContentRepository;
-import com.hzed.easyget.infrastructure.repository.UserAuthStatusRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.AuthContent;
@@ -40,8 +39,8 @@ public class AuthService {
         GlobalUser user = getGlobalUser();
         //写入用户授权信息返回值
         Long userAuthId = IdentifierGenerator.nextId();
-        AuthContent authContent = insertAuthContent(request.getContacts(), "通讯录授权", userAuthId);
-        UserAuthStatus userAuthStatus = insertUserAuthStatus(user.getUserId(), "通讯录授权", userAuthId);
+        AuthContent authContent = buildAuthContent(request.getContacts(), "通讯录授权", userAuthId);
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "通讯录授权", userAuthId);
         authContentRepository.insertContactAndUserAuthStatus(authContent, userAuthStatus);
     }
 
@@ -51,7 +50,7 @@ public class AuthService {
      * @param content
      * @param remark
      */
-    public AuthContent insertAuthContent(String content, String remark, Long userAuthId) {
+    public AuthContent buildAuthContent(String content, String remark, Long userAuthId) {
         //写入用户认证授权返回信息
         AuthContent authContent = new AuthContent();
         authContent.setId(IdentifierGenerator.nextId());
@@ -71,7 +70,7 @@ public class AuthService {
      * @param userId
      * @param remark
      */
-    public UserAuthStatus insertUserAuthStatus(Long userId, String remark, Long userAuthId) {
+    public UserAuthStatus buildUserAuthStatus(Long userId, String remark, Long userAuthId) {
         //保存到数据库短信记录表
         UserAuthStatus userAuthStatus = new UserAuthStatus();
         userAuthStatus.setId(userAuthId);
@@ -96,8 +95,8 @@ public class AuthService {
         GlobalUser user = getGlobalUser();
         //写入用户授权信息返回值
         Long userAuthId = IdentifierGenerator.nextId();
-        AuthContent authContent = insertAuthContent(request.getMessage(), "短信授权", userAuthId);
-        UserAuthStatus userAuthStatus = insertUserAuthStatus(user.getUserId(), "短信授权", userAuthId);
+        AuthContent authContent = buildAuthContent(request.getMessage(), "短信授权", userAuthId);
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "短信授权", userAuthId);
         authContentRepository.insertContactAndUserAuthStatus(authContent, userAuthStatus);
     }
 

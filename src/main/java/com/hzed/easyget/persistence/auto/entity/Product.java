@@ -22,7 +22,7 @@ public class Product implements Serializable {
     /**
      * 额度类型 1-枚举 2-区间
      */
-    private Boolean loanAmountType;
+    private Byte loanAmountType;
 
     /**
      * 额度 逗号隔开如 200,300,400
@@ -115,11 +115,11 @@ public class Product implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
-    public Boolean getLoanAmountType() {
+    public Byte getLoanAmountType() {
         return loanAmountType;
     }
 
-    public void setLoanAmountType(Boolean loanAmountType) {
+    public void setLoanAmountType(Byte loanAmountType) {
         this.loanAmountType = loanAmountType;
     }
 
@@ -290,7 +290,7 @@ public class Product implements Serializable {
             return this;
         }
 
-        public Builder loanAmountType(Boolean loanAmountType) {
+        public Builder loanAmountType(Byte loanAmountType) {
             obj.setLoanAmountType(loanAmountType);
             return this;
         }

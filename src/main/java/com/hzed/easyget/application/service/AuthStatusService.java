@@ -27,6 +27,13 @@ public class AuthStatusService {
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
         List<UserAuthStatus> userAuthStatus = authStatusRepository.getAuthSattusByUserId(userId);
+        if(userAuthStatus.isEmpty()){
+            return authStatusResponse;
+        }
+        for(UserAuthStatus uas:userAuthStatus){
+
+      //      AuthCodeEnum.ID_CARD.equals(uas.getAuthCode())? authStatusResponse.setAuthAddress(String.valueOf(uas.getAuthStatus())):0;
+        }
 
         return authStatusResponse;
     }

@@ -1,12 +1,15 @@
 package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.HomeService;
+import com.hzed.easyget.controller.model.AppVersionRequest;
+import com.hzed.easyget.controller.model.AppVersionResponse;
 import com.hzed.easyget.controller.model.ProductInfoResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +34,14 @@ public class HomeController {
     public Response<ProductInfoResponse> getProductInfo(){
 
         return Response.getSuccessResponse(homeService.getProductInfo());
+
+    }
+
+    @ModuleFunc("版本号检测是否更新")
+    @PostMapping("/getAppVersion")
+    public Response<AppVersionResponse> getAppVersion(@RequestBody AppVersionRequest request){
+
+        return Response.getSuccessResponse(homeService.getAppVersion(request));
 
     }
 }

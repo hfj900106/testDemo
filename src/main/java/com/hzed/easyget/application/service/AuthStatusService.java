@@ -1,6 +1,5 @@
 package com.hzed.easyget.application.service;
 
-import com.alibaba.fastjson.JSON;
 import com.hzed.easyget.controller.model.AuthStatusResponse;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.UserAuthStatusRepository;
@@ -26,9 +25,8 @@ public class AuthStatusService {
 
         AuthStatusResponse authStatusResponse = new AuthStatusResponse();
         GlobalUser globalUser = RequestUtil.getGlobalUser();
-        String userStr = JSON.toJSONString(globalUser);
-        String userId = "";
-        List<UserAuthStatus> userAuthStatus = authStatusRepository.getAuthSattusByUserId(Long.valueOf(userId));
+        Long userId = globalUser.getUserId();
+        List<UserAuthStatus> userAuthStatus = authStatusRepository.getAuthSattusByUserId(userId);
 
         return authStatusResponse;
     }

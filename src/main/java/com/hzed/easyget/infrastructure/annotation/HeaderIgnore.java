@@ -6,7 +6,7 @@ import java.lang.annotation.*;
  * 忽略请求头验证
  *
  * @author guichang
- * @date 2018/05/16
+ * @date 2018/5/23
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

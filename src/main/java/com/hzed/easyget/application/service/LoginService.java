@@ -81,7 +81,6 @@ public class LoginService {
     public void sendSmsCode(SmsCodRequest request) {
         //获取短信验证码
         Map<String, String> map = SmsUtil.sendCode(request.getMobile());
-
         //保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();
         smsLog.setId(IdentifierGenerator.nextId());
@@ -90,7 +89,6 @@ public class LoginService {
         smsLog.setMobile(request.getMobile());
         smsLog.setRemark("短信验证码");
         smsLogRepository.insertSelective(smsLog);
-
         //保存到Redis
         redisService.setCache(ComConsts.SMS_CODE, map.get("smsCode"), 120L);
 

@@ -27,7 +27,8 @@ public enum BizCodeEnum {
     ILLEGAL_I18N("1005", "无效的i18n"),
     ERROR_SMSCODE("1006","验证码错误或已过期"),
     USER_NOTEXISTS("1007", "用户不存在"),
-    DICT_NOTEXISTS("1008", "字典不存在");
+    DICT_NOTEXISTS("1008", "字典不存在"),
+    PRODUT_NOTEXISTS("1009", "当前产品不可用");
 
     // 20-
 

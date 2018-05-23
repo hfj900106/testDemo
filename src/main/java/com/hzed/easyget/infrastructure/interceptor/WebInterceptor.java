@@ -1,5 +1,6 @@
 package com.hzed.easyget.infrastructure.interceptor;
 
+import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.consts.LogConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
@@ -29,13 +30,21 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 日志加入trace
+        MDC.put(LogConsts.TRACE, UUID.randomUUID().toString().replaceAll("-", "").substring(3, 20));
+
         // 不为方法拦截直接放过
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }
 
-        // 日志加入trace
-        MDC.put(LogConsts.TRACE, UUID.randomUUID().toString().replaceAll("-", "").substring(3, 20));
+        HandlerMethod mHandler = (HandlerMethod) handler;
+
+        // 请求头忽略标志
+        HeaderIgnore headerIgnore = mHandler.getMethodAnnotation(HeaderIgnore.class);
+        if(headerIgnore != null) {
+            return true;
+        }
 
         // header中一些必要参数校验
         GlobalHeadr globalHead = RequestUtil.getGlobalHead();
@@ -58,7 +67,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         }
 
         // token验证
-        TokenIgnore tokenIgnore = ((HandlerMethod) handler).getMethodAnnotation(TokenIgnore.class);
+        TokenIgnore tokenIgnore = mHandler.getMethodAnnotation(TokenIgnore.class);
         if (tokenIgnore == null) {
             String token = globalHead.getToken();
             if (StringUtils.isBlank(token)) {

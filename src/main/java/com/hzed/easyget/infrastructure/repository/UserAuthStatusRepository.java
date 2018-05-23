@@ -31,7 +31,6 @@ public class UserAuthStatusRepository {
         example.createCriteria().andUserIdEqualTo(userId);
         return userAuthStatusMapper.selectByExample(example);
     }
-}
     public void insertSelective(UserAuthStatus userAuthStatus) {
         userAuthStatusMapper.insertSelective(userAuthStatus);
     }

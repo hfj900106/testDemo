@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
  * @date 2018/5/23
  */
 @Repository
-public class HomeRepository {
+public class ProductRepository {
 
     @Autowired
     private ProductMapper productMapper;

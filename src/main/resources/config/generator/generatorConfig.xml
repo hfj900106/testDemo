@@ -61,10 +61,10 @@
             <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
         </table>-->
 
-        <table tableName="t_user" domainObjectName="User" >
+        <table tableName="t_product" domainObjectName="Product" >
             <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
             <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-            <columnOverride column="last_login_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+            <!--<columnOverride column="last_login_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
         </table>
 
     </context>

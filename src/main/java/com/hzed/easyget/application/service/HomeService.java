@@ -3,7 +3,7 @@ package com.hzed.easyget.application.service;
 import com.hzed.easyget.controller.model.ProductInfoResponse;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
-import com.hzed.easyget.infrastructure.repository.HomeRepository;
+import com.hzed.easyget.infrastructure.repository.ProductRepository;
 import com.hzed.easyget.persistence.auto.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.Objects;
 public class HomeService {
 
     @Autowired
-    private HomeRepository homeRepository;
+    private ProductRepository homeRepository;
 
     public ProductInfoResponse getProductInfo() {
 

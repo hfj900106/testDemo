@@ -35,8 +35,6 @@ public class LoginService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private SmsCodeService smsCodeService;
-    @Autowired
     private SmsLogRepository smsLogRepository;
     @Autowired
     private RedisService redisService;
@@ -104,32 +102,16 @@ public class LoginService {
 
     }
 
-    @Autowired
-    RestService restService;
-
     public void sendSmsCode(SmsCodeRequest request) {
         String mobile = request.getMobile();
         String smsCodeKey = RedisConsts.SMS_CODE + ":" + mobile;
-
         String cacheSmsCode = redisService.getCache(smsCodeKey);
         if(StringUtils.isNotBlank(cacheSmsCode)) {
-            throw new ComBizException(BizCodeEnum.INVALID_REQUEST, "验证码发送频繁，请****");
+            throw new ComBizException(BizCodeEnum.INVALID_REQUEST, "验证码发送频繁，请稍后重试");
         }
-
-//        restService.get("htttasasdasdsaw", Maps.newHashMap(), )
-
         String code = StringUtils.leftPad(String.valueOf(new Random().nextInt(9999)), 4, "0");
         String content = "您的注册验证码是：" + code + " ，两分钟内有效，欢迎使用本平台";
-
-
-//        String content = ;
-//        sendSMS(mobile, content);
-//        Map<String, String> map = new HashMap(2);
-//        map.put("smsCode", String.valueOf(randomCode));
-//        map.put("content", content);
-
         // TODO 发送验证码 content
-
 
         // 保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();
@@ -141,7 +123,5 @@ public class LoginService {
         smsLogRepository.insertSelective(smsLog);
         //保存到Redis
         redisService.setCache(RedisConsts.SMS_CODE + ":" + mobile, content, 120L);
-
-
     }
 }

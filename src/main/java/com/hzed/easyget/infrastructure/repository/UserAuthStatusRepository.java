@@ -26,7 +26,7 @@ public class UserAuthStatusRepository {
     private UserAuthStatusMapper userAuthStatusMapper;
 
 
-    public List<UserAuthStatus> getAuthSattusByUserId(Long userId) {
+    public List<UserAuthStatus> getAuthStatusByUserId(Long userId) {
         UserAuthStatusExample example = new UserAuthStatusExample();
         example.createCriteria().andUserIdEqualTo(userId);
         return userAuthStatusMapper.selectByExample(example);

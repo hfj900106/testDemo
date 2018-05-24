@@ -10,12 +10,6 @@ import lombok.Data;
  */
 @Data
 public class AuthStatusResponse {
-    private String authIdentity;
-    private String authAddress;
-    private String authSMS;
-    private String authPersonalInfo;
-    private String authMobileOperator;
-    private String authInformation;
-    private String authFacebook;
-    private String authIns;
+    private String code;
+    private String status;
 }

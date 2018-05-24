@@ -28,6 +28,6 @@ public class AuthStatusController {
     @PostMapping("/getAuthStatus")
     public Response<AuthStatusResponse> getAuthStatus(){
 
-        return Response.getSuccessResponse(authStatusService.getAuthSatus());
+        return Response.getSuccessResponse(authStatusService.getAuthStatus());
     }
 }

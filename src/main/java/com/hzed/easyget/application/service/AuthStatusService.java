@@ -1,5 +1,6 @@
 package com.hzed.easyget.application.service;
 
+import com.google.common.collect.Lists;
 import com.hzed.easyget.controller.model.AuthStatusResponse;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.UserAuthStatusRepository;
@@ -21,20 +22,22 @@ public class AuthStatusService {
     @Autowired
     private UserAuthStatusRepository authStatusRepository;
 
-    public AuthStatusResponse getAuthSatus() {
+    public List<AuthStatusResponse> getAuthStatus() {
 
-        AuthStatusResponse authStatusResponse = new AuthStatusResponse();
+        List<AuthStatusResponse> authStatusList = Lists.newArrayList();
+
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
-        List<UserAuthStatus> userAuthStatus = authStatusRepository.getAuthSattusByUserId(userId);
-        if(userAuthStatus.isEmpty()){
-            return authStatusResponse;
-        }
-        for(UserAuthStatus uas:userAuthStatus){
+        List<UserAuthStatus> userAuthStatus = authStatusRepository.getAuthStatusByUserId(userId);
 
-      //      AuthCodeEnum.ID_CARD.equals(uas.getAuthCode())? authStatusResponse.setAuthAddress(String.valueOf(uas.getAuthStatus())):0;
+        for (UserAuthStatus uas : userAuthStatus) {
+            AuthStatusResponse authStatusResponse = new AuthStatusResponse();
+            authStatusResponse.setCode(uas.getAuthCode());
+            authStatusResponse.setStatus(String.valueOf(uas.getAuthStatus()));
+            authStatusList.add(authStatusResponse);
         }
 
-        return authStatusResponse;
+        return authStatusList;
     }
+
 }

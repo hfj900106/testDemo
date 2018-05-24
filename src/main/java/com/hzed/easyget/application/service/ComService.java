@@ -1,0 +1,53 @@
+package com.hzed.easyget.application.service;
+
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.model.GlobalHeadr;
+import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.utils.JwtUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+
+/**
+ * 一些公用的方法
+ *
+ * @author guichang
+ * @since 2018/5/24
+ */
+
+@Service
+public class ComService {
+
+    /**
+     * 校验请求头非token参数
+     */
+    public void validateHeader(GlobalHeadr globalHeadr) {
+        if (StringUtils.isBlank(globalHeadr.getAppKey())) {
+            throw new ComBizException(BizCodeEnum.ILLEGAL_APPKEY);
+        }
+        if (StringUtils.isBlank(globalHeadr.getPlatform())) {
+            throw new ComBizException(BizCodeEnum.ILLEGAL_PLATFORM);
+        }
+        if (StringUtils.isBlank(globalHeadr.getVersion())) {
+            throw new ComBizException(BizCodeEnum.ILLEGAL_VERSION);
+        }
+        if (StringUtils.isBlank(globalHeadr.getI18n())) {
+            throw new ComBizException(BizCodeEnum.ILLEGAL_I18N);
+        }
+        if (StringUtils.isBlank(globalHeadr.getImei())) {
+            throw new ComBizException(BizCodeEnum.ILLEGAL_IMEI);
+        }
+    }
+
+    public void validateToken(String token) {
+        if (StringUtils.isBlank(token)) {
+            throw new ComBizException(BizCodeEnum.ILLEGAL_TOKEN);
+        }
+
+        GlobalUser globalUser = JwtUtil.verify(token, GlobalUser.class);
+        if (globalUser == null) {
+            throw new ComBizException(BizCodeEnum.ILLEGAL_TOKEN);
+        }
+
+    }
+}

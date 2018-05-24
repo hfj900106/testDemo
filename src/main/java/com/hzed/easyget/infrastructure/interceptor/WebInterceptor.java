@@ -1,16 +1,14 @@
 package com.hzed.easyget.infrastructure.interceptor;
 
+import com.hzed.easyget.application.service.ComService;
 import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.consts.LogConsts;
-import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.model.GlobalHeadr;
-import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -27,6 +25,9 @@ import java.util.UUID;
 @Slf4j
 @Component
 public class WebInterceptor extends HandlerInterceptorAdapter {
+
+    @Autowired
+    private ComService comService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -47,39 +48,13 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         }
 
         // header中一些必要参数校验
-        GlobalHeadr globalHead = RequestUtil.getGlobalHead();
-
-        if (StringUtils.isBlank(globalHead.getAppKey())) {
-            RequestUtil.render(BizCodeEnum.ILLEGAL_APPKEY);
-            return false;
-        }
-        if (StringUtils.isBlank(globalHead.getPlatform())) {
-            RequestUtil.render(BizCodeEnum.ILLEGAL_PLATFORM);
-            return false;
-        }
-        if (StringUtils.isBlank(globalHead.getVersion())) {
-            RequestUtil.render(BizCodeEnum.ILLEGAL_VERSION);
-            return false;
-        }
-        if (StringUtils.isBlank(globalHead.getI18n())) {
-            RequestUtil.render(BizCodeEnum.ILLEGAL_I18N);
-            return false;
-        }
+        GlobalHeadr globalHeadr = RequestUtil.getGlobalHead();
+        comService.validateHeader(globalHeadr);
 
         // token验证
         TokenIgnore tokenIgnore = mHandler.getMethodAnnotation(TokenIgnore.class);
         if (tokenIgnore == null) {
-            String token = globalHead.getToken();
-            if (StringUtils.isBlank(token)) {
-                RequestUtil.render(BizCodeEnum.ILLEGAL_TOKEN);
-                return false;
-            }
-
-            GlobalUser globalUser = JwtUtil.verify(token, GlobalUser.class);
-            if (globalUser == null) {
-                RequestUtil.render(BizCodeEnum.ILLEGAL_TOKEN);
-                return false;
-            }
+            comService.validateToken(globalHeadr.getToken());
         }
 
         return true;

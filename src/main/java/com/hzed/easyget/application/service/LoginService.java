@@ -2,7 +2,7 @@ package com.hzed.easyget.application.service;
 
 import com.hzed.easyget.controller.model.LoginByCodeRequest;
 import com.hzed.easyget.controller.model.LoginByCodeResponse;
-import com.hzed.easyget.controller.model.SmsCodRequest;
+import com.hzed.easyget.controller.model.SmsCodeRequest;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
@@ -78,10 +78,9 @@ public class LoginService {
     }
 
 
-    public void sendSmsCode(SmsCodRequest request) {
+    public void sendSmsCode(SmsCodeRequest request) {
         //获取短信验证码
         Map<String, String> map = SmsUtil.sendCode(request.getMobile());
-
         //保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();
         smsLog.setId(IdentifierGenerator.nextId());
@@ -90,7 +89,6 @@ public class LoginService {
         smsLog.setMobile(request.getMobile());
         smsLog.setRemark("短信验证码");
         smsLogRepository.insertSelective(smsLog);
-
         //保存到Redis
         redisService.setCache(ComConsts.SMS_CODE, map.get("smsCode"), 120L);
 

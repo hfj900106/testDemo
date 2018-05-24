@@ -12,6 +12,6 @@ import lombok.Data;
 
 @Builder
 @Data
-public class SmsCodResponse {
+public class SmsCodeResponse {
     public Integer code;
 }

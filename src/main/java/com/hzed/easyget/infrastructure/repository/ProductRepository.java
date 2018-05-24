@@ -15,6 +15,7 @@ public class ProductRepository {
 
     @Autowired
     private ProductMapper productMapper;
+
     public Product getProductInfo() {
         ProductExample example = new ProductExample();
         example.createCriteria().andIsUseEqualTo(true);

@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 
 @Data
-public class SmsCodRequest {
+public class SmsCodeRequest {
 
     @NotBlank(message = "[mobile]不能为空")
     private String mobile;

@@ -4,7 +4,6 @@ import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
@@ -13,7 +12,6 @@ import java.util.concurrent.TimeUnit;
  * @author guichang
  * @date 2018/5/22
  */
-@Component
 public class RedisService {
 
     @Value("${spring.profiles.active}")

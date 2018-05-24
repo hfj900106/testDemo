@@ -2,6 +2,8 @@ package com.hzed;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hzed.easyget.infrastructure.annotation.EnableRedis;
+import com.hzed.easyget.infrastructure.annotation.EnableRest;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -28,6 +30,8 @@ import javax.sql.DataSource;
 @EnableAsync
 @EnableTransactionManagement
 @EnableScheduling
+@EnableRedis
+@EnableRest
 public class BootApplication {
 
     @Bean

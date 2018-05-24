@@ -30,6 +30,10 @@ public enum BizCodeEnum {
     DICT_NOTEXISTS("1008", "字典不存在"),
     PRODUT_NOTEXISTS("1009", "当前产品不可用"),
     ILLEGAL_SMSCODE("1010", "无效的验证码")
+
+
+
+
     ;
 
 

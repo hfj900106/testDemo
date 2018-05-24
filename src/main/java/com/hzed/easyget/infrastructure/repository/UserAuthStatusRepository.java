@@ -1,9 +1,7 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateUserStatement;
 import com.hzed.easyget.persistence.auto.entity.UserAuthStatus;
 import com.hzed.easyget.persistence.auto.entity.example.UserAuthStatusExample;
-import com.hzed.easyget.persistence.auto.entity.example.UserExample;
 import com.hzed.easyget.persistence.auto.mapper.UserAuthStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

@@ -3,6 +3,7 @@ package com.hzed.easyget.application.service;
 import com.hzed.easyget.application.enums.AmountEnum;
 import com.hzed.easyget.application.enums.AppVersionEnum;
 import com.hzed.easyget.controller.model.*;
+import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
@@ -36,6 +37,8 @@ public class HomeService {
     private DictService dictService;
     @Autowired
     private UserTokenRepository userTokenRepository;
+    @Autowired
+    private RedisService redisService;
 
     public ProductInfoResponse getProductInfo() {
 
@@ -101,18 +104,17 @@ public class HomeService {
     public UpdateTokenResponse updateToken() {
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
-        String imei = "11111";
-        //GlobalHeadr globalHead = RequestUtil.getGlobalHead();
-        // String imei = globalHead.getImei();
+        GlobalHeadr globalHead = RequestUtil.getGlobalHead();
+        String imei = globalHead.getImei();
         String newToken = JwtUtil.createToken(globalUser);
-        // 更新到t_user_token表 redis 3个小时
         UserToken userToken = new UserToken();
         userToken.setUpdateTime(LocalDateTime.now());
         userToken.setToken(newToken);
         userToken.setImei(imei);
         userToken.setExpireTime(DateUtil.addDays(LocalDateTime.now(), ComConsts.EXPIRE_DAYS));
         userTokenRepository.updateByUserIdAndImei(userToken);
-        userTokenRepository.updateByUserIdAndImei(userToken);
+        //放入redis 3个小时
+        redisService.setCache(String.valueOf(userId), newToken, 3 * 3600L);
         // 将新token返回给APP
         return UpdateTokenResponse.builder().token(newToken).build();
     }

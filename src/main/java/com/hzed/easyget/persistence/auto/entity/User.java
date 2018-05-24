@@ -32,7 +32,7 @@ public class User implements Serializable {
     /**
      * 性别 0-未知 1-男 2-女 3-女改男 4-男改女 5-其他
      */
-    private Boolean gender;
+    private Byte gender;
 
     /**
      * 真实姓名
@@ -131,11 +131,11 @@ public class User implements Serializable {
         this.lastLoginTime = lastLoginTime;
     }
 
-    public Boolean getGender() {
+    public Byte getGender() {
         return gender;
     }
 
-    public void setGender(Boolean gender) {
+    public void setGender(Byte gender) {
         this.gender = gender;
     }
 
@@ -300,7 +300,7 @@ public class User implements Serializable {
             return this;
         }
 
-        public Builder gender(Boolean gender) {
+        public Builder gender(Byte gender) {
             obj.setGender(gender);
             return this;
         }

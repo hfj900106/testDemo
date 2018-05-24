@@ -4,8 +4,8 @@ import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.controller.model.LoginByCodeRequest;
 import com.hzed.easyget.controller.model.LoginByCodeResponse;
 import com.hzed.easyget.controller.model.SmsCodeRequest;
+import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
-import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
@@ -45,6 +45,8 @@ public class LoginService {
     private RedisService redisService;
     @Autowired
     private UserTokenRepository userTokenRepository;
+    @Autowired
+    private SystemProp systemProp;
 
     @Value("${spring.profiles.active}")
     private String env;
@@ -82,14 +84,14 @@ public class LoginService {
             userTokenUpdate.setUpdateTime(LocalDateTime.now());
             userTokenUpdate.setToken(token);
             userTokenUpdate.setImei(imei);
-            userTokenUpdate.setExpireTime(DateUtil.addDays(LocalDateTime.now(), ComConsts.EXPIRE_DAYS));
+            userTokenUpdate.setExpireTime(DateUtil.addDays(LocalDateTime.now(), systemProp.getTokenExpire()));
             userTokenRepository.updateByUserIdAndImei(userTokenUpdate);
         } else {
             userToken.setId(IdentifierGenerator.nextId());
             userToken.setUserId(userId);
             userToken.setToken(token);
             userToken.setImei(imei);
-            userToken.setExpireTime(DateUtil.addDays(LocalDateTime.now(), ComConsts.EXPIRE_DAYS));
+            userToken.setExpireTime(DateUtil.addDays(LocalDateTime.now(), systemProp.getTokenExpire()));
             userToken.setCreateTime(LocalDateTime.now());
             userTokenRepository.insertByUserIdAndImei(userToken);
         }

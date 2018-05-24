@@ -48,11 +48,7 @@ public class HomeController {
     @PostMapping("/updateToken")
     public Response<UpdateTokenResponse> updateToken(){
 
-// 刷新token接口 token未过期的情况
-        // 1、从当前token拿到 GlobalUser 调用
-//        String newToken = JwtUtil.createToken(oldGlobalUser);
-        // 更新到t_user_token表 redis 3个小时
-        // 将新token返回给APP
-        return null;
+
+        return Response.getSuccessResponse(homeService.updateToken());
     }
 }

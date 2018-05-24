@@ -24,8 +24,9 @@ public class UserTokenRepository {
     }
 
     public int updateByUserIdAndImei(UserToken userToken) {
-
-        return userTokenMapper.updateByPrimaryKey(userToken);
+        UserTokenExample example = new UserTokenExample();
+        example.createCriteria().andIdEqualTo(userToken.getId());
+        return userTokenMapper.updateByExampleSelective(userToken, example);
     }
 
 

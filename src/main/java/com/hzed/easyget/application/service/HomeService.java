@@ -1,9 +1,8 @@
 package com.hzed.easyget.application.service;
 
+import com.hzed.easyget.application.enums.AmountEnum;
 import com.hzed.easyget.application.enums.AppVersionEnum;
-import com.hzed.easyget.controller.model.AppVersionRequest;
-import com.hzed.easyget.controller.model.AppVersionResponse;
-import com.hzed.easyget.controller.model.ProductInfoResponse;
+import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalHeadr;
@@ -14,6 +13,7 @@ import com.hzed.easyget.persistence.auto.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -74,5 +74,18 @@ public class HomeService {
         }else {
             return AppVersionEnum.HAS_UPDATE.getCode();
         }
+    }
+
+    public LoanCalculateResponse loanCalculate(LoanCalculateRequest request) {
+        LoanCalculateResponse loanCalculateResponse = new LoanCalculateResponse();
+        String loanAmountStr = request.getLoanAmount();
+        BigDecimal amount = new BigDecimal(loanAmountStr);
+        BigDecimal finalRepaymentRate = new BigDecimal(AmountEnum.FINAL_PAYMENT.getNum());
+
+        //尾款
+        BigDecimal finalRepayment = amount.multiply(finalRepaymentRate);
+        BigDecimal totalAmount = amount.add(finalRepayment);
+        loanCalculateResponse.setTotalAmount(totalAmount.toString());
+        return loanCalculateResponse;
     }
 }

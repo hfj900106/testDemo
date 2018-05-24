@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -29,9 +28,8 @@ public class DictController {
 
     @HeaderIgnore
     @ModuleFunc("清除字典缓存")
-    @PostMapping("/sendSmsCode")
-    public @ResponseBody
-    Response discardsCache(String key) {
+    @PostMapping("/clearCache")
+    public Response discardsCache(String key) {
         return Response.getSuccessResponse();
     }
 

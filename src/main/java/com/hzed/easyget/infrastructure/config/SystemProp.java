@@ -13,5 +13,5 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "system")
 public class SystemProp {
-    private String tokenExpire;
+    private Integer tokenExpire;
 }

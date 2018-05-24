@@ -126,7 +126,7 @@ public class LoginService {
         String smsCodeKey = RedisConsts.SMS_CODE + ":" + mobile;
         String cacheSmsCode = redisService.getCache(smsCodeKey);
         if(StringUtils.isNotBlank(cacheSmsCode)) {
-            throw new ComBizException(BizCodeEnum.INVALID_REQUEST, "验证码发送频繁，请稍后重试");
+            throw new ComBizException(BizCodeEnum.ILLEGAL_REQUEST, "验证码发送频繁，请稍后重试");
         }
         String code = StringUtils.leftPad(String.valueOf(new Random().nextInt(9999)), 4, "0");
         String content = "您的注册验证码是：" + code + " ，两分钟内有效，欢迎使用本平台";

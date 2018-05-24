@@ -16,7 +16,7 @@ public enum BizCodeEnum {
     // 9-系统服务异常
     UNKNOWN_EXCEPTION("9999", "系统未知错误"),
     SERVICE_EXCEPTION("9998", "内部服务处理异常"),
-    INVALID_REQUEST("9997", "无效的请求"),
+    ILLEGAL_REQUEST("9997", "无效的请求"),
 
     // 1-请求业务校验
     ILLEGAL_PARAM("1000", "请求参数非法"),
@@ -25,11 +25,13 @@ public enum BizCodeEnum {
     ILLEGAL_VERSION("1003", "无效的version"),
     ILLEGAL_TOKEN("1004", "无效的token"),
     ILLEGAL_I18N("1005", "无效的i18n"),
-    ERROR_SMSCODE("1006","验证码错误或已过期"),
-    USER_NOTEXISTS("1007", "用户不存在"),
-    DICT_NOTEXISTS("1008", "字典不存在"),
-    PRODUT_NOTEXISTS("1009", "当前产品不可用"),
-    ILLEGAL_SMSCODE("1010", "无效的验证码")
+    ILLEGAL_IMEI("1006", "无效的imei"),
+
+    ILLEGAL_SMSCODE("1007", "无效的验证码"),
+    ERROR_SMSCODE("1008","验证码错误或已过期"),
+    USER_NOTEXISTS("1009", "用户不存在"),
+    DICT_NOTEXISTS("1010", "字典不存在"),
+    PRODUT_NOTEXISTS("1011", "当前产品不可用")
 
 
 

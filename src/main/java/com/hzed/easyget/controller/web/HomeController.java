@@ -1,9 +1,7 @@
 package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.HomeService;
-import com.hzed.easyget.controller.model.AppVersionRequest;
-import com.hzed.easyget.controller.model.AppVersionResponse;
-import com.hzed.easyget.controller.model.ProductInfoResponse;
+import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
@@ -38,5 +36,11 @@ public class HomeController {
     public Response<AppVersionResponse> getAppVersion(@RequestBody AppVersionRequest request) {
         return Response.getSuccessResponse(homeService.getAppVersion(request));
 
+    }
+
+    @ModuleFunc("产品试算")
+    @PostMapping("/loanCalculate")
+    public Response<LoanCalculateResponse> loanCalculate(@RequestBody LoanCalculateRequest request){
+        return Response.getSuccessResponse(homeService.loanCalculate(request));
     }
 }

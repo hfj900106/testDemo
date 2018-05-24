@@ -3,21 +3,23 @@ package com.hzed.easyget.application.service;
 import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.controller.model.ContactsRequest;
 import com.hzed.easyget.controller.model.MessagesRequest;
+import com.hzed.easyget.controller.model.PersonInfoAuthRequest;
 import com.hzed.easyget.controller.model.SmsAuthRequest;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.AuthContentRepository;
+import com.hzed.easyget.infrastructure.repository.PersonInfoRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
+import com.hzed.easyget.infrastructure.utils.FaJsonUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.AuthContent;
+import com.hzed.easyget.persistence.auto.entity.PersonInfo;
 import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserAuthStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
-
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 
 /**
@@ -33,6 +35,8 @@ public class AuthService {
     private AuthContentRepository authContentRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PersonInfoRepository personInfoRepository;
     /**
      * 通讯录认证
      *
@@ -114,6 +118,26 @@ public class AuthService {
         user1.setId(user.getUserId());
         user1.setSmsPassword(request.getServerKey());
         userRepository.updateServerKey(user1);
+    }
+
+    /**
+     * 个人信息认证
+     * @param request
+     */
+    public void authPersonInfo(PersonInfoAuthRequest request) {
+        GlobalUser user = getGlobalUser();
+        String personInfoStr = request.getDate();
+        //根据拿到json串组装对象
+        PersonInfo personInfo = FaJsonUtil.parseObj(personInfoStr,PersonInfo.class);
+        if(null!=personInfo){
+            Long userAuthId = IdentifierGenerator.nextId();
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "个人信息认证", userAuthId);
+            personInfo.setId(IdentifierGenerator.nextId());
+            personInfo.setUserId(user.getUserId());
+            personInfo.setUserStatusId(userAuthId);
+            personInfo.setRemark("个人信息认证");
+            personInfoRepository.insertPersonInfoAndUserAuthStatus(personInfo,userAuthStatus);
+        }
     }
 
 }

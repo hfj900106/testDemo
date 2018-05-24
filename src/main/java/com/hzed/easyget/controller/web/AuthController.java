@@ -3,6 +3,7 @@ package com.hzed.easyget.controller.web;
 import com.hzed.easyget.application.service.AuthService;
 import com.hzed.easyget.controller.model.ContactsRequest;
 import com.hzed.easyget.controller.model.MessagesRequest;
+import com.hzed.easyget.controller.model.PersonInfoAuthRequest;
 import com.hzed.easyget.controller.model.SmsAuthRequest;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
@@ -49,5 +50,11 @@ public class AuthController {
         return Response.getSuccessResponse();
     }
 
+    @ModuleFunc("个人信息认证")
+    @PostMapping("/personInfo")
+    public Response personInfoAuth(@RequestBody PersonInfoAuthRequest request) {
+        authService.authPersonInfo(request);
+        return Response.getSuccessResponse();
+    }
 
 }

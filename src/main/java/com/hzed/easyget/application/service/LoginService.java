@@ -5,16 +5,20 @@ import com.hzed.easyget.controller.model.LoginByCodeRequest;
 import com.hzed.easyget.controller.model.LoginByCodeResponse;
 import com.hzed.easyget.controller.model.SmsCodeRequest;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
+import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
+import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
+import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.SmsLog;
 import com.hzed.easyget.persistence.auto.entity.User;
+import com.hzed.easyget.persistence.auto.entity.UserToken;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,14 +41,17 @@ public class LoginService {
     private SmsLogRepository smsLogRepository;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private UserTokenRepository userTokenRepository;
 
     @Value("${spring.profiles.active}")
     private String env;
 
-    public LoginByCodeResponse loginByCode(LoginByCodeRequest params) {
+    public LoginByCodeResponse loginByCode(LoginByCodeRequest request) {
 
-        String mobile = params.getMobile();
-        String smsCode = params.getSmsCode();
+        String mobile = request.getMobile();
+        String smsCode = request.getSmsCode();
+        String imei = request.getIMEI();
 
         //校验验证码
         checkSmsCode(mobile, smsCode);
@@ -61,20 +68,28 @@ public class LoginService {
             userRepository.insert(user);
         }
 
+        Long userId = user.getId();
         // 生成token
-        GlobalUser userToken = GlobalUser.builder().userId(user.getId()).mobile(mobile).build();
-        String token = JwtUtil.createToken(userToken);
+        GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
+        String token = JwtUtil.createToken(newUserToken);
+        UserToken userToken = userTokenRepository.findByUserIdAndImei(userId, imei);
+        if (userToken != null) {
+            userToken.setUpdateTime(LocalDateTime.now());
+            userToken.setToken(token);
+            userToken.setExpireTime(DateUtil.addDays(LocalDateTime.now(), ComConsts.EXPIRE_DAYS));
+            userTokenRepository.updateByUserIdAndImei(userToken);
+        } else {
+            userToken.setId(IdentifierGenerator.nextId());
+            userToken.setUserId(userId);
+            userToken.setToken(token);
+            userToken.setImei(imei);
+            userToken.setExpireTime(DateUtil.addDays(LocalDateTime.now(), ComConsts.EXPIRE_DAYS));
+            userToken.setCreateTime(LocalDateTime.now());
+            userTokenRepository.insertByUserIdAndImei(userToken);
+        }
 
-        // 1、插入t_user_token表
-
-        // 2、放入redis 3个小时
-
-        // 刷新token接口 token未过期的情况
-        // 1、从当前token拿到 GlobalUser 调用
-//        String newToken = JwtUtil.createToken(oldGlobalUser);
-        // 更新到t_user_token表 redis 3个小时
-        // 将新token返回给APP
-
+        //放入redis 3个小时
+        redisService.setCache(String.valueOf(userId), token, 3 * 3600L);
 
         //更新用户最后登录时间
         user.setLastLoginTime(LocalDateTime.now());

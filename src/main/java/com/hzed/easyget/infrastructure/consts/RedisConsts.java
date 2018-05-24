@@ -14,4 +14,6 @@ public class RedisConsts {
      */
     public static String SPLIT = ":";
 
+    public static final String SMS_CODE = "sms_code";
+
 }

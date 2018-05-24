@@ -28,7 +28,10 @@ public enum BizCodeEnum {
     ERROR_SMSCODE("1006","验证码错误或已过期"),
     USER_NOTEXISTS("1007", "用户不存在"),
     DICT_NOTEXISTS("1008", "字典不存在"),
-    PRODUT_NOTEXISTS("1009", "当前产品不可用");
+    PRODUT_NOTEXISTS("1009", "当前产品不可用"),
+    ILLEGAL_SMSCODE("1010", "无效的验证码")
+    ;
+
 
     // 20-
 

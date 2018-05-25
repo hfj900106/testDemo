@@ -20,9 +20,9 @@ public class Auth implements Serializable {
     private String name;
 
     /**
-     * 是否可用 0-不可用 1-可用
+     * 是否可用 true-可用 false-不可用
      */
-    private Byte isUse;
+    private Boolean isUse;
 
     /**
      */
@@ -70,11 +70,11 @@ public class Auth implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
-    public Byte getIsUse() {
+    public Boolean getIsUse() {
         return isUse;
     }
 
-    public void setIsUse(Byte isUse) {
+    public void setIsUse(Boolean isUse) {
         this.isUse = isUse;
     }
 
@@ -164,7 +164,7 @@ public class Auth implements Serializable {
             return this;
         }
 
-        public Builder isUse(Byte isUse) {
+        public Builder isUse(Boolean isUse) {
             obj.setIsUse(isUse);
             return this;
         }

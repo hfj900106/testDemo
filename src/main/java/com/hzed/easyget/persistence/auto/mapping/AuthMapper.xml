@@ -5,7 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="code" jdbcType="CHAR" property="code" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="is_use" jdbcType="TINYINT" property="isUse" />
+    <result column="is_use" jdbcType="BIT" property="isUse" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -139,7 +139,7 @@
     insert into t_auth (id, code, name, is_use, 
       create_by, create_time, update_by, 
       update_time, remark)
-    values (#{id,jdbcType=BIGINT}, #{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{isUse,jdbcType=TINYINT}, 
+    values (#{id,jdbcType=BIGINT}, #{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{isUse,jdbcType=BIT}, 
       #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
@@ -185,7 +185,7 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="isUse != null">
-        #{isUse,jdbcType=TINYINT},
+        #{isUse,jdbcType=BIT},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -223,7 +223,7 @@
         name = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.isUse != null">
-        is_use = #{record.isUse,jdbcType=TINYINT},
+        is_use = #{record.isUse,jdbcType=BIT},
       </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
@@ -250,7 +250,7 @@
     set id = #{record.id,jdbcType=BIGINT},
       code = #{record.code,jdbcType=CHAR},
       name = #{record.name,jdbcType=VARCHAR},
-      is_use = #{record.isUse,jdbcType=TINYINT},
+      is_use = #{record.isUse,jdbcType=BIT},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -270,7 +270,7 @@
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="isUse != null">
-        is_use = #{isUse,jdbcType=TINYINT},
+        is_use = #{isUse,jdbcType=BIT},
       </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
@@ -294,7 +294,7 @@
     update t_auth
     set code = #{code,jdbcType=CHAR},
       name = #{name,jdbcType=VARCHAR},
-      is_use = #{isUse,jdbcType=TINYINT},
+      is_use = #{isUse,jdbcType=BIT},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
@@ -334,7 +334,7 @@
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.code,jdbcType=CHAR}, #{item.name,jdbcType=VARCHAR}, 
-        #{item.isUse,jdbcType=TINYINT}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.isUse,jdbcType=BIT}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
         #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
         )
     </foreach>
@@ -359,7 +359,7 @@
           #{item.name,jdbcType=VARCHAR}
         </if>
         <if test="'is_use' == column.value">
-          #{item.isUse,jdbcType=TINYINT}
+          #{item.isUse,jdbcType=BIT}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

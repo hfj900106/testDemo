@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @ExceptionAnno
 @RestController
-@RequestMapping("/hzed/easy-get/home")
+@RequestMapping("/home")
 public class HomeController {
     @Autowired
     private HomeService homeService;

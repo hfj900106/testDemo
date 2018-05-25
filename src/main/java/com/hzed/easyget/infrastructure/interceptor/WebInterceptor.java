@@ -54,7 +54,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         // token验证
         TokenIgnore tokenIgnore = mHandler.getMethodAnnotation(TokenIgnore.class);
         if (tokenIgnore == null) {
-            comService.validateToken(globalHeadr.getToken());
+            comService.validateToken(globalHeadr);
         }
 
         return true;

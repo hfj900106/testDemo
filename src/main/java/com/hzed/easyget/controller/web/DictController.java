@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @ExceptionAnno
 @RestController
-@RequestMapping("/hzed/easy-get/dict")
+@RequestMapping("/dict")
 public class DictController {
 
     @Autowired

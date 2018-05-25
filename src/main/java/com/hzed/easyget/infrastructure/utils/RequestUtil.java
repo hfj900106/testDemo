@@ -46,6 +46,7 @@ public class RequestUtil {
         header.setToken(request.getHeader(ComConsts.TOKEN));
         header.setVersion(request.getHeader(ComConsts.VERSION));
         header.setI18n(request.getHeader(ComConsts.I18N));
+        header.setImei(request.getHeader(ComConsts.IMEI));
         return header;
     }
 

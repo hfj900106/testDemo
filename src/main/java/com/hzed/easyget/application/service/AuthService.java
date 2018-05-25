@@ -59,7 +59,7 @@ public class AuthService {
             AuthStatusResponse authStatusResponse = new AuthStatusResponse();
             authStatusResponse.setCode(uas.getAuthCode());
             authStatusResponse.setStatus(String.valueOf(uas.getAuthStatus()));
-            authStatusResponse.setIsUse(auth.getIsUse()==true ? StatusEnum.ENABLE.getCode(): StatusEnum.DISENABLE.getCode());
+            authStatusResponse.setIsUse(auth.getIsUse() ? StatusEnum.ENABLE.getCode(): StatusEnum.DISENABLE.getCode());
             authStatusList.add(authStatusResponse);
         }
         return authStatusList;

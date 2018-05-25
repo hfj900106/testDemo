@@ -10,7 +10,7 @@ import lombok.Getter;
 public enum StatusEnum {
     ENABLE("1", "可用"),
     DISENABLE("0", "不可用");
-    
+
     private String code;
     private String msg;
 

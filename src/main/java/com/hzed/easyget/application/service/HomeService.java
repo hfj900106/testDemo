@@ -3,6 +3,7 @@ package com.hzed.easyget.application.service;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AmountEnum;
 import com.hzed.easyget.application.enums.AppVersionEnum;
+import com.hzed.easyget.application.enums.StatusEnum;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
@@ -11,16 +12,14 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalHeadr;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.BombRepository;
 import com.hzed.easyget.infrastructure.repository.ProductRepository;
 import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
-import com.hzed.easyget.persistence.auto.entity.Bomb;
-import com.hzed.easyget.persistence.auto.entity.Dict;
-import com.hzed.easyget.persistence.auto.entity.Product;
-import com.hzed.easyget.persistence.auto.entity.UserToken;
+import com.hzed.easyget.persistence.auto.entity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +46,8 @@ public class HomeService {
     private RedisService redisService;
     @Autowired
     private BombRepository bombRepository;
+    @Autowired
+    private BidRepository bidRepository;
 
     private static final String ANDROID_BOMB = "android_bomb";
     private static final String IOS_BOMB = "ios_bomb";
@@ -164,5 +165,15 @@ public class HomeService {
             bombResponseList.add(bombResponse);
         }
         return bombResponseList;
+    }
+
+    public LoanResponse startLoan() {
+        GlobalUser globalUser = RequestUtil.getGlobalUser();
+        Long userId = globalUser.getUserId();
+        List<Bid> bid = bidRepository.findBStatusByUserId(userId, Lists.newArrayList((byte) 1, (byte) 5));
+        if (bid.isEmpty() || bid.size() == 0) {
+            return LoanResponse.builder().isLoan(StatusEnum.ENABLE.getCode()).build();
+        }
+        return LoanResponse.builder().isLoan(StatusEnum.DISENABLE.getCode()).build();
     }
 }

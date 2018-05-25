@@ -4,7 +4,6 @@ import com.hzed.easyget.application.service.HomeService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,9 +56,14 @@ public class HomeController {
 
     @ModuleFunc("获取公告列表")
     @PostMapping("/getBombList")
-    @TokenIgnore
     public Response<List<BombResponse>> getBombList(){
         return Response.getSuccessResponse(homeService.getBombList());
+    }
+
+    @ModuleFunc("发起借款校验")
+    @PostMapping("/startLoan")
+    public Response<LoanResponse> startLoan(){
+        return Response.getSuccessResponse(homeService.startLoan());
     }
 
 }

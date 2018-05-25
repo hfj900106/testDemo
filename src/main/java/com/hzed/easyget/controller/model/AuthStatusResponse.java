@@ -12,4 +12,5 @@ import lombok.Data;
 public class AuthStatusResponse {
     private String code;
     private String status;
+    private String isUse;
 }

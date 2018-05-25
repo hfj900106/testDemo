@@ -49,9 +49,9 @@ public class AuthController {
     }
 
     @ModuleFunc("身份信息认证")
-    @PostMapping("/identityInformation")
-    public Response identityInformationAuth(@RequestBody IdentityInformationAuthRequest request) {
-        authService.identityInformationAuth(request);
+    @PostMapping("/identityInfo")
+    public Response identityInformationAuth(@RequestBody IdentityInfoAuthRequest request) {
+        authService.identityInfoAuth(request);
         return Response.getSuccessResponse();
     }
 

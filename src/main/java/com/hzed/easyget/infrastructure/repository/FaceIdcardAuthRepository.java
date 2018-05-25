@@ -25,7 +25,7 @@ public class FaceIdcardAuthRepository {
     private UserMapper userMapper;
 
     @Transactional(rollbackFor = Exception.class)
-    public void insertIdentityInformation(FaceIdcardAuth faceIdcardAuth, UserAuthStatus userAuthStatus, User user) {
+    public void insertIdentityInfo(FaceIdcardAuth faceIdcardAuth, UserAuthStatus userAuthStatus, User user) {
         faceIdcardAuthMapper.insertSelective(faceIdcardAuth);
         userAuthStatusMapper.insertSelective(userAuthStatus);
         userMapper.updateByPrimaryKeySelective(user);

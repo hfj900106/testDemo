@@ -22,7 +22,7 @@ public class Auth implements Serializable {
     /**
      * 是否可用 0-不可用 1-可用
      */
-    private Boolean isUse;
+    private Byte isUse;
 
     /**
      */
@@ -70,11 +70,11 @@ public class Auth implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
-    public Boolean getIsUse() {
+    public Byte getIsUse() {
         return isUse;
     }
 
-    public void setIsUse(Boolean isUse) {
+    public void setIsUse(Byte isUse) {
         this.isUse = isUse;
     }
 
@@ -164,7 +164,7 @@ public class Auth implements Serializable {
             return this;
         }
 
-        public Builder isUse(Boolean isUse) {
+        public Builder isUse(Byte isUse) {
             obj.setIsUse(isUse);
             return this;
         }

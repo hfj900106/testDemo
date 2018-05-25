@@ -85,7 +85,7 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from auth_content
+    from t_auth_content
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -107,7 +107,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from auth_content
+    from t_auth_content
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -131,7 +131,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from auth_content
+    from t_auth_content
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -144,7 +144,7 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from auth_content
+    from t_auth_content
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -152,21 +152,21 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from auth_content
+    from t_auth_content
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from auth_content
+    delete from t_auth_content
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.AuthContentExample">
-    delete from auth_content
+    delete from t_auth_content
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.AuthContent">
-    insert into auth_content (id, user_auth_status_id, create_by, 
+    insert into t_auth_content (id, user_auth_status_id, create_by, 
       create_time, update_by, update_time, 
       remark, content)
     values (#{id,jdbcType=BIGINT}, #{userAuthStatusId,jdbcType=BIGINT}, #{createBy,jdbcType=BIGINT}, 
@@ -174,7 +174,7 @@
       #{remark,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.AuthContent">
-    insert into auth_content
+    insert into t_auth_content
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -229,13 +229,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.AuthContentExample" resultType="java.lang.Long">
-    select count(*) from auth_content
+    select count(*) from t_auth_content
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update auth_content
+    update t_auth_content
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -267,7 +267,7 @@
     </if>
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map">
-    update auth_content
+    update t_auth_content
     set id = #{record.id,jdbcType=BIGINT},
       user_auth_status_id = #{record.userAuthStatusId,jdbcType=BIGINT},
       create_by = #{record.createBy,jdbcType=BIGINT},
@@ -281,7 +281,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update auth_content
+    update t_auth_content
     set id = #{record.id,jdbcType=BIGINT},
       user_auth_status_id = #{record.userAuthStatusId,jdbcType=BIGINT},
       create_by = #{record.createBy,jdbcType=BIGINT},
@@ -294,7 +294,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.AuthContent">
-    update auth_content
+    update t_auth_content
     <set>
       <if test="userAuthStatusId != null">
         user_auth_status_id = #{userAuthStatusId,jdbcType=BIGINT},
@@ -321,7 +321,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hzed.easyget.persistence.auto.entity.AuthContent">
-    update auth_content
+    update t_auth_content
     set user_auth_status_id = #{userAuthStatusId,jdbcType=BIGINT},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -332,7 +332,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.AuthContent">
-    update auth_content
+    update t_auth_content
     set user_auth_status_id = #{userAuthStatusId,jdbcType=BIGINT},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -344,7 +344,7 @@
   <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.AuthContentExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from auth_content
+    from t_auth_content
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -358,7 +358,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from auth_content
+    from t_auth_content
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -372,7 +372,7 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from auth_content
+    from t_auth_content
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -382,7 +382,7 @@
     limit 1
   </select>
   <insert id="batchInsert" parameterType="map">
-    insert into auth_content
+    insert into t_auth_content
     (id, user_auth_status_id, create_by, create_time, update_by, update_time, remark, 
       content)
     values
@@ -393,7 +393,7 @@
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into auth_content (
+    insert into t_auth_content (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>

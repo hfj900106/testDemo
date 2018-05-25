@@ -371,52 +371,52 @@ public class AuthExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsUseEqualTo(Boolean value) {
+        public Criteria andIsUseEqualTo(Byte value) {
             addCriterion("is_use =", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andIsUseNotEqualTo(Boolean value) {
+        public Criteria andIsUseNotEqualTo(Byte value) {
             addCriterion("is_use <>", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andIsUseGreaterThan(Boolean value) {
+        public Criteria andIsUseGreaterThan(Byte value) {
             addCriterion("is_use >", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andIsUseGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andIsUseGreaterThanOrEqualTo(Byte value) {
             addCriterion("is_use >=", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andIsUseLessThan(Boolean value) {
+        public Criteria andIsUseLessThan(Byte value) {
             addCriterion("is_use <", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andIsUseLessThanOrEqualTo(Boolean value) {
+        public Criteria andIsUseLessThanOrEqualTo(Byte value) {
             addCriterion("is_use <=", value, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andIsUseIn(List<Boolean> values) {
+        public Criteria andIsUseIn(List<Byte> values) {
             addCriterion("is_use in", values, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andIsUseNotIn(List<Boolean> values) {
+        public Criteria andIsUseNotIn(List<Byte> values) {
             addCriterion("is_use not in", values, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andIsUseBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsUseBetween(Byte value1, Byte value2) {
             addCriterion("is_use between", value1, value2, "isUse");
             return (Criteria) this;
         }
 
-        public Criteria andIsUseNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andIsUseNotBetween(Byte value1, Byte value2) {
             addCriterion("is_use not between", value1, value2, "isUse");
             return (Criteria) this;
         }

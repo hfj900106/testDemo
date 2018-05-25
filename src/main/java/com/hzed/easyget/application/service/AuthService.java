@@ -137,7 +137,7 @@ public class AuthService {
      */
     public void authPersonInfo(PersonInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
-        String personInfoStr = request.getDate();
+        String personInfoStr = request.getData();
         //根据拿到json串组装对象
         PersonInfo personInfo = FaJsonUtil.parseObj(personInfoStr, PersonInfo.class);
         if (null != personInfo) {
@@ -158,7 +158,7 @@ public class AuthService {
      */
     public void identityInfoAuth(IdentityInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
-        String identityInfoStr = request.getDate();
+        String identityInfoStr = request.getData();
         JSONObject jsStr = JSONObject.parseObject(identityInfoStr);
         String realName = (String) jsStr.get("realName");
         String idCardNo = (String) jsStr.get("idCardNo");
@@ -187,7 +187,7 @@ public class AuthService {
         faceIdcardAuth.setCreateTime(LocalDateTime.now());
         faceIdcardAuth.setRemark("身份信息认证");
         //获取UserAuthStatus对象
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthStatusId, "通讯录授权");
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthStatusId, "身份信息认证");
         faceIdcardAuthRepository.insertIdentityInfo(faceIdcardAuth, userAuthStatus, userObj);
     }
 }

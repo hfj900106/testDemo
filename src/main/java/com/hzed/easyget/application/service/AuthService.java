@@ -166,30 +166,26 @@ public class AuthService {
         //根据拿到json串组装对象
         User userObj = new User();
         FaceIdcardAuth faceIdcardAuth = new FaceIdcardAuth();
-        if (null != userObj && null != faceIdcardAuth) {
-            //组装user对象
-            userObj.setId(user.getUserId());
-            userObj.setRealName(realName);
-            userObj.setIdCardNo(idCardNo);
-            userObj.setGender(gender);
-            userObj.setUpdateTime(LocalDateTime.now());
-            userObj.setUpdateBy(user.getUserId());
-            //组装faceIdcardAuth对象
-            Long faceIdcardAuthId = IdentifierGenerator.nextId();
-            Long userAuthStatusId = IdentifierGenerator.nextId();
-            faceIdcardAuth.setId(faceIdcardAuthId);
-            faceIdcardAuth.setUserId(user.getUserId());
-            faceIdcardAuth.setUserStatusId(userAuthStatusId);
-            faceIdcardAuth.setIdCardPhotoPath(idCardPhotoPath);
-            faceIdcardAuth.setFacePhotoPath(facePhotoPath);
-            faceIdcardAuth.setCreateBy(faceIdcardAuthId);
-            faceIdcardAuth.setCreateTime(LocalDateTime.now());
-            faceIdcardAuth.setRemark("身份信息认证");
-            //获取UserAuthStatus对象
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "通讯录授权", userAuthStatusId);
-            faceIdcardAuthRepository.insertIdentityInformation(faceIdcardAuth, userAuthStatus, userObj);
-        } else {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "数据不符合要求，请仔细核对");
-        }
+        //组装user对象
+        userObj.setId(user.getUserId());
+        userObj.setRealName(realName);
+        userObj.setIdCardNo(idCardNo);
+        userObj.setGender(gender);
+        userObj.setUpdateTime(LocalDateTime.now());
+        userObj.setUpdateBy(user.getUserId());
+        //组装faceIdcardAuth对象
+        Long faceIdcardAuthId = IdentifierGenerator.nextId();
+        Long userAuthStatusId = IdentifierGenerator.nextId();
+        faceIdcardAuth.setId(faceIdcardAuthId);
+        faceIdcardAuth.setUserId(user.getUserId());
+        faceIdcardAuth.setUserStatusId(userAuthStatusId);
+        faceIdcardAuth.setIdCardPhotoPath(idCardPhotoPath);
+        faceIdcardAuth.setFacePhotoPath(facePhotoPath);
+        faceIdcardAuth.setCreateBy(faceIdcardAuthId);
+        faceIdcardAuth.setCreateTime(LocalDateTime.now());
+        faceIdcardAuth.setRemark("身份信息认证");
+        //获取UserAuthStatus对象
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "通讯录授权", userAuthStatusId);
+        faceIdcardAuthRepository.insertIdentityInformation(faceIdcardAuth, userAuthStatus, userObj);
     }
 }

@@ -41,13 +41,6 @@ public class AuthController {
         return Response.getSuccessResponse();
     }
 
-    @ModuleFunc("运营商认证")
-    @PostMapping("/sms")
-    public Response smsAuth(@RequestBody SmsAuthRequest request) {
-        authService.authSms(request);
-        return Response.getSuccessResponse();
-    }
-
     @ModuleFunc("个人信息认证")
     @PostMapping("/personInfo")
     public Response personInfoAuth(@RequestBody PersonInfoAuthRequest request) {

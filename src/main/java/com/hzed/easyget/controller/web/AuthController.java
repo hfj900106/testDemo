@@ -1,10 +1,7 @@
 package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.AuthService;
-import com.hzed.easyget.controller.model.ContactsRequest;
-import com.hzed.easyget.controller.model.MessagesRequest;
-import com.hzed.easyget.controller.model.PersonInfoAuthRequest;
-import com.hzed.easyget.controller.model.SmsAuthRequest;
+import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
@@ -17,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 用户认证
+ *
  * @author hfj
  * @date 2018/5/22
  */
@@ -43,17 +41,17 @@ public class AuthController {
         return Response.getSuccessResponse();
     }
 
-    @ModuleFunc("运营商认证")
-    @PostMapping("/sms")
-    public Response smsAuth(@RequestBody SmsAuthRequest request) {
-        authService.authSms(request);
-        return Response.getSuccessResponse();
-    }
-
     @ModuleFunc("个人信息认证")
     @PostMapping("/personInfo")
     public Response personInfoAuth(@RequestBody PersonInfoAuthRequest request) {
         authService.authPersonInfo(request);
+        return Response.getSuccessResponse();
+    }
+
+    @ModuleFunc("身份信息认证")
+    @PostMapping("/identityInformation")
+    public Response identityInformationAuth(@RequestBody IdentityInformationAuthRequest request) {
+        authService.identityInformationAuth(request);
         return Response.getSuccessResponse();
     }
 

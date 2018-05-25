@@ -7,7 +7,7 @@
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="profile_photo" jdbcType="VARCHAR" property="profilePhoto" />
     <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
-    <result column="gender" jdbcType="TINYINT" property="gender" />
+    <result column="gender" jdbcType="CHAR" property="gender" />
     <result column="real_name" jdbcType="VARCHAR" property="realName" />
     <result column="id_card_no" jdbcType="VARCHAR" property="idCardNo" />
     <result column="platform" jdbcType="VARCHAR" property="platform" />
@@ -155,7 +155,7 @@
       update_by, update_time, remark
       )
     values (#{id,jdbcType=BIGINT}, #{mobileAccount,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{profilePhoto,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{gender,jdbcType=TINYINT}, 
+      #{profilePhoto,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{gender,jdbcType=CHAR}, 
       #{realName,jdbcType=VARCHAR}, #{idCardNo,jdbcType=VARCHAR}, #{platform,jdbcType=VARCHAR}, 
       #{isLocked,jdbcType=BIT}, #{isBlacklist,jdbcType=BIT}, #{client,jdbcType=TINYINT}, 
       #{smsPassword,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
@@ -237,7 +237,7 @@
         #{lastLoginTime,jdbcType=TIMESTAMP},
       </if>
       <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
+        #{gender,jdbcType=CHAR},
       </if>
       <if test="realName != null">
         #{realName,jdbcType=VARCHAR},
@@ -302,7 +302,7 @@
         last_login_time = #{record.lastLoginTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.gender != null">
-        gender = #{record.gender,jdbcType=TINYINT},
+        gender = #{record.gender,jdbcType=CHAR},
       </if>
       <if test="record.realName != null">
         real_name = #{record.realName,jdbcType=VARCHAR},
@@ -352,7 +352,7 @@
       password = #{record.password,jdbcType=VARCHAR},
       profile_photo = #{record.profilePhoto,jdbcType=VARCHAR},
       last_login_time = #{record.lastLoginTime,jdbcType=TIMESTAMP},
-      gender = #{record.gender,jdbcType=TINYINT},
+      gender = #{record.gender,jdbcType=CHAR},
       real_name = #{record.realName,jdbcType=VARCHAR},
       id_card_no = #{record.idCardNo,jdbcType=VARCHAR},
       platform = #{record.platform,jdbcType=VARCHAR},
@@ -385,7 +385,7 @@
         last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
       </if>
       <if test="gender != null">
-        gender = #{gender,jdbcType=TINYINT},
+        gender = #{gender,jdbcType=CHAR},
       </if>
       <if test="realName != null">
         real_name = #{realName,jdbcType=VARCHAR},
@@ -432,7 +432,7 @@
       password = #{password,jdbcType=VARCHAR},
       profile_photo = #{profilePhoto,jdbcType=VARCHAR},
       last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
-      gender = #{gender,jdbcType=TINYINT},
+      gender = #{gender,jdbcType=CHAR},
       real_name = #{realName,jdbcType=VARCHAR},
       id_card_no = #{idCardNo,jdbcType=VARCHAR},
       platform = #{platform,jdbcType=VARCHAR},
@@ -482,7 +482,7 @@
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.mobileAccount,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, 
         #{item.profilePhoto,jdbcType=VARCHAR}, #{item.lastLoginTime,jdbcType=TIMESTAMP}, 
-        #{item.gender,jdbcType=TINYINT}, #{item.realName,jdbcType=VARCHAR}, #{item.idCardNo,jdbcType=VARCHAR}, 
+        #{item.gender,jdbcType=CHAR}, #{item.realName,jdbcType=VARCHAR}, #{item.idCardNo,jdbcType=VARCHAR}, 
         #{item.platform,jdbcType=VARCHAR}, #{item.isLocked,jdbcType=BIT}, #{item.isBlacklist,jdbcType=BIT}, 
         #{item.client,jdbcType=TINYINT}, #{item.smsPassword,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, 
         #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
@@ -515,7 +515,7 @@
           #{item.lastLoginTime,jdbcType=TIMESTAMP}
         </if>
         <if test="'gender' == column.value">
-          #{item.gender,jdbcType=TINYINT}
+          #{item.gender,jdbcType=CHAR}
         </if>
         <if test="'real_name' == column.value">
           #{item.realName,jdbcType=VARCHAR}

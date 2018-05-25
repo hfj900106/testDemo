@@ -501,52 +501,62 @@ public class UserExample {
             return (Criteria) this;
         }
 
-        public Criteria andGenderEqualTo(Byte value) {
+        public Criteria andGenderEqualTo(String value) {
             addCriterion("gender =", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderNotEqualTo(Byte value) {
+        public Criteria andGenderNotEqualTo(String value) {
             addCriterion("gender <>", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderGreaterThan(Byte value) {
+        public Criteria andGenderGreaterThan(String value) {
             addCriterion("gender >", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderGreaterThanOrEqualTo(Byte value) {
+        public Criteria andGenderGreaterThanOrEqualTo(String value) {
             addCriterion("gender >=", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderLessThan(Byte value) {
+        public Criteria andGenderLessThan(String value) {
             addCriterion("gender <", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderLessThanOrEqualTo(Byte value) {
+        public Criteria andGenderLessThanOrEqualTo(String value) {
             addCriterion("gender <=", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderIn(List<Byte> values) {
+        public Criteria andGenderLike(String value) {
+            addCriterion("gender like", value, "gender");
+            return (Criteria) this;
+        }
+
+        public Criteria andGenderNotLike(String value) {
+            addCriterion("gender not like", value, "gender");
+            return (Criteria) this;
+        }
+
+        public Criteria andGenderIn(List<String> values) {
             addCriterion("gender in", values, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderNotIn(List<Byte> values) {
+        public Criteria andGenderNotIn(List<String> values) {
             addCriterion("gender not in", values, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderBetween(Byte value1, Byte value2) {
+        public Criteria andGenderBetween(String value1, String value2) {
             addCriterion("gender between", value1, value2, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderNotBetween(Byte value1, Byte value2) {
+        public Criteria andGenderNotBetween(String value1, String value2) {
             addCriterion("gender not between", value1, value2, "gender");
             return (Criteria) this;
         }
@@ -1333,6 +1343,11 @@ public class UserExample {
 
         public Criteria andProfilePhotoLikeInsensitive(String value) {
             addCriterion("upper(profile_photo) like", value.toUpperCase(), "profilePhoto");
+            return (Criteria) this;
+        }
+
+        public Criteria andGenderLikeInsensitive(String value) {
+            addCriterion("upper(gender) like", value.toUpperCase(), "gender");
             return (Criteria) this;
         }
 

@@ -1,7 +1,7 @@
 package com.hzed.easyget.controller.web;
 
-import com.hzed.easyget.application.service.UserAcountService;
-import com.hzed.easyget.controller.model.UserAcountResponse;
+import com.hzed.easyget.application.service.UserService;
+import com.hzed.easyget.controller.model.UserResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 @ExceptionAnno
 @RestController
 @RequestMapping("/user")
-public class UserAcountController {
+public class UserController {
 
     @Autowired
-    private UserAcountService userAcountService;
+    private UserService userService;
 
     @ModuleFunc("我的")
     @PostMapping("/getAcountInfo")
-    public Response<UserAcountResponse> getAcountInfo() {
-        return Response.getSuccessResponse(userAcountService.getAcountInfo());
+    public Response<UserResponse> getAcountInfo() {
+        return Response.getSuccessResponse(userService.getAcountInfo());
     }
 }

@@ -153,10 +153,10 @@ public class AuthService {
     /**
      * 身份信息认证，信息分两个表存（用户表、身份信息认证表，认证状态表）
      */
-    public void identityInformationAuth(IdentityInformationAuthRequest request) {
+    public void identityInfoAuth(IdentityInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
-        String identityInformationStr = request.getDate();
-        JSONObject jsStr = JSONObject.parseObject(identityInformationStr);
+        String identityInfoStr = request.getDate();
+        JSONObject jsStr = JSONObject.parseObject(identityInfoStr);
         String realName = (String) jsStr.get("realName");
         String idCardNo = (String) jsStr.get("idCardNo");
         String gender = (String) jsStr.get("gender");
@@ -185,6 +185,6 @@ public class AuthService {
         faceIdcardAuth.setRemark("身份信息认证");
         //获取UserAuthStatus对象
         UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthStatusId, "通讯录授权");
-        faceIdcardAuthRepository.insertIdentityInformation(faceIdcardAuth, userAuthStatus, userObj);
+        faceIdcardAuthRepository.insertIdentityInfo(faceIdcardAuth, userAuthStatus, userObj);
     }
 }

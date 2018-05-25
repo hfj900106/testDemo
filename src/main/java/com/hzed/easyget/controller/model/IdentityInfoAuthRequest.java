@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 
 @Data
-public class IdentityInformationAuthRequest {
+public class IdentityInfoAuthRequest {
 
     @NotBlank(message = "[date]不能为空")
     private String date;

@@ -7,7 +7,7 @@ import lombok.Data;
  * @date 2018/5/25
  */
 @Data
-public class UserAcountResponse {
+public class UserResponse {
     private String nickName;
     private String mobile;
     private String profile_photo;

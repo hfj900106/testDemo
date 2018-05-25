@@ -20,7 +20,7 @@ public class UserTokenRepository {
 
         UserTokenExample example = new UserTokenExample();
         example.createCriteria().andUserIdEqualTo(userId).andImeiEqualTo(imei);
-        return userTokenMapper.selectOneByExampleSelective(example);
+        return userTokenMapper.selectOneByExample(example);
     }
 
     public int updateByUserIdAndImei(UserToken userToken) {

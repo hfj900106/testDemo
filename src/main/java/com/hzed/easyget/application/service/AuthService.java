@@ -1,6 +1,7 @@
 package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.controller.model.*;
@@ -10,8 +11,10 @@ import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.AuthContentRepository;
 import com.hzed.easyget.infrastructure.repository.FaceIdcardAuthRepository;
 import com.hzed.easyget.infrastructure.repository.PersonInfoRepository;
+import com.hzed.easyget.infrastructure.repository.UserAuthStatusRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.FaJsonUtil;
+import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 
@@ -38,6 +42,25 @@ public class AuthService {
     private PersonInfoRepository personInfoRepository;
     @Autowired
     private FaceIdcardAuthRepository faceIdcardAuthRepository;
+    @Autowired
+    private UserAuthStatusRepository authStatusRepository;
+
+    /**
+     * 获取用户认证状态
+     */
+    public List<AuthStatusResponse> getAuthStatus() {
+        List<AuthStatusResponse> authStatusList = Lists.newArrayList();
+        GlobalUser globalUser = RequestUtil.getGlobalUser();
+        Long userId = globalUser.getUserId();
+        List<UserAuthStatus> userAuthStatus = authStatusRepository.getAuthStatusByUserId(userId);
+        for (UserAuthStatus uas : userAuthStatus) {
+            AuthStatusResponse authStatusResponse = new AuthStatusResponse();
+            authStatusResponse.setCode(uas.getAuthCode());
+            authStatusResponse.setStatus(String.valueOf(uas.getAuthStatus()));
+            authStatusList.add(authStatusResponse);
+        }
+        return authStatusList;
+    }
 
     /**
      * 通讯录认证

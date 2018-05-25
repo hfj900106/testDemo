@@ -4,12 +4,15 @@ import com.hzed.easyget.application.service.HomeService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
+import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 首页相关
@@ -50,6 +53,13 @@ public class HomeController {
 
 
         return Response.getSuccessResponse(homeService.updateToken());
+    }
+
+    @ModuleFunc("获取公告列表")
+    @PostMapping("/getBombList")
+    @TokenIgnore
+    public Response<List<BombResponse>> getBombList(){
+        return Response.getSuccessResponse(homeService.getBombList());
     }
 
 }

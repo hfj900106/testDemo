@@ -1,5 +1,6 @@
 package com.hzed.easyget.application.service;
 
+import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AmountEnum;
 import com.hzed.easyget.application.enums.AppVersionEnum;
 import com.hzed.easyget.controller.model.*;
@@ -10,19 +11,23 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalHeadr;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.repository.BombRepository;
 import com.hzed.easyget.infrastructure.repository.ProductRepository;
 import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
+import com.hzed.easyget.persistence.auto.entity.Bomb;
 import com.hzed.easyget.persistence.auto.entity.Dict;
 import com.hzed.easyget.persistence.auto.entity.Product;
 import com.hzed.easyget.persistence.auto.entity.UserToken;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -40,6 +45,11 @@ public class HomeService {
     private UserTokenRepository userTokenRepository;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private BombRepository bombRepository;
+
+    private static final String ANDROID_BOMB = "android_bomb";
+    private static final String IOS_BOMB = "ios_bomb";
 
     public ProductInfoResponse getProductInfo() {
 
@@ -118,5 +128,41 @@ public class HomeService {
         redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, newToken, 3 * 3600L);
         // 将新token返回给APP
         return UpdateTokenResponse.builder().token(newToken).build();
+    }
+
+    public List<BombResponse> getBombList() {
+        List<BombResponse> bombResponseList = Lists.newArrayList();
+
+        GlobalHeadr globalHead = RequestUtil.getGlobalHead();
+        String platform = globalHead.getPlatform();
+        String version = globalHead.getVersion();
+        //安卓是否要弹窗
+        if (AppVersionEnum.ANDROID.getCode().equals(platform)) {
+            Dict dictBomb = dictService.getDictByCode(ANDROID_BOMB);
+            String dicValue = dictBomb.getDicValue();
+            if (StringUtils.isBlank(dicValue) || version.equals(dicValue)) {
+
+                return bombResponseList;
+            }
+        }
+        //苹果是否要弹窗
+        if (AppVersionEnum.IOS_VERSION.getCode().equals(platform)) {
+            Dict dictBomb = dictService.getDictByCode(IOS_BOMB);
+            String dicValue = dictBomb.getDicValue();
+            if (StringUtils.isBlank(dicValue) || version.equals(dicValue)) {
+
+                return bombResponseList;
+            }
+        }
+
+        List<Bomb> bombList = bombRepository.getBombList();
+        for (Bomb bomb : bombList) {
+            BombResponse bombResponse = new BombResponse();
+            bombResponse.setBombTitle(bomb.getTitle());
+            bombResponse.setImgUrl(bomb.getImgUrl());
+            bombResponse.setToUrl(bomb.getToUrl());
+            bombResponseList.add(bombResponse);
+        }
+        return bombResponseList;
     }
 }

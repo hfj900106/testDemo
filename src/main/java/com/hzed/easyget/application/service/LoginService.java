@@ -63,7 +63,9 @@ public class LoginService {
 
         // 用户是否存在,不存在去注册
         User user = userRepository.findByMobile(mobile);
+
         if (user == null) {
+            user = new User();
             user.setId(IdentifierGenerator.nextId());
             user.setMobileAccount(mobile);
             user.setPlatform(platform);
@@ -87,6 +89,7 @@ public class LoginService {
             userTokenUpdate.setExpireTime(DateUtil.addDays(LocalDateTime.now(), systemProp.getTokenExpire()));
             userTokenRepository.updateByUserIdAndImei(userTokenUpdate);
         } else {
+            userToken = new UserToken();
             userToken.setId(IdentifierGenerator.nextId());
             userToken.setUserId(userId);
             userToken.setToken(token);
@@ -97,7 +100,7 @@ public class LoginService {
         }
 
         //放入redis 3个小时
-        redisService.setCache(String.valueOf(userId), token, 3 * 3600L);
+        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 3 * 3600L);
 
         //更新用户最后登录时间
         userRepository.updateLastLoginTime(User.builder().id(userId).lastLoginTime(LocalDateTime.now()).build());
@@ -115,7 +118,7 @@ public class LoginService {
         }
 
         //获取缓存数据
-        String cacheSmsCode = redisService.getCache(mobile);
+        String cacheSmsCode = redisService.getCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
 
         if (StringUtils.isBlank(cacheSmsCode) || !cacheSmsCode.equals(smsCode)) {
             throw new ComBizException(BizCodeEnum.ILLEGAL_SMSCODE);
@@ -143,6 +146,6 @@ public class LoginService {
         smsLog.setRemark("短信验证码");
         smsLogRepository.insertSelective(smsLog);
         //保存到Redis
-        redisService.setCache(RedisConsts.SMS_CODE + ":" + mobile, content, 120L);
+        redisService.setCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile, code, 120L);
     }
 }

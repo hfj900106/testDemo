@@ -88,9 +88,7 @@ public class AuthService {
         AuthContent authContent = new AuthContent();
         authContent.setId(IdentifierGenerator.nextId());
         authContent.setUserAuthStatusId(userAuthId);
-        authContent.setCreateBy(0L);
         authContent.setCreateTime(LocalDateTime.now());
-        authContent.setUpdateBy(0L);
         authContent.setUpdateTime(LocalDateTime.now());
         authContent.setRemark(remark);
         authContent.setContent(content);
@@ -112,9 +110,7 @@ public class AuthService {
         userAuthStatus.setAuthStatus(Integer.valueOf(AuthStatusEnum.HAS_AUTH.getCode()));
         //过期时间，半年
         userAuthStatus.setExpireTime(DateUtil.addMonth(LocalDateTime.now(), 6));
-        userAuthStatus.setCreateBy(0L);
         userAuthStatus.setCreateTime(LocalDateTime.now());
-        userAuthStatus.setUpdateBy(0L);
         userAuthStatus.setUpdateTime(LocalDateTime.now());
         userAuthStatus.setRemark(remark);
         return userAuthStatus;
@@ -137,20 +133,25 @@ public class AuthService {
      */
     public void authPersonInfo(PersonInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
-        String personInfoStr = request.getData();
-        //根据拿到json串组装对象
-        PersonInfo personInfo = FaJsonUtil.parseObj(personInfoStr, PersonInfo.class);
-        if (null != personInfo) {
-            Long userAuthId = IdentifierGenerator.nextId();
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthId, "个人信息认证");
-            personInfo.setId(IdentifierGenerator.nextId());
-            personInfo.setUserId(user.getUserId());
-            personInfo.setUserStatusId(userAuthId);
-            personInfo.setRemark("个人信息认证");
-            personInfoRepository.insertPersonInfoAndUserAuthStatus(personInfo, userAuthStatus);
-        } else {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "数据不符合要求，请仔细核对");
-        }
+        Long userAuthId = IdentifierGenerator.nextId();
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthId, "个人信息认证");
+        PersonInfo personInfo = new PersonInfo();
+        personInfo.setId(IdentifierGenerator.nextId());
+        personInfo.setUserId(user.getUserId());
+        personInfo.setUserStatusId(userAuthId);
+        personInfo.setEducation(request.getEducation());
+        personInfo.setCompanyName(request.getCompanyName());
+        personInfo.setCompanyAddr(request.getCompanyAddr());
+        personInfo.setCompanyAddrDetail(request.getCompanyAddrDetail());
+        personInfo.setEmail(request.getEmail());
+        personInfo.setParentName(request.getParentName());
+        personInfo.setParentTel(request.getParentTel());
+        personInfo.setRelationship(request.getRelationship());
+        personInfo.setRelatedPersonName(request.getRelatedPersonName());
+        personInfo.setRelatedPersonTel(request.getRelatedPersonTel());
+        personInfo.setCreateTime(LocalDateTime.now());
+        personInfo.setRemark("个人信息认证");
+        personInfoRepository.insertPersonInfoAndUserAuthStatus(personInfo, userAuthStatus);
     }
 
     /**
@@ -158,13 +159,11 @@ public class AuthService {
      */
     public void identityInfoAuth(IdentityInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
-        String identityInfoStr = request.getData();
-        JSONObject jsStr = JSONObject.parseObject(identityInfoStr);
-        String realName = (String) jsStr.get("realName");
-        String idCardNo = (String) jsStr.get("idCardNo");
-        String gender = (String) jsStr.get("gender");
-        String idCardPhotoPath = (String) jsStr.get("idCardPhotoPath");
-        String facePhotoPath = (String) jsStr.get("facePhotoPath");
+        String realName = request.getRealName();
+        String idCardNo = request.getIdCardNo();
+        Integer gender = request.getGender();
+        String idCardPhotoPath = request.getIdCardPhotoPath();
+        String facePhotoPath = request.getFacePhotoPath();
         //根据拿到json串组装对象
         User userObj = new User();
         FaceIdcardAuth faceIdcardAuth = new FaceIdcardAuth();
@@ -172,7 +171,7 @@ public class AuthService {
         userObj.setId(user.getUserId());
         userObj.setRealName(realName);
         userObj.setIdCardNo(idCardNo);
-        userObj.setGender(gender);
+        userObj.setGender(gender.toString());
         userObj.setUpdateTime(LocalDateTime.now());
         userObj.setUpdateBy(user.getUserId());
         //组装faceIdcardAuth对象

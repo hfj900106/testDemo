@@ -13,7 +13,25 @@ import org.hibernate.validator.constraints.NotBlank;
 @Data
 public class PersonInfoAuthRequest {
 
-    @NotBlank(message = "[data]不能为空")
-    private String data;
+    @NotBlank(message = "[education]不能为空")
+    private String education;
+    @NotBlank(message = "[companyName]不能为空")
+    private String companyName;
+    @NotBlank(message = "[companyAddr]不能为空")
+    private String companyAddr;
+    @NotBlank(message = "[companyAddrDetail]不能为空")
+    private String companyAddrDetail;
+    @NotBlank(message = "[email]不能为空")
+    private String email;
+    @NotBlank(message = "[parentName]不能为空")
+    private String parentName;
+    @NotBlank(message = "[parentTel]不能为空")
+    private String parentTel;
+    @NotBlank(message = "[relationship]不能为空")
+    private String relationship;
+    @NotBlank(message = "[relatedPersonName]不能为空")
+    private String relatedPersonName;
+    @NotBlank(message = "[relatedPersonTel]不能为空")
+    private String relatedPersonTel;
 
 }

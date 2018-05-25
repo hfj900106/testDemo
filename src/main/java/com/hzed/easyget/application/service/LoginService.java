@@ -53,11 +53,11 @@ public class LoginService {
 
     public LoginByCodeResponse loginByCode(LoginByCodeRequest request) {
 
+        GlobalHeadr globalHead = RequestUtil.getGlobalHead();
         String mobile = request.getMobile();
         String smsCode = request.getSmsCode();
-        String imei = request.getImei();
-        GlobalHeadr globalHead = RequestUtil.getGlobalHead();
         String platform = globalHead.getPlatform();
+        String imei = globalHead.getImei();
         //校验验证码
         checkSmsCode(mobile, smsCode);
 

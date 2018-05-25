@@ -27,14 +27,14 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @ModuleFunc("通讯录授权")
+    @ModuleFunc("通讯录上传")
     @PostMapping("/contacts")
     public Response contacts(@RequestBody ContactsRequest request) {
         authService.authContacts(request);
         return Response.getSuccessResponse();
     }
 
-    @ModuleFunc("短信授权")
+    @ModuleFunc("短信上传")
     @PostMapping("/messages")
     public Response messages(@RequestBody MessagesRequest request) {
         authService.authMessages(request);

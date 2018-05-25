@@ -1,6 +1,7 @@
 package com.hzed.easyget.application.service;
 
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
+import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalHeadr;
@@ -11,6 +12,8 @@ import com.hzed.easyget.persistence.auto.entity.UserToken;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 /**
  * 一些公用的方法
@@ -59,14 +62,27 @@ public class ComService {
             throw new ComBizException(BizCodeEnum.ILLEGAL_TOKEN);
         }
         Long userId = globalUser.getUserId();
-        // TODO 1、检查redis是否有值
-//        redisService.getCache()
 
-        // TODO 2、检查库中token是否失效
+        String tokenCacheKey = RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei;
+        String tokenCache = redisService.getCache(tokenCacheKey);
+
+        if (StringUtils.isBlank(tokenCache)) {
+            // 检查库中token是否失效，未失效则放入token
+            UserToken userToken = userTokenRepository.findByUserIdAndImei(userId, imei);
+            if (userToken == null) {
+                throw new ComBizException(BizCodeEnum.ILLEGAL_TOKEN);
+            } else if (!token.equals(userToken.getToken())) {
+                throw new ComBizException(BizCodeEnum.ILLEGAL_TOKEN);
+            } else if (LocalDateTime.now().compareTo(userToken.getExpireTime()) > 0) {
+                throw new ComBizException(BizCodeEnum.TOKEN_EXPIRE);
+            } else {
+                redisService.setCache(tokenCacheKey, userToken.getToken(), RedisConsts.THREE_HOUR);
+            }
+        } else if (!token.equals(tokenCache)) {
+            // 检查redis token是否与传过来的一致
+            throw new ComBizException(BizCodeEnum.ILLEGAL_TOKEN);
+        }
 
 
-        UserToken userToken = userTokenRepository.findByUserIdAndImei(userId, imei);
-//        if(userToken == null || (userToken.getExpireTime().compareTo(LocalDateTime.now())>0))
-            // TODO 检查token是否生效
     }
 }

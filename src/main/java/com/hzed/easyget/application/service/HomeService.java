@@ -56,7 +56,7 @@ public class HomeService {
         ProductInfoResponse productInfoResponse = new ProductInfoResponse();
         Product product = productRepository.getProductInfo();
         if(Objects.isNull(product)){
-            throw new ComBizException(BizCodeEnum.PRODUT_NOTEXISTS);
+            throw new ComBizException(BizCodeEnum.NO_USEFUL_PRODUCT);
         }
         productInfoResponse.setLoanAmount(product.getLoanAmount());
         productInfoResponse.setLoanTime(product.getLoanTime());

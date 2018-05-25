@@ -184,7 +184,7 @@ public class AuthService {
         faceIdcardAuth.setCreateTime(LocalDateTime.now());
         faceIdcardAuth.setRemark("身份信息认证");
         //获取UserAuthStatus对象
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthStatusId, "通讯录授权");
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthStatusId, "身份信息认证");
         faceIdcardAuthRepository.insertIdentityInfo(faceIdcardAuth, userAuthStatus, userObj);
     }
 }

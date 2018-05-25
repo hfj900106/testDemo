@@ -1,33 +1,34 @@
 package com.hzed.easyget.controller.web;
 
-import com.hzed.easyget.application.service.AuthStatusService;
-import com.hzed.easyget.controller.model.AuthStatusResponse;
+import com.hzed.easyget.application.service.UserService;
+import com.hzed.easyget.controller.model.UserResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 用户认证状态
+ * 我的
  *
- * @author wuchengwu
- * @date 2018/5/23
+ * @author hfj
+ * @date 2018/5/25
  */
+@Slf4j
 @ExceptionAnno
 @RestController
-@RequestMapping("/hzed/easy-get/auth")
-public class AuthStatusController {
+@RequestMapping("/hzed/easy-get/user")
+public class UserController {
 
     @Autowired
-    private AuthStatusService authStatusService;
+    private UserService userService;
 
-    @ModuleFunc("/获取用户认证信息")
-    @PostMapping("/getAuthStatus")
-    public Response<AuthStatusResponse> getAuthStatus(){
-
-        return Response.getSuccessResponse(authStatusService.getAuthStatus());
+    @ModuleFunc("我的")
+    @PostMapping("/getAcountInfo")
+    public Response<UserResponse> getAcountInfo() {
+        return Response.getSuccessResponse(userService.getAcountInfo());
     }
 }

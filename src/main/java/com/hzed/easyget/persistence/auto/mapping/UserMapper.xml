@@ -6,6 +6,7 @@
     <result column="mobile_account" jdbcType="VARCHAR" property="mobileAccount" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="profile_photo" jdbcType="VARCHAR" property="profilePhoto" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
     <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
     <result column="gender" jdbcType="CHAR" property="gender" />
     <result column="real_name" jdbcType="VARCHAR" property="realName" />
@@ -80,9 +81,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, mobile_account, password, profile_photo, last_login_time, gender, real_name, 
-    id_card_no, platform, is_locked, is_blacklist, client, sms_password, create_by, create_time, 
-    update_by, update_time, remark
+    id, mobile_account, password, profile_photo, nick_name, last_login_time, gender, 
+    real_name, id_card_no, platform, is_locked, is_blacklist, client, sms_password, create_by, 
+    create_time, update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserExample" resultMap="BaseResultMap">
     select
@@ -148,19 +149,19 @@
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.User">
     insert into t_user (id, mobile_account, password, 
-      profile_photo, last_login_time, gender, 
-      real_name, id_card_no, platform, 
-      is_locked, is_blacklist, client, 
-      sms_password, create_by, create_time, 
-      update_by, update_time, remark
-      )
+      profile_photo, nick_name, last_login_time, 
+      gender, real_name, id_card_no, 
+      platform, is_locked, is_blacklist, 
+      client, sms_password, create_by, 
+      create_time, update_by, update_time, 
+      remark)
     values (#{id,jdbcType=BIGINT}, #{mobileAccount,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{profilePhoto,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP}, #{gender,jdbcType=CHAR}, 
-      #{realName,jdbcType=VARCHAR}, #{idCardNo,jdbcType=VARCHAR}, #{platform,jdbcType=VARCHAR}, 
-      #{isLocked,jdbcType=BIT}, #{isBlacklist,jdbcType=BIT}, #{client,jdbcType=TINYINT}, 
-      #{smsPassword,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
-      )
+      #{profilePhoto,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP}, 
+      #{gender,jdbcType=CHAR}, #{realName,jdbcType=VARCHAR}, #{idCardNo,jdbcType=VARCHAR}, 
+      #{platform,jdbcType=VARCHAR}, #{isLocked,jdbcType=BIT}, #{isBlacklist,jdbcType=BIT}, 
+      #{client,jdbcType=TINYINT}, #{smsPassword,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.User">
     insert into t_user
@@ -176,6 +177,9 @@
       </if>
       <if test="profilePhoto != null">
         profile_photo,
+      </if>
+      <if test="nickName != null">
+        nick_name,
       </if>
       <if test="lastLoginTime != null">
         last_login_time,
@@ -232,6 +236,9 @@
       </if>
       <if test="profilePhoto != null">
         #{profilePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        #{nickName,jdbcType=VARCHAR},
       </if>
       <if test="lastLoginTime != null">
         #{lastLoginTime,jdbcType=TIMESTAMP},
@@ -298,6 +305,9 @@
       <if test="record.profilePhoto != null">
         profile_photo = #{record.profilePhoto,jdbcType=VARCHAR},
       </if>
+      <if test="record.nickName != null">
+        nick_name = #{record.nickName,jdbcType=VARCHAR},
+      </if>
       <if test="record.lastLoginTime != null">
         last_login_time = #{record.lastLoginTime,jdbcType=TIMESTAMP},
       </if>
@@ -351,6 +361,7 @@
       mobile_account = #{record.mobileAccount,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
       profile_photo = #{record.profilePhoto,jdbcType=VARCHAR},
+      nick_name = #{record.nickName,jdbcType=VARCHAR},
       last_login_time = #{record.lastLoginTime,jdbcType=TIMESTAMP},
       gender = #{record.gender,jdbcType=CHAR},
       real_name = #{record.realName,jdbcType=VARCHAR},
@@ -380,6 +391,9 @@
       </if>
       <if test="profilePhoto != null">
         profile_photo = #{profilePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        nick_name = #{nickName,jdbcType=VARCHAR},
       </if>
       <if test="lastLoginTime != null">
         last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
@@ -431,6 +445,7 @@
     set mobile_account = #{mobileAccount,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       profile_photo = #{profilePhoto,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
       last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
       gender = #{gender,jdbcType=CHAR},
       real_name = #{realName,jdbcType=VARCHAR},
@@ -475,13 +490,13 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_user
-    (id, mobile_account, password, profile_photo, last_login_time, gender, real_name, 
-      id_card_no, platform, is_locked, is_blacklist, client, sms_password, create_by, 
-      create_time, update_by, update_time, remark)
+    (id, mobile_account, password, profile_photo, nick_name, last_login_time, gender, 
+      real_name, id_card_no, platform, is_locked, is_blacklist, client, sms_password, 
+      create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.mobileAccount,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, 
-        #{item.profilePhoto,jdbcType=VARCHAR}, #{item.lastLoginTime,jdbcType=TIMESTAMP}, 
+        #{item.profilePhoto,jdbcType=VARCHAR}, #{item.nickName,jdbcType=VARCHAR}, #{item.lastLoginTime,jdbcType=TIMESTAMP}, 
         #{item.gender,jdbcType=CHAR}, #{item.realName,jdbcType=VARCHAR}, #{item.idCardNo,jdbcType=VARCHAR}, 
         #{item.platform,jdbcType=VARCHAR}, #{item.isLocked,jdbcType=BIT}, #{item.isBlacklist,jdbcType=BIT}, 
         #{item.client,jdbcType=TINYINT}, #{item.smsPassword,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, 
@@ -510,6 +525,9 @@
         </if>
         <if test="'profile_photo' == column.value">
           #{item.profilePhoto,jdbcType=VARCHAR}
+        </if>
+        <if test="'nick_name' == column.value">
+          #{item.nickName,jdbcType=VARCHAR}
         </if>
         <if test="'last_login_time' == column.value">
           #{item.lastLoginTime,jdbcType=TIMESTAMP}

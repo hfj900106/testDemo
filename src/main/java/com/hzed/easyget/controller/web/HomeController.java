@@ -51,4 +51,5 @@ public class HomeController {
 
         return Response.getSuccessResponse(homeService.updateToken());
     }
+
 }

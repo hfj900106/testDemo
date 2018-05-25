@@ -5,6 +5,7 @@ import com.hzed.easyget.application.enums.AppVersionEnum;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
+import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalHeadr;
@@ -114,7 +115,7 @@ public class HomeService {
         userToken.setExpireTime(DateUtil.addDays(LocalDateTime.now(), ComConsts.EXPIRE_DAYS));
         userTokenRepository.updateByUserIdAndImei(userToken);
         //放入redis 3个小时
-        redisService.setCache(String.valueOf(userId), newToken, 3 * 3600L);
+        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, newToken, 3 * 3600L);
         // 将新token返回给APP
         return UpdateTokenResponse.builder().token(newToken).build();
     }

@@ -16,4 +16,6 @@ public class RedisConsts {
 
     public static final String SMS_CODE = "sms_code";
 
+    public static final String TOKEN = "token";
+
 }

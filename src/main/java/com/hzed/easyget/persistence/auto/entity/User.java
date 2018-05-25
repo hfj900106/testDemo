@@ -25,6 +25,11 @@ public class User implements Serializable {
     private String profilePhoto;
 
     /**
+     * 昵称
+     */
+    private String nickName;
+
+    /**
      * 最后登录时间
      */
     private LocalDateTime lastLoginTime;
@@ -121,6 +126,14 @@ public class User implements Serializable {
 
     public void setProfilePhoto(String profilePhoto) {
         this.profilePhoto = profilePhoto == null ? null : profilePhoto.trim();
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName == null ? null : nickName.trim();
     }
 
     public LocalDateTime getLastLoginTime() {
@@ -245,6 +258,7 @@ public class User implements Serializable {
         sb.append(", mobileAccount=").append(mobileAccount);
         sb.append(", password=").append(password);
         sb.append(", profilePhoto=").append(profilePhoto);
+        sb.append(", nickName=").append(nickName);
         sb.append(", lastLoginTime=").append(lastLoginTime);
         sb.append(", gender=").append(gender);
         sb.append(", realName=").append(realName);
@@ -292,6 +306,11 @@ public class User implements Serializable {
 
         public Builder profilePhoto(String profilePhoto) {
             obj.setProfilePhoto(profilePhoto);
+            return this;
+        }
+
+        public Builder nickName(String nickName) {
+            obj.setNickName(nickName);
             return this;
         }
 
@@ -375,6 +394,7 @@ public class User implements Serializable {
         mobileAccount("mobile_account"),
         password("password"),
         profilePhoto("profile_photo"),
+        nickName("nick_name"),
         lastLoginTime("last_login_time"),
         gender("gender"),
         realName("real_name"),

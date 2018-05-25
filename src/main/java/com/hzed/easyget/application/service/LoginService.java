@@ -143,6 +143,6 @@ public class LoginService {
         smsLog.setRemark("短信验证码");
         smsLogRepository.insertSelective(smsLog);
         //保存到Redis
-        redisService.setCache(RedisConsts.SMS_CODE + ":" + mobile, content, 120L);
+        redisService.setCache(RedisConsts.SMS_CODE + ":" + mobile, code, 120L);
     }
 }

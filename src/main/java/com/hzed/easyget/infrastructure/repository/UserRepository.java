@@ -34,7 +34,11 @@ public class UserRepository {
         userMapper.insertSelective(user);
     }
 
-    public void updateServerKey(User user){
+    public void updateServerKey(User user) {
         userMapper.updateByPrimaryKeySelective(user);
+    }
+
+    public User findById(Long id) {
+        return userMapper.selectByPrimaryKey(id);
     }
 }

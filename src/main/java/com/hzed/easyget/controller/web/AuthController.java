@@ -57,7 +57,7 @@ public class AuthController {
 
     @ModuleFunc("/获取用户认证信息")
     @PostMapping("/getAuthStatus")
-    public Response<AuthStatusResponse> getAuthStatus(){
+    public Response<AuthStatusResponse> getAuthStatus() {
         return Response.getSuccessResponse(authService.getAuthStatus());
     }
 }

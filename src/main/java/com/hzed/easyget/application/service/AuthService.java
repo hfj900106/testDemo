@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
+import com.hzed.easyget.application.enums.StatusEnum;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
@@ -54,9 +55,11 @@ public class AuthService {
         Long userId = globalUser.getUserId();
         List<UserAuthStatus> userAuthStatus = authStatusRepository.getAuthStatusByUserId(userId);
         for (UserAuthStatus uas : userAuthStatus) {
+            Auth auth = authStatusRepository.findAuthByCode(uas.getAuthCode());
             AuthStatusResponse authStatusResponse = new AuthStatusResponse();
             authStatusResponse.setCode(uas.getAuthCode());
             authStatusResponse.setStatus(String.valueOf(uas.getAuthStatus()));
+            authStatusResponse.setIsUse(auth.getIsUse()==true ? StatusEnum.ENABLE.getCode(): StatusEnum.DISENABLE.getCode());
             authStatusList.add(authStatusResponse);
         }
         return authStatusList;

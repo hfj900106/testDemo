@@ -1,9 +1,9 @@
 package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
-import com.hzed.easyget.application.enums.AmountEnum;
 import com.hzed.easyget.application.enums.AppVersionEnum;
 import com.hzed.easyget.application.enums.StatusEnum;
+import com.hzed.easyget.application.service.product.model.EasyGetPruduct;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
@@ -102,14 +102,10 @@ public class HomeService {
 
     public LoanCalculateResponse loanCalculate(LoanCalculateRequest request) {
         LoanCalculateResponse loanCalculateResponse = new LoanCalculateResponse();
-        String loanAmountStr = request.getLoanAmount();
-        BigDecimal amount = new BigDecimal(loanAmountStr);
-        BigDecimal finalRepaymentRate = new BigDecimal(AmountEnum.FINAL_PAYMENT.getNum());
 
-        //尾款
-        BigDecimal finalRepayment = amount.multiply(finalRepaymentRate);
-        BigDecimal totalAmount = amount.add(finalRepayment);
-        loanCalculateResponse.setTotalAmount(totalAmount.toString());
+        EasyGetPruduct product = new EasyGetPruduct(new BigDecimal(request.getLoanAmount()));
+
+        loanCalculateResponse.setTotalAmount(product.getRepaymentAmount().toString());
         return loanCalculateResponse;
     }
 

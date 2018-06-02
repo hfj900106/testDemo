@@ -10,14 +10,11 @@ import lombok.Getter;
 public enum BidStatusEnum {
 
     AUDIT_ING(0, "审核中"),
-    AUDIT_PASS(2, "借款中(审核通过)"),
-    WAIT_LENDING(3, "待放款"),
-    REPAYMENT(4, "还款中(财务放款)"),
-    AUDIT_FAIL(-1, "审核不通过"),
-    BORROW_AUDIT_FAIL(-2, "借款中不通过"),
-    LENDING_FAIL(-3, "放款不通过"),
-    CANCEL(-5, "撤销"),
-    USER_CONFIRM(-11, "用户确定借款");
+    AUDIT_FAIL(1, "审核不通过"),
+    AUDIT_PASS(2, "审核通过"),
+    REPAYMENT(3, "已放款"),
+    CLEARED(4, "已结清")
+    ;
 
     private Integer code;
     private String msg;

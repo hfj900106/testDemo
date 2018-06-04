@@ -155,7 +155,7 @@ public class AuthService {
     }
 
     /**
-     * 身份信息认证，信息分两个表存（用户表、身份信息认证表，认证状态表）
+     * 身份信息认证，信息分3个表存（用户表、身份信息认证表，认证状态表）
      */
     public void identityInfoAuth(IdentityInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();

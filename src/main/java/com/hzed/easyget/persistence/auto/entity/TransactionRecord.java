@@ -11,23 +11,29 @@ public class TransactionRecord implements Serializable {
     private Long id;
 
     /**
+     * 用户id
+     */
+    private Long userId;
+
+    /**
+     * 标id
+     */
+    private Long bidId;
+
+    /**
+     * 交易类型 1-入账 2-出账 3-其他
+     */
+    private Byte type;
+
+    /**
      * 金额
      */
     private BigDecimal acount;
 
     /**
-     * 交易备注
+     * 是否显示 1-是 0-否
      */
-    private String remark;
-
-    /**
-     * 是否显示
-     */
-    private Byte display;
-
-    /**
-     */
-    private Long updateBy;
+    private Boolean isDisplay;
 
     /**
      */
@@ -39,7 +45,16 @@ public class TransactionRecord implements Serializable {
 
     /**
      */
+    private Long updateBy;
+
+    /**
+     */
     private LocalDateTime updateTime;
+
+    /**
+     * 交易备注
+     */
+    private String remark;
 
     private static final long serialVersionUID = 1L;
 
@@ -51,6 +66,30 @@ public class TransactionRecord implements Serializable {
         this.id = id;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getBidId() {
+        return bidId;
+    }
+
+    public void setBidId(Long bidId) {
+        this.bidId = bidId;
+    }
+
+    public Byte getType() {
+        return type;
+    }
+
+    public void setType(Byte type) {
+        this.type = type;
+    }
+
     public BigDecimal getAcount() {
         return acount;
     }
@@ -59,28 +98,12 @@ public class TransactionRecord implements Serializable {
         this.acount = acount;
     }
 
-    public String getRemark() {
-        return remark;
+    public Boolean getIsDisplay() {
+        return isDisplay;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
-    }
-
-    public Byte getDisplay() {
-        return display;
-    }
-
-    public void setDisplay(Byte display) {
-        this.display = display;
-    }
-
-    public Long getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Long updateBy) {
-        this.updateBy = updateBy;
+    public void setIsDisplay(Boolean isDisplay) {
+        this.isDisplay = isDisplay;
     }
 
     public Long getCreateBy() {
@@ -99,12 +122,28 @@ public class TransactionRecord implements Serializable {
         this.createTime = createTime;
     }
 
+    public Long getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(Long updateBy) {
+        this.updateBy = updateBy;
+    }
+
     public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
     }
 
     @Override
@@ -114,13 +153,16 @@ public class TransactionRecord implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
+        sb.append(", userId=").append(userId);
+        sb.append(", bidId=").append(bidId);
+        sb.append(", type=").append(type);
         sb.append(", acount=").append(acount);
-        sb.append(", remark=").append(remark);
-        sb.append(", display=").append(display);
-        sb.append(", updateBy=").append(updateBy);
+        sb.append(", isDisplay=").append(isDisplay);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
+        sb.append(", updateBy=").append(updateBy);
         sb.append(", updateTime=").append(updateTime);
+        sb.append(", remark=").append(remark);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
@@ -142,23 +184,28 @@ public class TransactionRecord implements Serializable {
             return this;
         }
 
+        public Builder userId(Long userId) {
+            obj.setUserId(userId);
+            return this;
+        }
+
+        public Builder bidId(Long bidId) {
+            obj.setBidId(bidId);
+            return this;
+        }
+
+        public Builder type(Byte type) {
+            obj.setType(type);
+            return this;
+        }
+
         public Builder acount(BigDecimal acount) {
             obj.setAcount(acount);
             return this;
         }
 
-        public Builder remark(String remark) {
-            obj.setRemark(remark);
-            return this;
-        }
-
-        public Builder display(Byte display) {
-            obj.setDisplay(display);
-            return this;
-        }
-
-        public Builder updateBy(Long updateBy) {
-            obj.setUpdateBy(updateBy);
+        public Builder isDisplay(Boolean isDisplay) {
+            obj.setIsDisplay(isDisplay);
             return this;
         }
 
@@ -172,8 +219,18 @@ public class TransactionRecord implements Serializable {
             return this;
         }
 
+        public Builder updateBy(Long updateBy) {
+            obj.setUpdateBy(updateBy);
+            return this;
+        }
+
         public Builder updateTime(LocalDateTime updateTime) {
             obj.setUpdateTime(updateTime);
+            return this;
+        }
+
+        public Builder remark(String remark) {
+            obj.setRemark(remark);
             return this;
         }
 
@@ -184,13 +241,16 @@ public class TransactionRecord implements Serializable {
 
     public enum Column {
         id("id"),
+        userId("user_id"),
+        bidId("bid_id"),
+        type("type"),
         acount("acount"),
-        remark("remark"),
-        display("display"),
-        updateBy("update_by"),
+        isDisplay("is_display"),
         createBy("create_by"),
         createTime("create_time"),
-        updateTime("update_time");
+        updateBy("update_by"),
+        updateTime("update_time"),
+        remark("remark");
 
         private final String column;
 

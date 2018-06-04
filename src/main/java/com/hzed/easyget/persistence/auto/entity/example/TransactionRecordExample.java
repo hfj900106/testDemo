@@ -222,6 +222,186 @@ public class TransactionRecordExample {
             return (Criteria) this;
         }
 
+        public Criteria andUserIdIsNull() {
+            addCriterion("user_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdIsNotNull() {
+            addCriterion("user_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdEqualTo(Long value) {
+            addCriterion("user_id =", value, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdNotEqualTo(Long value) {
+            addCriterion("user_id <>", value, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdGreaterThan(Long value) {
+            addCriterion("user_id >", value, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("user_id >=", value, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdLessThan(Long value) {
+            addCriterion("user_id <", value, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdLessThanOrEqualTo(Long value) {
+            addCriterion("user_id <=", value, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdIn(List<Long> values) {
+            addCriterion("user_id in", values, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdNotIn(List<Long> values) {
+            addCriterion("user_id not in", values, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdBetween(Long value1, Long value2) {
+            addCriterion("user_id between", value1, value2, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIdNotBetween(Long value1, Long value2) {
+            addCriterion("user_id not between", value1, value2, "userId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBidIdIsNull() {
+            addCriterion("bid_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBidIdIsNotNull() {
+            addCriterion("bid_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBidIdEqualTo(Long value) {
+            addCriterion("bid_id =", value, "bidId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBidIdNotEqualTo(Long value) {
+            addCriterion("bid_id <>", value, "bidId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBidIdGreaterThan(Long value) {
+            addCriterion("bid_id >", value, "bidId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBidIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("bid_id >=", value, "bidId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBidIdLessThan(Long value) {
+            addCriterion("bid_id <", value, "bidId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBidIdLessThanOrEqualTo(Long value) {
+            addCriterion("bid_id <=", value, "bidId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBidIdIn(List<Long> values) {
+            addCriterion("bid_id in", values, "bidId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBidIdNotIn(List<Long> values) {
+            addCriterion("bid_id not in", values, "bidId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBidIdBetween(Long value1, Long value2) {
+            addCriterion("bid_id between", value1, value2, "bidId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBidIdNotBetween(Long value1, Long value2) {
+            addCriterion("bid_id not between", value1, value2, "bidId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIsNull() {
+            addCriterion("type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIsNotNull() {
+            addCriterion("type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeEqualTo(Byte value) {
+            addCriterion("type =", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotEqualTo(Byte value) {
+            addCriterion("type <>", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeGreaterThan(Byte value) {
+            addCriterion("type >", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeGreaterThanOrEqualTo(Byte value) {
+            addCriterion("type >=", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeLessThan(Byte value) {
+            addCriterion("type <", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeLessThanOrEqualTo(Byte value) {
+            addCriterion("type <=", value, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeIn(List<Byte> values) {
+            addCriterion("type in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotIn(List<Byte> values) {
+            addCriterion("type not in", values, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeBetween(Byte value1, Byte value2) {
+            addCriterion("type between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
+        public Criteria andTypeNotBetween(Byte value1, Byte value2) {
+            addCriterion("type not between", value1, value2, "type");
+            return (Criteria) this;
+        }
+
         public Criteria andAcountIsNull() {
             addCriterion("acount is null");
             return (Criteria) this;
@@ -282,193 +462,63 @@ public class TransactionRecordExample {
             return (Criteria) this;
         }
 
-        public Criteria andRemarkIsNull() {
-            addCriterion("remark is null");
+        public Criteria andIsDisplayIsNull() {
+            addCriterion("is_display is null");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkIsNotNull() {
-            addCriterion("remark is not null");
+        public Criteria andIsDisplayIsNotNull() {
+            addCriterion("is_display is not null");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkEqualTo(String value) {
-            addCriterion("remark =", value, "remark");
+        public Criteria andIsDisplayEqualTo(Boolean value) {
+            addCriterion("is_display =", value, "isDisplay");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkNotEqualTo(String value) {
-            addCriterion("remark <>", value, "remark");
+        public Criteria andIsDisplayNotEqualTo(Boolean value) {
+            addCriterion("is_display <>", value, "isDisplay");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkGreaterThan(String value) {
-            addCriterion("remark >", value, "remark");
+        public Criteria andIsDisplayGreaterThan(Boolean value) {
+            addCriterion("is_display >", value, "isDisplay");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkGreaterThanOrEqualTo(String value) {
-            addCriterion("remark >=", value, "remark");
+        public Criteria andIsDisplayGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_display >=", value, "isDisplay");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkLessThan(String value) {
-            addCriterion("remark <", value, "remark");
+        public Criteria andIsDisplayLessThan(Boolean value) {
+            addCriterion("is_display <", value, "isDisplay");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkLessThanOrEqualTo(String value) {
-            addCriterion("remark <=", value, "remark");
+        public Criteria andIsDisplayLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_display <=", value, "isDisplay");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkLike(String value) {
-            addCriterion("remark like", value, "remark");
+        public Criteria andIsDisplayIn(List<Boolean> values) {
+            addCriterion("is_display in", values, "isDisplay");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkNotLike(String value) {
-            addCriterion("remark not like", value, "remark");
+        public Criteria andIsDisplayNotIn(List<Boolean> values) {
+            addCriterion("is_display not in", values, "isDisplay");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkIn(List<String> values) {
-            addCriterion("remark in", values, "remark");
+        public Criteria andIsDisplayBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_display between", value1, value2, "isDisplay");
             return (Criteria) this;
         }
 
-        public Criteria andRemarkNotIn(List<String> values) {
-            addCriterion("remark not in", values, "remark");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarkBetween(String value1, String value2) {
-            addCriterion("remark between", value1, value2, "remark");
-            return (Criteria) this;
-        }
-
-        public Criteria andRemarkNotBetween(String value1, String value2) {
-            addCriterion("remark not between", value1, value2, "remark");
-            return (Criteria) this;
-        }
-
-        public Criteria andDisplayIsNull() {
-            addCriterion("display is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andDisplayIsNotNull() {
-            addCriterion("display is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andDisplayEqualTo(Byte value) {
-            addCriterion("display =", value, "display");
-            return (Criteria) this;
-        }
-
-        public Criteria andDisplayNotEqualTo(Byte value) {
-            addCriterion("display <>", value, "display");
-            return (Criteria) this;
-        }
-
-        public Criteria andDisplayGreaterThan(Byte value) {
-            addCriterion("display >", value, "display");
-            return (Criteria) this;
-        }
-
-        public Criteria andDisplayGreaterThanOrEqualTo(Byte value) {
-            addCriterion("display >=", value, "display");
-            return (Criteria) this;
-        }
-
-        public Criteria andDisplayLessThan(Byte value) {
-            addCriterion("display <", value, "display");
-            return (Criteria) this;
-        }
-
-        public Criteria andDisplayLessThanOrEqualTo(Byte value) {
-            addCriterion("display <=", value, "display");
-            return (Criteria) this;
-        }
-
-        public Criteria andDisplayIn(List<Byte> values) {
-            addCriterion("display in", values, "display");
-            return (Criteria) this;
-        }
-
-        public Criteria andDisplayNotIn(List<Byte> values) {
-            addCriterion("display not in", values, "display");
-            return (Criteria) this;
-        }
-
-        public Criteria andDisplayBetween(Byte value1, Byte value2) {
-            addCriterion("display between", value1, value2, "display");
-            return (Criteria) this;
-        }
-
-        public Criteria andDisplayNotBetween(Byte value1, Byte value2) {
-            addCriterion("display not between", value1, value2, "display");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateByIsNull() {
-            addCriterion("update_by is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateByIsNotNull() {
-            addCriterion("update_by is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateByEqualTo(Long value) {
-            addCriterion("update_by =", value, "updateBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateByNotEqualTo(Long value) {
-            addCriterion("update_by <>", value, "updateBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateByGreaterThan(Long value) {
-            addCriterion("update_by >", value, "updateBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateByGreaterThanOrEqualTo(Long value) {
-            addCriterion("update_by >=", value, "updateBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateByLessThan(Long value) {
-            addCriterion("update_by <", value, "updateBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateByLessThanOrEqualTo(Long value) {
-            addCriterion("update_by <=", value, "updateBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateByIn(List<Long> values) {
-            addCriterion("update_by in", values, "updateBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateByNotIn(List<Long> values) {
-            addCriterion("update_by not in", values, "updateBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateByBetween(Long value1, Long value2) {
-            addCriterion("update_by between", value1, value2, "updateBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andUpdateByNotBetween(Long value1, Long value2) {
-            addCriterion("update_by not between", value1, value2, "updateBy");
+        public Criteria andIsDisplayNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_display not between", value1, value2, "isDisplay");
             return (Criteria) this;
         }
 
@@ -592,6 +642,66 @@ public class TransactionRecordExample {
             return (Criteria) this;
         }
 
+        public Criteria andUpdateByIsNull() {
+            addCriterion("update_by is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateByIsNotNull() {
+            addCriterion("update_by is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateByEqualTo(Long value) {
+            addCriterion("update_by =", value, "updateBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateByNotEqualTo(Long value) {
+            addCriterion("update_by <>", value, "updateBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateByGreaterThan(Long value) {
+            addCriterion("update_by >", value, "updateBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateByGreaterThanOrEqualTo(Long value) {
+            addCriterion("update_by >=", value, "updateBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateByLessThan(Long value) {
+            addCriterion("update_by <", value, "updateBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateByLessThanOrEqualTo(Long value) {
+            addCriterion("update_by <=", value, "updateBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateByIn(List<Long> values) {
+            addCriterion("update_by in", values, "updateBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateByNotIn(List<Long> values) {
+            addCriterion("update_by not in", values, "updateBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateByBetween(Long value1, Long value2) {
+            addCriterion("update_by between", value1, value2, "updateBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateByNotBetween(Long value1, Long value2) {
+            addCriterion("update_by not between", value1, value2, "updateBy");
+            return (Criteria) this;
+        }
+
         public Criteria andUpdateTimeIsNull() {
             addCriterion("update_time is null");
             return (Criteria) this;
@@ -649,6 +759,76 @@ public class TransactionRecordExample {
 
         public Criteria andUpdateTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("update_time not between", value1, value2, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkIsNull() {
+            addCriterion("remark is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkIsNotNull() {
+            addCriterion("remark is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkEqualTo(String value) {
+            addCriterion("remark =", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotEqualTo(String value) {
+            addCriterion("remark <>", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkGreaterThan(String value) {
+            addCriterion("remark >", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkGreaterThanOrEqualTo(String value) {
+            addCriterion("remark >=", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkLessThan(String value) {
+            addCriterion("remark <", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkLessThanOrEqualTo(String value) {
+            addCriterion("remark <=", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkLike(String value) {
+            addCriterion("remark like", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotLike(String value) {
+            addCriterion("remark not like", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkIn(List<String> values) {
+            addCriterion("remark in", values, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotIn(List<String> values) {
+            addCriterion("remark not in", values, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkBetween(String value1, String value2) {
+            addCriterion("remark between", value1, value2, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotBetween(String value1, String value2) {
+            addCriterion("remark not between", value1, value2, "remark");
             return (Criteria) this;
         }
 

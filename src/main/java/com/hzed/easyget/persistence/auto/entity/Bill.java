@@ -3,7 +3,6 @@ package com.hzed.easyget.persistence.auto.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class Bill implements Serializable {
     /**
@@ -23,7 +22,7 @@ public class Bill implements Serializable {
     /**
      * 应还时间
      */
-    private Date repaymentTime;
+    private LocalDateTime repaymentTime;
 
     /**
      * 应收金额
@@ -33,7 +32,7 @@ public class Bill implements Serializable {
     /**
      * 结清时间(结清才更新)
      */
-    private Date settlementTime;
+    private LocalDateTime settlementTime;
 
     /**
      * 实还总额
@@ -96,11 +95,11 @@ public class Bill implements Serializable {
         this.indexPeriods = indexPeriods;
     }
 
-    public Date getRepaymentTime() {
+    public LocalDateTime getRepaymentTime() {
         return repaymentTime;
     }
 
-    public void setRepaymentTime(Date repaymentTime) {
+    public void setRepaymentTime(LocalDateTime repaymentTime) {
         this.repaymentTime = repaymentTime;
     }
 
@@ -112,11 +111,11 @@ public class Bill implements Serializable {
         this.repaymentAmount = repaymentAmount;
     }
 
-    public Date getSettlementTime() {
+    public LocalDateTime getSettlementTime() {
         return settlementTime;
     }
 
-    public void setSettlementTime(Date settlementTime) {
+    public void setSettlementTime(LocalDateTime settlementTime) {
         this.settlementTime = settlementTime;
     }
 
@@ -235,7 +234,7 @@ public class Bill implements Serializable {
             return this;
         }
 
-        public Builder repaymentTime(Date repaymentTime) {
+        public Builder repaymentTime(LocalDateTime repaymentTime) {
             obj.setRepaymentTime(repaymentTime);
             return this;
         }
@@ -245,7 +244,7 @@ public class Bill implements Serializable {
             return this;
         }
 
-        public Builder settlementTime(Date settlementTime) {
+        public Builder settlementTime(LocalDateTime settlementTime) {
             obj.setSettlementTime(settlementTime);
             return this;
         }

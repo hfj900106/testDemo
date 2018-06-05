@@ -13,7 +13,7 @@ import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalHeadr;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
-import com.hzed.easyget.infrastructure.repository.BombRepository;
+import com.hzed.easyget.infrastructure.repository.NewsRepository;
 import com.hzed.easyget.infrastructure.repository.ProductRepository;
 import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -45,7 +45,7 @@ public class HomeService {
     @Autowired
     private RedisService redisService;
     @Autowired
-    private BombRepository bombRepository;
+    private NewsRepository newsRepository;
     @Autowired
     private BidRepository bidRepository;
 
@@ -127,7 +127,7 @@ public class HomeService {
         return UpdateTokenResponse.builder().token(newToken).build();
     }
 
-    public List<BombResponse> getBombList() {
+    public List<BombResponse> getNewsList() {
         List<BombResponse> bombResponseList = Lists.newArrayList();
 
         GlobalHeadr globalHead = RequestUtil.getGlobalHead();
@@ -152,7 +152,7 @@ public class HomeService {
             }
         }
 
-        List<News> bombList = bombRepository.getBombList();
+        List<News> bombList = newsRepository.getBombList();
         for (News bomb : bombList) {
             BombResponse bombResponse = new BombResponse();
             bombResponse.setBombTitle(bomb.getTitle());

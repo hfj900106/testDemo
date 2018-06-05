@@ -14,7 +14,7 @@ import java.util.List;
  * @date 2018/5/25
  */
 @Repository
-public class BombRepository {
+public class NewsRepository {
 
     @Autowired
     private NewsMapper newsMapper;

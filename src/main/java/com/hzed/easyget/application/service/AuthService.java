@@ -5,8 +5,13 @@ import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.application.enums.StatusEnum;
 import com.hzed.easyget.controller.model.*;
+import com.hzed.easyget.infrastructure.config.aliyun.AliyunService;
+import com.hzed.easyget.infrastructure.exception.NestedException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.repository.*;
+import com.hzed.easyget.infrastructure.repository.WorkRepository;
+import com.hzed.easyget.infrastructure.repository.PersonInfoRepository;
+import com.hzed.easyget.infrastructure.repository.ProfessionalRepository;
+import com.hzed.easyget.infrastructure.repository.UserAuthStatusRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
@@ -31,15 +36,15 @@ import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 @Service
 public class AuthService {
     @Autowired
-    private AuthContentRepository authContentRepository;
-    @Autowired
     private PersonInfoRepository personInfoRepository;
     @Autowired
-    private FaceIdcardAuthRepository faceIdcardAuthRepository;
+    private WorkRepository workRepository;
     @Autowired
     private UserAuthStatusRepository authStatusRepository;
     @Autowired
     private ProfessionalRepository professionalRepository;
+    @Autowired
+    private AliyunService aliyunService;
 
     /**
      * 获取用户认证状态
@@ -50,7 +55,7 @@ public class AuthService {
         Long userId = globalUser.getUserId();
         List<UserAuthStatus> userAuthStatus = authStatusRepository.getAuthStatusByUserId(userId);
         for (UserAuthStatus uas : userAuthStatus) {
-            Auth auth = authStatusRepository.findAuthByCode(uas.getAuthCode());
+            AuthItem auth = authStatusRepository.findAuthByCode(uas.getAuthCode());
             AuthStatusResponse authStatusResponse = new AuthStatusResponse();
             authStatusResponse.setCode(uas.getAuthCode());
             authStatusResponse.setStatus(String.valueOf(uas.getAuthStatus()));
@@ -64,32 +69,13 @@ public class AuthService {
      * 通讯录认证
      */
     public void authContacts(ContactsRequest request) {
-        GlobalUser user = getGlobalUser();
-        //写入用户授权信息返回值
-        //TODO 调风控接口
-        Long userAuthId = IdentifierGenerator.nextId();
-        AuthContent authContent = buildAuthContent(request.getContacts(), userAuthId, "通讯录授权");
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthId, "通讯录授权");
-        authContentRepository.insertContactAndUserAuthStatus(authContent, userAuthStatus);
-    }
-
-    /**
-     * 构建AuthContent对象
-     *
-     * @param content
-     * @param remark
-     */
-    public AuthContent buildAuthContent(String content, Long userAuthId, String remark) {
-        //写入用户认证授权返回信息
-        //TODO 后面应该会去掉
-        AuthContent authContent = new AuthContent();
-        authContent.setId(IdentifierGenerator.nextId());
-        authContent.setUserAuthStatusId(userAuthId);
-        authContent.setCreateTime(LocalDateTime.now());
-        authContent.setUpdateTime(LocalDateTime.now());
-        authContent.setRemark(remark);
-        authContent.setContent(content);
-        return authContent;
+//        GlobalUser user = getGlobalUser();
+//        //写入用户授权信息返回值
+//        //TODO 调风控接口
+//        Long userAuthId = IdentifierGenerator.nextId();
+//        AuthContent authContent = buildAuthContent(request.getContacts(), userAuthId, "通讯录授权");
+//        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthId, "通讯录授权");
+//        authContentRepository.insertContactAndUserAuthStatus(authContent, userAuthStatus);
     }
 
     /**
@@ -117,13 +103,12 @@ public class AuthService {
      * 短信认证
      */
     public void authMessages(MessagesRequest request) {
-        GlobalUser user = getGlobalUser();
-        //写入用户授权信息返回值
-        //TODO 调风控接口
-        Long userAuthId = IdentifierGenerator.nextId();
-        AuthContent authContent = buildAuthContent(request.getMessage(), userAuthId, "短信授权");
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthId, "短信授权");
-        authContentRepository.insertContactAndUserAuthStatus(authContent, userAuthStatus);
+//        GlobalUser user = getGlobalUser();
+//        //写入用户授权信息返回值
+//        //TODO 调风控接口
+//        Long userAuthId = IdentifierGenerator.nextId();
+//        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthId, "短信授权");
+//        authContentRepository.insertContactAndUserAuthStatus(authContent, userAuthStatus);
     }
 
     /**
@@ -132,22 +117,22 @@ public class AuthService {
     public void authPersonInfo(PersonInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
         UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), IdentifierGenerator.nextId(), "个人信息认证");
-        PersonInfo personInfo = new PersonInfo();
-        personInfo.setId(IdentifierGenerator.nextId());
-        personInfo.setUserId(user.getUserId());
-        personInfo.setEducation(request.getEducation());
-        personInfo.setCompanyName(request.getCompanyName());
-        personInfo.setCompanyAddr(request.getCompanyAddr());
-        personInfo.setCompanyAddrDetail(request.getCompanyAddrDetail());
-        personInfo.setEmail(request.getEmail());
-        personInfo.setParentName(request.getParentName());
-        personInfo.setParentTel(request.getParentTel());
-        personInfo.setRelationship(request.getRelationship());
-        personInfo.setRelatedPersonName(request.getRelatedPersonName());
-        personInfo.setRelatedPersonTel(request.getRelatedPersonTel());
-        personInfo.setCreateTime(LocalDateTime.now());
-        personInfo.setRemark("个人信息认证");
-        personInfoRepository.insertPersonInfoAndUserAuthStatus(personInfo, userAuthStatus);
+        Profile profile = new Profile();
+        profile.setId(IdentifierGenerator.nextId());
+        profile.setUserId(user.getUserId());
+        profile.setEducation(request.getEducation());
+        profile.setCompanyName(request.getCompanyName());
+        profile.setCompanyAddr(request.getCompanyAddr());
+        profile.setCompanyAddrDetail(request.getCompanyAddrDetail());
+        profile.setEmail(request.getEmail());
+        profile.setParentName(request.getParentName());
+        profile.setParentTel(request.getParentTel());
+        profile.setRelationship(request.getRelationship());
+        profile.setRelatedPersonName(request.getRelatedPersonName());
+        profile.setRelatedPersonTel(request.getRelatedPersonTel());
+        profile.setCreateTime(LocalDateTime.now());
+        profile.setRemark("个人信息认证");
+        personInfoRepository.insertPersonInfoAndUserAuthStatus(profile, userAuthStatus);
     }
 
     /**
@@ -158,11 +143,24 @@ public class AuthService {
         String realName = request.getRealName();
         String idCardNo = request.getIdCardNo();
         Integer gender = request.getGender();
-        String idCardPhotoPath = request.getIdCardPhotoPath();
-        String facePhotoPath = request.getFacePhotoPath();
+        String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
+        String faceBase64ImgStr = request.getFaceBase64ImgStr();
+        String picSuffix = request.getPicSuffix();
+        //上传至阿里云
+
+        String idCardPhotoPath ;
+        String facePhotoPath ;
+        try {
+            idCardPhotoPath = aliyunService.uploadBase64PicStr(idCardBase64ImgStr,picSuffix);
+            facePhotoPath = aliyunService.uploadBase64PicStr(faceBase64ImgStr,picSuffix);
+        } catch (NestedException e) {
+            //上传base64图片字符串失败
+            log.error(e.getMessage());
+            return;
+        }
         //根据拿到json串组装对象
         User userObj = new User();
-        FaceIdCard faceIdCard = new FaceIdCard();
+        UserPic userPic = new UserPic();
         //组装user对象
         userObj.setId(user.getUserId());
         userObj.setRealName(realName);
@@ -172,16 +170,16 @@ public class AuthService {
         userObj.setUpdateBy(user.getUserId());
         //组装faceIdcardAuth对象
         Long faceIdcardAuthId = IdentifierGenerator.nextId();
-        faceIdCard.setId(faceIdcardAuthId);
-        faceIdCard.setUserId(user.getUserId());
-        faceIdCard.setIdCardPhotoPath(idCardPhotoPath);
-        faceIdCard.setFacePhotoPath(facePhotoPath);
-        faceIdCard.setCreateBy(faceIdcardAuthId);
-        faceIdCard.setCreateTime(LocalDateTime.now());
-        faceIdCard.setRemark("身份信息认证");
+        userPic.setId(faceIdcardAuthId);
+        userPic.setUserId(user.getUserId());
+        userPic.setIdCardPhoto(idCardPhotoPath);
+        userPic.setFacePhoto(facePhotoPath);
+        userPic.setCreateBy(faceIdcardAuthId);
+        userPic.setCreateTime(LocalDateTime.now());
+        userPic.setRemark("身份信息认证");
         //获取UserAuthStatus对象
         UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), IdentifierGenerator.nextId(), "身份信息认证");
-        faceIdcardAuthRepository.insertIdentityInfo(faceIdCard, userAuthStatus, userObj);
+        workRepository.insertIdentityInfo(userPic, userAuthStatus, userObj);
     }
 
     /**
@@ -189,18 +187,18 @@ public class AuthService {
      */
     public void professionalAuth(ProfessionalRequest request){
         GlobalUser user = getGlobalUser();
-        Professional professional =new Professional();
-        professional.setId(IdentifierGenerator.nextId());
-        professional.setUserId(user.getUserId());
-        professional.setJobType(request.getJobType().byteValue());
-        professional.setMonthlyIncome(request.getMonthlyIncome().byteValue());
-        professional.setEmployeeCard(request.getEmployeeCard());
-        professional.setWorkplace(request.getWorkplace());
-        professional.setCreateBy(user.getUserId());
-        professional.setCreateTime(LocalDateTime.now());
-        professional.setRemark("专业信息认证");
+        Work work =new Work();
+        work.setId(IdentifierGenerator.nextId());
+        work.setUserId(user.getUserId());
+        work.setJobType(request.getJobType().byteValue());
+        work.setMonthlyIncome(request.getMonthlyIncome().byteValue());
+        work.setEmployeeCard(request.getEmployeeCard());
+        work.setWorkplace(request.getWorkplace());
+        work.setCreateBy(user.getUserId());
+        work.setCreateTime(LocalDateTime.now());
+        work.setRemark("专业信息认证");
         //获取UserAuthStatus对象
         UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), IdentifierGenerator.nextId(), "专业信息认证");
-        professionalRepository.insertProfessionalAndUserAuthStatus(professional, userAuthStatus);
+        professionalRepository.insertProfessionalAndUserAuthStatus(work, userAuthStatus);
     }
 }

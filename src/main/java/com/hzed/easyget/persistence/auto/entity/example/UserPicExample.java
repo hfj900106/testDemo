@@ -1,11 +1,10 @@
 package com.hzed.easyget.persistence.auto.entity.example;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionRecordExample {
+public class UserPicExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -16,7 +15,7 @@ public class TransactionRecordExample {
 
     protected Integer rows;
 
-    public TransactionRecordExample() {
+    public UserPicExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -87,29 +86,29 @@ public class TransactionRecordExample {
         return this.rows;
     }
 
-    public TransactionRecordExample limit(Integer rows) {
+    public UserPicExample limit(Integer rows) {
         this.rows = rows;
         return this;
     }
 
-    public TransactionRecordExample limit(Integer offset, Integer rows) {
+    public UserPicExample limit(Integer offset, Integer rows) {
         this.offset = offset;
         this.rows = rows;
         return this;
     }
 
-    public TransactionRecordExample page(Integer page, Integer pageSize) {
+    public UserPicExample page(Integer page, Integer pageSize) {
         this.offset = page * pageSize;
         this.rows = pageSize;
         return this;
     }
 
-    public TransactionRecordExample orderBy(String orderByClause) {
+    public UserPicExample orderBy(String orderByClause) {
         this.setOrderByClause(orderByClause);
         return this;
     }
 
-    public TransactionRecordExample orderBy(String ... orderByClauses) {
+    public UserPicExample orderBy(String ... orderByClauses) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < orderByClauses.length; i++) {
             sb.append(orderByClauses[i]);
@@ -282,513 +281,143 @@ public class TransactionRecordExample {
             return (Criteria) this;
         }
 
-        public Criteria andBidIdIsNull() {
-            addCriterion("bid_id is null");
+        public Criteria andIdCardPhotoIsNull() {
+            addCriterion("id_card_photo is null");
             return (Criteria) this;
         }
 
-        public Criteria andBidIdIsNotNull() {
-            addCriterion("bid_id is not null");
+        public Criteria andIdCardPhotoIsNotNull() {
+            addCriterion("id_card_photo is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBidIdEqualTo(Long value) {
-            addCriterion("bid_id =", value, "bidId");
+        public Criteria andIdCardPhotoEqualTo(String value) {
+            addCriterion("id_card_photo =", value, "idCardPhoto");
             return (Criteria) this;
         }
 
-        public Criteria andBidIdNotEqualTo(Long value) {
-            addCriterion("bid_id <>", value, "bidId");
+        public Criteria andIdCardPhotoNotEqualTo(String value) {
+            addCriterion("id_card_photo <>", value, "idCardPhoto");
             return (Criteria) this;
         }
 
-        public Criteria andBidIdGreaterThan(Long value) {
-            addCriterion("bid_id >", value, "bidId");
+        public Criteria andIdCardPhotoGreaterThan(String value) {
+            addCriterion("id_card_photo >", value, "idCardPhoto");
             return (Criteria) this;
         }
 
-        public Criteria andBidIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("bid_id >=", value, "bidId");
+        public Criteria andIdCardPhotoGreaterThanOrEqualTo(String value) {
+            addCriterion("id_card_photo >=", value, "idCardPhoto");
             return (Criteria) this;
         }
 
-        public Criteria andBidIdLessThan(Long value) {
-            addCriterion("bid_id <", value, "bidId");
+        public Criteria andIdCardPhotoLessThan(String value) {
+            addCriterion("id_card_photo <", value, "idCardPhoto");
             return (Criteria) this;
         }
 
-        public Criteria andBidIdLessThanOrEqualTo(Long value) {
-            addCriterion("bid_id <=", value, "bidId");
+        public Criteria andIdCardPhotoLessThanOrEqualTo(String value) {
+            addCriterion("id_card_photo <=", value, "idCardPhoto");
             return (Criteria) this;
         }
 
-        public Criteria andBidIdIn(List<Long> values) {
-            addCriterion("bid_id in", values, "bidId");
+        public Criteria andIdCardPhotoLike(String value) {
+            addCriterion("id_card_photo like", value, "idCardPhoto");
             return (Criteria) this;
         }
 
-        public Criteria andBidIdNotIn(List<Long> values) {
-            addCriterion("bid_id not in", values, "bidId");
+        public Criteria andIdCardPhotoNotLike(String value) {
+            addCriterion("id_card_photo not like", value, "idCardPhoto");
             return (Criteria) this;
         }
 
-        public Criteria andBidIdBetween(Long value1, Long value2) {
-            addCriterion("bid_id between", value1, value2, "bidId");
+        public Criteria andIdCardPhotoIn(List<String> values) {
+            addCriterion("id_card_photo in", values, "idCardPhoto");
             return (Criteria) this;
         }
 
-        public Criteria andBidIdNotBetween(Long value1, Long value2) {
-            addCriterion("bid_id not between", value1, value2, "bidId");
+        public Criteria andIdCardPhotoNotIn(List<String> values) {
+            addCriterion("id_card_photo not in", values, "idCardPhoto");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIsNull() {
-            addCriterion("type is null");
+        public Criteria andIdCardPhotoBetween(String value1, String value2) {
+            addCriterion("id_card_photo between", value1, value2, "idCardPhoto");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIsNotNull() {
-            addCriterion("type is not null");
+        public Criteria andIdCardPhotoNotBetween(String value1, String value2) {
+            addCriterion("id_card_photo not between", value1, value2, "idCardPhoto");
             return (Criteria) this;
         }
 
-        public Criteria andTypeEqualTo(Byte value) {
-            addCriterion("type =", value, "type");
+        public Criteria andFacePhotoIsNull() {
+            addCriterion("face_photo is null");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotEqualTo(Byte value) {
-            addCriterion("type <>", value, "type");
+        public Criteria andFacePhotoIsNotNull() {
+            addCriterion("face_photo is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThan(Byte value) {
-            addCriterion("type >", value, "type");
+        public Criteria andFacePhotoEqualTo(String value) {
+            addCriterion("face_photo =", value, "facePhoto");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThanOrEqualTo(Byte value) {
-            addCriterion("type >=", value, "type");
+        public Criteria andFacePhotoNotEqualTo(String value) {
+            addCriterion("face_photo <>", value, "facePhoto");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThan(Byte value) {
-            addCriterion("type <", value, "type");
+        public Criteria andFacePhotoGreaterThan(String value) {
+            addCriterion("face_photo >", value, "facePhoto");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThanOrEqualTo(Byte value) {
-            addCriterion("type <=", value, "type");
+        public Criteria andFacePhotoGreaterThanOrEqualTo(String value) {
+            addCriterion("face_photo >=", value, "facePhoto");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIn(List<Byte> values) {
-            addCriterion("type in", values, "type");
+        public Criteria andFacePhotoLessThan(String value) {
+            addCriterion("face_photo <", value, "facePhoto");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotIn(List<Byte> values) {
-            addCriterion("type not in", values, "type");
+        public Criteria andFacePhotoLessThanOrEqualTo(String value) {
+            addCriterion("face_photo <=", value, "facePhoto");
             return (Criteria) this;
         }
 
-        public Criteria andTypeBetween(Byte value1, Byte value2) {
-            addCriterion("type between", value1, value2, "type");
+        public Criteria andFacePhotoLike(String value) {
+            addCriterion("face_photo like", value, "facePhoto");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotBetween(Byte value1, Byte value2) {
-            addCriterion("type not between", value1, value2, "type");
+        public Criteria andFacePhotoNotLike(String value) {
+            addCriterion("face_photo not like", value, "facePhoto");
             return (Criteria) this;
         }
 
-        public Criteria andAmountIsNull() {
-            addCriterion("amount is null");
+        public Criteria andFacePhotoIn(List<String> values) {
+            addCriterion("face_photo in", values, "facePhoto");
             return (Criteria) this;
         }
 
-        public Criteria andAmountIsNotNull() {
-            addCriterion("amount is not null");
+        public Criteria andFacePhotoNotIn(List<String> values) {
+            addCriterion("face_photo not in", values, "facePhoto");
             return (Criteria) this;
         }
 
-        public Criteria andAmountEqualTo(BigDecimal value) {
-            addCriterion("amount =", value, "amount");
+        public Criteria andFacePhotoBetween(String value1, String value2) {
+            addCriterion("face_photo between", value1, value2, "facePhoto");
             return (Criteria) this;
         }
 
-        public Criteria andAmountNotEqualTo(BigDecimal value) {
-            addCriterion("amount <>", value, "amount");
-            return (Criteria) this;
-        }
-
-        public Criteria andAmountGreaterThan(BigDecimal value) {
-            addCriterion("amount >", value, "amount");
-            return (Criteria) this;
-        }
-
-        public Criteria andAmountGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("amount >=", value, "amount");
-            return (Criteria) this;
-        }
-
-        public Criteria andAmountLessThan(BigDecimal value) {
-            addCriterion("amount <", value, "amount");
-            return (Criteria) this;
-        }
-
-        public Criteria andAmountLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("amount <=", value, "amount");
-            return (Criteria) this;
-        }
-
-        public Criteria andAmountIn(List<BigDecimal> values) {
-            addCriterion("amount in", values, "amount");
-            return (Criteria) this;
-        }
-
-        public Criteria andAmountNotIn(List<BigDecimal> values) {
-            addCriterion("amount not in", values, "amount");
-            return (Criteria) this;
-        }
-
-        public Criteria andAmountBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("amount between", value1, value2, "amount");
-            return (Criteria) this;
-        }
-
-        public Criteria andAmountNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("amount not between", value1, value2, "amount");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqIsNull() {
-            addCriterion("request_seq is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqIsNotNull() {
-            addCriterion("request_seq is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqEqualTo(String value) {
-            addCriterion("request_seq =", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqNotEqualTo(String value) {
-            addCriterion("request_seq <>", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqGreaterThan(String value) {
-            addCriterion("request_seq >", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqGreaterThanOrEqualTo(String value) {
-            addCriterion("request_seq >=", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqLessThan(String value) {
-            addCriterion("request_seq <", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqLessThanOrEqualTo(String value) {
-            addCriterion("request_seq <=", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqLike(String value) {
-            addCriterion("request_seq like", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqNotLike(String value) {
-            addCriterion("request_seq not like", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqIn(List<String> values) {
-            addCriterion("request_seq in", values, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqNotIn(List<String> values) {
-            addCriterion("request_seq not in", values, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqBetween(String value1, String value2) {
-            addCriterion("request_seq between", value1, value2, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqNotBetween(String value1, String value2) {
-            addCriterion("request_seq not between", value1, value2, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankIsNull() {
-            addCriterion("bank is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankIsNotNull() {
-            addCriterion("bank is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankEqualTo(String value) {
-            addCriterion("bank =", value, "bank");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankNotEqualTo(String value) {
-            addCriterion("bank <>", value, "bank");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankGreaterThan(String value) {
-            addCriterion("bank >", value, "bank");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankGreaterThanOrEqualTo(String value) {
-            addCriterion("bank >=", value, "bank");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankLessThan(String value) {
-            addCriterion("bank <", value, "bank");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankLessThanOrEqualTo(String value) {
-            addCriterion("bank <=", value, "bank");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankLike(String value) {
-            addCriterion("bank like", value, "bank");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankNotLike(String value) {
-            addCriterion("bank not like", value, "bank");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankIn(List<String> values) {
-            addCriterion("bank in", values, "bank");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankNotIn(List<String> values) {
-            addCriterion("bank not in", values, "bank");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankBetween(String value1, String value2) {
-            addCriterion("bank between", value1, value2, "bank");
-            return (Criteria) this;
-        }
-
-        public Criteria andBankNotBetween(String value1, String value2) {
-            addCriterion("bank not between", value1, value2, "bank");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountIsNull() {
-            addCriterion("account is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountIsNotNull() {
-            addCriterion("account is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountEqualTo(String value) {
-            addCriterion("account =", value, "account");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountNotEqualTo(String value) {
-            addCriterion("account <>", value, "account");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountGreaterThan(String value) {
-            addCriterion("account >", value, "account");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountGreaterThanOrEqualTo(String value) {
-            addCriterion("account >=", value, "account");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountLessThan(String value) {
-            addCriterion("account <", value, "account");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountLessThanOrEqualTo(String value) {
-            addCriterion("account <=", value, "account");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountLike(String value) {
-            addCriterion("account like", value, "account");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountNotLike(String value) {
-            addCriterion("account not like", value, "account");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountIn(List<String> values) {
-            addCriterion("account in", values, "account");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountNotIn(List<String> values) {
-            addCriterion("account not in", values, "account");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountBetween(String value1, String value2) {
-            addCriterion("account between", value1, value2, "account");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountNotBetween(String value1, String value2) {
-            addCriterion("account not between", value1, value2, "account");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeIsNull() {
-            addCriterion("mode is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeIsNotNull() {
-            addCriterion("mode is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeEqualTo(Byte value) {
-            addCriterion("mode =", value, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeNotEqualTo(Byte value) {
-            addCriterion("mode <>", value, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeGreaterThan(Byte value) {
-            addCriterion("mode >", value, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeGreaterThanOrEqualTo(Byte value) {
-            addCriterion("mode >=", value, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeLessThan(Byte value) {
-            addCriterion("mode <", value, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeLessThanOrEqualTo(Byte value) {
-            addCriterion("mode <=", value, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeIn(List<Byte> values) {
-            addCriterion("mode in", values, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeNotIn(List<Byte> values) {
-            addCriterion("mode not in", values, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeBetween(Byte value1, Byte value2) {
-            addCriterion("mode between", value1, value2, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andModeNotBetween(Byte value1, Byte value2) {
-            addCriterion("mode not between", value1, value2, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayIsNull() {
-            addCriterion("is_display is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayIsNotNull() {
-            addCriterion("is_display is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayEqualTo(Boolean value) {
-            addCriterion("is_display =", value, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayNotEqualTo(Boolean value) {
-            addCriterion("is_display <>", value, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayGreaterThan(Boolean value) {
-            addCriterion("is_display >", value, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("is_display >=", value, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayLessThan(Boolean value) {
-            addCriterion("is_display <", value, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayLessThanOrEqualTo(Boolean value) {
-            addCriterion("is_display <=", value, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayIn(List<Boolean> values) {
-            addCriterion("is_display in", values, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayNotIn(List<Boolean> values) {
-            addCriterion("is_display not in", values, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_display between", value1, value2, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_display not between", value1, value2, "isDisplay");
+        public Criteria andFacePhotoNotBetween(String value1, String value2) {
+            addCriterion("face_photo not between", value1, value2, "facePhoto");
             return (Criteria) this;
         }
 
@@ -1102,18 +731,13 @@ public class TransactionRecordExample {
             return (Criteria) this;
         }
 
-        public Criteria andRequestSeqLikeInsensitive(String value) {
-            addCriterion("upper(request_seq) like", value.toUpperCase(), "requestSeq");
+        public Criteria andIdCardPhotoLikeInsensitive(String value) {
+            addCriterion("upper(id_card_photo) like", value.toUpperCase(), "idCardPhoto");
             return (Criteria) this;
         }
 
-        public Criteria andBankLikeInsensitive(String value) {
-            addCriterion("upper(bank) like", value.toUpperCase(), "bank");
-            return (Criteria) this;
-        }
-
-        public Criteria andAccountLikeInsensitive(String value) {
-            addCriterion("upper(account) like", value.toUpperCase(), "account");
+        public Criteria andFacePhotoLikeInsensitive(String value) {
+            addCriterion("upper(face_photo) like", value.toUpperCase(), "facePhoto");
             return (Criteria) this;
         }
 
@@ -1124,14 +748,14 @@ public class TransactionRecordExample {
     }
 
     public static class Criteria extends GeneratedCriteria {
-        private TransactionRecordExample example;
+        private UserPicExample example;
 
-        protected Criteria(TransactionRecordExample example) {
+        protected Criteria(UserPicExample example) {
             super();
             this.example = example;
         }
 
-        public TransactionRecordExample example() {
+        public UserPicExample example() {
             return this.example;
         }
 

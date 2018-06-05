@@ -84,7 +84,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_dict
+    from t_loan_dict
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -108,7 +108,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_dict
+    from t_loan_dict
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -119,7 +119,7 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from t_dict
+    from t_loan_dict
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -127,21 +127,21 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_dict
+    from t_loan_dict
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_dict
+    delete from t_loan_dict
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.DictExample">
-    delete from t_dict
+    delete from t_loan_dict
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.Dict">
-    insert into t_dict (id, dic_name, dic_code, 
+    insert into t_loan_dict (id, dic_name, dic_code, 
       dic_value, dic_label, module_name, 
       module_code, orderby, create_by, 
       create_time, update_by, update_time, 
@@ -153,7 +153,7 @@
       #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.Dict">
-    insert into t_dict
+    insert into t_loan_dict
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -238,13 +238,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.DictExample" resultType="java.lang.Long">
-    select count(*) from t_dict
+    select count(*) from t_loan_dict
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_dict
+    update t_loan_dict
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -291,7 +291,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_dict
+    update t_loan_dict
     set id = #{record.id,jdbcType=BIGINT},
       dic_name = #{record.dicName,jdbcType=VARCHAR},
       dic_code = #{record.dicCode,jdbcType=VARCHAR},
@@ -310,7 +310,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.Dict">
-    update t_dict
+    update t_loan_dict
     <set>
       <if test="dicName != null">
         dic_name = #{dicName,jdbcType=VARCHAR},
@@ -352,7 +352,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.Dict">
-    update t_dict
+    update t_loan_dict
     set dic_name = #{dicName,jdbcType=VARCHAR},
       dic_code = #{dicCode,jdbcType=VARCHAR},
       dic_value = #{dicValue,jdbcType=VARCHAR},
@@ -370,7 +370,7 @@
   <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.DictExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_dict
+    from t_loan_dict
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -384,7 +384,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_dict
+    from t_loan_dict
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -394,7 +394,7 @@
     limit 1
   </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_dict
+    insert into t_loan_dict
     (id, dic_name, dic_code, dic_value, dic_label, module_name, module_code, orderby, 
       create_by, create_time, update_by, update_time, remark)
     values
@@ -407,7 +407,7 @@
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_dict (
+    insert into t_loan_dict (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>

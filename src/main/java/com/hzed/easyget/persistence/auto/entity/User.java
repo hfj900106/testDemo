@@ -60,9 +60,19 @@ public class User implements Serializable {
     private Boolean isLocked;
 
     /**
+     * 锁定时间
+     */
+    private LocalDateTime lockedTime;
+
+    /**
      * 是否黑名单 0-否 1-是
      */
     private Boolean isBlacklist;
+
+    /**
+     * 进入黑名单时间
+     */
+    private LocalDateTime blacklistTime;
 
     /**
      * 注册渠道 1-印尼APP
@@ -179,12 +189,28 @@ public class User implements Serializable {
         this.isLocked = isLocked;
     }
 
+    public LocalDateTime getLockedTime() {
+        return lockedTime;
+    }
+
+    public void setLockedTime(LocalDateTime lockedTime) {
+        this.lockedTime = lockedTime;
+    }
+
     public Boolean getIsBlacklist() {
         return isBlacklist;
     }
 
     public void setIsBlacklist(Boolean isBlacklist) {
         this.isBlacklist = isBlacklist;
+    }
+
+    public LocalDateTime getBlacklistTime() {
+        return blacklistTime;
+    }
+
+    public void setBlacklistTime(LocalDateTime blacklistTime) {
+        this.blacklistTime = blacklistTime;
     }
 
     public Byte getClient() {
@@ -252,7 +278,9 @@ public class User implements Serializable {
         sb.append(", idCardNo=").append(idCardNo);
         sb.append(", platform=").append(platform);
         sb.append(", isLocked=").append(isLocked);
+        sb.append(", lockedTime=").append(lockedTime);
         sb.append(", isBlacklist=").append(isBlacklist);
+        sb.append(", blacklistTime=").append(blacklistTime);
         sb.append(", client=").append(client);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
@@ -330,8 +358,18 @@ public class User implements Serializable {
             return this;
         }
 
+        public Builder lockedTime(LocalDateTime lockedTime) {
+            obj.setLockedTime(lockedTime);
+            return this;
+        }
+
         public Builder isBlacklist(Boolean isBlacklist) {
             obj.setIsBlacklist(isBlacklist);
+            return this;
+        }
+
+        public Builder blacklistTime(LocalDateTime blacklistTime) {
+            obj.setBlacklistTime(blacklistTime);
             return this;
         }
 
@@ -382,7 +420,9 @@ public class User implements Serializable {
         idCardNo("id_card_no"),
         platform("platform"),
         isLocked("is_locked"),
+        lockedTime("locked_time"),
         isBlacklist("is_blacklist"),
+        blacklistTime("blacklist_time"),
         client("client"),
         createBy("create_by"),
         createTime("create_time"),

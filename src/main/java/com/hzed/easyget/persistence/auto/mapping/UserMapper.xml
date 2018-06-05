@@ -13,7 +13,9 @@
     <result column="id_card_no" jdbcType="VARCHAR" property="idCardNo" />
     <result column="platform" jdbcType="VARCHAR" property="platform" />
     <result column="is_locked" jdbcType="BIT" property="isLocked" />
+    <result column="locked_time" jdbcType="TIMESTAMP" property="lockedTime" />
     <result column="is_blacklist" jdbcType="BIT" property="isBlacklist" />
+    <result column="blacklist_time" jdbcType="TIMESTAMP" property="blacklistTime" />
     <result column="client" jdbcType="TINYINT" property="client" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -81,8 +83,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, mobile_account, password, profile_photo, nick_name, last_login_time, gender, 
-    real_name, id_card_no, platform, is_locked, is_blacklist, client, create_by, create_time, 
-    update_by, update_time, remark
+    real_name, id_card_no, platform, is_locked, locked_time, is_blacklist, blacklist_time, 
+    client, create_by, create_time, update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserExample" resultMap="BaseResultMap">
     select
@@ -150,17 +152,17 @@
     insert into t_loan_user (id, mobile_account, password, 
       profile_photo, nick_name, last_login_time, 
       gender, real_name, id_card_no, 
-      platform, is_locked, is_blacklist, 
-      client, create_by, create_time, 
-      update_by, update_time, remark
-      )
+      platform, is_locked, locked_time, 
+      is_blacklist, blacklist_time, client, 
+      create_by, create_time, update_by, 
+      update_time, remark)
     values (#{id,jdbcType=BIGINT}, #{mobileAccount,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{profilePhoto,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP}, 
       #{gender,jdbcType=TINYINT}, #{realName,jdbcType=VARCHAR}, #{idCardNo,jdbcType=VARCHAR}, 
-      #{platform,jdbcType=VARCHAR}, #{isLocked,jdbcType=BIT}, #{isBlacklist,jdbcType=BIT}, 
-      #{client,jdbcType=TINYINT}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
-      )
+      #{platform,jdbcType=VARCHAR}, #{isLocked,jdbcType=BIT}, #{lockedTime,jdbcType=TIMESTAMP}, 
+      #{isBlacklist,jdbcType=BIT}, #{blacklistTime,jdbcType=TIMESTAMP}, #{client,jdbcType=TINYINT}, 
+      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.User">
     insert into t_loan_user
@@ -198,8 +200,14 @@
       <if test="isLocked != null">
         is_locked,
       </if>
+      <if test="lockedTime != null">
+        locked_time,
+      </if>
       <if test="isBlacklist != null">
         is_blacklist,
+      </if>
+      <if test="blacklistTime != null">
+        blacklist_time,
       </if>
       <if test="client != null">
         client,
@@ -254,8 +262,14 @@
       <if test="isLocked != null">
         #{isLocked,jdbcType=BIT},
       </if>
+      <if test="lockedTime != null">
+        #{lockedTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="isBlacklist != null">
         #{isBlacklist,jdbcType=BIT},
+      </if>
+      <if test="blacklistTime != null">
+        #{blacklistTime,jdbcType=TIMESTAMP},
       </if>
       <if test="client != null">
         #{client,jdbcType=TINYINT},
@@ -319,8 +333,14 @@
       <if test="record.isLocked != null">
         is_locked = #{record.isLocked,jdbcType=BIT},
       </if>
+      <if test="record.lockedTime != null">
+        locked_time = #{record.lockedTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.isBlacklist != null">
         is_blacklist = #{record.isBlacklist,jdbcType=BIT},
+      </if>
+      <if test="record.blacklistTime != null">
+        blacklist_time = #{record.blacklistTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.client != null">
         client = #{record.client,jdbcType=TINYINT},
@@ -358,7 +378,9 @@
       id_card_no = #{record.idCardNo,jdbcType=VARCHAR},
       platform = #{record.platform,jdbcType=VARCHAR},
       is_locked = #{record.isLocked,jdbcType=BIT},
+      locked_time = #{record.lockedTime,jdbcType=TIMESTAMP},
       is_blacklist = #{record.isBlacklist,jdbcType=BIT},
+      blacklist_time = #{record.blacklistTime,jdbcType=TIMESTAMP},
       client = #{record.client,jdbcType=TINYINT},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -402,8 +424,14 @@
       <if test="isLocked != null">
         is_locked = #{isLocked,jdbcType=BIT},
       </if>
+      <if test="lockedTime != null">
+        locked_time = #{lockedTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="isBlacklist != null">
         is_blacklist = #{isBlacklist,jdbcType=BIT},
+      </if>
+      <if test="blacklistTime != null">
+        blacklist_time = #{blacklistTime,jdbcType=TIMESTAMP},
       </if>
       <if test="client != null">
         client = #{client,jdbcType=TINYINT},
@@ -438,7 +466,9 @@
       id_card_no = #{idCardNo,jdbcType=VARCHAR},
       platform = #{platform,jdbcType=VARCHAR},
       is_locked = #{isLocked,jdbcType=BIT},
+      locked_time = #{lockedTime,jdbcType=TIMESTAMP},
       is_blacklist = #{isBlacklist,jdbcType=BIT},
+      blacklist_time = #{blacklistTime,jdbcType=TIMESTAMP},
       client = #{client,jdbcType=TINYINT},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -476,17 +506,17 @@
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_user
     (id, mobile_account, password, profile_photo, nick_name, last_login_time, gender, 
-      real_name, id_card_no, platform, is_locked, is_blacklist, client, create_by, create_time, 
-      update_by, update_time, remark)
+      real_name, id_card_no, platform, is_locked, locked_time, is_blacklist, blacklist_time, 
+      client, create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.mobileAccount,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, 
         #{item.profilePhoto,jdbcType=VARCHAR}, #{item.nickName,jdbcType=VARCHAR}, #{item.lastLoginTime,jdbcType=TIMESTAMP}, 
         #{item.gender,jdbcType=TINYINT}, #{item.realName,jdbcType=VARCHAR}, #{item.idCardNo,jdbcType=VARCHAR}, 
-        #{item.platform,jdbcType=VARCHAR}, #{item.isLocked,jdbcType=BIT}, #{item.isBlacklist,jdbcType=BIT}, 
-        #{item.client,jdbcType=TINYINT}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
-        )
+        #{item.platform,jdbcType=VARCHAR}, #{item.isLocked,jdbcType=BIT}, #{item.lockedTime,jdbcType=TIMESTAMP}, 
+        #{item.isBlacklist,jdbcType=BIT}, #{item.blacklistTime,jdbcType=TIMESTAMP}, #{item.client,jdbcType=TINYINT}, 
+        #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -532,8 +562,14 @@
         <if test="'is_locked' == column.value">
           #{item.isLocked,jdbcType=BIT}
         </if>
+        <if test="'locked_time' == column.value">
+          #{item.lockedTime,jdbcType=TIMESTAMP}
+        </if>
         <if test="'is_blacklist' == column.value">
           #{item.isBlacklist,jdbcType=BIT}
+        </if>
+        <if test="'blacklist_time' == column.value">
+          #{item.blacklistTime,jdbcType=TIMESTAMP}
         </if>
         <if test="'client' == column.value">
           #{item.client,jdbcType=TINYINT}

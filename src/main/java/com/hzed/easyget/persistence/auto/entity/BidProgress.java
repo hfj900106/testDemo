@@ -1,19 +1,12 @@
 package com.hzed.easyget.persistence.auto.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class TransactionRecord implements Serializable {
+public class BidProgress implements Serializable {
     /**
-     * 主键
      */
     private Long id;
-
-    /**
-     * 用户id
-     */
-    private Long userId;
 
     /**
      * 标id
@@ -21,39 +14,19 @@ public class TransactionRecord implements Serializable {
     private Long bidId;
 
     /**
-     * 交易类型 1-入账 2-出账 3-其他
+     * 处理类型 1-审核 2-放款 3-结清
      */
     private Byte type;
 
     /**
-     * 金额
+     * 处理时间
      */
-    private BigDecimal amount;
+    private LocalDateTime handleTime;
 
     /**
-     * 交易流水号
+     * 处理结果描述
      */
-    private String requestSeq;
-
-    /**
-     * 交易银行
-     */
-    private String bank;
-
-    /**
-     * 交易账号
-     */
-    private String account;
-
-    /**
-     * 交易方式 1-APP 2-ATM 3-other
-     */
-    private Byte mode;
-
-    /**
-     * 是否显示 1-是 0-否
-     */
-    private Boolean isDisplay;
+    private String handleResult;
 
     /**
      */
@@ -72,7 +45,6 @@ public class TransactionRecord implements Serializable {
     private LocalDateTime updateTime;
 
     /**
-     * 交易备注
      */
     private String remark;
 
@@ -84,14 +56,6 @@ public class TransactionRecord implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public Long getBidId() {
@@ -110,52 +74,20 @@ public class TransactionRecord implements Serializable {
         this.type = type;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public LocalDateTime getHandleTime() {
+        return handleTime;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setHandleTime(LocalDateTime handleTime) {
+        this.handleTime = handleTime;
     }
 
-    public String getRequestSeq() {
-        return requestSeq;
+    public String getHandleResult() {
+        return handleResult;
     }
 
-    public void setRequestSeq(String requestSeq) {
-        this.requestSeq = requestSeq == null ? null : requestSeq.trim();
-    }
-
-    public String getBank() {
-        return bank;
-    }
-
-    public void setBank(String bank) {
-        this.bank = bank == null ? null : bank.trim();
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account == null ? null : account.trim();
-    }
-
-    public Byte getMode() {
-        return mode;
-    }
-
-    public void setMode(Byte mode) {
-        this.mode = mode;
-    }
-
-    public Boolean getIsDisplay() {
-        return isDisplay;
-    }
-
-    public void setIsDisplay(Boolean isDisplay) {
-        this.isDisplay = isDisplay;
+    public void setHandleResult(String handleResult) {
+        this.handleResult = handleResult == null ? null : handleResult.trim();
     }
 
     public Long getCreateBy() {
@@ -205,15 +137,10 @@ public class TransactionRecord implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", userId=").append(userId);
         sb.append(", bidId=").append(bidId);
         sb.append(", type=").append(type);
-        sb.append(", amount=").append(amount);
-        sb.append(", requestSeq=").append(requestSeq);
-        sb.append(", bank=").append(bank);
-        sb.append(", account=").append(account);
-        sb.append(", mode=").append(mode);
-        sb.append(", isDisplay=").append(isDisplay);
+        sb.append(", handleTime=").append(handleTime);
+        sb.append(", handleResult=").append(handleResult);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -224,24 +151,19 @@ public class TransactionRecord implements Serializable {
         return sb.toString();
     }
 
-    public static TransactionRecord.Builder builder() {
-        return new TransactionRecord.Builder();
+    public static BidProgress.Builder builder() {
+        return new BidProgress.Builder();
     }
 
     public static class Builder {
-        private TransactionRecord obj;
+        private BidProgress obj;
 
         public Builder() {
-            this.obj = new TransactionRecord();
+            this.obj = new BidProgress();
         }
 
         public Builder id(Long id) {
             obj.setId(id);
-            return this;
-        }
-
-        public Builder userId(Long userId) {
-            obj.setUserId(userId);
             return this;
         }
 
@@ -255,33 +177,13 @@ public class TransactionRecord implements Serializable {
             return this;
         }
 
-        public Builder amount(BigDecimal amount) {
-            obj.setAmount(amount);
+        public Builder handleTime(LocalDateTime handleTime) {
+            obj.setHandleTime(handleTime);
             return this;
         }
 
-        public Builder requestSeq(String requestSeq) {
-            obj.setRequestSeq(requestSeq);
-            return this;
-        }
-
-        public Builder bank(String bank) {
-            obj.setBank(bank);
-            return this;
-        }
-
-        public Builder account(String account) {
-            obj.setAccount(account);
-            return this;
-        }
-
-        public Builder mode(Byte mode) {
-            obj.setMode(mode);
-            return this;
-        }
-
-        public Builder isDisplay(Boolean isDisplay) {
-            obj.setIsDisplay(isDisplay);
+        public Builder handleResult(String handleResult) {
+            obj.setHandleResult(handleResult);
             return this;
         }
 
@@ -310,22 +212,17 @@ public class TransactionRecord implements Serializable {
             return this;
         }
 
-        public TransactionRecord build() {
+        public BidProgress build() {
             return this.obj;
         }
     }
 
     public enum Column {
         id("id"),
-        userId("user_id"),
         bidId("bid_id"),
         type("type"),
-        amount("amount"),
-        requestSeq("request_seq"),
-        bank("bank"),
-        account("account"),
-        mode("mode"),
-        isDisplay("is_display"),
+        handleTime("handle_time"),
+        handleResult("handle_result"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

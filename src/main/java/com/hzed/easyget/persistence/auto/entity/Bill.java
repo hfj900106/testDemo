@@ -3,57 +3,52 @@ package com.hzed.easyget.persistence.auto.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
-public class TransactionRecord implements Serializable {
+public class Bill implements Serializable {
     /**
-     * 主键
      */
     private Long id;
 
     /**
-     * 用户id
-     */
-    private Long userId;
-
-    /**
-     * 标id
+     * 标的id
      */
     private Long bidId;
 
     /**
-     * 交易类型 1-入账 2-出账 3-其他
+     * 期数
      */
-    private Byte type;
+    private Integer indexPeriods;
 
     /**
-     * 金额
+     * 应还时间
      */
-    private BigDecimal amount;
+    private Date repaymentTime;
 
     /**
-     * 交易流水号
+     * 应收金额
      */
-    private String requestSeq;
+    private BigDecimal repaymentAmount;
 
     /**
-     * 交易银行
+     * 结清时间(结清才更新)
      */
-    private String bank;
+    private Date settlementTime;
 
     /**
-     * 交易账号
+     * 实还总额
      */
-    private String account;
+    private BigDecimal realRepaymentAmount;
 
     /**
-     * 交易方式 1-APP 2-ATM 3-other
+     * 状态 1-未结清 2-正常结清 3-逾期结清
      */
-    private Byte mode;
+    private Byte status;
 
     /**
-     * 是否显示 1-是 0-否
+     * 部分还款标志 1-是 0-否
      */
-    private Boolean isDisplay;
+    private Boolean isPartialRepayment;
 
     /**
      */
@@ -72,7 +67,6 @@ public class TransactionRecord implements Serializable {
     private LocalDateTime updateTime;
 
     /**
-     * 交易备注
      */
     private String remark;
 
@@ -86,14 +80,6 @@ public class TransactionRecord implements Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public Long getBidId() {
         return bidId;
     }
@@ -102,60 +88,60 @@ public class TransactionRecord implements Serializable {
         this.bidId = bidId;
     }
 
-    public Byte getType() {
-        return type;
+    public Integer getIndexPeriods() {
+        return indexPeriods;
     }
 
-    public void setType(Byte type) {
-        this.type = type;
+    public void setIndexPeriods(Integer indexPeriods) {
+        this.indexPeriods = indexPeriods;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public Date getRepaymentTime() {
+        return repaymentTime;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setRepaymentTime(Date repaymentTime) {
+        this.repaymentTime = repaymentTime;
     }
 
-    public String getRequestSeq() {
-        return requestSeq;
+    public BigDecimal getRepaymentAmount() {
+        return repaymentAmount;
     }
 
-    public void setRequestSeq(String requestSeq) {
-        this.requestSeq = requestSeq == null ? null : requestSeq.trim();
+    public void setRepaymentAmount(BigDecimal repaymentAmount) {
+        this.repaymentAmount = repaymentAmount;
     }
 
-    public String getBank() {
-        return bank;
+    public Date getSettlementTime() {
+        return settlementTime;
     }
 
-    public void setBank(String bank) {
-        this.bank = bank == null ? null : bank.trim();
+    public void setSettlementTime(Date settlementTime) {
+        this.settlementTime = settlementTime;
     }
 
-    public String getAccount() {
-        return account;
+    public BigDecimal getRealRepaymentAmount() {
+        return realRepaymentAmount;
     }
 
-    public void setAccount(String account) {
-        this.account = account == null ? null : account.trim();
+    public void setRealRepaymentAmount(BigDecimal realRepaymentAmount) {
+        this.realRepaymentAmount = realRepaymentAmount;
     }
 
-    public Byte getMode() {
-        return mode;
+    public Byte getStatus() {
+        return status;
     }
 
-    public void setMode(Byte mode) {
-        this.mode = mode;
+    public void setStatus(Byte status) {
+        this.status = status;
     }
 
-    public Boolean getIsDisplay() {
-        return isDisplay;
+    public Boolean getIsPartialRepayment() {
+        return isPartialRepayment;
     }
 
-    public void setIsDisplay(Boolean isDisplay) {
-        this.isDisplay = isDisplay;
+    public void setIsPartialRepayment(Boolean isPartialRepayment) {
+        this.isPartialRepayment = isPartialRepayment;
     }
 
     public Long getCreateBy() {
@@ -205,15 +191,14 @@ public class TransactionRecord implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", userId=").append(userId);
         sb.append(", bidId=").append(bidId);
-        sb.append(", type=").append(type);
-        sb.append(", amount=").append(amount);
-        sb.append(", requestSeq=").append(requestSeq);
-        sb.append(", bank=").append(bank);
-        sb.append(", account=").append(account);
-        sb.append(", mode=").append(mode);
-        sb.append(", isDisplay=").append(isDisplay);
+        sb.append(", indexPeriods=").append(indexPeriods);
+        sb.append(", repaymentTime=").append(repaymentTime);
+        sb.append(", repaymentAmount=").append(repaymentAmount);
+        sb.append(", settlementTime=").append(settlementTime);
+        sb.append(", realRepaymentAmount=").append(realRepaymentAmount);
+        sb.append(", status=").append(status);
+        sb.append(", isPartialRepayment=").append(isPartialRepayment);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -224,24 +209,19 @@ public class TransactionRecord implements Serializable {
         return sb.toString();
     }
 
-    public static TransactionRecord.Builder builder() {
-        return new TransactionRecord.Builder();
+    public static Bill.Builder builder() {
+        return new Bill.Builder();
     }
 
     public static class Builder {
-        private TransactionRecord obj;
+        private Bill obj;
 
         public Builder() {
-            this.obj = new TransactionRecord();
+            this.obj = new Bill();
         }
 
         public Builder id(Long id) {
             obj.setId(id);
-            return this;
-        }
-
-        public Builder userId(Long userId) {
-            obj.setUserId(userId);
             return this;
         }
 
@@ -250,38 +230,38 @@ public class TransactionRecord implements Serializable {
             return this;
         }
 
-        public Builder type(Byte type) {
-            obj.setType(type);
+        public Builder indexPeriods(Integer indexPeriods) {
+            obj.setIndexPeriods(indexPeriods);
             return this;
         }
 
-        public Builder amount(BigDecimal amount) {
-            obj.setAmount(amount);
+        public Builder repaymentTime(Date repaymentTime) {
+            obj.setRepaymentTime(repaymentTime);
             return this;
         }
 
-        public Builder requestSeq(String requestSeq) {
-            obj.setRequestSeq(requestSeq);
+        public Builder repaymentAmount(BigDecimal repaymentAmount) {
+            obj.setRepaymentAmount(repaymentAmount);
             return this;
         }
 
-        public Builder bank(String bank) {
-            obj.setBank(bank);
+        public Builder settlementTime(Date settlementTime) {
+            obj.setSettlementTime(settlementTime);
             return this;
         }
 
-        public Builder account(String account) {
-            obj.setAccount(account);
+        public Builder realRepaymentAmount(BigDecimal realRepaymentAmount) {
+            obj.setRealRepaymentAmount(realRepaymentAmount);
             return this;
         }
 
-        public Builder mode(Byte mode) {
-            obj.setMode(mode);
+        public Builder status(Byte status) {
+            obj.setStatus(status);
             return this;
         }
 
-        public Builder isDisplay(Boolean isDisplay) {
-            obj.setIsDisplay(isDisplay);
+        public Builder isPartialRepayment(Boolean isPartialRepayment) {
+            obj.setIsPartialRepayment(isPartialRepayment);
             return this;
         }
 
@@ -310,22 +290,21 @@ public class TransactionRecord implements Serializable {
             return this;
         }
 
-        public TransactionRecord build() {
+        public Bill build() {
             return this.obj;
         }
     }
 
     public enum Column {
         id("id"),
-        userId("user_id"),
         bidId("bid_id"),
-        type("type"),
-        amount("amount"),
-        requestSeq("request_seq"),
-        bank("bank"),
-        account("account"),
-        mode("mode"),
-        isDisplay("is_display"),
+        indexPeriods("index_periods"),
+        repaymentTime("repayment_time"),
+        repaymentAmount("repayment_amount"),
+        settlementTime("settlement_time"),
+        realRepaymentAmount("real_repayment_amount"),
+        status("status"),
+        isPartialRepayment("is_partial_repayment"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

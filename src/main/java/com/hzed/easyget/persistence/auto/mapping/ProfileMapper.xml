@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hzed.easyget.persistence.auto.mapper.TransactionRecordMapper">
-  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.TransactionRecord">
+<mapper namespace="com.hzed.easyget.persistence.auto.mapper.ProfileMapper">
+  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.Profile">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="bid_id" jdbcType="BIGINT" property="bidId" />
-    <result column="type" jdbcType="TINYINT" property="type" />
-    <result column="amount" jdbcType="DECIMAL" property="amount" />
-    <result column="request_seq" jdbcType="VARCHAR" property="requestSeq" />
-    <result column="bank" jdbcType="VARCHAR" property="bank" />
-    <result column="account" jdbcType="VARCHAR" property="account" />
-    <result column="mode" jdbcType="TINYINT" property="mode" />
-    <result column="is_display" jdbcType="BIT" property="isDisplay" />
+    <result column="education" jdbcType="VARCHAR" property="education" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="company_addr" jdbcType="VARCHAR" property="companyAddr" />
+    <result column="company_addr_detail" jdbcType="VARCHAR" property="companyAddrDetail" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="parent_name" jdbcType="VARCHAR" property="parentName" />
+    <result column="parent_tel" jdbcType="VARCHAR" property="parentTel" />
+    <result column="relationship" jdbcType="VARCHAR" property="relationship" />
+    <result column="related_person_name" jdbcType="VARCHAR" property="relatedPersonName" />
+    <result column="related_person_tel" jdbcType="VARCHAR" property="relatedPersonTel" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -77,16 +79,17 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, bid_id, type, amount, request_seq, bank, account, mode, is_display, 
-    create_by, create_time, update_by, update_time, remark
+    id, user_id, education, company_name, company_addr, company_addr_detail, email, parent_name, 
+    parent_tel, relationship, related_person_name, related_person_tel, create_by, create_time, 
+    update_by, update_time, remark
   </sql>
-  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.TransactionRecordExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProfileExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_loan_transaction_record
+    from t_loan_profile
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -110,7 +113,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_transaction_record
+    from t_loan_profile
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -121,7 +124,7 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from t_loan_transaction_record
+    from t_loan_profile
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -129,35 +132,35 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_transaction_record
+    from t_loan_profile
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_loan_transaction_record
+    delete from t_loan_profile
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.TransactionRecordExample">
-    delete from t_loan_transaction_record
+  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProfileExample">
+    delete from t_loan_profile
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.TransactionRecord">
-    insert into t_loan_transaction_record (id, user_id, bid_id, 
-      type, amount, request_seq, 
-      bank, account, mode, 
-      is_display, create_by, create_time, 
-      update_by, update_time, remark
-      )
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{bidId,jdbcType=BIGINT}, 
-      #{type,jdbcType=TINYINT}, #{amount,jdbcType=DECIMAL}, #{requestSeq,jdbcType=VARCHAR}, 
-      #{bank,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{mode,jdbcType=TINYINT}, 
-      #{isDisplay,jdbcType=BIT}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
-      )
+  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.Profile">
+    insert into t_loan_profile (id, user_id, education, 
+      company_name, company_addr, company_addr_detail, 
+      email, parent_name, parent_tel, 
+      relationship, related_person_name, related_person_tel, 
+      create_by, create_time, update_by, 
+      update_time, remark)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{education,jdbcType=VARCHAR}, 
+      #{companyName,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, #{companyAddrDetail,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{parentName,jdbcType=VARCHAR}, #{parentTel,jdbcType=VARCHAR}, 
+      #{relationship,jdbcType=VARCHAR}, #{relatedPersonName,jdbcType=VARCHAR}, #{relatedPersonTel,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.TransactionRecord">
-    insert into t_loan_transaction_record
+  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.Profile">
+    insert into t_loan_profile
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -165,29 +168,35 @@
       <if test="userId != null">
         user_id,
       </if>
-      <if test="bidId != null">
-        bid_id,
+      <if test="education != null">
+        education,
       </if>
-      <if test="type != null">
-        type,
+      <if test="companyName != null">
+        company_name,
       </if>
-      <if test="amount != null">
-        amount,
+      <if test="companyAddr != null">
+        company_addr,
       </if>
-      <if test="requestSeq != null">
-        request_seq,
+      <if test="companyAddrDetail != null">
+        company_addr_detail,
       </if>
-      <if test="bank != null">
-        bank,
+      <if test="email != null">
+        email,
       </if>
-      <if test="account != null">
-        account,
+      <if test="parentName != null">
+        parent_name,
       </if>
-      <if test="mode != null">
-        mode,
+      <if test="parentTel != null">
+        parent_tel,
       </if>
-      <if test="isDisplay != null">
-        is_display,
+      <if test="relationship != null">
+        relationship,
+      </if>
+      <if test="relatedPersonName != null">
+        related_person_name,
+      </if>
+      <if test="relatedPersonTel != null">
+        related_person_tel,
       </if>
       <if test="createBy != null">
         create_by,
@@ -212,29 +221,35 @@
       <if test="userId != null">
         #{userId,jdbcType=BIGINT},
       </if>
-      <if test="bidId != null">
-        #{bidId,jdbcType=BIGINT},
+      <if test="education != null">
+        #{education,jdbcType=VARCHAR},
       </if>
-      <if test="type != null">
-        #{type,jdbcType=TINYINT},
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
       </if>
-      <if test="amount != null">
-        #{amount,jdbcType=DECIMAL},
+      <if test="companyAddr != null">
+        #{companyAddr,jdbcType=VARCHAR},
       </if>
-      <if test="requestSeq != null">
-        #{requestSeq,jdbcType=VARCHAR},
+      <if test="companyAddrDetail != null">
+        #{companyAddrDetail,jdbcType=VARCHAR},
       </if>
-      <if test="bank != null">
-        #{bank,jdbcType=VARCHAR},
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
       </if>
-      <if test="account != null">
-        #{account,jdbcType=VARCHAR},
+      <if test="parentName != null">
+        #{parentName,jdbcType=VARCHAR},
       </if>
-      <if test="mode != null">
-        #{mode,jdbcType=TINYINT},
+      <if test="parentTel != null">
+        #{parentTel,jdbcType=VARCHAR},
       </if>
-      <if test="isDisplay != null">
-        #{isDisplay,jdbcType=BIT},
+      <if test="relationship != null">
+        #{relationship,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedPersonName != null">
+        #{relatedPersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedPersonTel != null">
+        #{relatedPersonTel,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -253,14 +268,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.TransactionRecordExample" resultType="java.lang.Long">
-    select count(*) from t_loan_transaction_record
+  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProfileExample" resultType="java.lang.Long">
+    select count(*) from t_loan_profile
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_loan_transaction_record
+    update t_loan_profile
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -268,29 +283,35 @@
       <if test="record.userId != null">
         user_id = #{record.userId,jdbcType=BIGINT},
       </if>
-      <if test="record.bidId != null">
-        bid_id = #{record.bidId,jdbcType=BIGINT},
+      <if test="record.education != null">
+        education = #{record.education,jdbcType=VARCHAR},
       </if>
-      <if test="record.type != null">
-        type = #{record.type,jdbcType=TINYINT},
+      <if test="record.companyName != null">
+        company_name = #{record.companyName,jdbcType=VARCHAR},
       </if>
-      <if test="record.amount != null">
-        amount = #{record.amount,jdbcType=DECIMAL},
+      <if test="record.companyAddr != null">
+        company_addr = #{record.companyAddr,jdbcType=VARCHAR},
       </if>
-      <if test="record.requestSeq != null">
-        request_seq = #{record.requestSeq,jdbcType=VARCHAR},
+      <if test="record.companyAddrDetail != null">
+        company_addr_detail = #{record.companyAddrDetail,jdbcType=VARCHAR},
       </if>
-      <if test="record.bank != null">
-        bank = #{record.bank,jdbcType=VARCHAR},
+      <if test="record.email != null">
+        email = #{record.email,jdbcType=VARCHAR},
       </if>
-      <if test="record.account != null">
-        account = #{record.account,jdbcType=VARCHAR},
+      <if test="record.parentName != null">
+        parent_name = #{record.parentName,jdbcType=VARCHAR},
       </if>
-      <if test="record.mode != null">
-        mode = #{record.mode,jdbcType=TINYINT},
+      <if test="record.parentTel != null">
+        parent_tel = #{record.parentTel,jdbcType=VARCHAR},
       </if>
-      <if test="record.isDisplay != null">
-        is_display = #{record.isDisplay,jdbcType=BIT},
+      <if test="record.relationship != null">
+        relationship = #{record.relationship,jdbcType=VARCHAR},
+      </if>
+      <if test="record.relatedPersonName != null">
+        related_person_name = #{record.relatedPersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.relatedPersonTel != null">
+        related_person_tel = #{record.relatedPersonTel,jdbcType=VARCHAR},
       </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
@@ -313,17 +334,19 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_loan_transaction_record
+    update t_loan_profile
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
-      bid_id = #{record.bidId,jdbcType=BIGINT},
-      type = #{record.type,jdbcType=TINYINT},
-      amount = #{record.amount,jdbcType=DECIMAL},
-      request_seq = #{record.requestSeq,jdbcType=VARCHAR},
-      bank = #{record.bank,jdbcType=VARCHAR},
-      account = #{record.account,jdbcType=VARCHAR},
-      mode = #{record.mode,jdbcType=TINYINT},
-      is_display = #{record.isDisplay,jdbcType=BIT},
+      education = #{record.education,jdbcType=VARCHAR},
+      company_name = #{record.companyName,jdbcType=VARCHAR},
+      company_addr = #{record.companyAddr,jdbcType=VARCHAR},
+      company_addr_detail = #{record.companyAddrDetail,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      parent_name = #{record.parentName,jdbcType=VARCHAR},
+      parent_tel = #{record.parentTel,jdbcType=VARCHAR},
+      relationship = #{record.relationship,jdbcType=VARCHAR},
+      related_person_name = #{record.relatedPersonName,jdbcType=VARCHAR},
+      related_person_tel = #{record.relatedPersonTel,jdbcType=VARCHAR},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -333,35 +356,41 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.TransactionRecord">
-    update t_loan_transaction_record
+  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.Profile">
+    update t_loan_profile
     <set>
       <if test="userId != null">
         user_id = #{userId,jdbcType=BIGINT},
       </if>
-      <if test="bidId != null">
-        bid_id = #{bidId,jdbcType=BIGINT},
+      <if test="education != null">
+        education = #{education,jdbcType=VARCHAR},
       </if>
-      <if test="type != null">
-        type = #{type,jdbcType=TINYINT},
+      <if test="companyName != null">
+        company_name = #{companyName,jdbcType=VARCHAR},
       </if>
-      <if test="amount != null">
-        amount = #{amount,jdbcType=DECIMAL},
+      <if test="companyAddr != null">
+        company_addr = #{companyAddr,jdbcType=VARCHAR},
       </if>
-      <if test="requestSeq != null">
-        request_seq = #{requestSeq,jdbcType=VARCHAR},
+      <if test="companyAddrDetail != null">
+        company_addr_detail = #{companyAddrDetail,jdbcType=VARCHAR},
       </if>
-      <if test="bank != null">
-        bank = #{bank,jdbcType=VARCHAR},
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
       </if>
-      <if test="account != null">
-        account = #{account,jdbcType=VARCHAR},
+      <if test="parentName != null">
+        parent_name = #{parentName,jdbcType=VARCHAR},
       </if>
-      <if test="mode != null">
-        mode = #{mode,jdbcType=TINYINT},
+      <if test="parentTel != null">
+        parent_tel = #{parentTel,jdbcType=VARCHAR},
       </if>
-      <if test="isDisplay != null">
-        is_display = #{isDisplay,jdbcType=BIT},
+      <if test="relationship != null">
+        relationship = #{relationship,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedPersonName != null">
+        related_person_name = #{relatedPersonName,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedPersonTel != null">
+        related_person_tel = #{relatedPersonTel,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
@@ -381,17 +410,19 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.TransactionRecord">
-    update t_loan_transaction_record
+  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.Profile">
+    update t_loan_profile
     set user_id = #{userId,jdbcType=BIGINT},
-      bid_id = #{bidId,jdbcType=BIGINT},
-      type = #{type,jdbcType=TINYINT},
-      amount = #{amount,jdbcType=DECIMAL},
-      request_seq = #{requestSeq,jdbcType=VARCHAR},
-      bank = #{bank,jdbcType=VARCHAR},
-      account = #{account,jdbcType=VARCHAR},
-      mode = #{mode,jdbcType=TINYINT},
-      is_display = #{isDisplay,jdbcType=BIT},
+      education = #{education,jdbcType=VARCHAR},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      company_addr = #{companyAddr,jdbcType=VARCHAR},
+      company_addr_detail = #{companyAddrDetail,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      parent_name = #{parentName,jdbcType=VARCHAR},
+      parent_tel = #{parentTel,jdbcType=VARCHAR},
+      relationship = #{relationship,jdbcType=VARCHAR},
+      related_person_name = #{relatedPersonName,jdbcType=VARCHAR},
+      related_person_tel = #{relatedPersonTel,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
@@ -399,10 +430,10 @@
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.TransactionRecordExample" resultMap="BaseResultMap">
+  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProfileExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_loan_transaction_record
+    from t_loan_profile
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -416,7 +447,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_transaction_record
+    from t_loan_profile
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -426,21 +457,23 @@
     limit 1
   </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_loan_transaction_record
-    (id, user_id, bid_id, type, amount, request_seq, bank, account, mode, is_display, 
+    insert into t_loan_profile
+    (id, user_id, education, company_name, company_addr, company_addr_detail, email, 
+      parent_name, parent_tel, relationship, related_person_name, related_person_tel, 
       create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.bidId,jdbcType=BIGINT}, 
-        #{item.type,jdbcType=TINYINT}, #{item.amount,jdbcType=DECIMAL}, #{item.requestSeq,jdbcType=VARCHAR}, 
-        #{item.bank,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR}, #{item.mode,jdbcType=TINYINT}, 
-        #{item.isDisplay,jdbcType=BIT}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.education,jdbcType=VARCHAR}, 
+        #{item.companyName,jdbcType=VARCHAR}, #{item.companyAddr,jdbcType=VARCHAR}, #{item.companyAddrDetail,jdbcType=VARCHAR}, 
+        #{item.email,jdbcType=VARCHAR}, #{item.parentName,jdbcType=VARCHAR}, #{item.parentTel,jdbcType=VARCHAR}, 
+        #{item.relationship,jdbcType=VARCHAR}, #{item.relatedPersonName,jdbcType=VARCHAR}, 
+        #{item.relatedPersonTel,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
         #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
         )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_loan_transaction_record (
+    insert into t_loan_profile (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
@@ -455,29 +488,35 @@
         <if test="'user_id' == column.value">
           #{item.userId,jdbcType=BIGINT}
         </if>
-        <if test="'bid_id' == column.value">
-          #{item.bidId,jdbcType=BIGINT}
+        <if test="'education' == column.value">
+          #{item.education,jdbcType=VARCHAR}
         </if>
-        <if test="'type' == column.value">
-          #{item.type,jdbcType=TINYINT}
+        <if test="'company_name' == column.value">
+          #{item.companyName,jdbcType=VARCHAR}
         </if>
-        <if test="'amount' == column.value">
-          #{item.amount,jdbcType=DECIMAL}
+        <if test="'company_addr' == column.value">
+          #{item.companyAddr,jdbcType=VARCHAR}
         </if>
-        <if test="'request_seq' == column.value">
-          #{item.requestSeq,jdbcType=VARCHAR}
+        <if test="'company_addr_detail' == column.value">
+          #{item.companyAddrDetail,jdbcType=VARCHAR}
         </if>
-        <if test="'bank' == column.value">
-          #{item.bank,jdbcType=VARCHAR}
+        <if test="'email' == column.value">
+          #{item.email,jdbcType=VARCHAR}
         </if>
-        <if test="'account' == column.value">
-          #{item.account,jdbcType=VARCHAR}
+        <if test="'parent_name' == column.value">
+          #{item.parentName,jdbcType=VARCHAR}
         </if>
-        <if test="'mode' == column.value">
-          #{item.mode,jdbcType=TINYINT}
+        <if test="'parent_tel' == column.value">
+          #{item.parentTel,jdbcType=VARCHAR}
         </if>
-        <if test="'is_display' == column.value">
-          #{item.isDisplay,jdbcType=BIT}
+        <if test="'relationship' == column.value">
+          #{item.relationship,jdbcType=VARCHAR}
+        </if>
+        <if test="'related_person_name' == column.value">
+          #{item.relatedPersonName,jdbcType=VARCHAR}
+        </if>
+        <if test="'related_person_tel' == column.value">
+          #{item.relatedPersonTel,jdbcType=VARCHAR}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

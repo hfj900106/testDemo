@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hzed.easyget.persistence.auto.mapper.TransactionRecordMapper">
-  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.TransactionRecord">
+<mapper namespace="com.hzed.easyget.persistence.auto.mapper.AuthItemMapper">
+  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.AuthItem">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="bid_id" jdbcType="BIGINT" property="bidId" />
-    <result column="type" jdbcType="TINYINT" property="type" />
-    <result column="amount" jdbcType="DECIMAL" property="amount" />
-    <result column="request_seq" jdbcType="VARCHAR" property="requestSeq" />
-    <result column="bank" jdbcType="VARCHAR" property="bank" />
-    <result column="account" jdbcType="VARCHAR" property="account" />
-    <result column="mode" jdbcType="TINYINT" property="mode" />
-    <result column="is_display" jdbcType="BIT" property="isDisplay" />
+    <result column="code" jdbcType="CHAR" property="code" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="is_use" jdbcType="BIT" property="isUse" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -77,16 +71,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, bid_id, type, amount, request_seq, bank, account, mode, is_display, 
-    create_by, create_time, update_by, update_time, remark
+    id, code, name, is_use, create_by, create_time, update_by, update_time, remark
   </sql>
-  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.TransactionRecordExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.AuthItemExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_loan_transaction_record
+    from t_loan_auth_item
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -110,7 +103,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_transaction_record
+    from t_loan_auth_item
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -121,7 +114,7 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from t_loan_transaction_record
+    from t_loan_auth_item
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -129,65 +122,41 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_transaction_record
+    from t_loan_auth_item
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_loan_transaction_record
+    delete from t_loan_auth_item
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.TransactionRecordExample">
-    delete from t_loan_transaction_record
+  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.AuthItemExample">
+    delete from t_loan_auth_item
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.TransactionRecord">
-    insert into t_loan_transaction_record (id, user_id, bid_id, 
-      type, amount, request_seq, 
-      bank, account, mode, 
-      is_display, create_by, create_time, 
-      update_by, update_time, remark
-      )
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{bidId,jdbcType=BIGINT}, 
-      #{type,jdbcType=TINYINT}, #{amount,jdbcType=DECIMAL}, #{requestSeq,jdbcType=VARCHAR}, 
-      #{bank,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{mode,jdbcType=TINYINT}, 
-      #{isDisplay,jdbcType=BIT}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
-      )
+  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.AuthItem">
+    insert into t_loan_auth_item (id, code, name, is_use, 
+      create_by, create_time, update_by, 
+      update_time, remark)
+    values (#{id,jdbcType=BIGINT}, #{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{isUse,jdbcType=BIT}, 
+      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.TransactionRecord">
-    insert into t_loan_transaction_record
+  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.AuthItem">
+    insert into t_loan_auth_item
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="userId != null">
-        user_id,
+      <if test="code != null">
+        code,
       </if>
-      <if test="bidId != null">
-        bid_id,
+      <if test="name != null">
+        name,
       </if>
-      <if test="type != null">
-        type,
-      </if>
-      <if test="amount != null">
-        amount,
-      </if>
-      <if test="requestSeq != null">
-        request_seq,
-      </if>
-      <if test="bank != null">
-        bank,
-      </if>
-      <if test="account != null">
-        account,
-      </if>
-      <if test="mode != null">
-        mode,
-      </if>
-      <if test="isDisplay != null">
-        is_display,
+      <if test="isUse != null">
+        is_use,
       </if>
       <if test="createBy != null">
         create_by,
@@ -209,32 +178,14 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="userId != null">
-        #{userId,jdbcType=BIGINT},
+      <if test="code != null">
+        #{code,jdbcType=CHAR},
       </if>
-      <if test="bidId != null">
-        #{bidId,jdbcType=BIGINT},
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
       </if>
-      <if test="type != null">
-        #{type,jdbcType=TINYINT},
-      </if>
-      <if test="amount != null">
-        #{amount,jdbcType=DECIMAL},
-      </if>
-      <if test="requestSeq != null">
-        #{requestSeq,jdbcType=VARCHAR},
-      </if>
-      <if test="bank != null">
-        #{bank,jdbcType=VARCHAR},
-      </if>
-      <if test="account != null">
-        #{account,jdbcType=VARCHAR},
-      </if>
-      <if test="mode != null">
-        #{mode,jdbcType=TINYINT},
-      </if>
-      <if test="isDisplay != null">
-        #{isDisplay,jdbcType=BIT},
+      <if test="isUse != null">
+        #{isUse,jdbcType=BIT},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -253,44 +204,26 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.TransactionRecordExample" resultType="java.lang.Long">
-    select count(*) from t_loan_transaction_record
+  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.AuthItemExample" resultType="java.lang.Long">
+    select count(*) from t_loan_auth_item
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_loan_transaction_record
+    update t_loan_auth_item
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.userId != null">
-        user_id = #{record.userId,jdbcType=BIGINT},
+      <if test="record.code != null">
+        code = #{record.code,jdbcType=CHAR},
       </if>
-      <if test="record.bidId != null">
-        bid_id = #{record.bidId,jdbcType=BIGINT},
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
       </if>
-      <if test="record.type != null">
-        type = #{record.type,jdbcType=TINYINT},
-      </if>
-      <if test="record.amount != null">
-        amount = #{record.amount,jdbcType=DECIMAL},
-      </if>
-      <if test="record.requestSeq != null">
-        request_seq = #{record.requestSeq,jdbcType=VARCHAR},
-      </if>
-      <if test="record.bank != null">
-        bank = #{record.bank,jdbcType=VARCHAR},
-      </if>
-      <if test="record.account != null">
-        account = #{record.account,jdbcType=VARCHAR},
-      </if>
-      <if test="record.mode != null">
-        mode = #{record.mode,jdbcType=TINYINT},
-      </if>
-      <if test="record.isDisplay != null">
-        is_display = #{record.isDisplay,jdbcType=BIT},
+      <if test="record.isUse != null">
+        is_use = #{record.isUse,jdbcType=BIT},
       </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
@@ -313,17 +246,11 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_loan_transaction_record
+    update t_loan_auth_item
     set id = #{record.id,jdbcType=BIGINT},
-      user_id = #{record.userId,jdbcType=BIGINT},
-      bid_id = #{record.bidId,jdbcType=BIGINT},
-      type = #{record.type,jdbcType=TINYINT},
-      amount = #{record.amount,jdbcType=DECIMAL},
-      request_seq = #{record.requestSeq,jdbcType=VARCHAR},
-      bank = #{record.bank,jdbcType=VARCHAR},
-      account = #{record.account,jdbcType=VARCHAR},
-      mode = #{record.mode,jdbcType=TINYINT},
-      is_display = #{record.isDisplay,jdbcType=BIT},
+      code = #{record.code,jdbcType=CHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      is_use = #{record.isUse,jdbcType=BIT},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -333,35 +260,17 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.TransactionRecord">
-    update t_loan_transaction_record
+  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.AuthItem">
+    update t_loan_auth_item
     <set>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=BIGINT},
+      <if test="code != null">
+        code = #{code,jdbcType=CHAR},
       </if>
-      <if test="bidId != null">
-        bid_id = #{bidId,jdbcType=BIGINT},
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="type != null">
-        type = #{type,jdbcType=TINYINT},
-      </if>
-      <if test="amount != null">
-        amount = #{amount,jdbcType=DECIMAL},
-      </if>
-      <if test="requestSeq != null">
-        request_seq = #{requestSeq,jdbcType=VARCHAR},
-      </if>
-      <if test="bank != null">
-        bank = #{bank,jdbcType=VARCHAR},
-      </if>
-      <if test="account != null">
-        account = #{account,jdbcType=VARCHAR},
-      </if>
-      <if test="mode != null">
-        mode = #{mode,jdbcType=TINYINT},
-      </if>
-      <if test="isDisplay != null">
-        is_display = #{isDisplay,jdbcType=BIT},
+      <if test="isUse != null">
+        is_use = #{isUse,jdbcType=BIT},
       </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
@@ -381,17 +290,11 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.TransactionRecord">
-    update t_loan_transaction_record
-    set user_id = #{userId,jdbcType=BIGINT},
-      bid_id = #{bidId,jdbcType=BIGINT},
-      type = #{type,jdbcType=TINYINT},
-      amount = #{amount,jdbcType=DECIMAL},
-      request_seq = #{requestSeq,jdbcType=VARCHAR},
-      bank = #{bank,jdbcType=VARCHAR},
-      account = #{account,jdbcType=VARCHAR},
-      mode = #{mode,jdbcType=TINYINT},
-      is_display = #{isDisplay,jdbcType=BIT},
+  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.AuthItem">
+    update t_loan_auth_item
+    set code = #{code,jdbcType=CHAR},
+      name = #{name,jdbcType=VARCHAR},
+      is_use = #{isUse,jdbcType=BIT},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
@@ -399,10 +302,10 @@
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.TransactionRecordExample" resultMap="BaseResultMap">
+  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.AuthItemExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_loan_transaction_record
+    from t_loan_auth_item
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -416,7 +319,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_transaction_record
+    from t_loan_auth_item
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -426,21 +329,18 @@
     limit 1
   </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_loan_transaction_record
-    (id, user_id, bid_id, type, amount, request_seq, bank, account, mode, is_display, 
-      create_by, create_time, update_by, update_time, remark)
+    insert into t_loan_auth_item
+    (id, code, name, is_use, create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.bidId,jdbcType=BIGINT}, 
-        #{item.type,jdbcType=TINYINT}, #{item.amount,jdbcType=DECIMAL}, #{item.requestSeq,jdbcType=VARCHAR}, 
-        #{item.bank,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR}, #{item.mode,jdbcType=TINYINT}, 
-        #{item.isDisplay,jdbcType=BIT}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+      (#{item.id,jdbcType=BIGINT}, #{item.code,jdbcType=CHAR}, #{item.name,jdbcType=VARCHAR}, 
+        #{item.isUse,jdbcType=BIT}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
         #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
         )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_loan_transaction_record (
+    insert into t_loan_auth_item (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
@@ -452,32 +352,14 @@
         <if test="'id' == column.value">
           #{item.id,jdbcType=BIGINT}
         </if>
-        <if test="'user_id' == column.value">
-          #{item.userId,jdbcType=BIGINT}
+        <if test="'code' == column.value">
+          #{item.code,jdbcType=CHAR}
         </if>
-        <if test="'bid_id' == column.value">
-          #{item.bidId,jdbcType=BIGINT}
+        <if test="'name' == column.value">
+          #{item.name,jdbcType=VARCHAR}
         </if>
-        <if test="'type' == column.value">
-          #{item.type,jdbcType=TINYINT}
-        </if>
-        <if test="'amount' == column.value">
-          #{item.amount,jdbcType=DECIMAL}
-        </if>
-        <if test="'request_seq' == column.value">
-          #{item.requestSeq,jdbcType=VARCHAR}
-        </if>
-        <if test="'bank' == column.value">
-          #{item.bank,jdbcType=VARCHAR}
-        </if>
-        <if test="'account' == column.value">
-          #{item.account,jdbcType=VARCHAR}
-        </if>
-        <if test="'mode' == column.value">
-          #{item.mode,jdbcType=TINYINT}
-        </if>
-        <if test="'is_display' == column.value">
-          #{item.isDisplay,jdbcType=BIT}
+        <if test="'is_use' == column.value">
+          #{item.isUse,jdbcType=BIT}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

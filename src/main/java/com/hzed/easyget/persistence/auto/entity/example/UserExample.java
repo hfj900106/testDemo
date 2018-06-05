@@ -891,6 +891,66 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andLockedTimeIsNull() {
+            addCriterion("locked_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockedTimeIsNotNull() {
+            addCriterion("locked_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockedTimeEqualTo(LocalDateTime value) {
+            addCriterion("locked_time =", value, "lockedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockedTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("locked_time <>", value, "lockedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockedTimeGreaterThan(LocalDateTime value) {
+            addCriterion("locked_time >", value, "lockedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockedTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("locked_time >=", value, "lockedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockedTimeLessThan(LocalDateTime value) {
+            addCriterion("locked_time <", value, "lockedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockedTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("locked_time <=", value, "lockedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockedTimeIn(List<LocalDateTime> values) {
+            addCriterion("locked_time in", values, "lockedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockedTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("locked_time not in", values, "lockedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockedTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("locked_time between", value1, value2, "lockedTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockedTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("locked_time not between", value1, value2, "lockedTime");
+            return (Criteria) this;
+        }
+
         public Criteria andIsBlacklistIsNull() {
             addCriterion("is_blacklist is null");
             return (Criteria) this;
@@ -948,6 +1008,66 @@ public class UserExample {
 
         public Criteria andIsBlacklistNotBetween(Boolean value1, Boolean value2) {
             addCriterion("is_blacklist not between", value1, value2, "isBlacklist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeIsNull() {
+            addCriterion("blacklist_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeIsNotNull() {
+            addCriterion("blacklist_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeEqualTo(LocalDateTime value) {
+            addCriterion("blacklist_time =", value, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("blacklist_time <>", value, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeGreaterThan(LocalDateTime value) {
+            addCriterion("blacklist_time >", value, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("blacklist_time >=", value, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeLessThan(LocalDateTime value) {
+            addCriterion("blacklist_time <", value, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("blacklist_time <=", value, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeIn(List<LocalDateTime> values) {
+            addCriterion("blacklist_time in", values, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("blacklist_time not in", values, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("blacklist_time between", value1, value2, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("blacklist_time not between", value1, value2, "blacklistTime");
             return (Criteria) this;
         }
 

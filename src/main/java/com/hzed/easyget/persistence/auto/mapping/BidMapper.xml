@@ -10,6 +10,7 @@
     <result column="purpose_code" jdbcType="VARCHAR" property="purposeCode" />
     <result column="apply_amount" jdbcType="DECIMAL" property="applyAmount" />
     <result column="loan_amount" jdbcType="DECIMAL" property="loanAmount" />
+    <result column="audit_fee" jdbcType="DECIMAL" property="auditFee" />
     <result column="period" jdbcType="INTEGER" property="period" />
     <result column="in_bank" jdbcType="VARCHAR" property="inBank" />
     <result column="in_account" jdbcType="VARCHAR" property="inAccount" />
@@ -81,8 +82,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, user_id, bid_no, title, product_code, purpose_code, apply_amount, loan_amount, 
-    period, in_bank, in_account, client, status, create_by, create_time, update_by, update_time, 
-    remark
+    audit_fee, period, in_bank, in_account, client, status, create_by, create_time, update_by, 
+    update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.BidExample" resultMap="BaseResultMap">
     select
@@ -149,18 +150,18 @@
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.Bid">
     insert into t_loan_bid (id, user_id, bid_no, 
       title, product_code, purpose_code, 
-      apply_amount, loan_amount, period, 
-      in_bank, in_account, client, 
-      status, create_by, create_time, 
-      update_by, update_time, remark
-      )
+      apply_amount, loan_amount, audit_fee, 
+      period, in_bank, in_account, 
+      client, status, create_by, 
+      create_time, update_by, update_time, 
+      remark)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{bidNo,jdbcType=VARCHAR}, 
       #{title,jdbcType=VARCHAR}, #{productCode,jdbcType=CHAR}, #{purposeCode,jdbcType=VARCHAR}, 
-      #{applyAmount,jdbcType=DECIMAL}, #{loanAmount,jdbcType=DECIMAL}, #{period,jdbcType=INTEGER}, 
-      #{inBank,jdbcType=VARCHAR}, #{inAccount,jdbcType=VARCHAR}, #{client,jdbcType=TINYINT}, 
-      #{status,jdbcType=TINYINT}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
-      )
+      #{applyAmount,jdbcType=DECIMAL}, #{loanAmount,jdbcType=DECIMAL}, #{auditFee,jdbcType=DECIMAL}, 
+      #{period,jdbcType=INTEGER}, #{inBank,jdbcType=VARCHAR}, #{inAccount,jdbcType=VARCHAR}, 
+      #{client,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{createBy,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.Bid">
     insert into t_loan_bid
@@ -188,6 +189,9 @@
       </if>
       <if test="loanAmount != null">
         loan_amount,
+      </if>
+      <if test="auditFee != null">
+        audit_fee,
       </if>
       <if test="period != null">
         period,
@@ -244,6 +248,9 @@
       </if>
       <if test="loanAmount != null">
         #{loanAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="auditFee != null">
+        #{auditFee,jdbcType=DECIMAL},
       </if>
       <if test="period != null">
         #{period,jdbcType=INTEGER},
@@ -310,6 +317,9 @@
       <if test="record.loanAmount != null">
         loan_amount = #{record.loanAmount,jdbcType=DECIMAL},
       </if>
+      <if test="record.auditFee != null">
+        audit_fee = #{record.auditFee,jdbcType=DECIMAL},
+      </if>
       <if test="record.period != null">
         period = #{record.period,jdbcType=INTEGER},
       </if>
@@ -355,6 +365,7 @@
       purpose_code = #{record.purposeCode,jdbcType=VARCHAR},
       apply_amount = #{record.applyAmount,jdbcType=DECIMAL},
       loan_amount = #{record.loanAmount,jdbcType=DECIMAL},
+      audit_fee = #{record.auditFee,jdbcType=DECIMAL},
       period = #{record.period,jdbcType=INTEGER},
       in_bank = #{record.inBank,jdbcType=VARCHAR},
       in_account = #{record.inAccount,jdbcType=VARCHAR},
@@ -392,6 +403,9 @@
       </if>
       <if test="loanAmount != null">
         loan_amount = #{loanAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="auditFee != null">
+        audit_fee = #{auditFee,jdbcType=DECIMAL},
       </if>
       <if test="period != null">
         period = #{period,jdbcType=INTEGER},
@@ -435,6 +449,7 @@
       purpose_code = #{purposeCode,jdbcType=VARCHAR},
       apply_amount = #{applyAmount,jdbcType=DECIMAL},
       loan_amount = #{loanAmount,jdbcType=DECIMAL},
+      audit_fee = #{auditFee,jdbcType=DECIMAL},
       period = #{period,jdbcType=INTEGER},
       in_bank = #{inBank,jdbcType=VARCHAR},
       in_account = #{inAccount,jdbcType=VARCHAR},
@@ -476,17 +491,17 @@
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_bid
     (id, user_id, bid_no, title, product_code, purpose_code, apply_amount, loan_amount, 
-      period, in_bank, in_account, client, status, create_by, create_time, update_by, 
-      update_time, remark)
+      audit_fee, period, in_bank, in_account, client, status, create_by, create_time, 
+      update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.bidNo,jdbcType=VARCHAR}, 
         #{item.title,jdbcType=VARCHAR}, #{item.productCode,jdbcType=CHAR}, #{item.purposeCode,jdbcType=VARCHAR}, 
-        #{item.applyAmount,jdbcType=DECIMAL}, #{item.loanAmount,jdbcType=DECIMAL}, #{item.period,jdbcType=INTEGER}, 
-        #{item.inBank,jdbcType=VARCHAR}, #{item.inAccount,jdbcType=VARCHAR}, #{item.client,jdbcType=TINYINT}, 
-        #{item.status,jdbcType=TINYINT}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
-        )
+        #{item.applyAmount,jdbcType=DECIMAL}, #{item.loanAmount,jdbcType=DECIMAL}, #{item.auditFee,jdbcType=DECIMAL}, 
+        #{item.period,jdbcType=INTEGER}, #{item.inBank,jdbcType=VARCHAR}, #{item.inAccount,jdbcType=VARCHAR}, 
+        #{item.client,jdbcType=TINYINT}, #{item.status,jdbcType=TINYINT}, #{item.createBy,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -522,6 +537,9 @@
         </if>
         <if test="'loan_amount' == column.value">
           #{item.loanAmount,jdbcType=DECIMAL}
+        </if>
+        <if test="'audit_fee' == column.value">
+          #{item.auditFee,jdbcType=DECIMAL}
         </if>
         <if test="'period' == column.value">
           #{item.period,jdbcType=INTEGER}

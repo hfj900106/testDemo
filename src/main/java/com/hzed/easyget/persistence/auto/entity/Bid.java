@@ -41,9 +41,14 @@ public class Bid implements Serializable {
     private BigDecimal applyAmount;
 
     /**
-     * 实际放款金额
+     * 审核金额
      */
     private BigDecimal loanAmount;
+
+    /**
+     * 快速信审费（砍头息），放款时收取
+     */
+    private BigDecimal auditFee;
 
     /**
      * 借款期限
@@ -66,7 +71,7 @@ public class Bid implements Serializable {
     private Byte client;
 
     /**
-     * 状态 0-待审核 1-审核不通过 2-审核通过 3-已放款 4-已结清
+     * 状态 1-待走风控 2-待人审 3-审核不通过 4-审核通过 5-已放款 6-已结清
      */
     private Byte status;
 
@@ -154,6 +159,14 @@ public class Bid implements Serializable {
 
     public void setLoanAmount(BigDecimal loanAmount) {
         this.loanAmount = loanAmount;
+    }
+
+    public BigDecimal getAuditFee() {
+        return auditFee;
+    }
+
+    public void setAuditFee(BigDecimal auditFee) {
+        this.auditFee = auditFee;
     }
 
     public Integer getPeriod() {
@@ -250,6 +263,7 @@ public class Bid implements Serializable {
         sb.append(", purposeCode=").append(purposeCode);
         sb.append(", applyAmount=").append(applyAmount);
         sb.append(", loanAmount=").append(loanAmount);
+        sb.append(", auditFee=").append(auditFee);
         sb.append(", period=").append(period);
         sb.append(", inBank=").append(inBank);
         sb.append(", inAccount=").append(inAccount);
@@ -313,6 +327,11 @@ public class Bid implements Serializable {
 
         public Builder loanAmount(BigDecimal loanAmount) {
             obj.setLoanAmount(loanAmount);
+            return this;
+        }
+
+        public Builder auditFee(BigDecimal auditFee) {
+            obj.setAuditFee(auditFee);
             return this;
         }
 
@@ -380,6 +399,7 @@ public class Bid implements Serializable {
         purposeCode("purpose_code"),
         applyAmount("apply_amount"),
         loanAmount("loan_amount"),
+        auditFee("audit_fee"),
         period("period"),
         inBank("in_bank"),
         inAccount("in_account"),

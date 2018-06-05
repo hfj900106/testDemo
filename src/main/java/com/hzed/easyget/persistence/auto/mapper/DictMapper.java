@@ -2,9 +2,8 @@ package com.hzed.easyget.persistence.auto.mapper;
 
 import com.hzed.easyget.persistence.auto.entity.Dict;
 import com.hzed.easyget.persistence.auto.entity.example.DictExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface DictMapper {
     long countByExample(DictExample example);

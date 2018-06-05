@@ -236,4 +236,15 @@ public final class DateUtil {
         return "Sunday";
     }
 
+    /**
+     * 获取两个时间差 天数
+     * @param smdate 较小的时间
+     * @param bdate 较大的时间
+     * @return
+     */
+    public static int daysBetween(LocalDateTime smdate, LocalDateTime bdate) {
+        Duration duration = Duration.between(smdate,bdate);
+        return (int)duration.toDays();
+    }
+
 }

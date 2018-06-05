@@ -38,12 +38,12 @@ public class Bid implements Serializable {
     /**
      * 借款金额
      */
-    private BigDecimal loanAmount;
+    private BigDecimal applyAmount;
 
     /**
      * 实际放款金额
      */
-    private BigDecimal realAmount;
+    private BigDecimal loanAmount;
 
     /**
      * 借款期限
@@ -61,22 +61,12 @@ public class Bid implements Serializable {
     private String inAccount;
 
     /**
-     * 原账单id，发续标用（保留字段）
-     */
-    private Long relevanceId;
-
-    /**
      * 进件渠道 1-印尼APP
      */
     private Byte client;
 
     /**
-     * 快速信审费
-     */
-    private BigDecimal auditFee;
-
-    /**
-     * 状态 0-待审核
+     * 状态 0-待审核 1-审核不通过 2-审核通过 3-已放款 4-已结清
      */
     private Byte status;
 
@@ -150,20 +140,20 @@ public class Bid implements Serializable {
         this.purposeCode = purposeCode == null ? null : purposeCode.trim();
     }
 
+    public BigDecimal getApplyAmount() {
+        return applyAmount;
+    }
+
+    public void setApplyAmount(BigDecimal applyAmount) {
+        this.applyAmount = applyAmount;
+    }
+
     public BigDecimal getLoanAmount() {
         return loanAmount;
     }
 
     public void setLoanAmount(BigDecimal loanAmount) {
         this.loanAmount = loanAmount;
-    }
-
-    public BigDecimal getRealAmount() {
-        return realAmount;
-    }
-
-    public void setRealAmount(BigDecimal realAmount) {
-        this.realAmount = realAmount;
     }
 
     public Integer getPeriod() {
@@ -190,28 +180,12 @@ public class Bid implements Serializable {
         this.inAccount = inAccount == null ? null : inAccount.trim();
     }
 
-    public Long getRelevanceId() {
-        return relevanceId;
-    }
-
-    public void setRelevanceId(Long relevanceId) {
-        this.relevanceId = relevanceId;
-    }
-
     public Byte getClient() {
         return client;
     }
 
     public void setClient(Byte client) {
         this.client = client;
-    }
-
-    public BigDecimal getAuditFee() {
-        return auditFee;
-    }
-
-    public void setAuditFee(BigDecimal auditFee) {
-        this.auditFee = auditFee;
     }
 
     public Byte getStatus() {
@@ -274,14 +248,12 @@ public class Bid implements Serializable {
         sb.append(", title=").append(title);
         sb.append(", productCode=").append(productCode);
         sb.append(", purposeCode=").append(purposeCode);
+        sb.append(", applyAmount=").append(applyAmount);
         sb.append(", loanAmount=").append(loanAmount);
-        sb.append(", realAmount=").append(realAmount);
         sb.append(", period=").append(period);
         sb.append(", inBank=").append(inBank);
         sb.append(", inAccount=").append(inAccount);
-        sb.append(", relevanceId=").append(relevanceId);
         sb.append(", client=").append(client);
-        sb.append(", auditFee=").append(auditFee);
         sb.append(", status=").append(status);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
@@ -334,13 +306,13 @@ public class Bid implements Serializable {
             return this;
         }
 
-        public Builder loanAmount(BigDecimal loanAmount) {
-            obj.setLoanAmount(loanAmount);
+        public Builder applyAmount(BigDecimal applyAmount) {
+            obj.setApplyAmount(applyAmount);
             return this;
         }
 
-        public Builder realAmount(BigDecimal realAmount) {
-            obj.setRealAmount(realAmount);
+        public Builder loanAmount(BigDecimal loanAmount) {
+            obj.setLoanAmount(loanAmount);
             return this;
         }
 
@@ -359,18 +331,8 @@ public class Bid implements Serializable {
             return this;
         }
 
-        public Builder relevanceId(Long relevanceId) {
-            obj.setRelevanceId(relevanceId);
-            return this;
-        }
-
         public Builder client(Byte client) {
             obj.setClient(client);
-            return this;
-        }
-
-        public Builder auditFee(BigDecimal auditFee) {
-            obj.setAuditFee(auditFee);
             return this;
         }
 
@@ -416,14 +378,12 @@ public class Bid implements Serializable {
         title("title"),
         productCode("product_code"),
         purposeCode("purpose_code"),
+        applyAmount("apply_amount"),
         loanAmount("loan_amount"),
-        realAmount("real_amount"),
         period("period"),
         inBank("in_bank"),
         inAccount("in_account"),
-        relevanceId("relevance_id"),
         client("client"),
-        auditFee("audit_fee"),
         status("status"),
         createBy("create_by"),
         createTime("create_time"),

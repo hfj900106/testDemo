@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hzed.easyget.persistence.auto.mapper.LoanBidProgressMapper">
+  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.LoanBidProgress">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="bid_id" jdbcType="BIGINT" property="bidId" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="handle_time" jdbcType="TIMESTAMP" property="handleTime" />
+    <result column="handle_result" jdbcType="VARCHAR" property="handleResult" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, bid_id, type, handle_time, handle_result, create_by, create_time, update_by, 
+    update_time, remark
+  </sql>
+  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.LoanBidProgressExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_loan_bid_progress
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="rows != null">
+      <if test="offset != null">
+        limit ${offset}, ${rows}
+      </if>
+      <if test="offset == null">
+        limit ${rows}
+      </if>
+    </if>
+  </select>
+  <select id="selectByExampleSelective" parameterType="map" resultMap="BaseResultMap">
+    select
+    <if test="example.distinct">
+      distinct
+    </if>
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    from t_loan_bid_progress
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+    <if test="example.orderByClause != null">
+      order by ${example.orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_loan_bid_progress
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
+    select
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    from t_loan_bid_progress
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_loan_bid_progress
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.LoanBidProgressExample">
+    delete from t_loan_bid_progress
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.LoanBidProgress">
+    insert into t_loan_bid_progress (id, bid_id, type, 
+      handle_time, handle_result, create_by, 
+      create_time, update_by, update_time, 
+      remark)
+    values (#{id,jdbcType=BIGINT}, #{bidId,jdbcType=BIGINT}, #{type,jdbcType=TINYINT}, 
+      #{handleTime,jdbcType=TIMESTAMP}, #{handleResult,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.LoanBidProgress">
+    insert into t_loan_bid_progress
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="bidId != null">
+        bid_id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="handleTime != null">
+        handle_time,
+      </if>
+      <if test="handleResult != null">
+        handle_result,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="bidId != null">
+        #{bidId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="handleTime != null">
+        #{handleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="handleResult != null">
+        #{handleResult,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.LoanBidProgressExample" resultType="java.lang.Long">
+    select count(*) from t_loan_bid_progress
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_loan_bid_progress
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.bidId != null">
+        bid_id = #{record.bidId,jdbcType=BIGINT},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=TINYINT},
+      </if>
+      <if test="record.handleTime != null">
+        handle_time = #{record.handleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.handleResult != null">
+        handle_result = #{record.handleResult,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null">
+        create_by = #{record.createBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null">
+        update_by = #{record.updateBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_loan_bid_progress
+    set id = #{record.id,jdbcType=BIGINT},
+      bid_id = #{record.bidId,jdbcType=BIGINT},
+      type = #{record.type,jdbcType=TINYINT},
+      handle_time = #{record.handleTime,jdbcType=TIMESTAMP},
+      handle_result = #{record.handleResult,jdbcType=VARCHAR},
+      create_by = #{record.createBy,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      remark = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.LoanBidProgress">
+    update t_loan_bid_progress
+    <set>
+      <if test="bidId != null">
+        bid_id = #{bidId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="handleTime != null">
+        handle_time = #{handleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="handleResult != null">
+        handle_result = #{handleResult,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.LoanBidProgress">
+    update t_loan_bid_progress
+    set bid_id = #{bidId,jdbcType=BIGINT},
+      type = #{type,jdbcType=TINYINT},
+      handle_time = #{handleTime,jdbcType=TIMESTAMP},
+      handle_result = #{handleResult,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.LoanBidProgressExample" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_loan_bid_progress
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 1
+  </select>
+  <select id="selectOneByExampleSelective" parameterType="map" resultMap="BaseResultMap">
+    select
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    from t_loan_bid_progress
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+    <if test="example.orderByClause != null">
+      order by ${example.orderByClause}
+    </if>
+    limit 1
+  </select>
+  <insert id="batchInsert" parameterType="map">
+    insert into t_loan_bid_progress
+    (id, bid_id, type, handle_time, handle_result, create_by, create_time, update_by, 
+      update_time, remark)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.bidId,jdbcType=BIGINT}, #{item.type,jdbcType=TINYINT}, 
+        #{item.handleTime,jdbcType=TIMESTAMP}, #{item.handleResult,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.remark,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="batchInsertSelective" parameterType="map">
+    insert into t_loan_bid_progress (
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    )
+    values
+    <foreach collection="list" item="item" separator=",">
+      (
+      <foreach collection="selective" item="column" separator=",">
+        <if test="'id' == column.value">
+          #{item.id,jdbcType=BIGINT}
+        </if>
+        <if test="'bid_id' == column.value">
+          #{item.bidId,jdbcType=BIGINT}
+        </if>
+        <if test="'type' == column.value">
+          #{item.type,jdbcType=TINYINT}
+        </if>
+        <if test="'handle_time' == column.value">
+          #{item.handleTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'handle_result' == column.value">
+          #{item.handleResult,jdbcType=VARCHAR}
+        </if>
+        <if test="'create_by' == column.value">
+          #{item.createBy,jdbcType=BIGINT}
+        </if>
+        <if test="'create_time' == column.value">
+          #{item.createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'update_by' == column.value">
+          #{item.updateBy,jdbcType=BIGINT}
+        </if>
+        <if test="'update_time' == column.value">
+          #{item.updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'remark' == column.value">
+          #{item.remark,jdbcType=VARCHAR}
+        </if>
+      </foreach>
+      )
+    </foreach>
+  </insert>
+</mapper>

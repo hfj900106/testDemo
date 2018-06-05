@@ -24,4 +24,6 @@ public class BidRepository {
         example.createCriteria().andUserIdEqualTo(userId).andStatusIn(statuses);
         return bidMapper.selectByExample(example);
     }
+
+
 }

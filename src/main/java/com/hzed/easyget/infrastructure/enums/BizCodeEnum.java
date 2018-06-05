@@ -17,6 +17,7 @@ public enum BizCodeEnum {
     UNKNOWN_EXCEPTION("9999", "系统未知错误"),
     SERVICE_EXCEPTION("9998", "内部服务处理异常"),
     ILLEGAL_REQUEST("9997", "无效的请求"),
+    ALIYUN_EXCEPTION("9996", "阿里云操作异常"),
 
     // 1-请求业务校验
     ILLEGAL_PARAM("1000", "请求参数非法"),
@@ -33,7 +34,7 @@ public enum BizCodeEnum {
     DICT_NOTEXISTS("1010", "字典不存在"),
     NO_USEFUL_PRODUCT("1011", "无可用产品"),
     TOKEN_EXPIRE("1012", "用户登录信息失效"),
-
+    ILLEGAL_PICTURECODE("1013", "图片验证码错误"),
 
 
 

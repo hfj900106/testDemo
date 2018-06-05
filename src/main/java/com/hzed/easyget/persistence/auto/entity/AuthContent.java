@@ -10,7 +10,7 @@ public class AuthContent implements Serializable {
     private Long id;
 
     /**
-     * 用户认证状态id
+     * 认证状态id
      */
     private Long userAuthStatusId;
 

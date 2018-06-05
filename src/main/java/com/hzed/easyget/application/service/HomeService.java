@@ -59,8 +59,8 @@ public class HomeService {
         if(Objects.isNull(product)){
             throw new ComBizException(BizCodeEnum.NO_USEFUL_PRODUCT);
         }
-        productInfoResponse.setLoanAmount(product.getLoanAmount());
-        productInfoResponse.setLoanTime(product.getLoanTime());
+        productInfoResponse.setLoanAmount(product.getLoanAmountArr());
+        productInfoResponse.setLoanTime(product.getLoanTimeArr());
         return productInfoResponse;
     }
 

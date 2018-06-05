@@ -10,6 +10,5 @@ import lombok.Data;
 public class UserResponse {
     private String nickName;
     private String mobile;
-    private String profile_photo;
-
+    private String profilePhoto;
 }

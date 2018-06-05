@@ -130,13 +130,15 @@ public class LoginService {
         String mobile = request.getMobile();
         String smsCodeKey = RedisConsts.SMS_CODE + ":" + mobile;
         String cacheSmsCode = redisService.getCache(smsCodeKey);
-        if(StringUtils.isNotBlank(cacheSmsCode)) {
+        if (StringUtils.isNotBlank(cacheSmsCode)) {
             throw new ComBizException(BizCodeEnum.ILLEGAL_REQUEST, "验证码发送频繁，请稍后重试");
         }
         String code = StringUtils.leftPad(String.valueOf(new Random().nextInt(9999)), 4, "0");
         String content = "您的注册验证码是：" + code + " ，两分钟内有效，欢迎使用本平台";
-        // TODO 发送验证码 content
+        if (!EnvEnum.isTestEnv(env)) {
+            // TODO 发送验证码 非测试环境下才调用短信发送接口
 
+        }
         // 保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();
         smsLog.setId(IdentifierGenerator.nextId());
@@ -145,7 +147,7 @@ public class LoginService {
         smsLog.setMobile(mobile);
         smsLog.setRemark("短信验证码");
         smsLogRepository.insertSelective(smsLog);
-        //保存到Redis
+        //保存到Redis，手机验证码2分钟有效
         redisService.setCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile, code, 120L);
     }
 }

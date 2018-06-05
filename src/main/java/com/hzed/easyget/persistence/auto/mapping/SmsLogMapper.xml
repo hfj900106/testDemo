@@ -78,7 +78,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_sms_log
+    from t_loan_sms_log
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -102,7 +102,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_sms_log
+    from t_loan_sms_log
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -111,13 +111,13 @@
     </if>
   </select>
   <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.SmsLogExample">
-    delete from t_sms_log
+    delete from t_loan_sms_log
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.SmsLog">
-    insert into t_sms_log (id, mobile, content, 
+    insert into t_loan_sms_log (id, mobile, content, 
       create_by, create_time, update_by, 
       update_time, remark)
     values (#{id,jdbcType=BIGINT}, #{mobile,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
@@ -125,7 +125,7 @@
       #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.SmsLog">
-    insert into t_sms_log
+    insert into t_loan_sms_log
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -180,13 +180,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.SmsLogExample" resultType="java.lang.Long">
-    select count(*) from t_sms_log
+    select count(*) from t_loan_sms_log
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_sms_log
+    update t_loan_sms_log
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -218,7 +218,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_sms_log
+    update t_loan_sms_log
     set id = #{record.id,jdbcType=BIGINT},
       mobile = #{record.mobile,jdbcType=VARCHAR},
       content = #{record.content,jdbcType=VARCHAR},
@@ -234,7 +234,7 @@
   <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.SmsLogExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_sms_log
+    from t_loan_sms_log
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -248,7 +248,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_sms_log
+    from t_loan_sms_log
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -262,10 +262,10 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_sms_log
+    from t_loan_sms_log
   </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_sms_log
+    insert into t_loan_sms_log
     (id, mobile, content, create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
@@ -275,7 +275,7 @@
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_sms_log (
+    insert into t_loan_sms_log (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>

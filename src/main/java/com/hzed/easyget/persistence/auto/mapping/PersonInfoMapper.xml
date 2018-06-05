@@ -4,7 +4,6 @@
   <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.PersonInfo">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="user_status_id" jdbcType="BIGINT" property="userStatusId" />
     <result column="education" jdbcType="VARCHAR" property="education" />
     <result column="company_name" jdbcType="VARCHAR" property="companyName" />
     <result column="company_addr" jdbcType="VARCHAR" property="companyAddr" />
@@ -80,9 +79,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, user_status_id, education, company_name, company_addr, company_addr_detail, 
-    email, parent_name, parent_tel, relationship, related_person_name, related_person_tel, 
-    create_by, create_time, update_by, update_time, remark
+    id, user_id, education, company_name, company_addr, company_addr_detail, email, parent_name, 
+    parent_tel, relationship, related_person_name, related_person_tel, create_by, create_time, 
+    update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.PersonInfoExample" resultMap="BaseResultMap">
     select
@@ -90,7 +89,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_person_info
+    from t_loan_person_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -114,7 +113,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_person_info
+    from t_loan_person_info
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -125,7 +124,7 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from t_person_info
+    from t_loan_person_info
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -133,46 +132,41 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_person_info
+    from t_loan_person_info
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_person_info
+    delete from t_loan_person_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.PersonInfoExample">
-    delete from t_person_info
+    delete from t_loan_person_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.PersonInfo">
-    insert into t_person_info (id, user_id, user_status_id, 
-      education, company_name, company_addr, 
-      company_addr_detail, email, parent_name, 
-      parent_tel, relationship, related_person_name, 
-      related_person_tel, create_by, create_time, 
-      update_by, update_time, remark
-      )
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{userStatusId,jdbcType=BIGINT}, 
-      #{education,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, 
-      #{companyAddrDetail,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{parentName,jdbcType=VARCHAR}, 
-      #{parentTel,jdbcType=VARCHAR}, #{relationship,jdbcType=VARCHAR}, #{relatedPersonName,jdbcType=VARCHAR}, 
-      #{relatedPersonTel,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
-      )
+    insert into t_loan_person_info (id, user_id, education, 
+      company_name, company_addr, company_addr_detail, 
+      email, parent_name, parent_tel, 
+      relationship, related_person_name, related_person_tel, 
+      create_by, create_time, update_by, 
+      update_time, remark)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{education,jdbcType=VARCHAR}, 
+      #{companyName,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, #{companyAddrDetail,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{parentName,jdbcType=VARCHAR}, #{parentTel,jdbcType=VARCHAR}, 
+      #{relationship,jdbcType=VARCHAR}, #{relatedPersonName,jdbcType=VARCHAR}, #{relatedPersonTel,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.PersonInfo">
-    insert into t_person_info
+    insert into t_loan_person_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
       <if test="userId != null">
         user_id,
-      </if>
-      <if test="userStatusId != null">
-        user_status_id,
       </if>
       <if test="education != null">
         education,
@@ -227,9 +221,6 @@
       <if test="userId != null">
         #{userId,jdbcType=BIGINT},
       </if>
-      <if test="userStatusId != null">
-        #{userStatusId,jdbcType=BIGINT},
-      </if>
       <if test="education != null">
         #{education,jdbcType=VARCHAR},
       </if>
@@ -278,22 +269,19 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.PersonInfoExample" resultType="java.lang.Long">
-    select count(*) from t_person_info
+    select count(*) from t_loan_person_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_person_info
+    update t_loan_person_info
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
       <if test="record.userId != null">
         user_id = #{record.userId,jdbcType=BIGINT},
-      </if>
-      <if test="record.userStatusId != null">
-        user_status_id = #{record.userStatusId,jdbcType=BIGINT},
       </if>
       <if test="record.education != null">
         education = #{record.education,jdbcType=VARCHAR},
@@ -346,10 +334,9 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_person_info
+    update t_loan_person_info
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
-      user_status_id = #{record.userStatusId,jdbcType=BIGINT},
       education = #{record.education,jdbcType=VARCHAR},
       company_name = #{record.companyName,jdbcType=VARCHAR},
       company_addr = #{record.companyAddr,jdbcType=VARCHAR},
@@ -370,13 +357,10 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.PersonInfo">
-    update t_person_info
+    update t_loan_person_info
     <set>
       <if test="userId != null">
         user_id = #{userId,jdbcType=BIGINT},
-      </if>
-      <if test="userStatusId != null">
-        user_status_id = #{userStatusId,jdbcType=BIGINT},
       </if>
       <if test="education != null">
         education = #{education,jdbcType=VARCHAR},
@@ -427,9 +411,8 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.PersonInfo">
-    update t_person_info
+    update t_loan_person_info
     set user_id = #{userId,jdbcType=BIGINT},
-      user_status_id = #{userStatusId,jdbcType=BIGINT},
       education = #{education,jdbcType=VARCHAR},
       company_name = #{companyName,jdbcType=VARCHAR},
       company_addr = #{companyAddr,jdbcType=VARCHAR},
@@ -450,7 +433,7 @@
   <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.PersonInfoExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_person_info
+    from t_loan_person_info
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -464,7 +447,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_person_info
+    from t_loan_person_info
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -474,23 +457,23 @@
     limit 1
   </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_person_info
-    (id, user_id, user_status_id, education, company_name, company_addr, company_addr_detail, 
-      email, parent_name, parent_tel, relationship, related_person_name, related_person_tel, 
+    insert into t_loan_person_info
+    (id, user_id, education, company_name, company_addr, company_addr_detail, email, 
+      parent_name, parent_tel, relationship, related_person_name, related_person_tel, 
       create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.userStatusId,jdbcType=BIGINT}, 
-        #{item.education,jdbcType=VARCHAR}, #{item.companyName,jdbcType=VARCHAR}, #{item.companyAddr,jdbcType=VARCHAR}, 
-        #{item.companyAddrDetail,jdbcType=VARCHAR}, #{item.email,jdbcType=VARCHAR}, #{item.parentName,jdbcType=VARCHAR}, 
-        #{item.parentTel,jdbcType=VARCHAR}, #{item.relationship,jdbcType=VARCHAR}, #{item.relatedPersonName,jdbcType=VARCHAR}, 
+      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.education,jdbcType=VARCHAR}, 
+        #{item.companyName,jdbcType=VARCHAR}, #{item.companyAddr,jdbcType=VARCHAR}, #{item.companyAddrDetail,jdbcType=VARCHAR}, 
+        #{item.email,jdbcType=VARCHAR}, #{item.parentName,jdbcType=VARCHAR}, #{item.parentTel,jdbcType=VARCHAR}, 
+        #{item.relationship,jdbcType=VARCHAR}, #{item.relatedPersonName,jdbcType=VARCHAR}, 
         #{item.relatedPersonTel,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
         #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
         )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_person_info (
+    insert into t_loan_person_info (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
@@ -504,9 +487,6 @@
         </if>
         <if test="'user_id' == column.value">
           #{item.userId,jdbcType=BIGINT}
-        </if>
-        <if test="'user_status_id' == column.value">
-          #{item.userStatusId,jdbcType=BIGINT}
         </if>
         <if test="'education' == column.value">
           #{item.education,jdbcType=VARCHAR}

@@ -20,14 +20,9 @@ public class Product implements Serializable {
     private String name;
 
     /**
-     * 额度类型 1-枚举 2-区间
-     */
-    private Byte loanAmountType;
-
-    /**
      * 额度 逗号隔开如 200,300,400
      */
-    private String loanAmount;
+    private String loanAmountArr;
 
     /**
      * 币种 IDR-印度尼西亚盾
@@ -35,14 +30,9 @@ public class Product implements Serializable {
     private String currency;
 
     /**
-     * 期限类型 1-枚举 2-区间
-     */
-    private Byte loanTimeType;
-
-    /**
      * 期限 逗号隔开如 7,8,9
      */
-    private String loanTime;
+    private String loanTimeArr;
 
     /**
      * 期限年月日 D-日 M-月 Y-年
@@ -55,7 +45,7 @@ public class Product implements Serializable {
     private Long apr;
 
     /**
-     * 描述
+     * 描述 key 保留字段
      */
     private String description;
 
@@ -115,20 +105,12 @@ public class Product implements Serializable {
         this.name = name == null ? null : name.trim();
     }
 
-    public Byte getLoanAmountType() {
-        return loanAmountType;
+    public String getLoanAmountArr() {
+        return loanAmountArr;
     }
 
-    public void setLoanAmountType(Byte loanAmountType) {
-        this.loanAmountType = loanAmountType;
-    }
-
-    public String getLoanAmount() {
-        return loanAmount;
-    }
-
-    public void setLoanAmount(String loanAmount) {
-        this.loanAmount = loanAmount == null ? null : loanAmount.trim();
+    public void setLoanAmountArr(String loanAmountArr) {
+        this.loanAmountArr = loanAmountArr == null ? null : loanAmountArr.trim();
     }
 
     public String getCurrency() {
@@ -139,20 +121,12 @@ public class Product implements Serializable {
         this.currency = currency == null ? null : currency.trim();
     }
 
-    public Byte getLoanTimeType() {
-        return loanTimeType;
+    public String getLoanTimeArr() {
+        return loanTimeArr;
     }
 
-    public void setLoanTimeType(Byte loanTimeType) {
-        this.loanTimeType = loanTimeType;
-    }
-
-    public String getLoanTime() {
-        return loanTime;
-    }
-
-    public void setLoanTime(String loanTime) {
-        this.loanTime = loanTime == null ? null : loanTime.trim();
+    public void setLoanTimeArr(String loanTimeArr) {
+        this.loanTimeArr = loanTimeArr == null ? null : loanTimeArr.trim();
     }
 
     public String getLoanTimeDmy() {
@@ -244,11 +218,9 @@ public class Product implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", code=").append(code);
         sb.append(", name=").append(name);
-        sb.append(", loanAmountType=").append(loanAmountType);
-        sb.append(", loanAmount=").append(loanAmount);
+        sb.append(", loanAmountArr=").append(loanAmountArr);
         sb.append(", currency=").append(currency);
-        sb.append(", loanTimeType=").append(loanTimeType);
-        sb.append(", loanTime=").append(loanTime);
+        sb.append(", loanTimeArr=").append(loanTimeArr);
         sb.append(", loanTimeDmy=").append(loanTimeDmy);
         sb.append(", apr=").append(apr);
         sb.append(", description=").append(description);
@@ -290,13 +262,8 @@ public class Product implements Serializable {
             return this;
         }
 
-        public Builder loanAmountType(Byte loanAmountType) {
-            obj.setLoanAmountType(loanAmountType);
-            return this;
-        }
-
-        public Builder loanAmount(String loanAmount) {
-            obj.setLoanAmount(loanAmount);
+        public Builder loanAmountArr(String loanAmountArr) {
+            obj.setLoanAmountArr(loanAmountArr);
             return this;
         }
 
@@ -305,13 +272,8 @@ public class Product implements Serializable {
             return this;
         }
 
-        public Builder loanTimeType(Byte loanTimeType) {
-            obj.setLoanTimeType(loanTimeType);
-            return this;
-        }
-
-        public Builder loanTime(String loanTime) {
-            obj.setLoanTime(loanTime);
+        public Builder loanTimeArr(String loanTimeArr) {
+            obj.setLoanTimeArr(loanTimeArr);
             return this;
         }
 
@@ -374,11 +336,9 @@ public class Product implements Serializable {
         id("id"),
         code("code"),
         name("name"),
-        loanAmountType("loan_amount_type"),
-        loanAmount("loan_amount"),
+        loanAmountArr("loan_amount_arr"),
         currency("currency"),
-        loanTimeType("loan_time_type"),
-        loanTime("loan_time"),
+        loanTimeArr("loan_time_arr"),
         loanTimeDmy("loan_time_dmy"),
         apr("apr"),
         description("description"),

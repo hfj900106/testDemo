@@ -281,66 +281,6 @@ public class PersonInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdIsNull() {
-            addCriterion("user_status_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserStatusIdIsNotNull() {
-            addCriterion("user_status_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserStatusIdEqualTo(Long value) {
-            addCriterion("user_status_id =", value, "userStatusId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserStatusIdNotEqualTo(Long value) {
-            addCriterion("user_status_id <>", value, "userStatusId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserStatusIdGreaterThan(Long value) {
-            addCriterion("user_status_id >", value, "userStatusId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserStatusIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("user_status_id >=", value, "userStatusId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserStatusIdLessThan(Long value) {
-            addCriterion("user_status_id <", value, "userStatusId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserStatusIdLessThanOrEqualTo(Long value) {
-            addCriterion("user_status_id <=", value, "userStatusId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserStatusIdIn(List<Long> values) {
-            addCriterion("user_status_id in", values, "userStatusId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserStatusIdNotIn(List<Long> values) {
-            addCriterion("user_status_id not in", values, "userStatusId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserStatusIdBetween(Long value1, Long value2) {
-            addCriterion("user_status_id between", value1, value2, "userStatusId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserStatusIdNotBetween(Long value1, Long value2) {
-            addCriterion("user_status_id not between", value1, value2, "userStatusId");
-            return (Criteria) this;
-        }
-
         public Criteria andEducationIsNull() {
             addCriterion("education is null");
             return (Criteria) this;

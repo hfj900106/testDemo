@@ -3,26 +3,30 @@ package com.hzed.easyget.persistence.auto.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Auth implements Serializable {
+public class FaceIdCard implements Serializable {
     /**
-     * 主键
      */
     private Long id;
 
     /**
-     * 认证代码
+     * 用户id
      */
-    private String code;
+    private Long userId;
 
     /**
-     * 认证名
+     * 用户认证id
      */
-    private String name;
+    private Long userStatusId;
 
     /**
-     * 是否可用 1-可用 0-不可用
+     * 身份证图片路径
      */
-    private Boolean isUse;
+    private String idCardPhotoPath;
+
+    /**
+     * 活体认证路径
+     */
+    private String facePhotoPath;
 
     /**
      */
@@ -54,28 +58,36 @@ public class Auth implements Serializable {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setCode(String code) {
-        this.code = code == null ? null : code.trim();
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public Long getUserStatusId() {
+        return userStatusId;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setUserStatusId(Long userStatusId) {
+        this.userStatusId = userStatusId;
     }
 
-    public Boolean getIsUse() {
-        return isUse;
+    public String getIdCardPhotoPath() {
+        return idCardPhotoPath;
     }
 
-    public void setIsUse(Boolean isUse) {
-        this.isUse = isUse;
+    public void setIdCardPhotoPath(String idCardPhotoPath) {
+        this.idCardPhotoPath = idCardPhotoPath == null ? null : idCardPhotoPath.trim();
+    }
+
+    public String getFacePhotoPath() {
+        return facePhotoPath;
+    }
+
+    public void setFacePhotoPath(String facePhotoPath) {
+        this.facePhotoPath = facePhotoPath == null ? null : facePhotoPath.trim();
     }
 
     public Long getCreateBy() {
@@ -125,9 +137,10 @@ public class Auth implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", code=").append(code);
-        sb.append(", name=").append(name);
-        sb.append(", isUse=").append(isUse);
+        sb.append(", userId=").append(userId);
+        sb.append(", userStatusId=").append(userStatusId);
+        sb.append(", idCardPhotoPath=").append(idCardPhotoPath);
+        sb.append(", facePhotoPath=").append(facePhotoPath);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -138,15 +151,15 @@ public class Auth implements Serializable {
         return sb.toString();
     }
 
-    public static Auth.Builder builder() {
-        return new Auth.Builder();
+    public static FaceIdCard.Builder builder() {
+        return new FaceIdCard.Builder();
     }
 
     public static class Builder {
-        private Auth obj;
+        private FaceIdCard obj;
 
         public Builder() {
-            this.obj = new Auth();
+            this.obj = new FaceIdCard();
         }
 
         public Builder id(Long id) {
@@ -154,18 +167,23 @@ public class Auth implements Serializable {
             return this;
         }
 
-        public Builder code(String code) {
-            obj.setCode(code);
+        public Builder userId(Long userId) {
+            obj.setUserId(userId);
             return this;
         }
 
-        public Builder name(String name) {
-            obj.setName(name);
+        public Builder userStatusId(Long userStatusId) {
+            obj.setUserStatusId(userStatusId);
             return this;
         }
 
-        public Builder isUse(Boolean isUse) {
-            obj.setIsUse(isUse);
+        public Builder idCardPhotoPath(String idCardPhotoPath) {
+            obj.setIdCardPhotoPath(idCardPhotoPath);
+            return this;
+        }
+
+        public Builder facePhotoPath(String facePhotoPath) {
+            obj.setFacePhotoPath(facePhotoPath);
             return this;
         }
 
@@ -194,16 +212,17 @@ public class Auth implements Serializable {
             return this;
         }
 
-        public Auth build() {
+        public FaceIdCard build() {
             return this.obj;
         }
     }
 
     public enum Column {
         id("id"),
-        code("code"),
-        name("name"),
-        isUse("is_use"),
+        userId("user_id"),
+        userStatusId("user_status_id"),
+        idCardPhotoPath("id_card_photo_path"),
+        facePhotoPath("face_photo_path"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

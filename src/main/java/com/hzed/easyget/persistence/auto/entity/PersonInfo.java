@@ -15,11 +15,6 @@ public class PersonInfo implements Serializable {
     private Long userId;
 
     /**
-     * 用户认证id
-     */
-    private Long userStatusId;
-
-    /**
      * 教育信息
      */
     private String education;
@@ -105,14 +100,6 @@ public class PersonInfo implements Serializable {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getUserStatusId() {
-        return userStatusId;
-    }
-
-    public void setUserStatusId(Long userStatusId) {
-        this.userStatusId = userStatusId;
     }
 
     public String getEducation() {
@@ -243,7 +230,6 @@ public class PersonInfo implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
-        sb.append(", userStatusId=").append(userStatusId);
         sb.append(", education=").append(education);
         sb.append(", companyName=").append(companyName);
         sb.append(", companyAddr=").append(companyAddr);
@@ -282,11 +268,6 @@ public class PersonInfo implements Serializable {
 
         public Builder userId(Long userId) {
             obj.setUserId(userId);
-            return this;
-        }
-
-        public Builder userStatusId(Long userStatusId) {
-            obj.setUserStatusId(userStatusId);
             return this;
         }
 
@@ -373,7 +354,6 @@ public class PersonInfo implements Serializable {
     public enum Column {
         id("id"),
         userId("user_id"),
-        userStatusId("user_status_id"),
         education("education"),
         companyName("company_name"),
         companyAddr("company_addr"),

@@ -571,62 +571,52 @@ public class UserExample {
             return (Criteria) this;
         }
 
-        public Criteria andGenderEqualTo(String value) {
+        public Criteria andGenderEqualTo(Byte value) {
             addCriterion("gender =", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderNotEqualTo(String value) {
+        public Criteria andGenderNotEqualTo(Byte value) {
             addCriterion("gender <>", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderGreaterThan(String value) {
+        public Criteria andGenderGreaterThan(Byte value) {
             addCriterion("gender >", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderGreaterThanOrEqualTo(String value) {
+        public Criteria andGenderGreaterThanOrEqualTo(Byte value) {
             addCriterion("gender >=", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderLessThan(String value) {
+        public Criteria andGenderLessThan(Byte value) {
             addCriterion("gender <", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderLessThanOrEqualTo(String value) {
+        public Criteria andGenderLessThanOrEqualTo(Byte value) {
             addCriterion("gender <=", value, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderLike(String value) {
-            addCriterion("gender like", value, "gender");
-            return (Criteria) this;
-        }
-
-        public Criteria andGenderNotLike(String value) {
-            addCriterion("gender not like", value, "gender");
-            return (Criteria) this;
-        }
-
-        public Criteria andGenderIn(List<String> values) {
+        public Criteria andGenderIn(List<Byte> values) {
             addCriterion("gender in", values, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderNotIn(List<String> values) {
+        public Criteria andGenderNotIn(List<Byte> values) {
             addCriterion("gender not in", values, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderBetween(String value1, String value2) {
+        public Criteria andGenderBetween(Byte value1, Byte value2) {
             addCriterion("gender between", value1, value2, "gender");
             return (Criteria) this;
         }
 
-        public Criteria andGenderNotBetween(String value1, String value2) {
+        public Criteria andGenderNotBetween(Byte value1, Byte value2) {
             addCriterion("gender not between", value1, value2, "gender");
             return (Criteria) this;
         }
@@ -1021,76 +1011,6 @@ public class UserExample {
             return (Criteria) this;
         }
 
-        public Criteria andSmsPasswordIsNull() {
-            addCriterion("sms_password is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordIsNotNull() {
-            addCriterion("sms_password is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordEqualTo(String value) {
-            addCriterion("sms_password =", value, "smsPassword");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordNotEqualTo(String value) {
-            addCriterion("sms_password <>", value, "smsPassword");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordGreaterThan(String value) {
-            addCriterion("sms_password >", value, "smsPassword");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordGreaterThanOrEqualTo(String value) {
-            addCriterion("sms_password >=", value, "smsPassword");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordLessThan(String value) {
-            addCriterion("sms_password <", value, "smsPassword");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordLessThanOrEqualTo(String value) {
-            addCriterion("sms_password <=", value, "smsPassword");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordLike(String value) {
-            addCriterion("sms_password like", value, "smsPassword");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordNotLike(String value) {
-            addCriterion("sms_password not like", value, "smsPassword");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordIn(List<String> values) {
-            addCriterion("sms_password in", values, "smsPassword");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordNotIn(List<String> values) {
-            addCriterion("sms_password not in", values, "smsPassword");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordBetween(String value1, String value2) {
-            addCriterion("sms_password between", value1, value2, "smsPassword");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordNotBetween(String value1, String value2) {
-            addCriterion("sms_password not between", value1, value2, "smsPassword");
-            return (Criteria) this;
-        }
-
         public Criteria andCreateByIsNull() {
             addCriterion("create_by is null");
             return (Criteria) this;
@@ -1421,11 +1341,6 @@ public class UserExample {
             return (Criteria) this;
         }
 
-        public Criteria andGenderLikeInsensitive(String value) {
-            addCriterion("upper(gender) like", value.toUpperCase(), "gender");
-            return (Criteria) this;
-        }
-
         public Criteria andRealNameLikeInsensitive(String value) {
             addCriterion("upper(real_name) like", value.toUpperCase(), "realName");
             return (Criteria) this;
@@ -1438,11 +1353,6 @@ public class UserExample {
 
         public Criteria andPlatformLikeInsensitive(String value) {
             addCriterion("upper(platform) like", value.toUpperCase(), "platform");
-            return (Criteria) this;
-        }
-
-        public Criteria andSmsPasswordLikeInsensitive(String value) {
-            addCriterion("upper(sms_password) like", value.toUpperCase(), "smsPassword");
             return (Criteria) this;
         }
 

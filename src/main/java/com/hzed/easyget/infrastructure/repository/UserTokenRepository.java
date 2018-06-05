@@ -16,7 +16,7 @@ public class UserTokenRepository {
     @Autowired
     private UserTokenMapper userTokenMapper;
 
-    public  UserToken findByUserIdAndImei(Long userId, String imei) {
+    public UserToken findByUserIdAndImei(Long userId, String imei) {
 
         UserTokenExample example = new UserTokenExample();
         example.createCriteria().andUserIdEqualTo(userId).andImeiEqualTo(imei);

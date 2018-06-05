@@ -37,7 +37,7 @@ public class User implements Serializable {
     /**
      * 性别 0-未知 1-男 2-女 3-女改男 4-男改女 5-其他
      */
-    private String gender;
+    private Byte gender;
 
     /**
      * 真实姓名
@@ -68,11 +68,6 @@ public class User implements Serializable {
      * 注册渠道 1-印尼APP
      */
     private Byte client;
-
-    /**
-     * 服务运营商密码
-     */
-    private String smsPassword;
 
     /**
      */
@@ -144,12 +139,12 @@ public class User implements Serializable {
         this.lastLoginTime = lastLoginTime;
     }
 
-    public String getGender() {
+    public Byte getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender == null ? null : gender.trim();
+    public void setGender(Byte gender) {
+        this.gender = gender;
     }
 
     public String getRealName() {
@@ -198,14 +193,6 @@ public class User implements Serializable {
 
     public void setClient(Byte client) {
         this.client = client;
-    }
-
-    public String getSmsPassword() {
-        return smsPassword;
-    }
-
-    public void setSmsPassword(String smsPassword) {
-        this.smsPassword = smsPassword == null ? null : smsPassword.trim();
     }
 
     public Long getCreateBy() {
@@ -267,7 +254,6 @@ public class User implements Serializable {
         sb.append(", isLocked=").append(isLocked);
         sb.append(", isBlacklist=").append(isBlacklist);
         sb.append(", client=").append(client);
-        sb.append(", smsPassword=").append(smsPassword);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -319,7 +305,7 @@ public class User implements Serializable {
             return this;
         }
 
-        public Builder gender(String gender) {
+        public Builder gender(Byte gender) {
             obj.setGender(gender);
             return this;
         }
@@ -351,11 +337,6 @@ public class User implements Serializable {
 
         public Builder client(Byte client) {
             obj.setClient(client);
-            return this;
-        }
-
-        public Builder smsPassword(String smsPassword) {
-            obj.setSmsPassword(smsPassword);
             return this;
         }
 
@@ -403,7 +384,6 @@ public class User implements Serializable {
         isLocked("is_locked"),
         isBlacklist("is_blacklist"),
         client("client"),
-        smsPassword("sms_password"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

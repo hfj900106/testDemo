@@ -1,10 +1,10 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.persistence.auto.entity.Auth;
+import com.hzed.easyget.persistence.auto.entity.AuthItem;
 import com.hzed.easyget.persistence.auto.entity.UserAuthStatus;
-import com.hzed.easyget.persistence.auto.entity.example.AuthExample;
+import com.hzed.easyget.persistence.auto.entity.example.AuthItemExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserAuthStatusExample;
-import com.hzed.easyget.persistence.auto.mapper.AuthMapper;
+import com.hzed.easyget.persistence.auto.mapper.AuthItemMapper;
 import com.hzed.easyget.persistence.auto.mapper.UserAuthStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -26,7 +26,7 @@ public class UserAuthStatusRepository {
     @Autowired
     private UserAuthStatusMapper userAuthStatusMapper;
     @Autowired
-    private AuthMapper authMapper;
+    private AuthItemMapper authItemMapper;
 
 
     public List<UserAuthStatus> getAuthStatusByUserId(Long userId) {
@@ -39,10 +39,10 @@ public class UserAuthStatusRepository {
     }
 
 
-    public Auth findAuthByCode(String authCode) {
+    public AuthItem findAuthByCode(String authCode) {
 
-        AuthExample example = new AuthExample();
+        AuthItemExample example = new AuthItemExample();
         example.createCriteria().andCodeEqualTo(authCode);
-        return authMapper.selectOneByExample(example);
+        return authItemMapper.selectOneByExample(example);
     }
 }

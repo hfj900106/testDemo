@@ -152,8 +152,8 @@ public class HomeService {
             }
         }
 
-        List<Bomb> bombList = bombRepository.getBombList();
-        for (Bomb bomb : bombList) {
+        List<News> bombList = bombRepository.getBombList();
+        for (News bomb : bombList) {
             BombResponse bombResponse = new BombResponse();
             bombResponse.setBombTitle(bomb.getTitle());
             bombResponse.setImgUrl(bomb.getImgUrl());

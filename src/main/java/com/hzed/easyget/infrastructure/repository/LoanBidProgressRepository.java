@@ -1,8 +1,8 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.persistence.auto.entity.LoanBidProgress;
-import com.hzed.easyget.persistence.auto.entity.example.LoanBidProgressExample;
-import com.hzed.easyget.persistence.auto.mapper.LoanBidProgressMapper;
+import com.hzed.easyget.persistence.auto.entity.BidProgress;
+import com.hzed.easyget.persistence.auto.entity.example.BidProgressExample;
+import com.hzed.easyget.persistence.auto.mapper.BidProgressMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,10 +16,10 @@ import org.springframework.stereotype.Repository;
 public class LoanBidProgressRepository {
 
     @Autowired
-    private LoanBidProgressMapper loanBidProgressMapper;
+    private BidProgressMapper loanBidProgressMapper;
 
-    public LoanBidProgress findHandleTimeByBidAndType(Long bid, String type) {
-        LoanBidProgressExample example = new LoanBidProgressExample();
+    public BidProgress findHandleTimeByBidAndType(Long bid, String type) {
+        BidProgressExample example = new BidProgressExample();
         example.createCriteria().andBidIdEqualTo(bid).andTypeEqualTo(Byte.valueOf(type));
 
         return loanBidProgressMapper.selectOneByExample(example);

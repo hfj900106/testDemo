@@ -16,8 +16,8 @@ import com.hzed.easyget.infrastructure.utils.Arith;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.Bid;
-import com.hzed.easyget.persistence.auto.entity.LoanBidProgress;
-import com.hzed.easyget.persistence.auto.entity.LoanBill;
+import com.hzed.easyget.persistence.auto.entity.BidProgress;
+import com.hzed.easyget.persistence.auto.entity.Bill;
 import com.hzed.easyget.persistence.auto.entity.LoanBillLedger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,8 +60,8 @@ public class RepayService {
         BigDecimal totalRepayAmount = new BigDecimal(1);
         for (Bid bid : bidList) {
             Long bidId = bid.getId();
-            LoanBidProgress loanBidProgress = loanBidProgressRepository.findHandleTimeByBidAndType(bidId, ProgressTypeEnum.CLEAR.getCode());
-            LoanBill loanBill = loanBillRepository.findRepayTimeByBid(bidId);
+            BidProgress bidProgress = loanBidProgressRepository.findHandleTimeByBidAndType(bidId, ProgressTypeEnum.CLEAR.getCode());
+            Bill loanBill = loanBillRepository.findRepayTimeByBid(bidId);
             Long billId = loanBill.getId();
 
 
@@ -69,7 +69,7 @@ public class RepayService {
             repaymentResponse.setLoanMount(bid.getLoanAmount().toString());
             //已结清
             if (BidStatusEnum.CLEARED.getCode().equals(bid.getStatus())) {
-                repaymentResponse.setLoanTime(loanBidProgress.getHandleTime().toString());
+                repaymentResponse.setLoanTime(bidProgress.getHandleTime().toString());
                 repaymentResponse.setStatus(String.valueOf(RepayStatusEnum.CLEAR_REPAY.getCode()));
 
             } else {//未结清

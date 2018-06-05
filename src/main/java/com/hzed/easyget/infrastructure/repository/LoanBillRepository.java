@@ -1,8 +1,8 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.persistence.auto.entity.LoanBill;
-import com.hzed.easyget.persistence.auto.entity.example.LoanBillExample;
-import com.hzed.easyget.persistence.auto.mapper.LoanBillMapper;
+import com.hzed.easyget.persistence.auto.entity.Bill;
+import com.hzed.easyget.persistence.auto.entity.example.BillExample;
+import com.hzed.easyget.persistence.auto.mapper.BillMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,10 +16,10 @@ import org.springframework.stereotype.Repository;
 public class LoanBillRepository {
 
     @Autowired
-    private LoanBillMapper loanBillMapper;
+    private BillMapper loanBillMapper;
 
-    public LoanBill findRepayTimeByBid(Long bid) {
-        LoanBillExample example = new LoanBillExample();
+    public Bill findRepayTimeByBid(Long bid) {
+        BillExample example = new BillExample();
         example.createCriteria().andBidIdEqualTo(bid);
         return loanBillMapper.selectOneByExample(example);
 

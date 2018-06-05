@@ -3,8 +3,9 @@ package com.hzed.easyget.persistence.auto.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class FaceIdcardAuth implements Serializable {
+public class Professional implements Serializable {
     /**
+     * 主键
      */
     private Long id;
 
@@ -14,19 +15,24 @@ public class FaceIdcardAuth implements Serializable {
     private Long userId;
 
     /**
-     * 用户认证id
+     * 工作类型，1  会计/财务官员，2  客户服务， 3  工程师，4  执行， 5  一般管理， 6  信息技术
      */
-    private Long userStatusId;
+    private Byte jobType;
 
     /**
-     * 身份证图片路径
+     * 每月收入，1 低于200万，2  200-400万，3  400-800万，4  800以上
      */
-    private String idCardPhotoPath;
+    private Byte monthlyIncome;
 
     /**
-     * 活体认证路径
+     * 工作证照片保存路径
      */
-    private String facePhotoPath;
+    private String employeeCard;
+
+    /**
+     * 工作场所照片保存路径
+     */
+    private String workplace;
 
     /**
      */
@@ -66,28 +72,36 @@ public class FaceIdcardAuth implements Serializable {
         this.userId = userId;
     }
 
-    public Long getUserStatusId() {
-        return userStatusId;
+    public Byte getJobType() {
+        return jobType;
     }
 
-    public void setUserStatusId(Long userStatusId) {
-        this.userStatusId = userStatusId;
+    public void setJobType(Byte jobType) {
+        this.jobType = jobType;
     }
 
-    public String getIdCardPhotoPath() {
-        return idCardPhotoPath;
+    public Byte getMonthlyIncome() {
+        return monthlyIncome;
     }
 
-    public void setIdCardPhotoPath(String idCardPhotoPath) {
-        this.idCardPhotoPath = idCardPhotoPath == null ? null : idCardPhotoPath.trim();
+    public void setMonthlyIncome(Byte monthlyIncome) {
+        this.monthlyIncome = monthlyIncome;
     }
 
-    public String getFacePhotoPath() {
-        return facePhotoPath;
+    public String getEmployeeCard() {
+        return employeeCard;
     }
 
-    public void setFacePhotoPath(String facePhotoPath) {
-        this.facePhotoPath = facePhotoPath == null ? null : facePhotoPath.trim();
+    public void setEmployeeCard(String employeeCard) {
+        this.employeeCard = employeeCard == null ? null : employeeCard.trim();
+    }
+
+    public String getWorkplace() {
+        return workplace;
+    }
+
+    public void setWorkplace(String workplace) {
+        this.workplace = workplace == null ? null : workplace.trim();
     }
 
     public Long getCreateBy() {
@@ -138,9 +152,10 @@ public class FaceIdcardAuth implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
-        sb.append(", userStatusId=").append(userStatusId);
-        sb.append(", idCardPhotoPath=").append(idCardPhotoPath);
-        sb.append(", facePhotoPath=").append(facePhotoPath);
+        sb.append(", jobType=").append(jobType);
+        sb.append(", monthlyIncome=").append(monthlyIncome);
+        sb.append(", employeeCard=").append(employeeCard);
+        sb.append(", workplace=").append(workplace);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -151,15 +166,15 @@ public class FaceIdcardAuth implements Serializable {
         return sb.toString();
     }
 
-    public static FaceIdcardAuth.Builder builder() {
-        return new FaceIdcardAuth.Builder();
+    public static Professional.Builder builder() {
+        return new Professional.Builder();
     }
 
     public static class Builder {
-        private FaceIdcardAuth obj;
+        private Professional obj;
 
         public Builder() {
-            this.obj = new FaceIdcardAuth();
+            this.obj = new Professional();
         }
 
         public Builder id(Long id) {
@@ -172,18 +187,23 @@ public class FaceIdcardAuth implements Serializable {
             return this;
         }
 
-        public Builder userStatusId(Long userStatusId) {
-            obj.setUserStatusId(userStatusId);
+        public Builder jobType(Byte jobType) {
+            obj.setJobType(jobType);
             return this;
         }
 
-        public Builder idCardPhotoPath(String idCardPhotoPath) {
-            obj.setIdCardPhotoPath(idCardPhotoPath);
+        public Builder monthlyIncome(Byte monthlyIncome) {
+            obj.setMonthlyIncome(monthlyIncome);
             return this;
         }
 
-        public Builder facePhotoPath(String facePhotoPath) {
-            obj.setFacePhotoPath(facePhotoPath);
+        public Builder employeeCard(String employeeCard) {
+            obj.setEmployeeCard(employeeCard);
+            return this;
+        }
+
+        public Builder workplace(String workplace) {
+            obj.setWorkplace(workplace);
             return this;
         }
 
@@ -212,7 +232,7 @@ public class FaceIdcardAuth implements Serializable {
             return this;
         }
 
-        public FaceIdcardAuth build() {
+        public Professional build() {
             return this.obj;
         }
     }
@@ -220,9 +240,10 @@ public class FaceIdcardAuth implements Serializable {
     public enum Column {
         id("id"),
         userId("user_id"),
-        userStatusId("user_status_id"),
-        idCardPhotoPath("id_card_photo_path"),
-        facePhotoPath("face_photo_path"),
+        jobType("job_type"),
+        monthlyIncome("monthly_income"),
+        employeeCard("employee_card"),
+        workplace("workplace"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

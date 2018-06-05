@@ -1,9 +1,9 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.persistence.auto.entity.FaceIdcardAuth;
+import com.hzed.easyget.persistence.auto.entity.FaceIdCard;
 import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserAuthStatus;
-import com.hzed.easyget.persistence.auto.mapper.FaceIdcardAuthMapper;
+import com.hzed.easyget.persistence.auto.mapper.FaceIdCardMapper;
 import com.hzed.easyget.persistence.auto.mapper.UserAuthStatusMapper;
 import com.hzed.easyget.persistence.auto.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class FaceIdcardAuthRepository {
     @Autowired
-    private FaceIdcardAuthMapper faceIdcardAuthMapper;
+    private FaceIdCardMapper faceIdCardMapper;
     @Autowired
     private UserAuthStatusMapper userAuthStatusMapper;
     @Autowired
     private UserMapper userMapper;
 
     @Transactional(rollbackFor = Exception.class)
-    public void insertIdentityInfo(FaceIdcardAuth faceIdcardAuth, UserAuthStatus userAuthStatus, User user) {
-        faceIdcardAuthMapper.insertSelective(faceIdcardAuth);
+    public void insertIdentityInfo(FaceIdCard faceIdCard, UserAuthStatus userAuthStatus, User user) {
+        faceIdCardMapper.insertSelective(faceIdCard);
         userAuthStatusMapper.insertSelective(userAuthStatus);
         userMapper.updateByPrimaryKeySelective(user);
     }

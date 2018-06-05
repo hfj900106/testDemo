@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FaceIdcardAuthExample {
+public class ProfessionalExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,7 +15,7 @@ public class FaceIdcardAuthExample {
 
     protected Integer rows;
 
-    public FaceIdcardAuthExample() {
+    public ProfessionalExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -86,29 +86,29 @@ public class FaceIdcardAuthExample {
         return this.rows;
     }
 
-    public FaceIdcardAuthExample limit(Integer rows) {
+    public ProfessionalExample limit(Integer rows) {
         this.rows = rows;
         return this;
     }
 
-    public FaceIdcardAuthExample limit(Integer offset, Integer rows) {
+    public ProfessionalExample limit(Integer offset, Integer rows) {
         this.offset = offset;
         this.rows = rows;
         return this;
     }
 
-    public FaceIdcardAuthExample page(Integer page, Integer pageSize) {
+    public ProfessionalExample page(Integer page, Integer pageSize) {
         this.offset = page * pageSize;
         this.rows = pageSize;
         return this;
     }
 
-    public FaceIdcardAuthExample orderBy(String orderByClause) {
+    public ProfessionalExample orderBy(String orderByClause) {
         this.setOrderByClause(orderByClause);
         return this;
     }
 
-    public FaceIdcardAuthExample orderBy(String ... orderByClauses) {
+    public ProfessionalExample orderBy(String ... orderByClauses) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < orderByClauses.length; i++) {
             sb.append(orderByClauses[i]);
@@ -281,203 +281,263 @@ public class FaceIdcardAuthExample {
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdIsNull() {
-            addCriterion("user_status_id is null");
+        public Criteria andJobTypeIsNull() {
+            addCriterion("job_type is null");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdIsNotNull() {
-            addCriterion("user_status_id is not null");
+        public Criteria andJobTypeIsNotNull() {
+            addCriterion("job_type is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdEqualTo(Long value) {
-            addCriterion("user_status_id =", value, "userStatusId");
+        public Criteria andJobTypeEqualTo(Byte value) {
+            addCriterion("job_type =", value, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdNotEqualTo(Long value) {
-            addCriterion("user_status_id <>", value, "userStatusId");
+        public Criteria andJobTypeNotEqualTo(Byte value) {
+            addCriterion("job_type <>", value, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdGreaterThan(Long value) {
-            addCriterion("user_status_id >", value, "userStatusId");
+        public Criteria andJobTypeGreaterThan(Byte value) {
+            addCriterion("job_type >", value, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("user_status_id >=", value, "userStatusId");
+        public Criteria andJobTypeGreaterThanOrEqualTo(Byte value) {
+            addCriterion("job_type >=", value, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdLessThan(Long value) {
-            addCriterion("user_status_id <", value, "userStatusId");
+        public Criteria andJobTypeLessThan(Byte value) {
+            addCriterion("job_type <", value, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdLessThanOrEqualTo(Long value) {
-            addCriterion("user_status_id <=", value, "userStatusId");
+        public Criteria andJobTypeLessThanOrEqualTo(Byte value) {
+            addCriterion("job_type <=", value, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdIn(List<Long> values) {
-            addCriterion("user_status_id in", values, "userStatusId");
+        public Criteria andJobTypeIn(List<Byte> values) {
+            addCriterion("job_type in", values, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdNotIn(List<Long> values) {
-            addCriterion("user_status_id not in", values, "userStatusId");
+        public Criteria andJobTypeNotIn(List<Byte> values) {
+            addCriterion("job_type not in", values, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdBetween(Long value1, Long value2) {
-            addCriterion("user_status_id between", value1, value2, "userStatusId");
+        public Criteria andJobTypeBetween(Byte value1, Byte value2) {
+            addCriterion("job_type between", value1, value2, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdNotBetween(Long value1, Long value2) {
-            addCriterion("user_status_id not between", value1, value2, "userStatusId");
+        public Criteria andJobTypeNotBetween(Byte value1, Byte value2) {
+            addCriterion("job_type not between", value1, value2, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathIsNull() {
-            addCriterion("id_card_photo_path is null");
+        public Criteria andMonthlyIncomeIsNull() {
+            addCriterion("monthly_income is null");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathIsNotNull() {
-            addCriterion("id_card_photo_path is not null");
+        public Criteria andMonthlyIncomeIsNotNull() {
+            addCriterion("monthly_income is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathEqualTo(String value) {
-            addCriterion("id_card_photo_path =", value, "idCardPhotoPath");
+        public Criteria andMonthlyIncomeEqualTo(Byte value) {
+            addCriterion("monthly_income =", value, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathNotEqualTo(String value) {
-            addCriterion("id_card_photo_path <>", value, "idCardPhotoPath");
+        public Criteria andMonthlyIncomeNotEqualTo(Byte value) {
+            addCriterion("monthly_income <>", value, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathGreaterThan(String value) {
-            addCriterion("id_card_photo_path >", value, "idCardPhotoPath");
+        public Criteria andMonthlyIncomeGreaterThan(Byte value) {
+            addCriterion("monthly_income >", value, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathGreaterThanOrEqualTo(String value) {
-            addCriterion("id_card_photo_path >=", value, "idCardPhotoPath");
+        public Criteria andMonthlyIncomeGreaterThanOrEqualTo(Byte value) {
+            addCriterion("monthly_income >=", value, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathLessThan(String value) {
-            addCriterion("id_card_photo_path <", value, "idCardPhotoPath");
+        public Criteria andMonthlyIncomeLessThan(Byte value) {
+            addCriterion("monthly_income <", value, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathLessThanOrEqualTo(String value) {
-            addCriterion("id_card_photo_path <=", value, "idCardPhotoPath");
+        public Criteria andMonthlyIncomeLessThanOrEqualTo(Byte value) {
+            addCriterion("monthly_income <=", value, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathLike(String value) {
-            addCriterion("id_card_photo_path like", value, "idCardPhotoPath");
+        public Criteria andMonthlyIncomeIn(List<Byte> values) {
+            addCriterion("monthly_income in", values, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathNotLike(String value) {
-            addCriterion("id_card_photo_path not like", value, "idCardPhotoPath");
+        public Criteria andMonthlyIncomeNotIn(List<Byte> values) {
+            addCriterion("monthly_income not in", values, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathIn(List<String> values) {
-            addCriterion("id_card_photo_path in", values, "idCardPhotoPath");
+        public Criteria andMonthlyIncomeBetween(Byte value1, Byte value2) {
+            addCriterion("monthly_income between", value1, value2, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathNotIn(List<String> values) {
-            addCriterion("id_card_photo_path not in", values, "idCardPhotoPath");
+        public Criteria andMonthlyIncomeNotBetween(Byte value1, Byte value2) {
+            addCriterion("monthly_income not between", value1, value2, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathBetween(String value1, String value2) {
-            addCriterion("id_card_photo_path between", value1, value2, "idCardPhotoPath");
+        public Criteria andEmployeeCardIsNull() {
+            addCriterion("employee_card is null");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathNotBetween(String value1, String value2) {
-            addCriterion("id_card_photo_path not between", value1, value2, "idCardPhotoPath");
+        public Criteria andEmployeeCardIsNotNull() {
+            addCriterion("employee_card is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathIsNull() {
-            addCriterion("face_photo_path is null");
+        public Criteria andEmployeeCardEqualTo(String value) {
+            addCriterion("employee_card =", value, "employeeCard");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathIsNotNull() {
-            addCriterion("face_photo_path is not null");
+        public Criteria andEmployeeCardNotEqualTo(String value) {
+            addCriterion("employee_card <>", value, "employeeCard");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathEqualTo(String value) {
-            addCriterion("face_photo_path =", value, "facePhotoPath");
+        public Criteria andEmployeeCardGreaterThan(String value) {
+            addCriterion("employee_card >", value, "employeeCard");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathNotEqualTo(String value) {
-            addCriterion("face_photo_path <>", value, "facePhotoPath");
+        public Criteria andEmployeeCardGreaterThanOrEqualTo(String value) {
+            addCriterion("employee_card >=", value, "employeeCard");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathGreaterThan(String value) {
-            addCriterion("face_photo_path >", value, "facePhotoPath");
+        public Criteria andEmployeeCardLessThan(String value) {
+            addCriterion("employee_card <", value, "employeeCard");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathGreaterThanOrEqualTo(String value) {
-            addCriterion("face_photo_path >=", value, "facePhotoPath");
+        public Criteria andEmployeeCardLessThanOrEqualTo(String value) {
+            addCriterion("employee_card <=", value, "employeeCard");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathLessThan(String value) {
-            addCriterion("face_photo_path <", value, "facePhotoPath");
+        public Criteria andEmployeeCardLike(String value) {
+            addCriterion("employee_card like", value, "employeeCard");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathLessThanOrEqualTo(String value) {
-            addCriterion("face_photo_path <=", value, "facePhotoPath");
+        public Criteria andEmployeeCardNotLike(String value) {
+            addCriterion("employee_card not like", value, "employeeCard");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathLike(String value) {
-            addCriterion("face_photo_path like", value, "facePhotoPath");
+        public Criteria andEmployeeCardIn(List<String> values) {
+            addCriterion("employee_card in", values, "employeeCard");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathNotLike(String value) {
-            addCriterion("face_photo_path not like", value, "facePhotoPath");
+        public Criteria andEmployeeCardNotIn(List<String> values) {
+            addCriterion("employee_card not in", values, "employeeCard");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathIn(List<String> values) {
-            addCriterion("face_photo_path in", values, "facePhotoPath");
+        public Criteria andEmployeeCardBetween(String value1, String value2) {
+            addCriterion("employee_card between", value1, value2, "employeeCard");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathNotIn(List<String> values) {
-            addCriterion("face_photo_path not in", values, "facePhotoPath");
+        public Criteria andEmployeeCardNotBetween(String value1, String value2) {
+            addCriterion("employee_card not between", value1, value2, "employeeCard");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathBetween(String value1, String value2) {
-            addCriterion("face_photo_path between", value1, value2, "facePhotoPath");
+        public Criteria andWorkplaceIsNull() {
+            addCriterion("workplace is null");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathNotBetween(String value1, String value2) {
-            addCriterion("face_photo_path not between", value1, value2, "facePhotoPath");
+        public Criteria andWorkplaceIsNotNull() {
+            addCriterion("workplace is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkplaceEqualTo(String value) {
+            addCriterion("workplace =", value, "workplace");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkplaceNotEqualTo(String value) {
+            addCriterion("workplace <>", value, "workplace");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkplaceGreaterThan(String value) {
+            addCriterion("workplace >", value, "workplace");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkplaceGreaterThanOrEqualTo(String value) {
+            addCriterion("workplace >=", value, "workplace");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkplaceLessThan(String value) {
+            addCriterion("workplace <", value, "workplace");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkplaceLessThanOrEqualTo(String value) {
+            addCriterion("workplace <=", value, "workplace");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkplaceLike(String value) {
+            addCriterion("workplace like", value, "workplace");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkplaceNotLike(String value) {
+            addCriterion("workplace not like", value, "workplace");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkplaceIn(List<String> values) {
+            addCriterion("workplace in", values, "workplace");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkplaceNotIn(List<String> values) {
+            addCriterion("workplace not in", values, "workplace");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkplaceBetween(String value1, String value2) {
+            addCriterion("workplace between", value1, value2, "workplace");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkplaceNotBetween(String value1, String value2) {
+            addCriterion("workplace not between", value1, value2, "workplace");
             return (Criteria) this;
         }
 
@@ -791,13 +851,13 @@ public class FaceIdcardAuthExample {
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathLikeInsensitive(String value) {
-            addCriterion("upper(id_card_photo_path) like", value.toUpperCase(), "idCardPhotoPath");
+        public Criteria andEmployeeCardLikeInsensitive(String value) {
+            addCriterion("upper(employee_card) like", value.toUpperCase(), "employeeCard");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathLikeInsensitive(String value) {
-            addCriterion("upper(face_photo_path) like", value.toUpperCase(), "facePhotoPath");
+        public Criteria andWorkplaceLikeInsensitive(String value) {
+            addCriterion("upper(workplace) like", value.toUpperCase(), "workplace");
             return (Criteria) this;
         }
 
@@ -808,14 +868,14 @@ public class FaceIdcardAuthExample {
     }
 
     public static class Criteria extends GeneratedCriteria {
-        private FaceIdcardAuthExample example;
+        private ProfessionalExample example;
 
-        protected Criteria(FaceIdcardAuthExample example) {
+        protected Criteria(ProfessionalExample example) {
             super();
             this.example = example;
         }
 
-        public FaceIdcardAuthExample example() {
+        public ProfessionalExample example() {
             return this.example;
         }
 

@@ -75,6 +75,12 @@ public class AliyunService {
         }
     }
 
+    /**
+     * 上传base64编码的字符串至阿里云并返回阿里云地址
+     * @param base64ImgStr base64编码字符串
+     * @param picSuffix 后缀 如：png、jpg
+     * @return 上传后阿里云地址
+     */
     public String uploadBase64PicStr(String base64ImgStr, String picSuffix) {
         try {
             String imgPathAbs = PicUtil.generateImage(base64ImgStr, picSuffix);

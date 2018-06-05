@@ -1,8 +1,8 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.persistence.auto.entity.LoanBillLedger;
-import com.hzed.easyget.persistence.auto.entity.example.LoanBillLedgerExample;
-import com.hzed.easyget.persistence.auto.mapper.LoanBillLedgerMapper;
+import com.hzed.easyget.persistence.auto.entity.BillLedger;
+import com.hzed.easyget.persistence.auto.entity.example.BillLedgerExample;
+import com.hzed.easyget.persistence.auto.mapper.BillLedgerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,16 +18,16 @@ import java.util.List;
 public class LoanBillLedgerRepository {
 
     @Autowired
-    private LoanBillLedgerMapper loanBillLedgerMapper;
+    private BillLedgerMapper loanBillLedgerMapper;
 
-    public LoanBillLedger findLoanBillLedger(Long billId, String type) {
-        LoanBillLedgerExample example = new LoanBillLedgerExample();
+    public BillLedger findLoanBillLedger(Long billId, String type) {
+        BillLedgerExample example = new BillLedgerExample();
         example.createCriteria().andBillIdEqualTo(billId).andRepaymentItemEqualTo((byte)Integer.parseInt(type));
         return loanBillLedgerMapper.selectOneByExample(example);
     }
 
-    public List<LoanBillLedger> findTotalAmount(Long billId) {
-        LoanBillLedgerExample example = new LoanBillLedgerExample();
+    public List<BillLedger> findTotalAmount(Long billId) {
+        BillLedgerExample example = new BillLedgerExample();
         example.createCriteria().andBillIdEqualTo(billId);
         return loanBillLedgerMapper.selectByExample(example);
     }

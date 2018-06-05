@@ -15,10 +15,7 @@ import com.hzed.easyget.infrastructure.repository.LoanBillRepository;
 import com.hzed.easyget.infrastructure.utils.Arith;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
-import com.hzed.easyget.persistence.auto.entity.Bid;
-import com.hzed.easyget.persistence.auto.entity.BidProgress;
-import com.hzed.easyget.persistence.auto.entity.Bill;
-import com.hzed.easyget.persistence.auto.entity.LoanBillLedger;
+import com.hzed.easyget.persistence.auto.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -88,7 +85,7 @@ public class RepayService {
                     if (loanBill.getIsPartialRepayment()) {
 
                         //已还逾期费
-                        LoanBillLedger loanBillLedgerOver = loanBillLedgerRepository.findLoanBillLedger(billId, LoanBillLedgerEnum.OVERDUE.getType());
+                        BillLedger loanBillLedgerOver = loanBillLedgerRepository.findLoanBillLedger(billId, LoanBillLedgerEnum.OVERDUE.getType());
                         BigDecimal realRepayOver = loanBillLedgerOver.getRealRepaymentAmount();
 
                         //最终逾期费
@@ -123,12 +120,12 @@ public class RepayService {
      */
 
     private BigDecimal getRepaymentAmount(Long billId) {
-        List<LoanBillLedger> loanBillLedgerList = loanBillLedgerRepository.findTotalAmount(billId);
+        List<BillLedger> loanBillLedgerList = loanBillLedgerRepository.findTotalAmount(billId);
 
         BigDecimal totalRepaymentAmount = new BigDecimal(1);
         BigDecimal totalRealRepaymentAmount = new BigDecimal(1);
 
-        for (LoanBillLedger loanBillLedger : loanBillLedgerList) {
+        for (BillLedger loanBillLedger : loanBillLedgerList) {
             BigDecimal repaymentAmount = loanBillLedger.getRepaymentAmount();
             BigDecimal realRepaymentAmount = loanBillLedger.getRealRepaymentAmount();
 
@@ -155,7 +152,7 @@ public class RepayService {
         //逾期费率
         BigDecimal twentyPercent = new BigDecimal(TWENTY_PERCENT);
         //本金
-        LoanBillLedger loanBillLedgerCorpus = loanBillLedgerRepository.findLoanBillLedger(billId, LoanBillLedgerEnum.CORPUS.getType());
+        BillLedger loanBillLedgerCorpus = loanBillLedgerRepository.findLoanBillLedger(billId, LoanBillLedgerEnum.CORPUS.getType());
         BigDecimal repaymentCorpus = loanBillLedgerCorpus.getRepaymentAmount();
         BigDecimal realRepaymentCopus = loanBillLedgerCorpus.getRealRepaymentAmount();
         BigDecimal corpus = Arith.sub(repaymentCorpus, realRepaymentCopus);

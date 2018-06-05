@@ -5,6 +5,8 @@ import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.application.enums.StatusEnum;
 import com.hzed.easyget.controller.model.*;
+import com.hzed.easyget.infrastructure.config.aliyun.AliyunService;
+import com.hzed.easyget.infrastructure.exception.NestedException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -40,6 +42,8 @@ public class AuthService {
     private UserAuthStatusRepository authStatusRepository;
     @Autowired
     private ProfessionalRepository professionalRepository;
+    @Autowired
+    private AliyunService aliyunService;
 
     /**
      * 获取用户认证状态
@@ -158,8 +162,21 @@ public class AuthService {
         String realName = request.getRealName();
         String idCardNo = request.getIdCardNo();
         Integer gender = request.getGender();
-        String idCardPhotoPath = request.getIdCardPhotoPath();
-        String facePhotoPath = request.getFacePhotoPath();
+        String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
+        String faceBase64ImgStr = request.getFaceBase64ImgStr();
+        String picSuffix = request.getPicSuffix();
+        //上传至阿里云
+
+        String idCardPhotoPath ;
+        String facePhotoPath ;
+        try {
+            idCardPhotoPath = aliyunService.uploadBase64PicStr(idCardBase64ImgStr,picSuffix);
+            facePhotoPath = aliyunService.uploadBase64PicStr(faceBase64ImgStr,picSuffix);
+        } catch (NestedException e) {
+            //上传base64图片字符串失败
+            log.error(e.getMessage());
+            return;
+        }
         //根据拿到json串组装对象
         User userObj = new User();
         FaceIdCard faceIdCard = new FaceIdCard();

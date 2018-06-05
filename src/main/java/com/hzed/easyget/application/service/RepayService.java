@@ -9,9 +9,9 @@ import com.hzed.easyget.controller.model.RepayResponse;
 import com.hzed.easyget.controller.model.RepaymentResponse;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
-import com.hzed.easyget.infrastructure.repository.LoanBidProgressRepository;
-import com.hzed.easyget.infrastructure.repository.LoanBillLedgerRepository;
-import com.hzed.easyget.infrastructure.repository.LoanBillRepository;
+import com.hzed.easyget.infrastructure.repository.BidProgressRepository;
+import com.hzed.easyget.infrastructure.repository.BillLedgerRepository;
+import com.hzed.easyget.infrastructure.repository.BillRepository;
 import com.hzed.easyget.infrastructure.utils.Arith;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
@@ -34,11 +34,11 @@ public class RepayService {
     @Autowired
     private BidRepository bidRepository;
     @Autowired
-    private LoanBidProgressRepository loanBidProgressRepository;
+    private BidProgressRepository bidProgressRepository;
     @Autowired
-    private LoanBillRepository loanBillRepository;
+    private BillRepository billRepository;
     @Autowired
-    private LoanBillLedgerRepository loanBillLedgerRepository;
+    private BillLedgerRepository billLedgerRepository;
 
     private static final String TWENTY_PERCENT = "0.2";
 
@@ -57,8 +57,8 @@ public class RepayService {
         BigDecimal totalRepayAmount = new BigDecimal(1);
         for (Bid bid : bidList) {
             Long bidId = bid.getId();
-            BidProgress bidProgress = loanBidProgressRepository.findHandleTimeByBidAndType(bidId, ProgressTypeEnum.CLEAR.getCode());
-            Bill loanBill = loanBillRepository.findRepayTimeByBid(bidId);
+            BidProgress bidProgress = bidProgressRepository.findHandleTimeByBidAndType(bidId, ProgressTypeEnum.CLEAR.getCode());
+            Bill loanBill = billRepository.findRepayTimeByBid(bidId);
             Long billId = loanBill.getId();
 
 
@@ -85,7 +85,7 @@ public class RepayService {
                     if (loanBill.getIsPartialRepayment()) {
 
                         //已还逾期费
-                        BillLedger loanBillLedgerOver = loanBillLedgerRepository.findLoanBillLedger(billId, LoanBillLedgerEnum.OVERDUE.getType());
+                        BillLedger loanBillLedgerOver = billLedgerRepository.findLoanBillLedger(billId, LoanBillLedgerEnum.OVERDUE.getType());
                         BigDecimal realRepayOver = loanBillLedgerOver.getRealRepaymentAmount();
 
                         //最终逾期费
@@ -120,7 +120,7 @@ public class RepayService {
      */
 
     private BigDecimal getRepaymentAmount(Long billId) {
-        List<BillLedger> loanBillLedgerList = loanBillLedgerRepository.findTotalAmount(billId);
+        List<BillLedger> loanBillLedgerList = billLedgerRepository.findTotalAmount(billId);
 
         BigDecimal totalRepaymentAmount = new BigDecimal(1);
         BigDecimal totalRealRepaymentAmount = new BigDecimal(1);
@@ -152,7 +152,7 @@ public class RepayService {
         //逾期费率
         BigDecimal twentyPercent = new BigDecimal(TWENTY_PERCENT);
         //本金
-        BillLedger loanBillLedgerCorpus = loanBillLedgerRepository.findLoanBillLedger(billId, LoanBillLedgerEnum.CORPUS.getType());
+        BillLedger loanBillLedgerCorpus = billLedgerRepository.findLoanBillLedger(billId, LoanBillLedgerEnum.CORPUS.getType());
         BigDecimal repaymentCorpus = loanBillLedgerCorpus.getRepaymentAmount();
         BigDecimal realRepaymentCopus = loanBillLedgerCorpus.getRealRepaymentAmount();
         BigDecimal corpus = Arith.sub(repaymentCorpus, realRepaymentCopus);

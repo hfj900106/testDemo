@@ -15,7 +15,7 @@ import java.util.List;
  * @data 2018/6/5
  */
 @Repository
-public class LoanBillLedgerRepository {
+public class BillLedgerRepository {
 
     @Autowired
     private BillLedgerMapper loanBillLedgerMapper;

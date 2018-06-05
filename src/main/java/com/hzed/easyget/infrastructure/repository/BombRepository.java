@@ -1,9 +1,8 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.application.enums.StatusEnum;
-import com.hzed.easyget.persistence.auto.entity.Bomb;
-import com.hzed.easyget.persistence.auto.entity.example.BombExample;
-import com.hzed.easyget.persistence.auto.mapper.BombMapper;
+import com.hzed.easyget.persistence.auto.entity.News;
+import com.hzed.easyget.persistence.auto.entity.example.NewsExample;
+import com.hzed.easyget.persistence.auto.mapper.NewsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,12 +17,12 @@ import java.util.List;
 public class BombRepository {
 
     @Autowired
-    private BombMapper bombMapper;
-    public List<Bomb> getBombList() {
-        BombExample example = new BombExample();
-        example.setOrderByClause("up_time desc");
-        example.createCriteria()
-                .andIsUseEqualTo(StatusEnum.ENABLE.getCode());
-        return bombMapper.selectByExample(example);
+    private NewsMapper newsMapper;
+
+    public List<News> getBombList() {
+        NewsExample example = new NewsExample();
+        example.setOrderByClause(News.Column.upTime.desc());
+        example.createCriteria().andIsUseEqualTo(true);
+        return newsMapper.selectByExample(example);
     }
 }

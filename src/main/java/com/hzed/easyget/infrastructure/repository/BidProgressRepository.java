@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public class LoanBidProgressRepository {
+public class BidProgressRepository {
 
     @Autowired
     private BidProgressMapper loanBidProgressMapper;

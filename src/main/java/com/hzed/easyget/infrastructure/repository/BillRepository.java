@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * @data 2018/6/5
  */
 @Repository
-public class LoanBillRepository {
+public class BillRepository {
 
     @Autowired
     private BillMapper loanBillMapper;

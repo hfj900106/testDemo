@@ -6,9 +6,11 @@ import com.aliyun.oss.model.UploadFileRequest;
 import com.aliyun.oss.model.UploadFileResult;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.NestedException;
+import com.hzed.easyget.infrastructure.utils.PicUtil;
 import lombok.Data;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -51,8 +53,10 @@ public class AliyunService {
      *
      * @param fileName      文件名 abc.json
      * @param localFilePath 本地文件绝对路径
+     * @param isDelete      上传后是否删掉 true-删除
+     * @return 阿里云地址
      */
-    public String upload(String fileName, String localFilePath) {
+    public String upload(String fileName, String localFilePath, boolean isDelete) {
         UploadFileRequest uploadFileRequest = new UploadFileRequest(aliyunProp.getBucketName(), fileName);
         uploadFileRequest.setUploadFile(localFilePath);
         uploadFileRequest.setTaskNum(5);
@@ -60,10 +64,25 @@ public class AliyunService {
         uploadFileRequest.setEnableCheckpoint(true);
         try {
             UploadFileResult uploadResult = ossClient.uploadFile(uploadFileRequest);
-            return uploadResult.getMultipartUploadResult().getLocation();
+            String aliyunPath = uploadResult.getMultipartUploadResult().getLocation();
+            if (isDelete) {
+                new File(localFilePath).deleteOnExit();
+            }
+            return aliyunPath;
         } catch (Throwable throwable) {
             throwable.printStackTrace();
             throw new NestedException(BizCodeEnum.ALIYUN_EXCEPTION, "上传文件失败");
+        }
+    }
+
+    public String uploadBase64PicStr(String base64ImgStr, String picSuffix) {
+        try {
+            String imgPathAbs = PicUtil.generateImage(base64ImgStr, picSuffix);
+            String fileName = PicUtil.getFileName(imgPathAbs);
+            return upload(fileName, imgPathAbs, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new NestedException(BizCodeEnum.ALIYUN_EXCEPTION, "上传base64图片字符串失败");
         }
     }
 

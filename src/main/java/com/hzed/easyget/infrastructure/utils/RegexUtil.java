@@ -3,7 +3,7 @@ package com.hzed.easyget.infrastructure.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class RegexUtils {
+public class RegexUtil {
 
 	/** 只能是数字或字母 */
 	public static boolean isNumbersOrLetters(String str) {

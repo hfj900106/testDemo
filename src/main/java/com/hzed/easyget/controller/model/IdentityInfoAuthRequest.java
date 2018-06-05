@@ -21,8 +21,10 @@ public class IdentityInfoAuthRequest {
     private String idCardNo;
     @NotNull(message = "[gender]不能为空")
     private Integer gender;
-    @NotBlank(message = "[idCardPhotoPath]不能为空")
-    private String idCardPhotoPath;
-    @NotBlank(message = "[facePhotoPath]不能为空")
-    private String facePhotoPath;
+    @NotBlank(message = "[idCardBase64ImgStr]不能为空")
+    private String idCardBase64ImgStr;
+    @NotBlank(message = "[faceBase64ImgStr]不能为空")
+    private String faceBase64ImgStr;
+    @NotBlank(message = "[picSuffix]不能为空")
+    private String picSuffix;
 }

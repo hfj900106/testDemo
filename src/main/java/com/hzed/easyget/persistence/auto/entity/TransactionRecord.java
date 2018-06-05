@@ -1,10 +1,12 @@
 package com.hzed.easyget.persistence.auto.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class FaceIdcardAuth implements Serializable {
+public class TransactionRecord implements Serializable {
     /**
+     * 主键
      */
     private Long id;
 
@@ -14,19 +16,24 @@ public class FaceIdcardAuth implements Serializable {
     private Long userId;
 
     /**
-     * 用户认证id
+     * 标id
      */
-    private Long userStatusId;
+    private Long bidId;
 
     /**
-     * 身份证图片路径
+     * 交易类型 1-入账 2-出账 3-其他
      */
-    private String idCardPhotoPath;
+    private Byte type;
 
     /**
-     * 活体认证路径
+     * 金额
      */
-    private String facePhotoPath;
+    private BigDecimal acount;
+
+    /**
+     * 是否显示 1-是 0-否
+     */
+    private Boolean isDisplay;
 
     /**
      */
@@ -45,6 +52,7 @@ public class FaceIdcardAuth implements Serializable {
     private LocalDateTime updateTime;
 
     /**
+     * 交易备注
      */
     private String remark;
 
@@ -66,28 +74,36 @@ public class FaceIdcardAuth implements Serializable {
         this.userId = userId;
     }
 
-    public Long getUserStatusId() {
-        return userStatusId;
+    public Long getBidId() {
+        return bidId;
     }
 
-    public void setUserStatusId(Long userStatusId) {
-        this.userStatusId = userStatusId;
+    public void setBidId(Long bidId) {
+        this.bidId = bidId;
     }
 
-    public String getIdCardPhotoPath() {
-        return idCardPhotoPath;
+    public Byte getType() {
+        return type;
     }
 
-    public void setIdCardPhotoPath(String idCardPhotoPath) {
-        this.idCardPhotoPath = idCardPhotoPath == null ? null : idCardPhotoPath.trim();
+    public void setType(Byte type) {
+        this.type = type;
     }
 
-    public String getFacePhotoPath() {
-        return facePhotoPath;
+    public BigDecimal getAcount() {
+        return acount;
     }
 
-    public void setFacePhotoPath(String facePhotoPath) {
-        this.facePhotoPath = facePhotoPath == null ? null : facePhotoPath.trim();
+    public void setAcount(BigDecimal acount) {
+        this.acount = acount;
+    }
+
+    public Boolean getIsDisplay() {
+        return isDisplay;
+    }
+
+    public void setIsDisplay(Boolean isDisplay) {
+        this.isDisplay = isDisplay;
     }
 
     public Long getCreateBy() {
@@ -138,9 +154,10 @@ public class FaceIdcardAuth implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
-        sb.append(", userStatusId=").append(userStatusId);
-        sb.append(", idCardPhotoPath=").append(idCardPhotoPath);
-        sb.append(", facePhotoPath=").append(facePhotoPath);
+        sb.append(", bidId=").append(bidId);
+        sb.append(", type=").append(type);
+        sb.append(", acount=").append(acount);
+        sb.append(", isDisplay=").append(isDisplay);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -151,15 +168,15 @@ public class FaceIdcardAuth implements Serializable {
         return sb.toString();
     }
 
-    public static FaceIdcardAuth.Builder builder() {
-        return new FaceIdcardAuth.Builder();
+    public static TransactionRecord.Builder builder() {
+        return new TransactionRecord.Builder();
     }
 
     public static class Builder {
-        private FaceIdcardAuth obj;
+        private TransactionRecord obj;
 
         public Builder() {
-            this.obj = new FaceIdcardAuth();
+            this.obj = new TransactionRecord();
         }
 
         public Builder id(Long id) {
@@ -172,18 +189,23 @@ public class FaceIdcardAuth implements Serializable {
             return this;
         }
 
-        public Builder userStatusId(Long userStatusId) {
-            obj.setUserStatusId(userStatusId);
+        public Builder bidId(Long bidId) {
+            obj.setBidId(bidId);
             return this;
         }
 
-        public Builder idCardPhotoPath(String idCardPhotoPath) {
-            obj.setIdCardPhotoPath(idCardPhotoPath);
+        public Builder type(Byte type) {
+            obj.setType(type);
             return this;
         }
 
-        public Builder facePhotoPath(String facePhotoPath) {
-            obj.setFacePhotoPath(facePhotoPath);
+        public Builder acount(BigDecimal acount) {
+            obj.setAcount(acount);
+            return this;
+        }
+
+        public Builder isDisplay(Boolean isDisplay) {
+            obj.setIsDisplay(isDisplay);
             return this;
         }
 
@@ -212,7 +234,7 @@ public class FaceIdcardAuth implements Serializable {
             return this;
         }
 
-        public FaceIdcardAuth build() {
+        public TransactionRecord build() {
             return this.obj;
         }
     }
@@ -220,9 +242,10 @@ public class FaceIdcardAuth implements Serializable {
     public enum Column {
         id("id"),
         userId("user_id"),
-        userStatusId("user_status_id"),
-        idCardPhotoPath("id_card_photo_path"),
-        facePhotoPath("face_photo_path"),
+        bidId("bid_id"),
+        type("type"),
+        acount("acount"),
+        isDisplay("is_display"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

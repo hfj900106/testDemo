@@ -2,6 +2,8 @@ package com.hzed.easyget.infrastructure.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -102,7 +104,19 @@ public final class DateUtil {
         }
         return localDateTime.format(formatter);
     }
-
+    /**
+     * 把字符串转化成LocalDateTime
+     */
+    public static Date strToDate(String dateString){
+        if(null == dateString) {
+            return new Date();
+        }
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateString);
+        } catch (ParseException e) {
+            return new Date();
+        }
+    }
     /**
      * 获取两个日期的月份数
      */

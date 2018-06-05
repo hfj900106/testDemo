@@ -3,16 +3,36 @@ package com.hzed.easyget.persistence.auto.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class AuthContent implements Serializable {
+public class Professional implements Serializable {
     /**
      * 主键
      */
     private Long id;
 
     /**
-     * 认证状态id
+     * 用户id
      */
-    private Long userAuthStatusId;
+    private Long userId;
+
+    /**
+     * 工作类型，1  会计/财务官员，2  客户服务， 3  工程师，4  执行， 5  一般管理， 6  信息技术
+     */
+    private Byte jobType;
+
+    /**
+     * 每月收入，1 低于200万，2  200-400万，3  400-800万，4  800以上
+     */
+    private Byte monthlyIncome;
+
+    /**
+     * 工作证照片保存路径
+     */
+    private String employeeCard;
+
+    /**
+     * 工作场所照片保存路径
+     */
+    private String workplace;
 
     /**
      */
@@ -34,11 +54,6 @@ public class AuthContent implements Serializable {
      */
     private String remark;
 
-    /**
-     * 认证返回内容
-     */
-    private String content;
-
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -49,12 +64,44 @@ public class AuthContent implements Serializable {
         this.id = id;
     }
 
-    public Long getUserAuthStatusId() {
-        return userAuthStatusId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUserAuthStatusId(Long userAuthStatusId) {
-        this.userAuthStatusId = userAuthStatusId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Byte getJobType() {
+        return jobType;
+    }
+
+    public void setJobType(Byte jobType) {
+        this.jobType = jobType;
+    }
+
+    public Byte getMonthlyIncome() {
+        return monthlyIncome;
+    }
+
+    public void setMonthlyIncome(Byte monthlyIncome) {
+        this.monthlyIncome = monthlyIncome;
+    }
+
+    public String getEmployeeCard() {
+        return employeeCard;
+    }
+
+    public void setEmployeeCard(String employeeCard) {
+        this.employeeCard = employeeCard == null ? null : employeeCard.trim();
+    }
+
+    public String getWorkplace() {
+        return workplace;
+    }
+
+    public void setWorkplace(String workplace) {
+        this.workplace = workplace == null ? null : workplace.trim();
     }
 
     public Long getCreateBy() {
@@ -97,14 +144,6 @@ public class AuthContent implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -112,27 +151,30 @@ public class AuthContent implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", userAuthStatusId=").append(userAuthStatusId);
+        sb.append(", userId=").append(userId);
+        sb.append(", jobType=").append(jobType);
+        sb.append(", monthlyIncome=").append(monthlyIncome);
+        sb.append(", employeeCard=").append(employeeCard);
+        sb.append(", workplace=").append(workplace);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", remark=").append(remark);
-        sb.append(", content=").append(content);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
     }
 
-    public static AuthContent.Builder builder() {
-        return new AuthContent.Builder();
+    public static Professional.Builder builder() {
+        return new Professional.Builder();
     }
 
     public static class Builder {
-        private AuthContent obj;
+        private Professional obj;
 
         public Builder() {
-            this.obj = new AuthContent();
+            this.obj = new Professional();
         }
 
         public Builder id(Long id) {
@@ -140,8 +182,28 @@ public class AuthContent implements Serializable {
             return this;
         }
 
-        public Builder userAuthStatusId(Long userAuthStatusId) {
-            obj.setUserAuthStatusId(userAuthStatusId);
+        public Builder userId(Long userId) {
+            obj.setUserId(userId);
+            return this;
+        }
+
+        public Builder jobType(Byte jobType) {
+            obj.setJobType(jobType);
+            return this;
+        }
+
+        public Builder monthlyIncome(Byte monthlyIncome) {
+            obj.setMonthlyIncome(monthlyIncome);
+            return this;
+        }
+
+        public Builder employeeCard(String employeeCard) {
+            obj.setEmployeeCard(employeeCard);
+            return this;
+        }
+
+        public Builder workplace(String workplace) {
+            obj.setWorkplace(workplace);
             return this;
         }
 
@@ -170,25 +232,23 @@ public class AuthContent implements Serializable {
             return this;
         }
 
-        public Builder content(String content) {
-            obj.setContent(content);
-            return this;
-        }
-
-        public AuthContent build() {
+        public Professional build() {
             return this.obj;
         }
     }
 
     public enum Column {
         id("id"),
-        userAuthStatusId("user_auth_status_id"),
+        userId("user_id"),
+        jobType("job_type"),
+        monthlyIncome("monthly_income"),
+        employeeCard("employee_card"),
+        workplace("workplace"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),
         updateTime("update_time"),
-        remark("remark"),
-        content("content");
+        remark("remark");
 
         private final String column;
 

@@ -1,10 +1,11 @@
 package com.hzed.easyget.persistence.auto.entity.example;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FaceIdcardAuthExample {
+public class TransactionRecordExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,7 +16,7 @@ public class FaceIdcardAuthExample {
 
     protected Integer rows;
 
-    public FaceIdcardAuthExample() {
+    public TransactionRecordExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -86,29 +87,29 @@ public class FaceIdcardAuthExample {
         return this.rows;
     }
 
-    public FaceIdcardAuthExample limit(Integer rows) {
+    public TransactionRecordExample limit(Integer rows) {
         this.rows = rows;
         return this;
     }
 
-    public FaceIdcardAuthExample limit(Integer offset, Integer rows) {
+    public TransactionRecordExample limit(Integer offset, Integer rows) {
         this.offset = offset;
         this.rows = rows;
         return this;
     }
 
-    public FaceIdcardAuthExample page(Integer page, Integer pageSize) {
+    public TransactionRecordExample page(Integer page, Integer pageSize) {
         this.offset = page * pageSize;
         this.rows = pageSize;
         return this;
     }
 
-    public FaceIdcardAuthExample orderBy(String orderByClause) {
+    public TransactionRecordExample orderBy(String orderByClause) {
         this.setOrderByClause(orderByClause);
         return this;
     }
 
-    public FaceIdcardAuthExample orderBy(String ... orderByClauses) {
+    public TransactionRecordExample orderBy(String ... orderByClauses) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < orderByClauses.length; i++) {
             sb.append(orderByClauses[i]);
@@ -281,203 +282,243 @@ public class FaceIdcardAuthExample {
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdIsNull() {
-            addCriterion("user_status_id is null");
+        public Criteria andBidIdIsNull() {
+            addCriterion("bid_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdIsNotNull() {
-            addCriterion("user_status_id is not null");
+        public Criteria andBidIdIsNotNull() {
+            addCriterion("bid_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdEqualTo(Long value) {
-            addCriterion("user_status_id =", value, "userStatusId");
+        public Criteria andBidIdEqualTo(Long value) {
+            addCriterion("bid_id =", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdNotEqualTo(Long value) {
-            addCriterion("user_status_id <>", value, "userStatusId");
+        public Criteria andBidIdNotEqualTo(Long value) {
+            addCriterion("bid_id <>", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdGreaterThan(Long value) {
-            addCriterion("user_status_id >", value, "userStatusId");
+        public Criteria andBidIdGreaterThan(Long value) {
+            addCriterion("bid_id >", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("user_status_id >=", value, "userStatusId");
+        public Criteria andBidIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("bid_id >=", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdLessThan(Long value) {
-            addCriterion("user_status_id <", value, "userStatusId");
+        public Criteria andBidIdLessThan(Long value) {
+            addCriterion("bid_id <", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdLessThanOrEqualTo(Long value) {
-            addCriterion("user_status_id <=", value, "userStatusId");
+        public Criteria andBidIdLessThanOrEqualTo(Long value) {
+            addCriterion("bid_id <=", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdIn(List<Long> values) {
-            addCriterion("user_status_id in", values, "userStatusId");
+        public Criteria andBidIdIn(List<Long> values) {
+            addCriterion("bid_id in", values, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdNotIn(List<Long> values) {
-            addCriterion("user_status_id not in", values, "userStatusId");
+        public Criteria andBidIdNotIn(List<Long> values) {
+            addCriterion("bid_id not in", values, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdBetween(Long value1, Long value2) {
-            addCriterion("user_status_id between", value1, value2, "userStatusId");
+        public Criteria andBidIdBetween(Long value1, Long value2) {
+            addCriterion("bid_id between", value1, value2, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andUserStatusIdNotBetween(Long value1, Long value2) {
-            addCriterion("user_status_id not between", value1, value2, "userStatusId");
+        public Criteria andBidIdNotBetween(Long value1, Long value2) {
+            addCriterion("bid_id not between", value1, value2, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathIsNull() {
-            addCriterion("id_card_photo_path is null");
+        public Criteria andTypeIsNull() {
+            addCriterion("type is null");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathIsNotNull() {
-            addCriterion("id_card_photo_path is not null");
+        public Criteria andTypeIsNotNull() {
+            addCriterion("type is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathEqualTo(String value) {
-            addCriterion("id_card_photo_path =", value, "idCardPhotoPath");
+        public Criteria andTypeEqualTo(Byte value) {
+            addCriterion("type =", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathNotEqualTo(String value) {
-            addCriterion("id_card_photo_path <>", value, "idCardPhotoPath");
+        public Criteria andTypeNotEqualTo(Byte value) {
+            addCriterion("type <>", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathGreaterThan(String value) {
-            addCriterion("id_card_photo_path >", value, "idCardPhotoPath");
+        public Criteria andTypeGreaterThan(Byte value) {
+            addCriterion("type >", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathGreaterThanOrEqualTo(String value) {
-            addCriterion("id_card_photo_path >=", value, "idCardPhotoPath");
+        public Criteria andTypeGreaterThanOrEqualTo(Byte value) {
+            addCriterion("type >=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathLessThan(String value) {
-            addCriterion("id_card_photo_path <", value, "idCardPhotoPath");
+        public Criteria andTypeLessThan(Byte value) {
+            addCriterion("type <", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathLessThanOrEqualTo(String value) {
-            addCriterion("id_card_photo_path <=", value, "idCardPhotoPath");
+        public Criteria andTypeLessThanOrEqualTo(Byte value) {
+            addCriterion("type <=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathLike(String value) {
-            addCriterion("id_card_photo_path like", value, "idCardPhotoPath");
+        public Criteria andTypeIn(List<Byte> values) {
+            addCriterion("type in", values, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathNotLike(String value) {
-            addCriterion("id_card_photo_path not like", value, "idCardPhotoPath");
+        public Criteria andTypeNotIn(List<Byte> values) {
+            addCriterion("type not in", values, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathIn(List<String> values) {
-            addCriterion("id_card_photo_path in", values, "idCardPhotoPath");
+        public Criteria andTypeBetween(Byte value1, Byte value2) {
+            addCriterion("type between", value1, value2, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathNotIn(List<String> values) {
-            addCriterion("id_card_photo_path not in", values, "idCardPhotoPath");
+        public Criteria andTypeNotBetween(Byte value1, Byte value2) {
+            addCriterion("type not between", value1, value2, "type");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathBetween(String value1, String value2) {
-            addCriterion("id_card_photo_path between", value1, value2, "idCardPhotoPath");
+        public Criteria andAcountIsNull() {
+            addCriterion("acount is null");
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathNotBetween(String value1, String value2) {
-            addCriterion("id_card_photo_path not between", value1, value2, "idCardPhotoPath");
+        public Criteria andAcountIsNotNull() {
+            addCriterion("acount is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathIsNull() {
-            addCriterion("face_photo_path is null");
+        public Criteria andAcountEqualTo(BigDecimal value) {
+            addCriterion("acount =", value, "acount");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathIsNotNull() {
-            addCriterion("face_photo_path is not null");
+        public Criteria andAcountNotEqualTo(BigDecimal value) {
+            addCriterion("acount <>", value, "acount");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathEqualTo(String value) {
-            addCriterion("face_photo_path =", value, "facePhotoPath");
+        public Criteria andAcountGreaterThan(BigDecimal value) {
+            addCriterion("acount >", value, "acount");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathNotEqualTo(String value) {
-            addCriterion("face_photo_path <>", value, "facePhotoPath");
+        public Criteria andAcountGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("acount >=", value, "acount");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathGreaterThan(String value) {
-            addCriterion("face_photo_path >", value, "facePhotoPath");
+        public Criteria andAcountLessThan(BigDecimal value) {
+            addCriterion("acount <", value, "acount");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathGreaterThanOrEqualTo(String value) {
-            addCriterion("face_photo_path >=", value, "facePhotoPath");
+        public Criteria andAcountLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("acount <=", value, "acount");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathLessThan(String value) {
-            addCriterion("face_photo_path <", value, "facePhotoPath");
+        public Criteria andAcountIn(List<BigDecimal> values) {
+            addCriterion("acount in", values, "acount");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathLessThanOrEqualTo(String value) {
-            addCriterion("face_photo_path <=", value, "facePhotoPath");
+        public Criteria andAcountNotIn(List<BigDecimal> values) {
+            addCriterion("acount not in", values, "acount");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathLike(String value) {
-            addCriterion("face_photo_path like", value, "facePhotoPath");
+        public Criteria andAcountBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("acount between", value1, value2, "acount");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathNotLike(String value) {
-            addCriterion("face_photo_path not like", value, "facePhotoPath");
+        public Criteria andAcountNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("acount not between", value1, value2, "acount");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathIn(List<String> values) {
-            addCriterion("face_photo_path in", values, "facePhotoPath");
+        public Criteria andIsDisplayIsNull() {
+            addCriterion("is_display is null");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathNotIn(List<String> values) {
-            addCriterion("face_photo_path not in", values, "facePhotoPath");
+        public Criteria andIsDisplayIsNotNull() {
+            addCriterion("is_display is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathBetween(String value1, String value2) {
-            addCriterion("face_photo_path between", value1, value2, "facePhotoPath");
+        public Criteria andIsDisplayEqualTo(Boolean value) {
+            addCriterion("is_display =", value, "isDisplay");
             return (Criteria) this;
         }
 
-        public Criteria andFacePhotoPathNotBetween(String value1, String value2) {
-            addCriterion("face_photo_path not between", value1, value2, "facePhotoPath");
+        public Criteria andIsDisplayNotEqualTo(Boolean value) {
+            addCriterion("is_display <>", value, "isDisplay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDisplayGreaterThan(Boolean value) {
+            addCriterion("is_display >", value, "isDisplay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDisplayGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_display >=", value, "isDisplay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDisplayLessThan(Boolean value) {
+            addCriterion("is_display <", value, "isDisplay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDisplayLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_display <=", value, "isDisplay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDisplayIn(List<Boolean> values) {
+            addCriterion("is_display in", values, "isDisplay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDisplayNotIn(List<Boolean> values) {
+            addCriterion("is_display not in", values, "isDisplay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDisplayBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_display between", value1, value2, "isDisplay");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDisplayNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_display not between", value1, value2, "isDisplay");
             return (Criteria) this;
         }
 
@@ -791,16 +832,6 @@ public class FaceIdcardAuthExample {
             return (Criteria) this;
         }
 
-        public Criteria andIdCardPhotoPathLikeInsensitive(String value) {
-            addCriterion("upper(id_card_photo_path) like", value.toUpperCase(), "idCardPhotoPath");
-            return (Criteria) this;
-        }
-
-        public Criteria andFacePhotoPathLikeInsensitive(String value) {
-            addCriterion("upper(face_photo_path) like", value.toUpperCase(), "facePhotoPath");
-            return (Criteria) this;
-        }
-
         public Criteria andRemarkLikeInsensitive(String value) {
             addCriterion("upper(remark) like", value.toUpperCase(), "remark");
             return (Criteria) this;
@@ -808,14 +839,14 @@ public class FaceIdcardAuthExample {
     }
 
     public static class Criteria extends GeneratedCriteria {
-        private FaceIdcardAuthExample example;
+        private TransactionRecordExample example;
 
-        protected Criteria(FaceIdcardAuthExample example) {
+        protected Criteria(TransactionRecordExample example) {
             super();
             this.example = example;
         }
 
-        public FaceIdcardAuthExample example() {
+        public TransactionRecordExample example() {
             return this.example;
         }
 

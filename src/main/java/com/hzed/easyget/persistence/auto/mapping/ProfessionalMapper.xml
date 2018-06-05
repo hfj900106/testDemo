@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hzed.easyget.persistence.auto.mapper.FaceIdcardAuthMapper">
-  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.FaceIdcardAuth">
+<mapper namespace="com.hzed.easyget.persistence.auto.mapper.ProfessionalMapper">
+  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.Professional">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="user_status_id" jdbcType="BIGINT" property="userStatusId" />
-    <result column="id_card_photo_path" jdbcType="VARCHAR" property="idCardPhotoPath" />
-    <result column="face_photo_path" jdbcType="VARCHAR" property="facePhotoPath" />
+    <result column="job_type" jdbcType="TINYINT" property="jobType" />
+    <result column="monthly_income" jdbcType="TINYINT" property="monthlyIncome" />
+    <result column="employee_card" jdbcType="VARCHAR" property="employeeCard" />
+    <result column="workplace" jdbcType="VARCHAR" property="workplace" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -72,16 +73,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, user_status_id, id_card_photo_path, face_photo_path, create_by, create_time, 
+    id, user_id, job_type, monthly_income, employee_card, workplace, create_by, create_time, 
     update_by, update_time, remark
   </sql>
-  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.FaceIdcardAuthExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProfessionalExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_face_idcard_auth
+    from t_loan_professional
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -105,7 +106,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_face_idcard_auth
+    from t_loan_professional
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -116,7 +117,7 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from t_face_idcard_auth
+    from t_loan_professional
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -124,31 +125,31 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_face_idcard_auth
+    from t_loan_professional
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_face_idcard_auth
+    delete from t_loan_professional
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.FaceIdcardAuthExample">
-    delete from t_face_idcard_auth
+  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProfessionalExample">
+    delete from t_loan_professional
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.FaceIdcardAuth">
-    insert into t_face_idcard_auth (id, user_id, user_status_id, 
-      id_card_photo_path, face_photo_path, create_by, 
-      create_time, update_by, update_time, 
-      remark)
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{userStatusId,jdbcType=BIGINT}, 
-      #{idCardPhotoPath,jdbcType=VARCHAR}, #{facePhotoPath,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{remark,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.Professional">
+    insert into t_loan_professional (id, user_id, job_type, 
+      monthly_income, employee_card, workplace, 
+      create_by, create_time, update_by, 
+      update_time, remark)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{jobType,jdbcType=TINYINT}, 
+      #{monthlyIncome,jdbcType=TINYINT}, #{employeeCard,jdbcType=VARCHAR}, #{workplace,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.FaceIdcardAuth">
-    insert into t_face_idcard_auth
+  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.Professional">
+    insert into t_loan_professional
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -156,14 +157,17 @@
       <if test="userId != null">
         user_id,
       </if>
-      <if test="userStatusId != null">
-        user_status_id,
+      <if test="jobType != null">
+        job_type,
       </if>
-      <if test="idCardPhotoPath != null">
-        id_card_photo_path,
+      <if test="monthlyIncome != null">
+        monthly_income,
       </if>
-      <if test="facePhotoPath != null">
-        face_photo_path,
+      <if test="employeeCard != null">
+        employee_card,
+      </if>
+      <if test="workplace != null">
+        workplace,
       </if>
       <if test="createBy != null">
         create_by,
@@ -188,14 +192,17 @@
       <if test="userId != null">
         #{userId,jdbcType=BIGINT},
       </if>
-      <if test="userStatusId != null">
-        #{userStatusId,jdbcType=BIGINT},
+      <if test="jobType != null">
+        #{jobType,jdbcType=TINYINT},
       </if>
-      <if test="idCardPhotoPath != null">
-        #{idCardPhotoPath,jdbcType=VARCHAR},
+      <if test="monthlyIncome != null">
+        #{monthlyIncome,jdbcType=TINYINT},
       </if>
-      <if test="facePhotoPath != null">
-        #{facePhotoPath,jdbcType=VARCHAR},
+      <if test="employeeCard != null">
+        #{employeeCard,jdbcType=VARCHAR},
+      </if>
+      <if test="workplace != null">
+        #{workplace,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -214,14 +221,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.FaceIdcardAuthExample" resultType="java.lang.Long">
-    select count(*) from t_face_idcard_auth
+  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProfessionalExample" resultType="java.lang.Long">
+    select count(*) from t_loan_professional
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_face_idcard_auth
+    update t_loan_professional
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -229,14 +236,17 @@
       <if test="record.userId != null">
         user_id = #{record.userId,jdbcType=BIGINT},
       </if>
-      <if test="record.userStatusId != null">
-        user_status_id = #{record.userStatusId,jdbcType=BIGINT},
+      <if test="record.jobType != null">
+        job_type = #{record.jobType,jdbcType=TINYINT},
       </if>
-      <if test="record.idCardPhotoPath != null">
-        id_card_photo_path = #{record.idCardPhotoPath,jdbcType=VARCHAR},
+      <if test="record.monthlyIncome != null">
+        monthly_income = #{record.monthlyIncome,jdbcType=TINYINT},
       </if>
-      <if test="record.facePhotoPath != null">
-        face_photo_path = #{record.facePhotoPath,jdbcType=VARCHAR},
+      <if test="record.employeeCard != null">
+        employee_card = #{record.employeeCard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workplace != null">
+        workplace = #{record.workplace,jdbcType=VARCHAR},
       </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
@@ -259,12 +269,13 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_face_idcard_auth
+    update t_loan_professional
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
-      user_status_id = #{record.userStatusId,jdbcType=BIGINT},
-      id_card_photo_path = #{record.idCardPhotoPath,jdbcType=VARCHAR},
-      face_photo_path = #{record.facePhotoPath,jdbcType=VARCHAR},
+      job_type = #{record.jobType,jdbcType=TINYINT},
+      monthly_income = #{record.monthlyIncome,jdbcType=TINYINT},
+      employee_card = #{record.employeeCard,jdbcType=VARCHAR},
+      workplace = #{record.workplace,jdbcType=VARCHAR},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -274,20 +285,23 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.FaceIdcardAuth">
-    update t_face_idcard_auth
+  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.Professional">
+    update t_loan_professional
     <set>
       <if test="userId != null">
         user_id = #{userId,jdbcType=BIGINT},
       </if>
-      <if test="userStatusId != null">
-        user_status_id = #{userStatusId,jdbcType=BIGINT},
+      <if test="jobType != null">
+        job_type = #{jobType,jdbcType=TINYINT},
       </if>
-      <if test="idCardPhotoPath != null">
-        id_card_photo_path = #{idCardPhotoPath,jdbcType=VARCHAR},
+      <if test="monthlyIncome != null">
+        monthly_income = #{monthlyIncome,jdbcType=TINYINT},
       </if>
-      <if test="facePhotoPath != null">
-        face_photo_path = #{facePhotoPath,jdbcType=VARCHAR},
+      <if test="employeeCard != null">
+        employee_card = #{employeeCard,jdbcType=VARCHAR},
+      </if>
+      <if test="workplace != null">
+        workplace = #{workplace,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
@@ -307,12 +321,13 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.FaceIdcardAuth">
-    update t_face_idcard_auth
+  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.Professional">
+    update t_loan_professional
     set user_id = #{userId,jdbcType=BIGINT},
-      user_status_id = #{userStatusId,jdbcType=BIGINT},
-      id_card_photo_path = #{idCardPhotoPath,jdbcType=VARCHAR},
-      face_photo_path = #{facePhotoPath,jdbcType=VARCHAR},
+      job_type = #{jobType,jdbcType=TINYINT},
+      monthly_income = #{monthlyIncome,jdbcType=TINYINT},
+      employee_card = #{employeeCard,jdbcType=VARCHAR},
+      workplace = #{workplace,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
@@ -320,10 +335,10 @@
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.FaceIdcardAuthExample" resultMap="BaseResultMap">
+  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProfessionalExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_face_idcard_auth
+    from t_loan_professional
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -337,7 +352,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_face_idcard_auth
+    from t_loan_professional
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -347,19 +362,20 @@
     limit 1
   </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_face_idcard_auth
-    (id, user_id, user_status_id, id_card_photo_path, face_photo_path, create_by, create_time, 
+    insert into t_loan_professional
+    (id, user_id, job_type, monthly_income, employee_card, workplace, create_by, create_time, 
       update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.userStatusId,jdbcType=BIGINT}, 
-        #{item.idCardPhotoPath,jdbcType=VARCHAR}, #{item.facePhotoPath,jdbcType=VARCHAR}, 
-        #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
-        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
+      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.jobType,jdbcType=TINYINT}, 
+        #{item.monthlyIncome,jdbcType=TINYINT}, #{item.employeeCard,jdbcType=VARCHAR}, 
+        #{item.workplace,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_face_idcard_auth (
+    insert into t_loan_professional (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
@@ -374,14 +390,17 @@
         <if test="'user_id' == column.value">
           #{item.userId,jdbcType=BIGINT}
         </if>
-        <if test="'user_status_id' == column.value">
-          #{item.userStatusId,jdbcType=BIGINT}
+        <if test="'job_type' == column.value">
+          #{item.jobType,jdbcType=TINYINT}
         </if>
-        <if test="'id_card_photo_path' == column.value">
-          #{item.idCardPhotoPath,jdbcType=VARCHAR}
+        <if test="'monthly_income' == column.value">
+          #{item.monthlyIncome,jdbcType=TINYINT}
         </if>
-        <if test="'face_photo_path' == column.value">
-          #{item.facePhotoPath,jdbcType=VARCHAR}
+        <if test="'employee_card' == column.value">
+          #{item.employeeCard,jdbcType=VARCHAR}
+        </if>
+        <if test="'workplace' == column.value">
+          #{item.workplace,jdbcType=VARCHAR}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

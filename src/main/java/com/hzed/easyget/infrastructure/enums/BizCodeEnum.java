@@ -34,7 +34,7 @@ public enum BizCodeEnum {
     DICT_NOTEXISTS("1010", "字典不存在"),
     NO_USEFUL_PRODUCT("1011", "无可用产品"),
     TOKEN_EXPIRE("1012", "用户登录信息失效"),
-
+    ILLEGAL_PICTURECODE("1013", "图片验证码错误"),
 
 
 

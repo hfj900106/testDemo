@@ -15,6 +15,7 @@ public class ComConsts {
     public static final String VERSION = "version";
     public static final String IMEI = "imei";
     public static final int EXPIRE_DAYS = 7;
+    public static final int APP_PAGESIZE = 18;
 
 
 

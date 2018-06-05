@@ -81,7 +81,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_user_auth_status
+    from t_loan_user_auth_status
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -105,7 +105,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_user_auth_status
+    from t_loan_user_auth_status
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -116,7 +116,7 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from t_user_auth_status
+    from t_loan_user_auth_status
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -124,21 +124,21 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_user_auth_status
+    from t_loan_user_auth_status
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_user_auth_status
+    delete from t_loan_user_auth_status
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserAuthStatusExample">
-    delete from t_user_auth_status
+    delete from t_loan_user_auth_status
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserAuthStatus">
-    insert into t_user_auth_status (id, user_id, auth_code, 
+    insert into t_loan_user_auth_status (id, user_id, auth_code, 
       auth_status, expire_time, create_by, 
       create_time, update_by, update_time, 
       remark)
@@ -148,7 +148,7 @@
       #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserAuthStatus">
-    insert into t_user_auth_status
+    insert into t_loan_user_auth_status
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -215,13 +215,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserAuthStatusExample" resultType="java.lang.Long">
-    select count(*) from t_user_auth_status
+    select count(*) from t_loan_user_auth_status
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_user_auth_status
+    update t_loan_user_auth_status
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -259,7 +259,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_user_auth_status
+    update t_loan_user_auth_status
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
       auth_code = #{record.authCode,jdbcType=CHAR},
@@ -275,7 +275,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserAuthStatus">
-    update t_user_auth_status
+    update t_loan_user_auth_status
     <set>
       <if test="userId != null">
         user_id = #{userId,jdbcType=BIGINT},
@@ -308,7 +308,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserAuthStatus">
-    update t_user_auth_status
+    update t_loan_user_auth_status
     set user_id = #{userId,jdbcType=BIGINT},
       auth_code = #{authCode,jdbcType=CHAR},
       auth_status = #{authStatus,jdbcType=INTEGER},
@@ -323,7 +323,7 @@
   <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserAuthStatusExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_user_auth_status
+    from t_loan_user_auth_status
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -337,7 +337,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_user_auth_status
+    from t_loan_user_auth_status
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -347,7 +347,7 @@
     limit 1
   </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_user_auth_status
+    insert into t_loan_user_auth_status
     (id, user_id, auth_code, auth_status, expire_time, create_by, create_time, update_by, 
       update_time, remark)
     values
@@ -359,7 +359,7 @@
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_user_auth_status (
+    insert into t_loan_user_auth_status (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>

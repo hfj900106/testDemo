@@ -361,133 +361,73 @@ public class ProductExample {
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeIsNull() {
-            addCriterion("loan_amount_type is null");
+        public Criteria andLoanAmountArrIsNull() {
+            addCriterion("loan_amount_arr is null");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeIsNotNull() {
-            addCriterion("loan_amount_type is not null");
+        public Criteria andLoanAmountArrIsNotNull() {
+            addCriterion("loan_amount_arr is not null");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeEqualTo(Byte value) {
-            addCriterion("loan_amount_type =", value, "loanAmountType");
+        public Criteria andLoanAmountArrEqualTo(String value) {
+            addCriterion("loan_amount_arr =", value, "loanAmountArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeNotEqualTo(Byte value) {
-            addCriterion("loan_amount_type <>", value, "loanAmountType");
+        public Criteria andLoanAmountArrNotEqualTo(String value) {
+            addCriterion("loan_amount_arr <>", value, "loanAmountArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeGreaterThan(Byte value) {
-            addCriterion("loan_amount_type >", value, "loanAmountType");
+        public Criteria andLoanAmountArrGreaterThan(String value) {
+            addCriterion("loan_amount_arr >", value, "loanAmountArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeGreaterThanOrEqualTo(Byte value) {
-            addCriterion("loan_amount_type >=", value, "loanAmountType");
+        public Criteria andLoanAmountArrGreaterThanOrEqualTo(String value) {
+            addCriterion("loan_amount_arr >=", value, "loanAmountArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeLessThan(Byte value) {
-            addCriterion("loan_amount_type <", value, "loanAmountType");
+        public Criteria andLoanAmountArrLessThan(String value) {
+            addCriterion("loan_amount_arr <", value, "loanAmountArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeLessThanOrEqualTo(Byte value) {
-            addCriterion("loan_amount_type <=", value, "loanAmountType");
+        public Criteria andLoanAmountArrLessThanOrEqualTo(String value) {
+            addCriterion("loan_amount_arr <=", value, "loanAmountArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeIn(List<Byte> values) {
-            addCriterion("loan_amount_type in", values, "loanAmountType");
+        public Criteria andLoanAmountArrLike(String value) {
+            addCriterion("loan_amount_arr like", value, "loanAmountArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeNotIn(List<Byte> values) {
-            addCriterion("loan_amount_type not in", values, "loanAmountType");
+        public Criteria andLoanAmountArrNotLike(String value) {
+            addCriterion("loan_amount_arr not like", value, "loanAmountArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeBetween(Byte value1, Byte value2) {
-            addCriterion("loan_amount_type between", value1, value2, "loanAmountType");
+        public Criteria andLoanAmountArrIn(List<String> values) {
+            addCriterion("loan_amount_arr in", values, "loanAmountArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountTypeNotBetween(Byte value1, Byte value2) {
-            addCriterion("loan_amount_type not between", value1, value2, "loanAmountType");
+        public Criteria andLoanAmountArrNotIn(List<String> values) {
+            addCriterion("loan_amount_arr not in", values, "loanAmountArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountIsNull() {
-            addCriterion("loan_amount is null");
+        public Criteria andLoanAmountArrBetween(String value1, String value2) {
+            addCriterion("loan_amount_arr between", value1, value2, "loanAmountArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountIsNotNull() {
-            addCriterion("loan_amount is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanAmountEqualTo(String value) {
-            addCriterion("loan_amount =", value, "loanAmount");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanAmountNotEqualTo(String value) {
-            addCriterion("loan_amount <>", value, "loanAmount");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanAmountGreaterThan(String value) {
-            addCriterion("loan_amount >", value, "loanAmount");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanAmountGreaterThanOrEqualTo(String value) {
-            addCriterion("loan_amount >=", value, "loanAmount");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanAmountLessThan(String value) {
-            addCriterion("loan_amount <", value, "loanAmount");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanAmountLessThanOrEqualTo(String value) {
-            addCriterion("loan_amount <=", value, "loanAmount");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanAmountLike(String value) {
-            addCriterion("loan_amount like", value, "loanAmount");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanAmountNotLike(String value) {
-            addCriterion("loan_amount not like", value, "loanAmount");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanAmountIn(List<String> values) {
-            addCriterion("loan_amount in", values, "loanAmount");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanAmountNotIn(List<String> values) {
-            addCriterion("loan_amount not in", values, "loanAmount");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanAmountBetween(String value1, String value2) {
-            addCriterion("loan_amount between", value1, value2, "loanAmount");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanAmountNotBetween(String value1, String value2) {
-            addCriterion("loan_amount not between", value1, value2, "loanAmount");
+        public Criteria andLoanAmountArrNotBetween(String value1, String value2) {
+            addCriterion("loan_amount_arr not between", value1, value2, "loanAmountArr");
             return (Criteria) this;
         }
 
@@ -561,133 +501,73 @@ public class ProductExample {
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeTypeIsNull() {
-            addCriterion("loan_time_type is null");
+        public Criteria andLoanTimeArrIsNull() {
+            addCriterion("loan_time_arr is null");
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeTypeIsNotNull() {
-            addCriterion("loan_time_type is not null");
+        public Criteria andLoanTimeArrIsNotNull() {
+            addCriterion("loan_time_arr is not null");
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeTypeEqualTo(Byte value) {
-            addCriterion("loan_time_type =", value, "loanTimeType");
+        public Criteria andLoanTimeArrEqualTo(String value) {
+            addCriterion("loan_time_arr =", value, "loanTimeArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeTypeNotEqualTo(Byte value) {
-            addCriterion("loan_time_type <>", value, "loanTimeType");
+        public Criteria andLoanTimeArrNotEqualTo(String value) {
+            addCriterion("loan_time_arr <>", value, "loanTimeArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeTypeGreaterThan(Byte value) {
-            addCriterion("loan_time_type >", value, "loanTimeType");
+        public Criteria andLoanTimeArrGreaterThan(String value) {
+            addCriterion("loan_time_arr >", value, "loanTimeArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeTypeGreaterThanOrEqualTo(Byte value) {
-            addCriterion("loan_time_type >=", value, "loanTimeType");
+        public Criteria andLoanTimeArrGreaterThanOrEqualTo(String value) {
+            addCriterion("loan_time_arr >=", value, "loanTimeArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeTypeLessThan(Byte value) {
-            addCriterion("loan_time_type <", value, "loanTimeType");
+        public Criteria andLoanTimeArrLessThan(String value) {
+            addCriterion("loan_time_arr <", value, "loanTimeArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeTypeLessThanOrEqualTo(Byte value) {
-            addCriterion("loan_time_type <=", value, "loanTimeType");
+        public Criteria andLoanTimeArrLessThanOrEqualTo(String value) {
+            addCriterion("loan_time_arr <=", value, "loanTimeArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeTypeIn(List<Byte> values) {
-            addCriterion("loan_time_type in", values, "loanTimeType");
+        public Criteria andLoanTimeArrLike(String value) {
+            addCriterion("loan_time_arr like", value, "loanTimeArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeTypeNotIn(List<Byte> values) {
-            addCriterion("loan_time_type not in", values, "loanTimeType");
+        public Criteria andLoanTimeArrNotLike(String value) {
+            addCriterion("loan_time_arr not like", value, "loanTimeArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeTypeBetween(Byte value1, Byte value2) {
-            addCriterion("loan_time_type between", value1, value2, "loanTimeType");
+        public Criteria andLoanTimeArrIn(List<String> values) {
+            addCriterion("loan_time_arr in", values, "loanTimeArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeTypeNotBetween(Byte value1, Byte value2) {
-            addCriterion("loan_time_type not between", value1, value2, "loanTimeType");
+        public Criteria andLoanTimeArrNotIn(List<String> values) {
+            addCriterion("loan_time_arr not in", values, "loanTimeArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeIsNull() {
-            addCriterion("loan_time is null");
+        public Criteria andLoanTimeArrBetween(String value1, String value2) {
+            addCriterion("loan_time_arr between", value1, value2, "loanTimeArr");
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeIsNotNull() {
-            addCriterion("loan_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanTimeEqualTo(String value) {
-            addCriterion("loan_time =", value, "loanTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanTimeNotEqualTo(String value) {
-            addCriterion("loan_time <>", value, "loanTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanTimeGreaterThan(String value) {
-            addCriterion("loan_time >", value, "loanTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanTimeGreaterThanOrEqualTo(String value) {
-            addCriterion("loan_time >=", value, "loanTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanTimeLessThan(String value) {
-            addCriterion("loan_time <", value, "loanTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanTimeLessThanOrEqualTo(String value) {
-            addCriterion("loan_time <=", value, "loanTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanTimeLike(String value) {
-            addCriterion("loan_time like", value, "loanTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanTimeNotLike(String value) {
-            addCriterion("loan_time not like", value, "loanTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanTimeIn(List<String> values) {
-            addCriterion("loan_time in", values, "loanTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanTimeNotIn(List<String> values) {
-            addCriterion("loan_time not in", values, "loanTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanTimeBetween(String value1, String value2) {
-            addCriterion("loan_time between", value1, value2, "loanTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andLoanTimeNotBetween(String value1, String value2) {
-            addCriterion("loan_time not between", value1, value2, "loanTime");
+        public Criteria andLoanTimeArrNotBetween(String value1, String value2) {
+            addCriterion("loan_time_arr not between", value1, value2, "loanTimeArr");
             return (Criteria) this;
         }
 
@@ -1341,8 +1221,8 @@ public class ProductExample {
             return (Criteria) this;
         }
 
-        public Criteria andLoanAmountLikeInsensitive(String value) {
-            addCriterion("upper(loan_amount) like", value.toUpperCase(), "loanAmount");
+        public Criteria andLoanAmountArrLikeInsensitive(String value) {
+            addCriterion("upper(loan_amount_arr) like", value.toUpperCase(), "loanAmountArr");
             return (Criteria) this;
         }
 
@@ -1351,8 +1231,8 @@ public class ProductExample {
             return (Criteria) this;
         }
 
-        public Criteria andLoanTimeLikeInsensitive(String value) {
-            addCriterion("upper(loan_time) like", value.toUpperCase(), "loanTime");
+        public Criteria andLoanTimeArrLikeInsensitive(String value) {
+            addCriterion("upper(loan_time_arr) like", value.toUpperCase(), "loanTimeArr");
             return (Criteria) this;
         }
 

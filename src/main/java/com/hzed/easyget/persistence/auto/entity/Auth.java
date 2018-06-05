@@ -20,7 +20,7 @@ public class Auth implements Serializable {
     private String name;
 
     /**
-     * 是否可用 true-可用 false-不可用
+     * 是否可用 1-可用 0-不可用
      */
     private Boolean isUse;
 

@@ -2,9 +2,8 @@ package com.hzed.easyget.controller.web;
 
 
 import com.hzed.easyget.application.service.LoginService;
-import com.hzed.easyget.controller.model.LoginByCodeRequest;
-import com.hzed.easyget.controller.model.LoginByCodeResponse;
-import com.hzed.easyget.controller.model.SmsCodeRequest;
+import com.hzed.easyget.application.service.PictureCodeService;
+import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
@@ -46,5 +45,22 @@ public class LoginController {
     public Response<LoginByCodeResponse> loginByCode(@RequestBody LoginByCodeRequest request) {
         LoginByCodeResponse response = loginService.loginByCode(request);
         return Response.getSuccessResponse(response);
+    }
+
+    @TokenIgnore
+    @ModuleFunc("获取图片验证码")
+    @PostMapping("/getPictureCode")
+    public Response<PictureCodeResponse> getPictureCode(@RequestBody PictureCodeRequest request) {
+        PictureCodeService pictureCodeService = new PictureCodeService();
+        return Response.getSuccessResponse(pictureCodeService.getPictureCode(request.getMobile()));
+    }
+
+    @TokenIgnore
+    @ModuleFunc("验证图片验证码")
+    @PostMapping("/checkPictureCode")
+    public Response checkPictureCode(@RequestBody CheckPictureCodeRequest request) {
+        PictureCodeService pictureCodeService = new PictureCodeService();
+        pictureCodeService.checkPictureCode(request.getMobile(),request.getCode());
+        return Response.getSuccessResponse();
     }
 }

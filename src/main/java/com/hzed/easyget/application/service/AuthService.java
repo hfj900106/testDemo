@@ -167,7 +167,7 @@ public class AuthService {
         userObj.setId(user.getUserId());
         userObj.setRealName(realName);
         userObj.setIdCardNo(idCardNo);
-        userObj.setGender(gender.toString());
+        userObj.setGender(gender.byteValue());
         userObj.setUpdateTime(LocalDateTime.now());
         userObj.setUpdateBy(user.getUserId());
         //组装faceIdcardAuth对象

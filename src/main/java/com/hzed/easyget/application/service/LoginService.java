@@ -147,7 +147,7 @@ public class LoginService {
         smsLog.setMobile(mobile);
         smsLog.setRemark("短信验证码");
         smsLogRepository.insertSelective(smsLog);
-        //保存到Redis，60秒有效时间
-        redisService.setCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile, code, 60L);
+        //保存到Redis，手机验证码2分钟有效
+        redisService.setCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile, code, 120L);
     }
 }

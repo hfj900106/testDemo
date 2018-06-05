@@ -81,7 +81,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_user_token
+    from t_loan_user_token
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -105,7 +105,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_user_token
+    from t_loan_user_token
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -116,7 +116,7 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from t_user_token
+    from t_loan_user_token
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -124,21 +124,21 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_user_token
+    from t_loan_user_token
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_user_token
+    delete from t_loan_user_token
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTokenExample">
-    delete from t_user_token
+    delete from t_loan_user_token
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserToken">
-    insert into t_user_token (id, user_id, imei, 
+    insert into t_loan_user_token (id, user_id, imei, 
       token, expire_time, create_by, 
       create_time, update_by, update_time, 
       remark)
@@ -148,7 +148,7 @@
       #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserToken">
-    insert into t_user_token
+    insert into t_loan_user_token
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -215,13 +215,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTokenExample" resultType="java.lang.Long">
-    select count(*) from t_user_token
+    select count(*) from t_loan_user_token
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_user_token
+    update t_loan_user_token
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -259,7 +259,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_user_token
+    update t_loan_user_token
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
       imei = #{record.imei,jdbcType=VARCHAR},
@@ -275,7 +275,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserToken">
-    update t_user_token
+    update t_loan_user_token
     <set>
       <if test="userId != null">
         user_id = #{userId,jdbcType=BIGINT},
@@ -308,7 +308,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserToken">
-    update t_user_token
+    update t_loan_user_token
     set user_id = #{userId,jdbcType=BIGINT},
       imei = #{imei,jdbcType=VARCHAR},
       token = #{token,jdbcType=VARCHAR},
@@ -323,7 +323,7 @@
   <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTokenExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_user_token
+    from t_loan_user_token
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -337,7 +337,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_user_token
+    from t_loan_user_token
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -347,7 +347,7 @@
     limit 1
   </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_user_token
+    insert into t_loan_user_token
     (id, user_id, imei, token, expire_time, create_by, create_time, update_by, update_time, 
       remark)
     values
@@ -359,7 +359,7 @@
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_user_token (
+    insert into t_loan_user_token (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>

@@ -5,11 +5,9 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="code" jdbcType="CHAR" property="code" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="loan_amount_type" jdbcType="TINYINT" property="loanAmountType" />
-    <result column="loan_amount" jdbcType="VARCHAR" property="loanAmount" />
+    <result column="loan_amount_arr" jdbcType="VARCHAR" property="loanAmountArr" />
     <result column="currency" jdbcType="CHAR" property="currency" />
-    <result column="loan_time_type" jdbcType="TINYINT" property="loanTimeType" />
-    <result column="loan_time" jdbcType="VARCHAR" property="loanTime" />
+    <result column="loan_time_arr" jdbcType="VARCHAR" property="loanTimeArr" />
     <result column="loan_time_dmy" jdbcType="CHAR" property="loanTimeDmy" />
     <result column="apr" jdbcType="DECIMAL" property="apr" />
     <result column="description" jdbcType="VARCHAR" property="description" />
@@ -80,9 +78,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, code, name, loan_amount_type, loan_amount, currency, loan_time_type, loan_time, 
-    loan_time_dmy, apr, description, picture, is_use, create_by, create_time, update_by, 
-    update_time, remark
+    id, code, name, loan_amount_arr, currency, loan_time_arr, loan_time_dmy, apr, description, 
+    picture, is_use, create_by, create_time, update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProductExample" resultMap="BaseResultMap">
     select
@@ -90,7 +87,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_product
+    from t_loan_product
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -114,7 +111,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_product
+    from t_loan_product
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -125,7 +122,7 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from t_product
+    from t_loan_product
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -133,35 +130,35 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_product
+    from t_loan_product
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_product
+    delete from t_loan_product
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProductExample">
-    delete from t_product
+    delete from t_loan_product
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.Product">
-    insert into t_product (id, code, name, loan_amount_type, 
-      loan_amount, currency, loan_time_type, 
-      loan_time, loan_time_dmy, apr, 
-      description, picture, is_use, 
-      create_by, create_time, update_by, 
-      update_time, remark)
-    values (#{id,jdbcType=BIGINT}, #{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{loanAmountType,jdbcType=TINYINT}, 
-      #{loanAmount,jdbcType=VARCHAR}, #{currency,jdbcType=CHAR}, #{loanTimeType,jdbcType=TINYINT}, 
-      #{loanTime,jdbcType=VARCHAR}, #{loanTimeDmy,jdbcType=CHAR}, #{apr,jdbcType=DECIMAL}, 
-      #{description,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR}, #{isUse,jdbcType=BIT}, 
-      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+    insert into t_loan_product (id, code, name, loan_amount_arr, 
+      currency, loan_time_arr, loan_time_dmy, 
+      apr, description, picture, 
+      is_use, create_by, create_time, 
+      update_by, update_time, remark
+      )
+    values (#{id,jdbcType=BIGINT}, #{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{loanAmountArr,jdbcType=VARCHAR}, 
+      #{currency,jdbcType=CHAR}, #{loanTimeArr,jdbcType=VARCHAR}, #{loanTimeDmy,jdbcType=CHAR}, 
+      #{apr,jdbcType=DECIMAL}, #{description,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR}, 
+      #{isUse,jdbcType=BIT}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.Product">
-    insert into t_product
+    insert into t_loan_product
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -172,20 +169,14 @@
       <if test="name != null">
         name,
       </if>
-      <if test="loanAmountType != null">
-        loan_amount_type,
-      </if>
-      <if test="loanAmount != null">
-        loan_amount,
+      <if test="loanAmountArr != null">
+        loan_amount_arr,
       </if>
       <if test="currency != null">
         currency,
       </if>
-      <if test="loanTimeType != null">
-        loan_time_type,
-      </if>
-      <if test="loanTime != null">
-        loan_time,
+      <if test="loanTimeArr != null">
+        loan_time_arr,
       </if>
       <if test="loanTimeDmy != null">
         loan_time_dmy,
@@ -228,20 +219,14 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="loanAmountType != null">
-        #{loanAmountType,jdbcType=TINYINT},
-      </if>
-      <if test="loanAmount != null">
-        #{loanAmount,jdbcType=VARCHAR},
+      <if test="loanAmountArr != null">
+        #{loanAmountArr,jdbcType=VARCHAR},
       </if>
       <if test="currency != null">
         #{currency,jdbcType=CHAR},
       </if>
-      <if test="loanTimeType != null">
-        #{loanTimeType,jdbcType=TINYINT},
-      </if>
-      <if test="loanTime != null">
-        #{loanTime,jdbcType=VARCHAR},
+      <if test="loanTimeArr != null">
+        #{loanTimeArr,jdbcType=VARCHAR},
       </if>
       <if test="loanTimeDmy != null">
         #{loanTimeDmy,jdbcType=CHAR},
@@ -276,13 +261,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProductExample" resultType="java.lang.Long">
-    select count(*) from t_product
+    select count(*) from t_loan_product
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_product
+    update t_loan_product
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -293,20 +278,14 @@
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
       </if>
-      <if test="record.loanAmountType != null">
-        loan_amount_type = #{record.loanAmountType,jdbcType=TINYINT},
-      </if>
-      <if test="record.loanAmount != null">
-        loan_amount = #{record.loanAmount,jdbcType=VARCHAR},
+      <if test="record.loanAmountArr != null">
+        loan_amount_arr = #{record.loanAmountArr,jdbcType=VARCHAR},
       </if>
       <if test="record.currency != null">
         currency = #{record.currency,jdbcType=CHAR},
       </if>
-      <if test="record.loanTimeType != null">
-        loan_time_type = #{record.loanTimeType,jdbcType=TINYINT},
-      </if>
-      <if test="record.loanTime != null">
-        loan_time = #{record.loanTime,jdbcType=VARCHAR},
+      <if test="record.loanTimeArr != null">
+        loan_time_arr = #{record.loanTimeArr,jdbcType=VARCHAR},
       </if>
       <if test="record.loanTimeDmy != null">
         loan_time_dmy = #{record.loanTimeDmy,jdbcType=CHAR},
@@ -344,15 +323,13 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_product
+    update t_loan_product
     set id = #{record.id,jdbcType=BIGINT},
       code = #{record.code,jdbcType=CHAR},
       name = #{record.name,jdbcType=VARCHAR},
-      loan_amount_type = #{record.loanAmountType,jdbcType=TINYINT},
-      loan_amount = #{record.loanAmount,jdbcType=VARCHAR},
+      loan_amount_arr = #{record.loanAmountArr,jdbcType=VARCHAR},
       currency = #{record.currency,jdbcType=CHAR},
-      loan_time_type = #{record.loanTimeType,jdbcType=TINYINT},
-      loan_time = #{record.loanTime,jdbcType=VARCHAR},
+      loan_time_arr = #{record.loanTimeArr,jdbcType=VARCHAR},
       loan_time_dmy = #{record.loanTimeDmy,jdbcType=CHAR},
       apr = #{record.apr,jdbcType=DECIMAL},
       description = #{record.description,jdbcType=VARCHAR},
@@ -368,7 +345,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.Product">
-    update t_product
+    update t_loan_product
     <set>
       <if test="code != null">
         code = #{code,jdbcType=CHAR},
@@ -376,20 +353,14 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="loanAmountType != null">
-        loan_amount_type = #{loanAmountType,jdbcType=TINYINT},
-      </if>
-      <if test="loanAmount != null">
-        loan_amount = #{loanAmount,jdbcType=VARCHAR},
+      <if test="loanAmountArr != null">
+        loan_amount_arr = #{loanAmountArr,jdbcType=VARCHAR},
       </if>
       <if test="currency != null">
         currency = #{currency,jdbcType=CHAR},
       </if>
-      <if test="loanTimeType != null">
-        loan_time_type = #{loanTimeType,jdbcType=TINYINT},
-      </if>
-      <if test="loanTime != null">
-        loan_time = #{loanTime,jdbcType=VARCHAR},
+      <if test="loanTimeArr != null">
+        loan_time_arr = #{loanTimeArr,jdbcType=VARCHAR},
       </if>
       <if test="loanTimeDmy != null">
         loan_time_dmy = #{loanTimeDmy,jdbcType=CHAR},
@@ -425,14 +396,12 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.Product">
-    update t_product
+    update t_loan_product
     set code = #{code,jdbcType=CHAR},
       name = #{name,jdbcType=VARCHAR},
-      loan_amount_type = #{loanAmountType,jdbcType=TINYINT},
-      loan_amount = #{loanAmount,jdbcType=VARCHAR},
+      loan_amount_arr = #{loanAmountArr,jdbcType=VARCHAR},
       currency = #{currency,jdbcType=CHAR},
-      loan_time_type = #{loanTimeType,jdbcType=TINYINT},
-      loan_time = #{loanTime,jdbcType=VARCHAR},
+      loan_time_arr = #{loanTimeArr,jdbcType=VARCHAR},
       loan_time_dmy = #{loanTimeDmy,jdbcType=CHAR},
       apr = #{apr,jdbcType=DECIMAL},
       description = #{description,jdbcType=VARCHAR},
@@ -448,7 +417,7 @@
   <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProductExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_product
+    from t_loan_product
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -462,7 +431,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_product
+    from t_loan_product
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -472,23 +441,21 @@
     limit 1
   </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_product
-    (id, code, name, loan_amount_type, loan_amount, currency, loan_time_type, loan_time, 
-      loan_time_dmy, apr, description, picture, is_use, create_by, create_time, update_by, 
-      update_time, remark)
+    insert into t_loan_product
+    (id, code, name, loan_amount_arr, currency, loan_time_arr, loan_time_dmy, apr, description, 
+      picture, is_use, create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.code,jdbcType=CHAR}, #{item.name,jdbcType=VARCHAR}, 
-        #{item.loanAmountType,jdbcType=TINYINT}, #{item.loanAmount,jdbcType=VARCHAR}, #{item.currency,jdbcType=CHAR}, 
-        #{item.loanTimeType,jdbcType=TINYINT}, #{item.loanTime,jdbcType=VARCHAR}, #{item.loanTimeDmy,jdbcType=CHAR}, 
-        #{item.apr,jdbcType=DECIMAL}, #{item.description,jdbcType=VARCHAR}, #{item.picture,jdbcType=VARCHAR}, 
-        #{item.isUse,jdbcType=BIT}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
-        )
+        #{item.loanAmountArr,jdbcType=VARCHAR}, #{item.currency,jdbcType=CHAR}, #{item.loanTimeArr,jdbcType=VARCHAR}, 
+        #{item.loanTimeDmy,jdbcType=CHAR}, #{item.apr,jdbcType=DECIMAL}, #{item.description,jdbcType=VARCHAR}, 
+        #{item.picture,jdbcType=VARCHAR}, #{item.isUse,jdbcType=BIT}, #{item.createBy,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_product (
+    insert into t_loan_product (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
@@ -506,20 +473,14 @@
         <if test="'name' == column.value">
           #{item.name,jdbcType=VARCHAR}
         </if>
-        <if test="'loan_amount_type' == column.value">
-          #{item.loanAmountType,jdbcType=TINYINT}
-        </if>
-        <if test="'loan_amount' == column.value">
-          #{item.loanAmount,jdbcType=VARCHAR}
+        <if test="'loan_amount_arr' == column.value">
+          #{item.loanAmountArr,jdbcType=VARCHAR}
         </if>
         <if test="'currency' == column.value">
           #{item.currency,jdbcType=CHAR}
         </if>
-        <if test="'loan_time_type' == column.value">
-          #{item.loanTimeType,jdbcType=TINYINT}
-        </if>
-        <if test="'loan_time' == column.value">
-          #{item.loanTime,jdbcType=VARCHAR}
+        <if test="'loan_time_arr' == column.value">
+          #{item.loanTimeArr,jdbcType=VARCHAR}
         </if>
         <if test="'loan_time_dmy' == column.value">
           #{item.loanTimeDmy,jdbcType=CHAR}

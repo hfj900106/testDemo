@@ -38,7 +38,7 @@ public class UserService {
         UserResponse userResponse = new UserResponse();
         userResponse.setMobile(user.getMobileAccount());
         userResponse.setNickName(user.getNickName());
-        userResponse.setProfile_photo(user.getProfilePhoto());
+        userResponse.setProfilePhoto(user.getProfilePhoto());
         return userResponse;
     }
 

@@ -77,65 +77,36 @@ public class RepayService {
                 //查询应还时间与当前时间对比，大于当前时间:逾期，小于:没到期
                 int days =  DateUtil.daysBetween(loanBill.getRepaymentTime(), LocalDateTime.now());
 
-                //逾期
+                //逾期未结清
                 if (days > 0) {
-                    //逾期费率
-                    BigDecimal twentyPercent = new BigDecimal(TWENTY_PERCENT);
 
-                    //逾期已还部分
+                    //计算总逾期费
+                    BigDecimal totalOverdue = getTotalOverdee(billId, days);
+                    //计算总的未还总额
+                    BigDecimal unRepaymentAmount = getRepaymentAmount(billId);
+                    //逾期部分已还
                     if (loanBill.getIsPartialRepayment()) {
-                        //本金
-                        LoanBillLedger loanBillLedgerCorpus = loanBillLedgerRepository.findLoanBillLedger(billId, LoanBillLedgerEnum.CORPUS.getType());
-                        BigDecimal repaymentCorpus = loanBillLedgerCorpus.getRepaymentAmount();
-                        BigDecimal realRepaymentCopus = loanBillLedgerCorpus.getRealRepaymentAmount();
-                        BigDecimal corpus = Arith.sub(repaymentCorpus, realRepaymentCopus);
-                        BigDecimal day = new BigDecimal(days);
-                        //总逾期费，本金X利息X逾期天数
-                        BigDecimal totalOverdueAmount = Arith.mul(corpus, twentyPercent, day);
+
                         //已还逾期费
                         LoanBillLedger loanBillLedgerOver = loanBillLedgerRepository.findLoanBillLedger(billId, LoanBillLedgerEnum.OVERDUE.getType());
                         BigDecimal realRepayOver = loanBillLedgerOver.getRealRepaymentAmount();
 
                         //最终逾期费
-                        BigDecimal overdue = Arith.sub(totalOverdueAmount,realRepayOver);
+                        BigDecimal overdue = Arith.sub(totalOverdue, realRepayOver);
 
-                        //计算应还总额
-                        List<LoanBillLedger> loanBillLedgerList = loanBillLedgerRepository.findTotalAmount(billId);
-
-                        BigDecimal totalRepaymentAmount = new BigDecimal(1);
-                        BigDecimal totalRealRepaymentAmount = new BigDecimal(1);
-
-                        for (LoanBillLedger loanBillLedger : loanBillLedgerList) {
-                            BigDecimal repaymentAmount = loanBillLedger.getRepaymentAmount();
-                            BigDecimal realRepaymentAmount = loanBillLedger.getRealRepaymentAmount();
-
-                            if(!LoanBillLedgerEnum.OVERDUE.getType().equals(loanBillLedger.getRepaymentItem())){
-
-                                //总的应还金额
-                                totalRepaymentAmount = Arith.add(totalRepaymentAmount, repaymentAmount);
-                                //总的已还金额
-                                totalRealRepaymentAmount = Arith.add(totalRealRepaymentAmount, realRepaymentAmount);
-                            }
-                        }
-
-                        //未还金额
-                        BigDecimal unRepaymentAmount = Arith.sub(totalRepaymentAmount, totalRealRepaymentAmount);
-                        totalRepayAmount = Arith.add(unRepaymentAmount,overdue);
+                        totalRepayAmount = Arith.add(unRepaymentAmount, overdue);
 
                     } else {//逾期未还
 
-
-
-
+                        totalRepayAmount = Arith.add(unRepaymentAmount,totalOverdue);
                     }
                     repaymentResponse.setStatus(RepayStatusEnum.OVDUE_UN_REPAY.getCode());
-
+                    repaymentResponse.setDays(String.valueOf(days));
                 } else {//正常未还
                     repaymentResponse.setStatus(RepayStatusEnum.UN_REPAY.getCode());
                     days = DateUtil.daysBetween(LocalDateTime.now(),loanBill.getRepaymentTime());
-
+                    repaymentResponse.setDays(String.valueOf(days));
                 }
-                repaymentResponse.setDays(String.valueOf(days));
 
             }
 
@@ -143,5 +114,54 @@ public class RepayService {
         repaymentResponseList.add(repaymentResponse);
         return RepayResponse.builder().repaymentInfo(repaymentResponseList).TotalAmount(String.valueOf(totalRepayAmount)).build();
 
+    }
+
+    /**
+     * 计算应还总额
+     * @param billId
+     * @return
+     */
+
+    private BigDecimal getRepaymentAmount(Long billId) {
+        List<LoanBillLedger> loanBillLedgerList = loanBillLedgerRepository.findTotalAmount(billId);
+
+        BigDecimal totalRepaymentAmount = new BigDecimal(1);
+        BigDecimal totalRealRepaymentAmount = new BigDecimal(1);
+
+        for (LoanBillLedger loanBillLedger : loanBillLedgerList) {
+            BigDecimal repaymentAmount = loanBillLedger.getRepaymentAmount();
+            BigDecimal realRepaymentAmount = loanBillLedger.getRealRepaymentAmount();
+
+            if(!LoanBillLedgerEnum.OVERDUE.getType().equals(loanBillLedger.getRepaymentItem())){
+
+                //总的应还金额
+                totalRepaymentAmount = Arith.add(totalRepaymentAmount, repaymentAmount);
+                //总的已还金额
+                totalRealRepaymentAmount = Arith.add(totalRealRepaymentAmount, realRepaymentAmount);
+            }
+        }
+
+        //未还金额
+        BigDecimal unRepaymentAmount = Arith.sub(totalRepaymentAmount, totalRealRepaymentAmount);
+        return unRepaymentAmount;
+    }
+
+    /**
+     * 计算总逾期费
+     * @param billId
+     * @return
+     */
+    private BigDecimal getTotalOverdee(Long billId,int days) {
+        //逾期费率
+        BigDecimal twentyPercent = new BigDecimal(TWENTY_PERCENT);
+        //本金
+        LoanBillLedger loanBillLedgerCorpus = loanBillLedgerRepository.findLoanBillLedger(billId, LoanBillLedgerEnum.CORPUS.getType());
+        BigDecimal repaymentCorpus = loanBillLedgerCorpus.getRepaymentAmount();
+        BigDecimal realRepaymentCopus = loanBillLedgerCorpus.getRealRepaymentAmount();
+        BigDecimal corpus = Arith.sub(repaymentCorpus, realRepaymentCopus);
+        BigDecimal day = new BigDecimal(days);
+        //总逾期费，本金X利息X逾期天数
+        BigDecimal totalOverdueAmount = Arith.mul(corpus, twentyPercent, day);
+        return totalOverdueAmount;
     }
 }

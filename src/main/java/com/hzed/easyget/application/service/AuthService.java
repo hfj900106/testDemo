@@ -8,7 +8,7 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.aliyun.AliyunService;
 import com.hzed.easyget.infrastructure.exception.NestedException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.repository.FaceIdcardAuthRepository;
+import com.hzed.easyget.infrastructure.repository.WorkRepository;
 import com.hzed.easyget.infrastructure.repository.PersonInfoRepository;
 import com.hzed.easyget.infrastructure.repository.ProfessionalRepository;
 import com.hzed.easyget.infrastructure.repository.UserAuthStatusRepository;
@@ -38,7 +38,7 @@ public class AuthService {
     @Autowired
     private PersonInfoRepository personInfoRepository;
     @Autowired
-    private FaceIdcardAuthRepository faceIdcardAuthRepository;
+    private WorkRepository workRepository;
     @Autowired
     private UserAuthStatusRepository authStatusRepository;
     @Autowired
@@ -179,7 +179,7 @@ public class AuthService {
         userPic.setRemark("身份信息认证");
         //获取UserAuthStatus对象
         UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), IdentifierGenerator.nextId(), "身份信息认证");
-        faceIdcardAuthRepository.insertIdentityInfo(userPic, userAuthStatus, userObj);
+        workRepository.insertIdentityInfo(userPic, userAuthStatus, userObj);
     }
 
     /**

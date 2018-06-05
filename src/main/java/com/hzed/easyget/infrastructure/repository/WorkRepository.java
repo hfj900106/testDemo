@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2018/5/22
  */
 @Repository
-public class FaceIdcardAuthRepository {
+public class WorkRepository {
     @Autowired
     private UserPicMapper userPicMapper;
     @Autowired

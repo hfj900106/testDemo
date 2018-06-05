@@ -3,7 +3,6 @@ package com.hzed.easyget.persistence.auto.entity.example;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class BillExample {
@@ -353,52 +352,52 @@ public class BillExample {
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeEqualTo(Date value) {
+        public Criteria andRepaymentTimeEqualTo(LocalDateTime value) {
             addCriterion("repayment_time =", value, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeNotEqualTo(Date value) {
+        public Criteria andRepaymentTimeNotEqualTo(LocalDateTime value) {
             addCriterion("repayment_time <>", value, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeGreaterThan(Date value) {
+        public Criteria andRepaymentTimeGreaterThan(LocalDateTime value) {
             addCriterion("repayment_time >", value, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeGreaterThanOrEqualTo(Date value) {
+        public Criteria andRepaymentTimeGreaterThanOrEqualTo(LocalDateTime value) {
             addCriterion("repayment_time >=", value, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeLessThan(Date value) {
+        public Criteria andRepaymentTimeLessThan(LocalDateTime value) {
             addCriterion("repayment_time <", value, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeLessThanOrEqualTo(Date value) {
+        public Criteria andRepaymentTimeLessThanOrEqualTo(LocalDateTime value) {
             addCriterion("repayment_time <=", value, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeIn(List<Date> values) {
+        public Criteria andRepaymentTimeIn(List<LocalDateTime> values) {
             addCriterion("repayment_time in", values, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeNotIn(List<Date> values) {
+        public Criteria andRepaymentTimeNotIn(List<LocalDateTime> values) {
             addCriterion("repayment_time not in", values, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeBetween(Date value1, Date value2) {
+        public Criteria andRepaymentTimeBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("repayment_time between", value1, value2, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeNotBetween(Date value1, Date value2) {
+        public Criteria andRepaymentTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("repayment_time not between", value1, value2, "repaymentTime");
             return (Criteria) this;
         }
@@ -473,52 +472,52 @@ public class BillExample {
             return (Criteria) this;
         }
 
-        public Criteria andSettlementTimeEqualTo(Date value) {
+        public Criteria andSettlementTimeEqualTo(LocalDateTime value) {
             addCriterion("settlement_time =", value, "settlementTime");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementTimeNotEqualTo(Date value) {
+        public Criteria andSettlementTimeNotEqualTo(LocalDateTime value) {
             addCriterion("settlement_time <>", value, "settlementTime");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementTimeGreaterThan(Date value) {
+        public Criteria andSettlementTimeGreaterThan(LocalDateTime value) {
             addCriterion("settlement_time >", value, "settlementTime");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementTimeGreaterThanOrEqualTo(Date value) {
+        public Criteria andSettlementTimeGreaterThanOrEqualTo(LocalDateTime value) {
             addCriterion("settlement_time >=", value, "settlementTime");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementTimeLessThan(Date value) {
+        public Criteria andSettlementTimeLessThan(LocalDateTime value) {
             addCriterion("settlement_time <", value, "settlementTime");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementTimeLessThanOrEqualTo(Date value) {
+        public Criteria andSettlementTimeLessThanOrEqualTo(LocalDateTime value) {
             addCriterion("settlement_time <=", value, "settlementTime");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementTimeIn(List<Date> values) {
+        public Criteria andSettlementTimeIn(List<LocalDateTime> values) {
             addCriterion("settlement_time in", values, "settlementTime");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementTimeNotIn(List<Date> values) {
+        public Criteria andSettlementTimeNotIn(List<LocalDateTime> values) {
             addCriterion("settlement_time not in", values, "settlementTime");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementTimeBetween(Date value1, Date value2) {
+        public Criteria andSettlementTimeBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("settlement_time between", value1, value2, "settlementTime");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementTimeNotBetween(Date value1, Date value2) {
+        public Criteria andSettlementTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
             addCriterion("settlement_time not between", value1, value2, "settlementTime");
             return (Criteria) this;
         }

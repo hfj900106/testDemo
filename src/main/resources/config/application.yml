@@ -27,6 +27,13 @@ logging:
   envNameCN: 开发环境 # 环境中文名
   emailTo: guichang@hzed.com # 邮件接收者，多个用逗号隔开
 
+# 阿里云配置
+aliyun:
+  endpoint: http://oss-cn-shenzhen.aliyuncs.com
+  accessKeyId: LTAIxzelwCX3fyTQ
+  accessKeySecret: IwfH6vAH0rZWK3wL2aK3hTopsWVb6t
+  bucketName: hzed-ccard #存储空间目录
+
 #======================================= 系统参数 开始 =======================================#
 system:
   tokenExpire: 7 # token失效时间 7 天

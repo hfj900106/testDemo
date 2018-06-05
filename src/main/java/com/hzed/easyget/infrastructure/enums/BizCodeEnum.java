@@ -17,6 +17,7 @@ public enum BizCodeEnum {
     UNKNOWN_EXCEPTION("9999", "系统未知错误"),
     SERVICE_EXCEPTION("9998", "内部服务处理异常"),
     ILLEGAL_REQUEST("9997", "无效的请求"),
+    ALIYUN_EXCEPTION("9996", "阿里云操作异常"),
 
     // 1-请求业务校验
     ILLEGAL_PARAM("1000", "请求参数非法"),

@@ -2,6 +2,7 @@ package com.hzed;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hzed.easyget.infrastructure.annotation.EnableAliyun;
 import com.hzed.easyget.infrastructure.annotation.EnableRedis;
 import com.hzed.easyget.infrastructure.annotation.EnableRest;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 /**
+ * 启动类
  * @author guichang
  */
 
@@ -32,6 +34,7 @@ import javax.sql.DataSource;
 @EnableScheduling
 @EnableRedis
 @EnableRest
+@EnableAliyun
 public class BootApplication {
 
     @Bean

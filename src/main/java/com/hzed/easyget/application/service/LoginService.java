@@ -135,6 +135,11 @@ public class LoginService {
 
     public void sendSmsCode(SmsCodeRequest request) {
         String mobile = request.getMobile();
+        String isSend = redisService.getCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile);
+        if (StringUtils.isNotBlank(isSend)) {
+            //发送过于频繁
+            throw new ComBizException(BizCodeEnum.FREQUENTLY_SEND);
+        }
         String code = StringUtils.leftPad(String.valueOf(new Random().nextInt(9999)), 4, "0");
         String content = "您的注册验证码是：" + code + " ，两分钟内有效，欢迎使用本平台";
         if (!EnvEnum.isTestEnv(env)) {
@@ -151,6 +156,8 @@ public class LoginService {
         smsLogRepository.insertSelective(smsLog);
         //保存到Redis，手机验证码2分钟有效
         redisService.setCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile, code, 120L);
+        //60秒后可以重发
+        redisService.setCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile, mobile, 60L);
     }
 
     /**

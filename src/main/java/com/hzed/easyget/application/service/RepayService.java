@@ -73,14 +73,14 @@ public class RepayService {
 
                 //查询应还时间与当前时间对比，大于当前时间:逾期，小于:没到期
                 int days =  DateUtil.daysBetween(loanBill.getRepaymentTime(), LocalDateTime.now());
+                //计算总的未还总额
+                BigDecimal unRepaymentAmount = getRepaymentAmount(billId);
 
                 //逾期未结清
                 if (days > 0) {
 
                     //计算总逾期费
                     BigDecimal totalOverdue = getTotalOverdee(billId, days);
-                    //计算总的未还总额
-                    BigDecimal unRepaymentAmount = getRepaymentAmount(billId);
                     //逾期部分已还
                     if (loanBill.getIsPartialRepayment()) {
 
@@ -103,6 +103,8 @@ public class RepayService {
                     repaymentResponse.setStatus(RepayStatusEnum.UN_REPAY.getCode());
                     days = DateUtil.daysBetween(LocalDateTime.now(),loanBill.getRepaymentTime());
                     repaymentResponse.setDays(String.valueOf(days));
+                    totalRepayAmount = unRepaymentAmount;
+
                 }
 
             }

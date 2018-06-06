@@ -56,8 +56,8 @@ public class HomeController {
 
     @ModuleFunc("获取公告列表")
     @PostMapping("/getBombList")
-    public Response<List<BombResponse>> getBombList(){
-        return Response.getSuccessResponse(homeService.getBombList());
+    public Response<List<BombResponse>> getNewsList(){
+        return Response.getSuccessResponse(homeService.getNewsList());
     }
 
     @ModuleFunc("发起借款校验")

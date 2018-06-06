@@ -60,4 +60,18 @@ public class AuthController {
     public Response<AuthStatusResponse> getAuthStatus() {
         return Response.getSuccessResponse(authService.getAuthStatus());
     }
+
+    @ModuleFunc("/运营商认证-发送验证码")
+    @PostMapping("/operatorSendSmsCode")
+    public Response operatorSendSmsCode() {
+        authService.operatorSendSmsCode();
+        return Response.getSuccessResponse();
+    }
+
+    @ModuleFunc("/运营商认证-验证码认证")
+    @PostMapping("/operatorAuth")
+    public Response operatorAuth(PeratorAuthRequest request) {
+        authService.operatorAuth(request);
+        return Response.getSuccessResponse();
+    }
 }

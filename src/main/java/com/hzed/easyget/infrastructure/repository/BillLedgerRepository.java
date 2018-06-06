@@ -26,7 +26,7 @@ public class BillLedgerRepository {
         return loanBillLedgerMapper.selectOneByExample(example);
     }
 
-    public List<BillLedger> findTotalAmount(Long billId) {
+    public List<BillLedger> findAllBillLedgerByBillId(Long billId) {
         BillLedgerExample example = new BillLedgerExample();
         example.createCriteria().andBillIdEqualTo(billId);
         return loanBillLedgerMapper.selectByExample(example);

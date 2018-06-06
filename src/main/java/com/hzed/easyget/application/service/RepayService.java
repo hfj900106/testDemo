@@ -123,7 +123,7 @@ public class RepayService {
      */
 
     private BigDecimal getRepaymentAmount(Long billId) {
-        List<BillLedger> loanBillLedgerList = billLedgerRepository.findTotalAmount(billId);
+        List<BillLedger> loanBillLedgerList = billLedgerRepository.findAllBillLedgerByBillId(billId);
 
         BigDecimal totalRepaymentAmount = new BigDecimal(1);
         BigDecimal totalRealRepaymentAmount = new BigDecimal(1);

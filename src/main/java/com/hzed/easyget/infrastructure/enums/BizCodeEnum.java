@@ -38,6 +38,7 @@ public enum BizCodeEnum {
     UN_IDENTITY_AUTH("1014", "用户未进行身份认证"),
     OVER_TIME_SMS_CODE("1015", "验证码超时"),
     FREQUENTLY_SEND("1016", "发送过于频繁"),
+    SMS_CODE_SEND_FAIL("1017", "短信发送失败"),
 
 
 

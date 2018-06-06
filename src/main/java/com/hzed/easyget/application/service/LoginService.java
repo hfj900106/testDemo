@@ -23,6 +23,9 @@ import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.SmsLog;
 import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserToken;
+import com.hzed.indonesia.sms.model.request.NxSmsDownRequest;
+import com.hzed.indonesia.sms.model.response.NxSmsDownResponse;
+import com.hzed.indonesia.sms.utils.NxSmsUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -134,6 +137,7 @@ public class LoginService {
     }
 
     public void sendSmsCode(SmsCodeRequest request) {
+        String isSendCode = "0";
         String mobile = request.getMobile();
         String isSend = redisService.getCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile);
         if (StringUtils.isNotBlank(isSend)) {
@@ -142,9 +146,18 @@ public class LoginService {
         }
         String code = StringUtils.leftPad(String.valueOf(new Random().nextInt(9999)), 4, "0");
         String content = "您的注册验证码是：" + code + " ，两分钟内有效，欢迎使用本平台";
-        if (!EnvEnum.isTestEnv(env)) {
-            // TODO 发送验证码 非测试环境下才调用短信发送接口
-
+        //发送短信
+        NxSmsDownRequest smsDownRequest = new NxSmsDownRequest();
+        //测试
+        smsDownRequest.setPhone(mobile);
+        smsDownRequest.setTimestamp(String.valueOf(System.currentTimeMillis()));
+        smsDownRequest.setSourceadd("hztele");
+        smsDownRequest.setExtno(123);
+        smsDownRequest.setContent(content);
+        NxSmsDownResponse smsDownResponse = NxSmsUtil.smsSend(smsDownRequest);
+        //发送失败
+        if(!isSendCode.equals(smsDownResponse.getCode())){
+            throw new ComBizException(BizCodeEnum.SMS_CODE_SEND_FAIL);
         }
         // 保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();

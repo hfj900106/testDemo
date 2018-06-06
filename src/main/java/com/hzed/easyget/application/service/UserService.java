@@ -32,12 +32,13 @@ public class UserService {
      * 我的
      */
     public UserResponse getAcountInfo() {
+        //已认证时显示姓名手机号，未认证时显示手机号，因为身份认证之后才有真实姓名，所以有名字意味着已经认证
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
         User user = userRepository.findById(userId);
         UserResponse userResponse = new UserResponse();
         userResponse.setMobile(user.getMobileAccount());
-        userResponse.setNickName(user.getNickName());
+        userResponse.setRealName(user.getRealName());
         userResponse.setProfilePhoto(user.getProfilePhoto());
         return userResponse;
     }

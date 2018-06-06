@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 public class UserResponse {
-    private String nickName;
+    private String realName;
     private String mobile;
     private String profilePhoto;
 }

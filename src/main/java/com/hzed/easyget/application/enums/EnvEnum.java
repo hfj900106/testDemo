@@ -15,18 +15,18 @@ public enum EnvEnum {
 
     private final String env;
     private final String msg;
-    private final Boolean isTestDev;
+    private final Boolean isTest;
 
-    EnvEnum(String env, String msg, Boolean isTestDev) {
+    EnvEnum(String env, String msg, Boolean isTest) {
         this.env = env;
         this.msg = msg;
-        this.isTestDev = isTestDev;
+        this.isTest = isTest;
     }
 
     public static boolean isTestEnv(String env) {
         for (EnvEnum eEnum : EnvEnum.values()) {
             if(eEnum.getEnv().equals(env)) {
-                return eEnum.getIsTestDev();
+                return eEnum.getIsTest();
             }
         }
 

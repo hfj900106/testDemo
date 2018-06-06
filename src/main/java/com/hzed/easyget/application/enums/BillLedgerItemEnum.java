@@ -12,16 +12,16 @@ import lombok.Getter;
 public enum BillLedgerItemEnum {
 
     /** 过规则 */
-    CORPUS("1","本金"),
-    INTEREST("2","利息"),
-    TAIL_FEE("3","尾款"),
-    OVERDUE_FEE("4","逾期费");
+    CORPUS(1,"本金"),
+    INTEREST(2,"利息"),
+    TAIL_FEE(3,"尾款"),
+    OVERDUE_FEE(4,"逾期费");
 
-    private String type;
+    private Integer code;
     private String msg;
 
-    BillLedgerItemEnum(String type, String msg){
-        this.type = type;
+    BillLedgerItemEnum(Integer code, String msg){
+        this.code = code;
         this.msg = msg;
     }
 

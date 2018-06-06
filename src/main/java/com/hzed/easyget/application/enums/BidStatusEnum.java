@@ -3,13 +3,17 @@ package com.hzed.easyget.application.enums;
 import lombok.Getter;
 
 /**
+ * 标的表状态
+ *
  * @author guichang
+ * @date 2018/6/6
  */
 
 @Getter
 public enum BidStatusEnum {
-
-    /** 过规则 */
+    /**
+     * 过规则
+     */
     RISK_ING(1, "待走风控"),
     MANMADE_ING(2, "待人审"),
     AUDIT_FAIL(3, "审核不通过"),

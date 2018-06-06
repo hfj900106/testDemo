@@ -11,7 +11,6 @@ public enum EnvEnum {
     /** 过规则 */
     DEV("dev", "开发环境", true),
     TEST("test", "测试环境", true),
-    RELEASE("release", "预生产环境", true),
     PROD("prod", "生产环境", false);
 
     private final String env;

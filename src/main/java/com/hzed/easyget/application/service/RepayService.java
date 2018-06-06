@@ -2,8 +2,8 @@ package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.BidStatusEnum;
-import com.hzed.easyget.application.enums.LoanBillLedgerEnum;
-import com.hzed.easyget.application.enums.ProgressTypeEnum;
+import com.hzed.easyget.application.enums.BillLedgerItemEnum;
+import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.RepayStatusEnum;
 import com.hzed.easyget.controller.model.RepayResponse;
 import com.hzed.easyget.controller.model.RepaymentResponse;
@@ -57,7 +57,7 @@ public class RepayService {
         BigDecimal totalRepayAmount = new BigDecimal(1);
         for (Bid bid : bidList) {
             Long bidId = bid.getId();
-            BidProgress bidProgress = bidProgressRepository.findHandleTimeByBidAndType(bidId, ProgressTypeEnum.CLEAR.getCode());
+            BidProgress bidProgress = bidProgressRepository.findHandleTimeByBidAndType(bidId, BidProgressTypeEnum.CLEAR.getCode());
             Bill loanBill = billRepository.findRepayTimeByBid(bidId);
             Long billId = loanBill.getId();
 
@@ -85,7 +85,7 @@ public class RepayService {
                     if (loanBill.getIsPartialRepayment()) {
 
                         //已还逾期费
-                        BillLedger loanBillLedgerOver = billLedgerRepository.findLoanBillLedger(billId, LoanBillLedgerEnum.OVERDUE.getType());
+                        BillLedger loanBillLedgerOver = billLedgerRepository.findLoanBillLedger(billId, BillLedgerItemEnum.OVERDUE_FEE.getType());
                         BigDecimal realRepayOver = loanBillLedgerOver.getRealRepaymentAmount();
 
                         //最终逾期费
@@ -131,7 +131,7 @@ public class RepayService {
             BigDecimal repaymentAmount = loanBillLedger.getRepaymentAmount();
             BigDecimal realRepaymentAmount = loanBillLedger.getRealRepaymentAmount();
 
-            if(!LoanBillLedgerEnum.OVERDUE.getType().equals(loanBillLedger.getRepaymentItem())){
+            if(!BillLedgerItemEnum.OVERDUE_FEE.getType().equals(loanBillLedger.getRepaymentItem())){
 
                 //总的应还金额
                 totalRepaymentAmount = Arith.add(totalRepaymentAmount, repaymentAmount);
@@ -154,7 +154,7 @@ public class RepayService {
         //逾期费率
         BigDecimal twentyPercent = new BigDecimal(TWENTY_PERCENT);
         //本金
-        BillLedger loanBillLedgerCorpus = billLedgerRepository.findLoanBillLedger(billId, LoanBillLedgerEnum.CORPUS.getType());
+        BillLedger loanBillLedgerCorpus = billLedgerRepository.findLoanBillLedger(billId, BillLedgerItemEnum.CORPUS.getType());
         BigDecimal repaymentCorpus = loanBillLedgerCorpus.getRepaymentAmount();
         BigDecimal realRepaymentCopus = loanBillLedgerCorpus.getRealRepaymentAmount();
         BigDecimal corpus = Arith.sub(repaymentCorpus, realRepaymentCopus);

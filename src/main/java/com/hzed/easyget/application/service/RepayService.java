@@ -5,7 +5,7 @@ import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.BillLedgerItemEnum;
 import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.RepayStatusEnum;
-import com.hzed.easyget.controller.model.RepayResponse;
+import com.hzed.easyget.controller.model.RepayListResponse;
 import com.hzed.easyget.controller.model.RepaymentResponse;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
@@ -42,14 +42,14 @@ public class RepayService {
 
     private static final String TWENTY_PERCENT = "0.2";
 
-    public RepayResponse repaidList() {
+    public RepayListResponse repaidList() {
 
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
         List<Bid> bidList = bidRepository.findBStatusByUserId(userId, Lists.newArrayList((byte) 3,(byte) 4));
         //没有借款记录
         if (bidList.isEmpty() || bidList.size() <= 0) {
-            return RepayResponse.builder().build();
+            return RepayListResponse.builder().build();
         }
         List<RepaymentResponse> repaymentResponseList = Lists.newArrayList();
         RepaymentResponse repaymentResponse = new RepaymentResponse();
@@ -111,7 +111,7 @@ public class RepayService {
 
         }
         repaymentResponseList.add(repaymentResponse);
-        return RepayResponse.builder().repaymentInfo(repaymentResponseList).TotalAmount(String.valueOf(totalRepayAmount)).build();
+        return RepayListResponse.builder().repaymentInfo(repaymentResponseList).TotalAmount(String.valueOf(totalRepayAmount)).build();
 
     }
 

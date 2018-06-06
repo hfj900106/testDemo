@@ -24,9 +24,9 @@ public enum EnvEnum {
     }
 
     public static boolean isTestEnv(String env) {
-        for (EnvEnum eEnum : EnvEnum.values()) {
-            if(eEnum.getEnv().equals(env)) {
-                return eEnum.getIsTest();
+        for (EnvEnum e : EnvEnum.values()) {
+            if(e.getEnv().equals(env)) {
+                return e.getIsTest();
             }
         }
 

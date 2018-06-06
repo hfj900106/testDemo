@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RepayResponse {
+public class RepayListResponse {
 
     private String TotalAmount;
     private List<RepaymentResponse> repaymentInfo;

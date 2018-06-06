@@ -16,7 +16,8 @@ public enum BidProgressTypeEnum {
      */
     AUDIT(1, "审核"),
     LOAN(2, "放款"),
-    CLEAR(3, "结清");
+    REPAY(3, "还款"),
+    CLEAR(4, "结清");
 
     private Integer code;
     private String msg;

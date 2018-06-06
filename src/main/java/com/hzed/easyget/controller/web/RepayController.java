@@ -1,7 +1,7 @@
 package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.RepayService;
-import com.hzed.easyget.controller.model.RepayResponse;
+import com.hzed.easyget.controller.model.RepayListResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
@@ -26,7 +26,7 @@ public class RepayController {
 
     @ModuleFunc("还款列表")
     @GetMapping("/repaidList")
-    public Response<RepayResponse> repaidList(){
+    public Response<RepayListResponse> repaidList(){
 
         return Response.getSuccessResponse(repayService.repaidList());
     }

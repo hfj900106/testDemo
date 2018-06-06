@@ -16,5 +16,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class LoanResponse {
-    private String isLoan;
+    private Boolean isLoan;
 }

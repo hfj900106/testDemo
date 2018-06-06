@@ -3,7 +3,6 @@ package com.hzed.easyget.application.service;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
-import com.hzed.easyget.application.enums.StatusEnum;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.aliyun.AliyunService;
 import com.hzed.easyget.infrastructure.exception.NestedException;
@@ -59,7 +58,7 @@ public class AuthService {
             AuthStatusResponse authStatusResponse = new AuthStatusResponse();
             authStatusResponse.setCode(uas.getAuthCode());
             authStatusResponse.setStatus(String.valueOf(uas.getAuthStatus()));
-            authStatusResponse.setIsUse(auth.getIsUse() ? StatusEnum.ENABLE.getCode() : StatusEnum.DISENABLE.getCode());
+            authStatusResponse.setIsUse(auth.getIsUse());
             authStatusList.add(authStatusResponse);
         }
         return authStatusList;

@@ -2,7 +2,6 @@ package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AppVersionEnum;
-import com.hzed.easyget.application.enums.StatusEnum;
 import com.hzed.easyget.application.service.product.model.EasyGetPruduct;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
@@ -168,8 +167,8 @@ public class HomeService {
         Long userId = globalUser.getUserId();
         List<Bid> bid = bidRepository.findBStatusByUserId(userId, Lists.newArrayList((byte) 1, (byte) 5));
         if (bid.isEmpty() || bid.size() == 0) {
-            return LoanResponse.builder().isLoan(StatusEnum.ENABLE.getCode()).build();
+            return LoanResponse.builder().isLoan(true).build();
         }
-        return LoanResponse.builder().isLoan(StatusEnum.DISENABLE.getCode()).build();
+        return LoanResponse.builder().isLoan(false).build();
     }
 }

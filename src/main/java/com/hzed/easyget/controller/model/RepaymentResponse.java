@@ -18,6 +18,5 @@ public class RepaymentResponse {
     private String loanMount;
     private String loanTime;
     private String status;
-    private String type;
     private String days;
 }

@@ -51,16 +51,17 @@ public class RepayService {
 
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
-        List<Bid> bidList = bidRepository.findBStatusByUserId(userId, Lists.newArrayList((byte) 3,(byte) 4));
+        List<Bid> bidList = bidRepository.findBStatusByUserId(userId, Lists.newArrayList(BidStatusEnum.REPAYMENT.getCode().byteValue(),BidStatusEnum.CLEARED.getCode().byteValue()));
         //没有借款记录
         if (bidList.isEmpty() || bidList.size() <= 0) {
             return RepayListResponse.builder().build();
         }
         List<RepaymentResponse> repaymentResponseList = Lists.newArrayList();
-        RepaymentResponse repaymentResponse = new RepaymentResponse();
+        RepaymentResponse repaymentResponse = null;
         //应还总金额
-        BigDecimal totalRepayAmount = new BigDecimal(1);
+        BigDecimal totalRepayAmount = new BigDecimal(0);
         for (Bid bid : bidList) {
+            repaymentResponse = new RepaymentResponse();
             Long bidId = bid.getId();
             BidProgress bidProgress = bidProgressRepository.findHandleTimeByBidAndType(bidId, BidProgressTypeEnum.CLEAR.getCode().toString());
             Bill loanBill = billRepository.findRepayTimeByBid(bidId);
@@ -70,10 +71,10 @@ public class RepayService {
             //借款金额
             repaymentResponse.setLoanMount(bid.getLoanAmount().toString());
             //已结清
-            if (BidStatusEnum.CLEARED.getCode().equals(bid.getStatus())) {
+            if ((BidStatusEnum.CLEARED.getCode().toString()).equals(bid.getStatus().toString())) {
                 repaymentResponse.setLoanTime(bidProgress.getHandleTime().toString());
                 repaymentResponse.setStatus(String.valueOf(RepayStatusEnum.CLEAR_REPAY.getCode()));
-
+                repaymentResponseList.add(repaymentResponse);
             } else {//未结清
 
                 //查询应还时间与当前时间对比，大于当前时间:逾期，小于:没到期
@@ -111,11 +112,11 @@ public class RepayService {
                     totalRepayAmount = unRepaymentAmount;
 
                 }
-
+                repaymentResponseList.add(repaymentResponse);
             }
 
         }
-        repaymentResponseList.add(repaymentResponse);
+
         return RepayListResponse.builder().repaymentInfo(repaymentResponseList).TotalAmount(String.valueOf(totalRepayAmount)).build();
 
     }

@@ -9,6 +9,7 @@ import lombok.Getter;
 
 @Getter
 public enum ProgressTypeEnum {
+    /** 过规则 */
     AUDIT("1","审核"),
     LOAN("2","放款"),
     CLEAR("3","结清");

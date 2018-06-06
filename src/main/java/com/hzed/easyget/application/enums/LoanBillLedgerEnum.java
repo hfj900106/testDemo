@@ -10,6 +10,7 @@ import lombok.Getter;
 @Getter
 public enum LoanBillLedgerEnum {
 
+    /** 过规则 */
     CORPUS("1","本金"),
     INTEREST("2","利息"),
     AUDIT("3","砍头息"),

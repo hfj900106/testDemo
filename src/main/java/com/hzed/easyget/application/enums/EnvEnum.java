@@ -2,8 +2,13 @@ package com.hzed.easyget.application.enums;
 
 import lombok.Getter;
 
+/**
+ * @author guichang
+ */
+
 @Getter
 public enum EnvEnum {
+    /** 过规则 */
     DEV("dev", "开发环境", true),
     TEST("test", "测试环境", true),
     RELEASE("release", "预生产环境", true),

@@ -10,6 +10,7 @@ import lombok.Getter;
 
 @Getter
 public enum AuthCodeEnum {
+    /** 过规则 */
     ID_CARD("001", "身份证认证"),
     CONTACTS("002", "通讯录授权"),
     MESSAGE("003", "短信授权"),

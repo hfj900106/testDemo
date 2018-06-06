@@ -8,6 +8,7 @@ import lombok.Getter;
 
 @Getter
 public enum StatusEnum {
+    /** 过规则 */
     ENABLE("1", "可用"),
     DISENABLE("0", "不可用");
 

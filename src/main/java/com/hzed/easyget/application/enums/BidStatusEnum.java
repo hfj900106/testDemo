@@ -8,6 +8,8 @@ import lombok.Getter;
 
 @Getter
 public enum BidStatusEnum {
+
+    /** 过规则 */
     RISK_ING(1, "待走风控"),
     MANMADE_ING(2, "待人审"),
     AUDIT_FAIL(3, "审核不通过"),

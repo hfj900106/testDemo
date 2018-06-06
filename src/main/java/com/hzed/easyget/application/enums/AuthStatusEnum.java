@@ -8,6 +8,7 @@ import lombok.Getter;
 
 @Getter
 public enum AuthStatusEnum {
+    /** 过规则 */
     UN_AUTH("100","未认证"),
     HAS_AUTH("200","已认证"),
     TO_AUTH("201","认证中"),

@@ -8,6 +8,7 @@ import lombok.Getter;
 
 @Getter
 public enum AppVersionEnum {
+    /** 过规则 */
     ANDROID("android","安卓"),
     IOS("ios","苹果"),
     ANDROID_VERSION("android_version","安卓版本号"),

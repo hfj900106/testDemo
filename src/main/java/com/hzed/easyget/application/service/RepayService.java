@@ -42,7 +42,7 @@ public class RepayService {
 
     private static final String TWENTY_PERCENT = "0.2";
 
-    public RepayResponse doRepay() {
+    public RepayResponse repaidList() {
 
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();

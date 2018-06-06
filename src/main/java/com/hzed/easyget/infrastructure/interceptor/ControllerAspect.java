@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Aspect
 @Component
-public class MethodAspect {
+public class ControllerAspect {
 
     @Around("@annotation(moduleFunc)")
     public Object aroundMethod(ProceedingJoinPoint joinPoint, ModuleFunc moduleFunc) throws Throwable {

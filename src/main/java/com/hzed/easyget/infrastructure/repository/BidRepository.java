@@ -1,5 +1,7 @@
 package com.hzed.easyget.infrastructure.repository;
 
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.example.BidExample;
 import com.hzed.easyget.persistence.auto.mapper.BidMapper;
@@ -27,5 +29,13 @@ public class BidRepository {
 
     public Bid findById(Long id) {
         return bidMapper.selectByPrimaryKey(id);
+    }
+
+    public Bid findByIdWithExp(Long id) {
+        Bid bid = findById(id);
+        if (bid == null) {
+            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "标ID：" + id + " 不存在");
+        }
+        return bid;
     }
 }

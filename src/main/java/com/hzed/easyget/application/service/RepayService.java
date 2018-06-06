@@ -33,6 +33,9 @@ import java.util.List;
 public class RepayService {
 
     @Autowired
+    private ComService comService;
+
+    @Autowired
     private BidRepository bidRepository;
     @Autowired
     private BidProgressRepository bidProgressRepository;
@@ -166,6 +169,9 @@ public class RepayService {
     }
 
     public void repayAll(RepayAllRequest request) {
+        Long bidId = request.getBidId();
+        comService.getBidNoRepay(bidId);
+
 
     }
 }

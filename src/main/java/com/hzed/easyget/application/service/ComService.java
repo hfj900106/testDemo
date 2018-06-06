@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 一些公用的方法
@@ -105,16 +106,32 @@ public class ComService {
     }
 
     /**
+     * 获取标的待还总费用
+     *
+     * @param bidId 标id
+     */
+    public BigDecimal getBidNoRepay(Long bidId) {
+        bidRepository.findByIdWithExp(bidId);
+
+        BigDecimal total = BigDecimal.ZERO;
+        List<Bill> bills = billRepository.findAllBillByBidIdWithExp(bidId);
+        for (Bill bill : bills) {
+            List<BillLedger> ledgers = billLedgerRepository.findAllBillLedgerByBillId(bill.getId());
+            for (BillLedger ledger : ledgers) {
+                total = total.add(getBillItemNoRepay(ledger.getBillId(), ledger.getRepaymentItem().intValue()));
+            }
+        }
+        return total;
+    }
+
+    /**
      * 获取账单台账待还费用
      *
-     * @param billId   账单id
-     * @param itemEnum 台账类型
+     * @param billId 账单id
+     * @param item   台账类型枚举值 如 BillLedgerItemEnum.OVERDUE_FEE.getCode()
      */
-    public BigDecimal getBillItemNoRepay(Long billId, BillLedgerItemEnum itemEnum) {
-        Bill bill = billRepository.findById(billId);
-        if (bill == null) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "账单ID：" + billId + " 不存在");
-        }
+    public BigDecimal getBillItemNoRepay(Long billId, Integer item) {
+        Bill bill = billRepository.findByIdWithExp(billId);
         int status = bill.getStatus().intValue();
         // 账单已结清则没有逾期费
         if (BillStatusEnum.NORMAL_CLEAR.getCode().equals(status) ||
@@ -122,14 +139,11 @@ public class ComService {
             return BigDecimal.ZERO;
         }
         // 逾期费另外计算
-        if (BillLedgerItemEnum.OVERDUE_FEE.equals(itemEnum)) {
+        if (BillLedgerItemEnum.OVERDUE_FEE.getCode().equals(item)) {
             return getBillOverFeeNoRepay(billId);
         }
 
-        BillLedger ledger = billLedgerRepository.findBillLedgerItemByBillId(billId, itemEnum.getCode().byteValue());
-        if (ledger == null) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "账单ID：" + billId + "的台账类型：" + itemEnum.getCode().byteValue() + "不存在");
-        }
+        BillLedger ledger = billLedgerRepository.findBillLedgerItemByBillIdWithExp(billId, item.byteValue());
         // 应还金额
         BigDecimal repaymentAmount = ledger.getRepaymentAmount();
         // 实还金额
@@ -144,10 +158,7 @@ public class ComService {
      * @param billId 账单id
      */
     public BigDecimal getBillOverFeeNoRepay(Long billId) {
-        Bill bill = billRepository.findById(billId);
-        if (bill == null) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "账单ID：" + billId + " 不存在");
-        }
+        Bill bill = billRepository.findByIdWithExp(billId);
         int status = bill.getStatus().intValue();
         // 账单已结清则没有逾期费
         if (BillStatusEnum.NORMAL_CLEAR.getCode().equals(status) ||
@@ -162,10 +173,7 @@ public class ComService {
             return BigDecimal.ZERO;
         }
 
-        Bid bid = bidRepository.findById(bill.getBidId());
-        if (bill == null) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "账单ID：" + billId + " 对应的标的不存在");
-        }
+        Bid bid = bidRepository.findByIdWithExp(bill.getBidId());
 
         EasyGetPruduct product = new EasyGetPruduct(bid.getLoanAmount(), bid.getPeriod());
         // 总逾期费

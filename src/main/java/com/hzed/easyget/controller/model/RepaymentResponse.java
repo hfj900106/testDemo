@@ -19,5 +19,5 @@ public class RepaymentResponse {
     private String repayTime;
     private String status;
     private String days;
-    private String bidId;
+    private String bid;
 }

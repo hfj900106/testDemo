@@ -1,11 +1,11 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.persistence.auto.entity.TransactionRecord;
 import com.hzed.easyget.persistence.auto.entity.User;
-import com.hzed.easyget.persistence.auto.entity.example.TransactionRecordExample;
+import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.example.UserExample;
-import com.hzed.easyget.persistence.auto.mapper.TransactionRecordMapper;
+import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.mapper.UserMapper;
+import com.hzed.easyget.persistence.auto.mapper.UserTransactionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +24,7 @@ public class UserRepository {
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private TransactionRecordMapper transactionRecordMapper;
+    private UserTransactionMapper userTransactionMapper;
 
     public User findByMobile(String mobile) {
         UserExample example = new UserExample();
@@ -49,10 +49,10 @@ public class UserRepository {
         return userMapper.selectByPrimaryKey(id);
     }
 
-    public List<TransactionRecord> findTransactionRecordBySelect(Long userId,Boolean isDisplay){
-        TransactionRecordExample transactionRecordExample = new TransactionRecordExample();
-        transactionRecordExample.createCriteria().andUserIdEqualTo(userId).andIsDisplayEqualTo(isDisplay);
-        List<TransactionRecord> transactionRecords = transactionRecordMapper.selectByExampleSelective(transactionRecordExample);
+    public List<UserTransaction> findTransactionRecordBySelect(Long userId,Boolean isDisplay){
+        UserTransactionExample example = new UserTransactionExample();
+        example.createCriteria().andUserIdEqualTo(userId).andIsDisplayEqualTo(isDisplay);
+        List<UserTransaction> transactionRecords = userTransactionMapper.selectByExampleSelective(example);
         return transactionRecords ;
     }
 

@@ -7,6 +7,7 @@ import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.RepayStatusEnum;
 import com.hzed.easyget.controller.model.RepayAllRequest;
 import com.hzed.easyget.controller.model.RepayListResponse;
+import com.hzed.easyget.controller.model.RepayPartRequest;
 import com.hzed.easyget.controller.model.RepaymentResponse;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
@@ -168,10 +169,24 @@ public class RepayService {
         return totalOverdueAmount;
     }
 
+    /**
+     * 结清全部
+     */
     public void repayAll(RepayAllRequest request) {
         Long bidId = request.getBidId();
         comService.getBidNoRepay(bidId);
 
 
+    }
+
+    /**
+     * 部分还款
+     */
+    public void repayPart(RepayPartRequest request) {
+        // TODO 保存 t_loan_transaction_record 用户交易记录表
+    }
+
+    private BigDecimal repayOverdueFee() {
+        return null;
     }
 }

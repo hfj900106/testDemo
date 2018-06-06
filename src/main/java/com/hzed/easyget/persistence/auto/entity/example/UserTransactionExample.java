@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionRecordExample {
+public class UserTransactionExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -16,7 +16,7 @@ public class TransactionRecordExample {
 
     protected Integer rows;
 
-    public TransactionRecordExample() {
+    public UserTransactionExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -87,29 +87,29 @@ public class TransactionRecordExample {
         return this.rows;
     }
 
-    public TransactionRecordExample limit(Integer rows) {
+    public UserTransactionExample limit(Integer rows) {
         this.rows = rows;
         return this;
     }
 
-    public TransactionRecordExample limit(Integer offset, Integer rows) {
+    public UserTransactionExample limit(Integer offset, Integer rows) {
         this.offset = offset;
         this.rows = rows;
         return this;
     }
 
-    public TransactionRecordExample page(Integer page, Integer pageSize) {
+    public UserTransactionExample page(Integer page, Integer pageSize) {
         this.offset = page * pageSize;
         this.rows = pageSize;
         return this;
     }
 
-    public TransactionRecordExample orderBy(String orderByClause) {
+    public UserTransactionExample orderBy(String orderByClause) {
         this.setOrderByClause(orderByClause);
         return this;
     }
 
-    public TransactionRecordExample orderBy(String ... orderByClauses) {
+    public UserTransactionExample orderBy(String ... orderByClauses) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < orderByClauses.length; i++) {
             sb.append(orderByClauses[i]);
@@ -1124,14 +1124,14 @@ public class TransactionRecordExample {
     }
 
     public static class Criteria extends GeneratedCriteria {
-        private TransactionRecordExample example;
+        private UserTransactionExample example;
 
-        protected Criteria(TransactionRecordExample example) {
+        protected Criteria(UserTransactionExample example) {
             super();
             this.example = example;
         }
 
-        public TransactionRecordExample example() {
+        public UserTransactionExample example() {
             return this.example;
         }
 

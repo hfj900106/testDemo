@@ -1,6 +1,6 @@
 package com.hzed.easyget.controller.model;
 
-import com.hzed.easyget.persistence.auto.entity.TransactionRecord;
+import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import lombok.Data;
 
 import java.util.List;
@@ -12,5 +12,5 @@ import java.util.List;
  */
 @Data
 public class TransactionRecordResponse {
-    private List<TransactionRecord> list ;
+    private List<UserTransaction> list ;
 }

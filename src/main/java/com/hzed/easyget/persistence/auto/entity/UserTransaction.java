@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class TransactionRecord implements Serializable {
+public class UserTransaction implements Serializable {
     /**
      * 主键
      */
@@ -224,15 +224,15 @@ public class TransactionRecord implements Serializable {
         return sb.toString();
     }
 
-    public static TransactionRecord.Builder builder() {
-        return new TransactionRecord.Builder();
+    public static UserTransaction.Builder builder() {
+        return new UserTransaction.Builder();
     }
 
     public static class Builder {
-        private TransactionRecord obj;
+        private UserTransaction obj;
 
         public Builder() {
-            this.obj = new TransactionRecord();
+            this.obj = new UserTransaction();
         }
 
         public Builder id(Long id) {
@@ -310,7 +310,7 @@ public class TransactionRecord implements Serializable {
             return this;
         }
 
-        public TransactionRecord build() {
+        public UserTransaction build() {
             return this.obj;
         }
     }

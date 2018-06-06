@@ -137,10 +137,10 @@ public class LoginService {
     }
 
     public void sendSmsCode(SmsCodeRequest request) {
-        String isSendCode = "0";
+        String isSuccess = "0";
         String mobile = request.getMobile();
-        String isSend = redisService.getCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile);
-        if (StringUtils.isNotBlank(isSend)) {
+        String hasBeenSend = redisService.getCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile);
+        if (StringUtils.isNotBlank(hasBeenSend)) {
             //发送过于频繁
             throw new ComBizException(BizCodeEnum.FREQUENTLY_SEND);
         }
@@ -148,7 +148,6 @@ public class LoginService {
         String content = "您的注册验证码是：" + code + " ，两分钟内有效，欢迎使用本平台";
         //发送短信
         NxSmsDownRequest smsDownRequest = new NxSmsDownRequest();
-        //测试
         smsDownRequest.setPhone(mobile);
         smsDownRequest.setTimestamp(String.valueOf(System.currentTimeMillis()));
         smsDownRequest.setSourceadd("hztele");
@@ -156,7 +155,7 @@ public class LoginService {
         smsDownRequest.setContent(content);
         NxSmsDownResponse smsDownResponse = NxSmsUtil.smsSend(smsDownRequest);
         //发送失败
-        if(!isSendCode.equals(smsDownResponse.getCode())){
+        if(!isSuccess.equals(smsDownResponse.getCode())){
             throw new ComBizException(BizCodeEnum.SMS_CODE_SEND_FAIL);
         }
         // 保存到数据库短信记录表

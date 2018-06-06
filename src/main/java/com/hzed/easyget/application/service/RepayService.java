@@ -72,7 +72,7 @@ public class RepayService {
             repaymentResponse.setLoanMount(bid.getLoanAmount().toString());
             //已结清
             if ((BidStatusEnum.CLEARED.getCode().toString()).equals(bid.getStatus().toString())) {
-                repaymentResponse.setLoanTime(bidProgress.getHandleTime().toString());
+                repaymentResponse.setRepayTime(bidProgress.getHandleTime().toString());
                 repaymentResponse.setStatus(String.valueOf(RepayStatusEnum.CLEAR_REPAY.getCode()));
                 repaymentResponseList.add(repaymentResponse);
             } else {//未结清
@@ -112,6 +112,7 @@ public class RepayService {
                     totalRepayAmount = unRepaymentAmount;
 
                 }
+                repaymentResponse.setBidId(String.valueOf(bidId));
                 repaymentResponseList.add(repaymentResponse);
             }
 

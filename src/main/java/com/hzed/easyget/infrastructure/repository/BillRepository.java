@@ -16,12 +16,16 @@ import org.springframework.stereotype.Repository;
 public class BillRepository {
 
     @Autowired
-    private BillMapper loanBillMapper;
+    private BillMapper billMapper;
 
     public Bill findRepayTimeByBid(Long bid) {
         BillExample example = new BillExample();
         example.createCriteria().andBidIdEqualTo(bid);
-        return loanBillMapper.selectOneByExample(example);
+        return billMapper.selectOneByExample(example);
 
+    }
+
+    public Bill findById(Long id) {
+        return billMapper.selectByPrimaryKey(id);
     }
 }

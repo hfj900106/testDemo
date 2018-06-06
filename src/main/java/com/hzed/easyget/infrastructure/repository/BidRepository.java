@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- *
  * @author wuchengwu
  * @data 2018/5/25
  */
@@ -26,4 +25,7 @@ public class BidRepository {
     }
 
 
+    public Bid findById(Long id) {
+        return bidMapper.selectByPrimaryKey(id);
+    }
 }

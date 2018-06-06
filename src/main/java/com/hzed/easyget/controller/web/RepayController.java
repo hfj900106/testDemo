@@ -1,12 +1,14 @@
 package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.RepayService;
+import com.hzed.easyget.controller.model.RepayAllRequest;
 import com.hzed.easyget.controller.model.RepayListResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +31,12 @@ public class RepayController {
     public Response<RepayListResponse> repaidList(){
 
         return Response.getSuccessResponse(repayService.repaidList());
+    }
+
+    @ModuleFunc("结清全部")
+    @GetMapping("/repayAll")
+    public Response repayAll(@RequestBody RepayAllRequest request){
+        repayService.repayAll(request);
+        return Response.getSuccessResponse();
     }
 }

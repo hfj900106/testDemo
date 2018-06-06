@@ -5,6 +5,7 @@ import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.BillLedgerItemEnum;
 import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.RepayStatusEnum;
+import com.hzed.easyget.controller.model.RepayAllRequest;
 import com.hzed.easyget.controller.model.RepayListResponse;
 import com.hzed.easyget.controller.model.RepaymentResponse;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
@@ -85,7 +86,7 @@ public class RepayService {
                     if (loanBill.getIsPartialRepayment()) {
 
                         //已还逾期费
-                        BillLedger loanBillLedgerOver = billLedgerRepository.findLoanBillLedger(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode().toString());
+                        BillLedger loanBillLedgerOver = billLedgerRepository.findBillLedgerItemByBillId(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode().byteValue());
                         BigDecimal realRepayOver = loanBillLedgerOver.getRealRepaymentAmount();
 
                         //最终逾期费
@@ -154,7 +155,7 @@ public class RepayService {
         //逾期费率
         BigDecimal twentyPercent = new BigDecimal(TWENTY_PERCENT);
         //本金
-        BillLedger loanBillLedgerCorpus = billLedgerRepository.findLoanBillLedger(billId, BillLedgerItemEnum.CORPUS.getCode().toString());
+        BillLedger loanBillLedgerCorpus = billLedgerRepository.findBillLedgerItemByBillId(billId, BillLedgerItemEnum.CORPUS.getCode().byteValue());
         BigDecimal repaymentCorpus = loanBillLedgerCorpus.getRepaymentAmount();
         BigDecimal realRepaymentCopus = loanBillLedgerCorpus.getRealRepaymentAmount();
         BigDecimal corpus = Arith.sub(repaymentCorpus, realRepaymentCopus);
@@ -162,5 +163,9 @@ public class RepayService {
         //总逾期费，本金X利息X逾期天数
         BigDecimal totalOverdueAmount = Arith.mul(corpus, twentyPercent, day);
         return totalOverdueAmount;
+    }
+
+    public void repayAll(RepayAllRequest request) {
+
     }
 }

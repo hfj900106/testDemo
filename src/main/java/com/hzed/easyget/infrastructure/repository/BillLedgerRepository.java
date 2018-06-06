@@ -20,9 +20,9 @@ public class BillLedgerRepository {
     @Autowired
     private BillLedgerMapper loanBillLedgerMapper;
 
-    public BillLedger findLoanBillLedger(Long billId, String type) {
+    public BillLedger findBillLedgerItemByBillId(Long billId, Byte item) {
         BillLedgerExample example = new BillLedgerExample();
-        example.createCriteria().andBillIdEqualTo(billId).andRepaymentItemEqualTo((byte)Integer.parseInt(type));
+        example.createCriteria().andBillIdEqualTo(billId).andRepaymentItemEqualTo(item);
         return loanBillLedgerMapper.selectOneByExample(example);
     }
 

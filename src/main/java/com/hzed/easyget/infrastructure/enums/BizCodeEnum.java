@@ -35,6 +35,9 @@ public enum BizCodeEnum {
     NO_USEFUL_PRODUCT("1011", "无可用产品"),
     TOKEN_EXPIRE("1012", "用户登录信息失效"),
     ILLEGAL_PICTURECODE("1013", "图片验证码错误"),
+    UN_IDENTITY_AUTH("1014", "用户未进行身份认证"),
+    OVER_TIME_SMS_CODE("1015", "验证码超时"),
+    FREQUENTLY_SEND("1016", "发送过于频繁"),
 
 
 

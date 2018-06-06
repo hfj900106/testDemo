@@ -61,4 +61,6 @@ public class UserService {
     public  List<UserTransaction> queryTransactionRecordForApp(Long userId,Boolean isDisplay) {
         return userRepository.findTransactionRecordBySelect(userId,isDisplay);
     }
+
+
 }

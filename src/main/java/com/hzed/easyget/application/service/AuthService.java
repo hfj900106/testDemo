@@ -5,22 +5,27 @@ import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.aliyun.AliyunService;
+import com.hzed.easyget.infrastructure.config.redis.RedisService;
+import com.hzed.easyget.infrastructure.consts.RedisConsts;
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.NestedException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.repository.WorkRepository;
-import com.hzed.easyget.infrastructure.repository.PersonInfoRepository;
-import com.hzed.easyget.infrastructure.repository.ProfessionalRepository;
-import com.hzed.easyget.infrastructure.repository.UserAuthStatusRepository;
+import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 
@@ -44,6 +49,12 @@ public class AuthService {
     private ProfessionalRepository professionalRepository;
     @Autowired
     private AliyunService aliyunService;
+    @Autowired
+    private RestTemplate template;
+    @Autowired
+    private RedisService redisService;
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * 获取用户认证状态
@@ -108,6 +119,66 @@ public class AuthService {
 //        Long userAuthId = IdentifierGenerator.nextId();
 //        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthId, "短信授权");
 //        authContentRepository.insertContactAndUserAuthStatus(authContent, userAuthStatus);
+    }
+
+    /**
+     * 运营商认证 - 发送验证码接口
+     */
+    public void operatorSendSmsCode(){
+        GlobalUser user = getGlobalUser();
+        String isSend = redisService.getCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
+        if (StringUtils.isNotBlank(isSend)) {
+            //发送过于频繁
+            throw new ComBizException(BizCodeEnum.FREQUENTLY_SEND);
+        }
+        User userInfo = userRepository.findById(user.getUserId());
+        String realName = userInfo.getRealName();
+        String identityCode = userInfo.getIdCardNo();
+        if (StringUtils.isBlank(realName) || StringUtils.isBlank(identityCode)) {
+            //未进行身份验证
+            throw new ComBizException(BizCodeEnum.UN_IDENTITY_AUTH);
+        }
+        //redis存一个发送标识，避免频繁发送
+        redisService.setCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + userInfo.getId(), "operatorAuth", 60L);
+        Map<String, Object> map = new HashMap<>(16);
+        //TODO 待定参数
+        map.put("sign", "1212");
+        map.put("channelType", "1212");
+        map.put("channelCode", "1212");
+        map.put("realName", userInfo.getRealName());
+        map.put("identityCode", userInfo.getIdCardNo());
+        map.put("userMobile", userInfo.getMobileAccount());
+        map.put("userId", userInfo.getId());
+        //TODO 待验证方式
+        String response = template.postForObject("/app/riskOperator/createTaskAndlogin", map, String.class);
+        if (StringUtils.isNotBlank(response)) {
+            //TODO 解析返回值并保存taskId 到 Redis ,一小时有效，调认证接口用
+            String taskId = "wewe";
+            redisService.setCache(RedisConsts.IDENTITY_AUTH_CODE + RedisConsts.SPLIT + userInfo.getId(), taskId, 3600L);
+        }
+
+    }
+
+    /**
+     * 运营商认证 - 输入验证码认证运行商
+     */
+    public void operatorAuth(PeratorAuthRequest request){
+        GlobalUser user = getGlobalUser();
+        String taskId = redisService.getCache(RedisConsts.IDENTITY_AUTH_CODE + RedisConsts.SPLIT + user.getUserId());
+        if(StringUtils.isBlank(taskId)){
+            throw new ComBizException(BizCodeEnum.OVER_TIME_SMS_CODE);
+        }
+        Map<String, Object> map = new HashMap<>(16);
+        //TODO 待定参数
+        map.put("sign", "1212");
+        map.put("taskId", taskId);
+        map.put("smsCode",request.getSmsCode());
+        //TODO 待验证方式
+        String response = template.postForObject("/app/riskOperator/sendSmsCode", map, String.class);
+        if (StringUtils.isNotBlank(response)) {
+            //TODO 解析返回值并保存
+
+        }
     }
 
     /**

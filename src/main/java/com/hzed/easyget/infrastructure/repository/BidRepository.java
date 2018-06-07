@@ -42,4 +42,8 @@ public class BidRepository {
     public void update(Bid bid) {
         bidMapper.updateByPrimaryKeySelective(bid);
     }
+
+    public int save(Bid bid) {
+        return bidMapper.insertSelective(bid);
+    }
 }

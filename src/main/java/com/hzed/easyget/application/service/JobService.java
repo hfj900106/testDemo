@@ -52,16 +52,18 @@ public class JobService {
                 return;
             }
             Boolean hasRun = false;
-            tempList2.forEach(tempTable -> {
-                if (bid.getId().equals(tempTable.getId())) {
-//                    hasRun = true;
+            Integer times = 0;
+            for (TempTable temp : tempList2) {
+                if (bid.getId().equals(temp.getId())) {
+                    hasRun = true;
+                    times= temp.getReRunTimes().intValue()+1;
                 }
-            });
+            }
             //已经跑过，update
             if(hasRun){
-
+                tempTableRepository.upDateTemp(TempTable.builder().id(bid.getId()).createTime(LocalDateTime.now()).reRunTimes(times.byteValue()).build());
             }else {
-                //先把bid信息放到job表
+                //没跑过的新增
                 Long jobId = IdentifierGenerator.nextId();
                 tempTableRepository.insertJob(TempTable.builder().id(jobId).relaseId(bid.getId()).jobName("pushBid").remark("推送资产").createTime(LocalDateTime.now()).build());
             }

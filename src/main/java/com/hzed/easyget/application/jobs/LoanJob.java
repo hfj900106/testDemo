@@ -23,8 +23,7 @@ public class LoanJob {
     private JobService jobService;
 
     @Scheduled(cron="0/5 * * * * ?")
-    public void pushBid() {
-        //TODO
+    public void pushBid() throws Exception{
         jobService.pushBid();
     }
 

@@ -289,7 +289,6 @@ public class RepayService {
         userTransaction.setAccount(bid.getInAccount());
         userTransaction.setMode((byte) 1);
         userTransaction.setIsDisplay(true);
-        userTransaction.setCreateTime(LocalDateTime.now());
         userTransactionRepository.insert(userTransaction);
 
         // 保存 t_loan_bid_progress 标的进度表
@@ -299,7 +298,6 @@ public class RepayService {
         progressInsert.setType(BidProgressTypeEnum.REPAY.getCode().byteValue());
         progressInsert.setHandleTime(LocalDateTime.now());
         progressInsert.setHandleResult("用户还款：" + repayAmount);
-        progressInsert.setCreateTime(LocalDateTime.now());
         bidProgressRepository.insert(progressInsert);
 
         // 待还账单
@@ -396,7 +394,6 @@ public class RepayService {
         userRepayment.setRepaymentItem(item.byteValue());
         userRepayment.setRepaymentAmount(billItemNoRepay);
         userRepayment.setRealRepaymentAmount(repayAmountNow);
-        userRepayment.setCreateTime(LocalDateTime.now());
         userRepaymentRepository.insert(userRepayment);
 
         // 新增或更新t_loan_bill_ledger 台账表

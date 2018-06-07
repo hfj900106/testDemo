@@ -6,13 +6,11 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.repository.BidProgressRepository;
-import com.hzed.easyget.infrastructure.repository.BidRepository;
-import com.hzed.easyget.infrastructure.repository.BillLedgerRepository;
-import com.hzed.easyget.infrastructure.repository.BillRepository;
+import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.Arith;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
+import com.hzed.easyget.infrastructure.utils.ThreadLocalUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,6 @@ public class RepayService {
 
     @Autowired
     private ComService comService;
-
     @Autowired
     private BidRepository bidRepository;
     @Autowired
@@ -40,6 +37,10 @@ public class RepayService {
     private BillRepository billRepository;
     @Autowired
     private BillLedgerRepository billLedgerRepository;
+    @Autowired
+    private UserTransactionRepository userTransactionRepository;
+
+    private static final String USER_TRANCATIONID = "userTrancationId";
 
     private static final String TWENTY_PERCENT = "0.2";
 
@@ -47,7 +48,7 @@ public class RepayService {
 
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
-        List<Bid> bidList = bidRepository.findBStatusByUserId(userId, Lists.newArrayList(BidStatusEnum.REPAYMENT.getCode().byteValue(),BidStatusEnum.CLEARED.getCode().byteValue()));
+        List<Bid> bidList = bidRepository.findBStatusByUserId(userId, Lists.newArrayList(BidStatusEnum.REPAYMENT.getCode().byteValue(), BidStatusEnum.CLEARED.getCode().byteValue()));
         //没有借款记录
         if (bidList.isEmpty() || bidList.size() <= 0) {
             return RepayListResponse.builder().build();
@@ -59,7 +60,7 @@ public class RepayService {
         for (Bid bid : bidList) {
             repaymentResponse = new RepaymentResponse();
             Long bidId = bid.getId();
-            BidProgress bidProgress = bidProgressRepository.findHandleTimeByBidAndType(bidId, BidProgressTypeEnum.CLEAR.getCode().toString());
+            BidProgress bidProgress = bidProgressRepository.findByBidId(bidId, BidProgressTypeEnum.CLEAR.getCode().byteValue());
             Bill loanBill = billRepository.findByBid(bidId);
             Long billId = loanBill.getId();
 
@@ -171,11 +172,12 @@ public class RepayService {
 
     /**
      * 还款详情
+     *
      * @param request
      * @return
      */
     public RepayDetailResponse repayDetail(RepayDetailRequest request) {
-        RepayDetailResponse  repayDetailResponse= new RepayDetailResponse();
+        RepayDetailResponse repayDetailResponse = new RepayDetailResponse();
         String bidStr = request.getBid();
         long bidId = Long.valueOf(bidStr);
         //获取标的待还总费用
@@ -189,13 +191,13 @@ public class RepayService {
         Bid bid = bidRepository.findById(bidId);
         Integer period = bid.getPeriod();
         //贷款时间
-        BidProgress bidProgress = bidProgressRepository.findHandleTimeByBidAndType(bidId, BidProgressTypeEnum.LOAN.getCode().toString());
+        BidProgress bidProgress = bidProgressRepository.findByBidId(bidId, BidProgressTypeEnum.LOAN.getCode().byteValue());
         LocalDateTime loanTime = bidProgress.getHandleTime();
         //还款时间或实际已还时间
         int status = bill.getStatus();
-        if(BillStatusEnum.WAIT_CLEAR.getCode().equals(status)){
+        if (BillStatusEnum.WAIT_CLEAR.getCode().equals(status)) {
             repayDetailResponse.setRepayTime(DateUtil.dateToStr(bill.getRepaymentTime()));
-        }else{
+        } else {
             repayDetailResponse.setRepayTime(DateUtil.dateToStr(bill.getSettlementTime()));
         }
         repayDetailResponse.setPeriod(period);
@@ -217,53 +219,78 @@ public class RepayService {
 
     /**
      * 部分还款
+     * 保存 t_loan_user_repayment 还款记录表
+     * 保存 t_loan_bill_ledger 台账表
+     * 保存 t_loan_bill 账单表
+     * 保存 t_loan_bid_progress 标的进度表（主要更新还款信息）
+     * 保存 t_loan_bid 标的表（主要是更新结清操作，部分还款不用更新）
+     * 保存 t_loan_user_transaction 用户交易记录表
      */
     public void repayPart(RepayPartRequest request) {
         Long bidId = request.getBidId();
         BigDecimal repayAmount = request.getRepayAmount();
         Bid bid = bidRepository.findByIdWithExp(bidId);
+        // TODO 调用转账交易后的流水号 可以提前生成，可放入threadLocal中
+        String requestSeq = String.valueOf(IdentifierGenerator.nextId());
 
-        // TODO 保存 t_loan_user_transaction 用户交易记录表
-        // TODO 保存 t_loan_user_repayment 还款记录表
-        // TODO 保存 t_loan_bill_ledger 台账表
-        // TODO 保存 t_loan_bill 账单表
-        // TODO 保存 t_loan_bid_progress 标的进度表（主要更新还款信息）
-        // TODO 保存 t_loan_bid 标的表（主要是更新结清操作，部分还款不用更新）
+        // 保存 t_loan_user_transaction 用户交易记录表
+        long userTrancationId = IdentifierGenerator.nextId();
+        // 放入threadLocal后面要用
+        ThreadLocalUtil.set(USER_TRANCATIONID, userTrancationId);
         UserTransaction userTransaction = new UserTransaction();
-        userTransaction.setId(IdentifierGenerator.nextId());
+        userTransaction.setId(userTrancationId);
         userTransaction.setUserId(RequestUtil.getGlobalUser().getUserId());
         userTransaction.setBidId(bidId);
         userTransaction.setType(TransactionTypeEnum.OUT.getCode().byteValue());
         userTransaction.setAmount(repayAmount);
-        // TODO 调用转账交易后的流水号 可以提前生成
-        userTransaction.setRequestSeq("");
+        userTransaction.setRequestSeq(requestSeq);
         userTransaction.setBank(bid.getInBank());
         userTransaction.setAccount(bid.getInAccount());
-        userTransaction.setMode((byte)1);
+        userTransaction.setMode((byte) 1);
         userTransaction.setIsDisplay(true);
         userTransaction.setCreateTime(LocalDateTime.now());
-        // TODO save
+        userTransactionRepository.insert(userTransaction);
 
+        // 保存 t_loan_bid_progress 标的进度表
+        BidProgress progressInsert = new BidProgress();
+        progressInsert.setId(IdentifierGenerator.nextId());
+        progressInsert.setBidId(bidId);
+        progressInsert.setType(BidProgressTypeEnum.REPAY.getCode().byteValue());
+        progressInsert.setHandleTime(LocalDateTime.now());
+        progressInsert.setHandleResult("用户还款：" + repayAmount);
+        progressInsert.setCreateTime(LocalDateTime.now());
+        bidProgressRepository.insert(progressInsert);
 
-        List<Bill> bills = billRepository.findAllBillByBidIdWithExp(bidId);
+        // 待还账单
+        Bill billBefore = billRepository.findAllBillByBidIdWithExp(bidId).get(0);
+        // 还账单操作
+        repayBill(billBefore, repayAmount, LocalDateTime.now());
 
+        // 保存 t_loan_bid 标的表（主要是更新结清操作，部分还款不用更新）
+        Bill billAfter = billRepository.findAllBillByBidIdWithExp(bidId).get(0);
+        if(BillStatusEnum.NORMAL_CLEAR.getCode().equals(billAfter.getStatus())
+                || BillStatusEnum.OVERDUE_CLEAR.getCode().equals(billAfter.getStatus())) {
+            // 账单已结清 修改标的状态为结清
+            Bid bidUpdate = new Bid();
+            bidUpdate.setId(bidId);
+            bidUpdate.setStatus(BidStatusEnum.CLEARED.getCode().byteValue());
+            bidUpdate.setUpdateTime(LocalDateTime.now());
+            bidRepository.update(bidUpdate);
+        }
 
-    }
-
-    private BigDecimal repayOverdueFee() {
-        return null;
     }
 
     /**
      * 账单还款
      * 逾期费->尾款->本金
      *
-     * @param billId            账单id
+     * @param bill              账单
      * @param repayAmount       总还款金额
      * @param realRepaymentTime 实际还款时间
      * @return 剩余金额
      */
-    private BigDecimal repayBill(Long billId, BigDecimal repayAmount, LocalDateTime realRepaymentTime) {
+    private BigDecimal repayBill(Bill bill, BigDecimal repayAmount, LocalDateTime realRepaymentTime) {
+        Long billId = bill.getId();
         // 还逾期费
         BigDecimal restAmount1 = repayBillLedger(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode().intValue(), repayAmount, realRepaymentTime);
         // 还尾款
@@ -272,12 +299,10 @@ public class RepayService {
         BigDecimal restAmount3 = repayBillLedger(billId, BillLedgerItemEnum.CORPUS.getCode().intValue(), restAmount2, realRepaymentTime);
         // 本次还款金额
         BigDecimal repayAmountNow = restAmount3.compareTo(BigDecimal.ZERO) >= 0 ? repayAmount.subtract(restAmount3) : repayAmount;
-        // 当期账单
-        Bill billQuery = billRepository.findById(billId);
         // 更新账单表
         Bill billUpdate = new Bill();
         billUpdate.setId(billId);
-        billUpdate.setRealRepaymentAmount(billQuery.getRealRepaymentAmount().add(repayAmountNow));
+        billUpdate.setRealRepaymentAmount(bill.getRealRepaymentAmount().add(repayAmountNow));
         billUpdate.setUpdateTime(LocalDateTime.now());
 
         // 判断此笔账单是否结清
@@ -326,7 +351,8 @@ public class RepayService {
         // 保存 t_loan_user_repayment 还款记录表
         UserRepayment userRepayment = new UserRepayment();
         userRepayment.setId(IdentifierGenerator.nextId());
-        userRepayment.setTransactionId(0L);// TODO
+        // 从threadLocal里面拿
+        userRepayment.setTransactionId(ThreadLocalUtil.get(USER_TRANCATIONID));
         userRepayment.setBillId(billId);
         userRepayment.setRepaymentItem(item.byteValue());
         userRepayment.setRepaymentAmount(billItemNoRepay);

@@ -1,5 +1,6 @@
 package com.hzed.easyget.infrastructure.repository;
 
+import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.persistence.auto.entity.Bid;
@@ -45,5 +46,10 @@ public class BidRepository {
 
     public int save(Bid bid) {
         return bidMapper.insertSelective(bid);
+    }
+    public List<Bid> gitBidsToPush(List<Long> ids){
+        BidExample example = new BidExample();
+        example.createCriteria().andStatusEqualTo(BidStatusEnum.RISK_ING.getCode().byteValue()).andIdNotIn(ids);
+        return bidMapper.selectByExample(example);
     }
 }

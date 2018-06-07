@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepaymentRecordExample {
+public class UserRepaymentExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -16,7 +16,7 @@ public class RepaymentRecordExample {
 
     protected Integer rows;
 
-    public RepaymentRecordExample() {
+    public UserRepaymentExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -87,29 +87,29 @@ public class RepaymentRecordExample {
         return this.rows;
     }
 
-    public RepaymentRecordExample limit(Integer rows) {
+    public UserRepaymentExample limit(Integer rows) {
         this.rows = rows;
         return this;
     }
 
-    public RepaymentRecordExample limit(Integer offset, Integer rows) {
+    public UserRepaymentExample limit(Integer offset, Integer rows) {
         this.offset = offset;
         this.rows = rows;
         return this;
     }
 
-    public RepaymentRecordExample page(Integer page, Integer pageSize) {
+    public UserRepaymentExample page(Integer page, Integer pageSize) {
         this.offset = page * pageSize;
         this.rows = pageSize;
         return this;
     }
 
-    public RepaymentRecordExample orderBy(String orderByClause) {
+    public UserRepaymentExample orderBy(String orderByClause) {
         this.setOrderByClause(orderByClause);
         return this;
     }
 
-    public RepaymentRecordExample orderBy(String ... orderByClauses) {
+    public UserRepaymentExample orderBy(String ... orderByClauses) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < orderByClauses.length; i++) {
             sb.append(orderByClauses[i]);
@@ -839,14 +839,14 @@ public class RepaymentRecordExample {
     }
 
     public static class Criteria extends GeneratedCriteria {
-        private RepaymentRecordExample example;
+        private UserRepaymentExample example;
 
-        protected Criteria(RepaymentRecordExample example) {
+        protected Criteria(UserRepaymentExample example) {
             super();
             this.example = example;
         }
 
-        public RepaymentRecordExample example() {
+        public UserRepaymentExample example() {
             return this.example;
         }
 

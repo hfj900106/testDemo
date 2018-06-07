@@ -3,14 +3,17 @@ package com.hzed.easyget.application.service;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.controller.model.*;
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.BidProgressRepository;
+import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.BillLedgerRepository;
 import com.hzed.easyget.infrastructure.repository.BillRepository;
 import com.hzed.easyget.infrastructure.utils.Arith;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
+import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- *
  * @author wuchengwu
  * @date 2018/6/4
  */
@@ -73,7 +75,7 @@ public class RepayService {
             } else {//未结清
 
                 //查询应还时间与当前时间对比，大于当前时间:逾期，小于:没到期
-                int days =  DateUtil.daysBetween(loanBill.getRepaymentTime(), LocalDateTime.now());
+                int days = DateUtil.daysBetween(loanBill.getRepaymentTime(), LocalDateTime.now());
                 //计算总的未还总额
                 BigDecimal unRepaymentAmount = getRepaymentAmount(billId);
 
@@ -96,13 +98,13 @@ public class RepayService {
 
                     } else {//逾期未还
 
-                        totalRepayAmount = Arith.add(unRepaymentAmount,totalOverdue);
+                        totalRepayAmount = Arith.add(unRepaymentAmount, totalOverdue);
                     }
                     repaymentResponse.setStatus(RepayStatusEnum.OVDUE_UN_REPAY.getCode().toString());
                     repaymentResponse.setDays(String.valueOf(days));
                 } else {//正常未还
                     repaymentResponse.setStatus(RepayStatusEnum.UN_REPAY.getCode().toString());
-                    days = DateUtil.daysBetween(LocalDateTime.now(),loanBill.getRepaymentTime());
+                    days = DateUtil.daysBetween(LocalDateTime.now(), loanBill.getRepaymentTime());
                     repaymentResponse.setDays(String.valueOf(days));
                     totalRepayAmount = unRepaymentAmount;
 
@@ -119,6 +121,7 @@ public class RepayService {
 
     /**
      * 计算应还总额
+     *
      * @param billId
      * @return
      */
@@ -133,7 +136,7 @@ public class RepayService {
             BigDecimal repaymentAmount = loanBillLedger.getRepaymentAmount();
             BigDecimal realRepaymentAmount = loanBillLedger.getRealRepaymentAmount();
 
-            if(!BillLedgerItemEnum.OVERDUE_FEE.getCode().equals(loanBillLedger.getRepaymentItem())){
+            if (!BillLedgerItemEnum.OVERDUE_FEE.getCode().equals(loanBillLedger.getRepaymentItem())) {
 
                 //总的应还金额
                 totalRepaymentAmount = Arith.add(totalRepaymentAmount, repaymentAmount);
@@ -149,10 +152,11 @@ public class RepayService {
 
     /**
      * 计算总逾期费
+     *
      * @param billId
      * @return
      */
-    private BigDecimal getTotalOverdee(Long billId,int days) {
+    private BigDecimal getTotalOverdee(Long billId, int days) {
         //逾期费率
         BigDecimal twentyPercent = new BigDecimal(TWENTY_PERCENT);
         //本金
@@ -167,27 +171,6 @@ public class RepayService {
     }
 
     /**
-     * 结清全部
-     */
-    public void repayAll(RepayAllRequest request) {
-        Long bidId = request.getBidId();
-        comService.getBidNoRepay(bidId);
-
-
-    }
-
-    /**
-     * 部分还款
-     */
-    public void repayPart(RepayPartRequest request) {
-        // TODO 保存 t_loan_transaction_record 用户交易记录表
-    }
-
-    private BigDecimal repayOverdueFee() {
-        return null;
-    }
-
-    /**
      * 还款详情
      * @param request
      * @return
@@ -197,10 +180,10 @@ public class RepayService {
         String bidStr = request.getBid();
         long bidId = Long.valueOf(bidStr);
         //获取标的待还总费用
-        BigDecimal bidNoRepay = comService.getBidNoRepay(bidId);
+        BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, LocalDateTime.now());
         //获取账单待还逾期费
         Bill bill = billRepository.findByBid(bidId);
-        BigDecimal billOverFeeNoRepay = comService.getBillOverFeeNoRepay(bill.getId());
+        BigDecimal billOverFeeNoRepay = comService.getBillOverFeeNoRepay(bill.getId(), LocalDateTime.now());
         //待应还总额
         BigDecimal totalRepayAmount = bidNoRepay.add(billOverFeeNoRepay);
         //借款期限
@@ -233,4 +216,182 @@ public class RepayService {
         return repayDetailResponse;
 
     }
+
+    /**
+     * 结清全部
+     */
+    public void repayAll(RepayAllRequest request) {
+        Long bidId = request.getBidId();
+        comService.getBidNoRepay(bidId, LocalDateTime.now());
+
+
+    }
+
+    /**
+     * 部分还款
+     */
+    public void repayPart(RepayPartRequest request) {
+        Long bidId = request.getBidId();
+        BigDecimal repayAmount = request.getRepayAmount();
+        Bid bid = bidRepository.findByIdWithExp(bidId);
+
+        // TODO 保存 t_loan_user_transaction 用户交易记录表
+        // TODO 保存 t_loan_user_repayment 还款记录表
+        // TODO 保存 t_loan_bill_ledger 台账表
+        // TODO 保存 t_loan_bill 账单表
+        // TODO 保存 t_loan_bid_progress 标的进度表（主要更新还款信息）
+        // TODO 保存 t_loan_bid 标的表（主要是更新结清操作，部分还款不用更新）
+        UserTransaction userTransaction = new UserTransaction();
+        userTransaction.setId(IdentifierGenerator.nextId());
+        userTransaction.setUserId(RequestUtil.getGlobalUser().getUserId());
+        userTransaction.setBidId(bidId);
+        userTransaction.setType(TransactionTypeEnum.OUT.getCode().byteValue());
+        userTransaction.setAmount(repayAmount);
+        // TODO 调用转账交易后的流水号 可以提前生成
+        userTransaction.setRequestSeq("");
+        userTransaction.setBank(bid.getInBank());
+        userTransaction.setAccount(bid.getInAccount());
+        userTransaction.setMode((byte)1);
+        userTransaction.setIsDisplay(true);
+        userTransaction.setCreateTime(LocalDateTime.now());
+        // TODO save
+
+
+        List<Bill> bills = billRepository.findAllBillByBidIdWithExp(bidId);
+
+
+    }
+
+    private BigDecimal repayOverdueFee() {
+        return null;
+    }
+
+    /**
+     * 账单还款
+     * 逾期费->尾款->本金
+     *
+     * @param billId            账单id
+     * @param repayAmount       总还款金额
+     * @param realRepaymentTime 实际还款时间
+     * @return 剩余金额
+     */
+    private BigDecimal repayBill(Long billId, BigDecimal repayAmount, LocalDateTime realRepaymentTime) {
+        // 还逾期费
+        BigDecimal restAmount1 = repayBillLedger(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode().intValue(), repayAmount, realRepaymentTime);
+        // 还尾款
+        BigDecimal restAmount2 = repayBillLedger(billId, BillLedgerItemEnum.TAIL_FEE.getCode().intValue(), restAmount1, realRepaymentTime);
+        // 还本金
+        BigDecimal restAmount3 = repayBillLedger(billId, BillLedgerItemEnum.CORPUS.getCode().intValue(), restAmount2, realRepaymentTime);
+        // 本次还款金额
+        BigDecimal repayAmountNow = restAmount3.compareTo(BigDecimal.ZERO) >= 0 ? repayAmount.subtract(restAmount3) : repayAmount;
+        // 当期账单
+        Bill billQuery = billRepository.findById(billId);
+        // 更新账单表
+        Bill billUpdate = new Bill();
+        billUpdate.setId(billId);
+        billUpdate.setRealRepaymentAmount(billQuery.getRealRepaymentAmount().add(repayAmountNow));
+        billUpdate.setUpdateTime(LocalDateTime.now());
+
+        // 判断此笔账单是否结清
+        BillLedger corpusLedger = billLedgerRepository.findBillLedgerItemByBillIdWithExp(billId, BillLedgerItemEnum.CORPUS.getCode().byteValue());
+        // 本金没有待还表示已结清
+        if (corpusLedger.getRepaymentAmount().compareTo(corpusLedger.getRealRepaymentAmount()) == 0) {
+            billUpdate.setSettlementTime(LocalDateTime.now());
+            // 逾期结清还是正常结清
+            billUpdate.setStatus(DateUtil.compare(realRepaymentTime, LocalDateTime.now()) ?
+                    BillStatusEnum.OVERDUE_CLEAR.getCode().byteValue() : BillStatusEnum.NORMAL_CLEAR.getCode().byteValue());
+        } else {
+            // 部分还款
+            billUpdate.setIsPartialRepayment(true);
+        }
+
+        billRepository.update(billUpdate);
+
+        return restAmount3;
+    }
+
+    /**
+     * 台账还款
+     *
+     * @param billId            账单id
+     * @param item              台账类型 本金、尾款、逾期费
+     * @param repayAmount       总还款金额
+     * @param realRepaymentTime 实际还款时间
+     * @return 剩余金额
+     */
+    private BigDecimal repayBillLedger(Long billId, Integer item, BigDecimal repayAmount, LocalDateTime realRepaymentTime) {
+        // 还款金额为0
+        if (repayAmount == null || repayAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            return BigDecimal.ZERO;
+        }
+        // 待还总额
+        BigDecimal billItemNoRepay = comService.getBillItemNoRepay(billId, item, realRepaymentTime);
+        // 已结清则直接返回还款金额
+        if (billItemNoRepay.compareTo(BigDecimal.ZERO) <= 0) {
+            return repayAmount;
+        }
+        // 剩余金额
+        BigDecimal restAmount = repayAmount.subtract(billItemNoRepay);
+        // 本次还款金额
+        BigDecimal repayAmountNow = restAmount.compareTo(BigDecimal.ZERO) <= 0 ? repayAmount : billItemNoRepay;
+
+        // 保存 t_loan_user_repayment 还款记录表
+        UserRepayment userRepayment = new UserRepayment();
+        userRepayment.setId(IdentifierGenerator.nextId());
+        userRepayment.setTransactionId(0L);// TODO
+        userRepayment.setBillId(billId);
+        userRepayment.setRepaymentItem(item.byteValue());
+        userRepayment.setRepaymentAmount(billItemNoRepay);
+        userRepayment.setRealRepaymentAmount(repayAmountNow);
+        userRepayment.setCreateTime(LocalDateTime.now());
+        // TODO save
+
+        // 新增或更新t_loan_bill_ledger 台账表
+        BillLedger ledger = billLedgerRepository.findBillLedgerItemByBillId(billId, item.byteValue());
+        // 逾期费单独处理
+        if (BillLedgerItemEnum.OVERDUE_FEE.getCode().equals(item)) {
+            // 无逾期费记录则新增
+            if (ledger == null) {
+                BillLedger ledgerInsert = new BillLedger();
+                ledgerInsert.setId(IdentifierGenerator.nextId());
+                ledgerInsert.setBillId(billId);
+                ledgerInsert.setRepaymentTime(LocalDateTime.now());
+                ledgerInsert.setRepaymentAmount(billItemNoRepay);
+                ledgerInsert.setRepaymentItem(item.byteValue());
+                ledgerInsert.setRealRepaymentTime(LocalDateTime.now());
+                ledgerInsert.setRealRepaymentAmount(repayAmountNow);
+                ledgerInsert.setCreateTime(LocalDateTime.now());
+                billLedgerRepository.insert(ledgerInsert);
+            }
+            // 有逾期费记录则修改
+            else {
+                BillLedger ledgerUpdate = new BillLedger();
+                ledgerUpdate.setId(ledger.getId());
+                ledgerUpdate.setRepaymentTime(LocalDateTime.now());
+                ledgerUpdate.setRepaymentAmount(billItemNoRepay);
+                ledgerUpdate.setRealRepaymentTime(LocalDateTime.now());
+                ledgerUpdate.setRealRepaymentAmount(repayAmountNow);
+                ledgerUpdate.setUpdateTime(LocalDateTime.now());
+                billLedgerRepository.update(ledgerUpdate);
+            }
+        }
+        // 其他台账做更新操作(本金+尾款)
+        else {
+            if (ledger == null) {
+                throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "账单ID：" + billId + "的台账类型：" + item + "不存在");
+            }
+
+            BillLedger ledgerUpdate = new BillLedger();
+            ledgerUpdate.setId(ledger.getId());
+            ledgerUpdate.setRealRepaymentTime(LocalDateTime.now());
+            // 实还金额累加
+            ledgerUpdate.setRealRepaymentAmount(repayAmountNow.add(ledger.getRealRepaymentAmount()));
+            ledgerUpdate.setUpdateTime(LocalDateTime.now());
+            billLedgerRepository.update(ledgerUpdate);
+
+        }
+
+        return restAmount.compareTo(BigDecimal.ZERO) <= 0 ? BigDecimal.ZERO : restAmount;
+    }
+
 }

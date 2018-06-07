@@ -54,4 +54,8 @@ public class BillRepository {
         }
         return list;
     }
+
+    public void update(Bill bill) {
+        billMapper.updateByPrimaryKeySelective(bill);
+    }
 }

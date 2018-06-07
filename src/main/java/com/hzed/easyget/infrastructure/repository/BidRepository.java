@@ -38,4 +38,8 @@ public class BidRepository {
         }
         return bid;
     }
+
+    public void update(Bid bid) {
+        bidMapper.updateByPrimaryKeySelective(bid);
+    }
 }

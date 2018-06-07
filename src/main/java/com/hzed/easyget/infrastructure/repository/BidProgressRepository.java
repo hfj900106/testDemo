@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- *
  * @author wuchengwu
  * @data 2018/6/4
  */
@@ -16,12 +15,20 @@ import org.springframework.stereotype.Repository;
 public class BidProgressRepository {
 
     @Autowired
-    private BidProgressMapper loanBidProgressMapper;
+    private BidProgressMapper bidProgressMapper;
 
-    public BidProgress findHandleTimeByBidAndType(Long bid, String type) {
+    public BidProgress findByBidId(Long bidId, Byte type) {
         BidProgressExample example = new BidProgressExample();
-        example.createCriteria().andBidIdEqualTo(bid).andTypeEqualTo(Byte.valueOf(type));
+        example.createCriteria().andBidIdEqualTo(bidId).andTypeEqualTo(type);
 
-        return loanBidProgressMapper.selectOneByExample(example);
+        return bidProgressMapper.selectOneByExample(example);
+    }
+
+    public void insert(BidProgress bidProgress) {
+        bidProgressMapper.insertSelective(bidProgress);
+    }
+
+    public void update(BidProgress bidProgress) {
+        bidProgressMapper.updateByPrimaryKeySelective(bidProgress);
     }
 }

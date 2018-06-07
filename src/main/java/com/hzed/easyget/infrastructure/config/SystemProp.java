@@ -14,4 +14,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "system")
 public class SystemProp {
     private Integer tokenExpire;
+    private Long expectedAuditTimeInterval;
+    private Long expectedLendingTimeInterval;
 }

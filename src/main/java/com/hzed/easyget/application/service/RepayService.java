@@ -68,6 +68,7 @@ public class RepayService {
             if ((BidStatusEnum.CLEARED.getCode().toString()).equals(bid.getStatus().toString())) {
                 repaymentResponse.setRepayTime(bidProgress.getHandleTime().toString());
                 repaymentResponse.setStatus(String.valueOf(RepayStatusEnum.CLEAR_REPAY.getCode()));
+                repaymentResponse.setBid(String.valueOf(bidId));
                 repaymentResponseList.add(repaymentResponse);
             } else {//未结清
 
@@ -214,6 +215,17 @@ public class RepayService {
             repayDetailResponse.setRepayTime(DateUtil.dateToStr(bill.getRepaymentTime()));
         }else{
             repayDetailResponse.setRepayTime(DateUtil.dateToStr(bill.getSettlementTime()));
+        }
+        //还款状态
+        if ((BidStatusEnum.CLEARED.getCode().toString()).equals(bid.getStatus().toString())) {
+            repayDetailResponse.setStatus(String.valueOf(RepayStatusEnum.CLEAR_REPAY.getCode()));
+        } else {
+            int days =  DateUtil.daysBetween(bill.getRepaymentTime(), LocalDateTime.now());
+            if (days > 0) {
+                repayDetailResponse.setStatus(String.valueOf(RepayStatusEnum.OVDUE_UN_REPAY.getCode()));
+            } else {
+                repayDetailResponse.setStatus(String.valueOf(RepayStatusEnum.UN_REPAY.getCode()));
+            }
         }
         repayDetailResponse.setPeriod(period);
         repayDetailResponse.setTotalRepayAmount(totalRepayAmount.toString());

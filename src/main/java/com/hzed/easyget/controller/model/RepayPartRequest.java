@@ -2,6 +2,7 @@ package com.hzed.easyget.controller.model;
 
 import lombok.Data;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
@@ -17,5 +18,6 @@ public class RepayPartRequest {
     @NotNull(message = "标ID不可为空")
     private Long bidId;
     @NotNull(message = "还款金额不可为空")
+    @DecimalMin(value="100")
     private BigDecimal repayAmount;
 }

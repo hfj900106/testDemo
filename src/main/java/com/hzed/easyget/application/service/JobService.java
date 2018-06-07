@@ -31,7 +31,7 @@ public class JobService {
 
     public void pushBid() {
         //查出所有待推送的标
-        //查询中间表，拿到所有推送资产失败大于等于5次的ids
+        //查询中间表，拿到所有推送资产失败大于等于5次的ids，次数小与5的可以重跑
         List<TempTable> tempList = tempTableRepository.getByJobName();
         List<Long> ids = Lists.newArrayList();
         if (tempList.size() > 0 && !tempList.isEmpty()) {
@@ -65,7 +65,7 @@ public class JobService {
             } else {
                 //没跑过的新增
                 Long jobId = IdentifierGenerator.nextId();
-                tempTableRepository.insertJob(TempTable.builder().id(jobId).relaseId(bid.getId()).jobName("pushBid").remark("推送资产").createTime(LocalDateTime.now()).build());
+                tempTableRepository.insertJob(TempTable.builder().id(jobId).relaseId(bid.getId()).jobName("pushBid").remark("推送资产").createTime(LocalDateTime.now()).reRunTimes(Integer.valueOf(1).byteValue()).build());
             }
             // TODO 推送-调风控接口
 

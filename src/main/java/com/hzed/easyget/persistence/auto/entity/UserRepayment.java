@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class RepaymentRecord implements Serializable {
+public class UserRepayment implements Serializable {
     /**
      * ID
      */
@@ -167,15 +167,15 @@ public class RepaymentRecord implements Serializable {
         return sb.toString();
     }
 
-    public static RepaymentRecord.Builder builder() {
-        return new RepaymentRecord.Builder();
+    public static UserRepayment.Builder builder() {
+        return new UserRepayment.Builder();
     }
 
     public static class Builder {
-        private RepaymentRecord obj;
+        private UserRepayment obj;
 
         public Builder() {
-            this.obj = new RepaymentRecord();
+            this.obj = new UserRepayment();
         }
 
         public Builder id(Long id) {
@@ -233,7 +233,7 @@ public class RepaymentRecord implements Serializable {
             return this;
         }
 
-        public RepaymentRecord build() {
+        public UserRepayment build() {
             return this.obj;
         }
     }

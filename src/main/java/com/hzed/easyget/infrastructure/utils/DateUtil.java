@@ -13,6 +13,7 @@ import java.util.Date;
 
 /**
  * 日期工具类
+ *
  * @author Administrator
  */
 
@@ -104,11 +105,12 @@ public final class DateUtil {
         }
         return localDateTime.format(formatter);
     }
+
     /**
      * 把字符串转化成LocalDateTime
      */
-    public static Date strToDate(String dateString){
-        if(null == dateString) {
+    public static Date strToDate(String dateString) {
+        if (null == dateString) {
             return new Date();
         }
         try {
@@ -117,6 +119,7 @@ public final class DateUtil {
             return new Date();
         }
     }
+
     /**
      * 获取两个日期的月份数
      */
@@ -252,13 +255,26 @@ public final class DateUtil {
 
     /**
      * 获取两个时间差 天数
+     *
      * @param smdate 较小的时间
-     * @param bdate 较大的时间
+     * @param bdate  较大的时间
      * @return
      */
     public static int daysBetween(LocalDateTime smdate, LocalDateTime bdate) {
-        Duration duration = Duration.between(smdate,bdate);
-        return (int)duration.toDays();
+        Duration duration = Duration.between(smdate, bdate);
+        return (int) duration.toDays();
+    }
+
+    /**
+     * 判断大小
+     *
+     * @param bDate 较大
+     * @param sDate 较小
+     * @return
+     */
+    public static boolean compare(LocalDateTime bDate, LocalDateTime sDate) {
+        int result = bDate.compareTo(sDate);
+        return result > 0 ? true : false;
     }
 
 }

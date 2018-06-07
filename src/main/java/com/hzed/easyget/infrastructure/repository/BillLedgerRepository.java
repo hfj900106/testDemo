@@ -20,12 +20,12 @@ import java.util.List;
 public class BillLedgerRepository {
 
     @Autowired
-    private BillLedgerMapper loanBillLedgerMapper;
+    private BillLedgerMapper billLedgerMapper;
 
     public BillLedger findBillLedgerItemByBillId(Long billId, Byte item) {
         BillLedgerExample example = new BillLedgerExample();
         example.createCriteria().andBillIdEqualTo(billId).andRepaymentItemEqualTo(item);
-        return loanBillLedgerMapper.selectOneByExample(example);
+        return billLedgerMapper.selectOneByExample(example);
     }
 
     public BillLedger findBillLedgerItemByBillIdWithExp(Long billId, Byte item) {
@@ -39,7 +39,7 @@ public class BillLedgerRepository {
     public List<BillLedger> findAllBillLedgerByBillId(Long billId) {
         BillLedgerExample example = new BillLedgerExample();
         example.createCriteria().andBillIdEqualTo(billId);
-        return loanBillLedgerMapper.selectByExample(example);
+        return billLedgerMapper.selectByExample(example);
     }
 
     public List<BillLedger> findAllBillLedgerByBillIdWithExp(Long billId) {
@@ -48,5 +48,13 @@ public class BillLedgerRepository {
             throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "账单ID：" + billId + "不存在台账");
         }
         return list;
+    }
+
+    public void update(BillLedger ledger) {
+        billLedgerMapper.updateByPrimaryKeySelective(ledger);
+    }
+
+    public void insert(BillLedger ledger) {
+        billLedgerMapper.insertSelective(ledger);
     }
 }

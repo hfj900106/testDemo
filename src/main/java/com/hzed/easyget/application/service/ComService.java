@@ -108,18 +108,18 @@ public class ComService {
     /**
      * 获取标的待还总费用
      *
-     * @param bidId 标id
+     * @param bidId             标id
+     * @param realRepaymentTime 实际还款时间
      */
-    public BigDecimal getBidNoRepay(Long bidId) {
+    public BigDecimal getBidNoRepay(Long bidId, LocalDateTime realRepaymentTime) {
         bidRepository.findByIdWithExp(bidId);
 
         BigDecimal total = BigDecimal.ZERO;
         List<Bill> bills = billRepository.findAllBillByBidIdWithExp(bidId);
-        for (Bill bill : bills) {
-            List<BillLedger> ledgers = billLedgerRepository.findAllBillLedgerByBillId(bill.getId());
-            for (BillLedger ledger : ledgers) {
-                total = total.add(getBillItemNoRepay(ledger.getBillId(), ledger.getRepaymentItem().intValue()));
-            }
+        // TODO 目前不做多期
+        List<BillLedger> ledgers = billLedgerRepository.findAllBillLedgerByBillIdWithExp(bills.get(0).getId());
+        for (BillLedger ledger : ledgers) {
+            total = total.add(getBillItemNoRepay(ledger.getBillId(), ledger.getRepaymentItem().intValue(), realRepaymentTime));
         }
         return total;
     }
@@ -127,10 +127,11 @@ public class ComService {
     /**
      * 获取账单台账待还费用
      *
-     * @param billId 账单id
-     * @param item   台账类型枚举值 如 BillLedgerItemEnum.OVERDUE_FEE.getCode()
+     * @param billId            账单id
+     * @param item              台账类型枚举值 如 BillLedgerItemEnum.OVERDUE_FEE.getCode()
+     * @param realRepaymentTime 实际还款时间
      */
-    public BigDecimal getBillItemNoRepay(Long billId, Integer item) {
+    public BigDecimal getBillItemNoRepay(Long billId, Integer item, LocalDateTime realRepaymentTime) {
         Bill bill = billRepository.findByIdWithExp(billId);
         int status = bill.getStatus().intValue();
         // 账单已结清则没有逾期费
@@ -140,7 +141,7 @@ public class ComService {
         }
         // 逾期费另外计算
         if (BillLedgerItemEnum.OVERDUE_FEE.getCode().equals(item)) {
-            return getBillOverFeeNoRepay(billId);
+            return getBillOverFeeNoRepay(billId, realRepaymentTime);
         }
 
         BillLedger ledger = billLedgerRepository.findBillLedgerItemByBillIdWithExp(billId, item.byteValue());
@@ -155,9 +156,10 @@ public class ComService {
     /**
      * 获取账单的待还的逾期费
      *
-     * @param billId 账单id
+     * @param billId            账单id
+     * @param realRepaymentTime 实还时间
      */
-    public BigDecimal getBillOverFeeNoRepay(Long billId) {
+    public BigDecimal getBillOverFeeNoRepay(Long billId, LocalDateTime realRepaymentTime) {
         Bill bill = billRepository.findByIdWithExp(billId);
         int status = bill.getStatus().intValue();
         // 账单已结清则没有逾期费
@@ -167,7 +169,7 @@ public class ComService {
         }
 
         // 逾期天数
-        int overDays = DateUtil.daysBetween(bill.getRepaymentTime(), LocalDateTime.now());
+        int overDays = DateUtil.daysBetween(bill.getRepaymentTime(), realRepaymentTime);
         // 逾期天数小于0则没有逾期费
         if (overDays <= 0) {
             return BigDecimal.ZERO;

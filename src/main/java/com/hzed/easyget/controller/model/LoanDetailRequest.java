@@ -1,6 +1,7 @@
 package com.hzed.easyget.controller.model;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 借款详情请求参数
@@ -10,5 +11,6 @@ import lombok.Data;
  */
 @Data
 public class LoanDetailRequest {
+    @NotBlank(message = "bid不能为空")
     private String bid;
 }

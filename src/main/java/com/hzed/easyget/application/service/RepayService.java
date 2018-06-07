@@ -44,6 +44,7 @@ public class RepayService {
     private UserRepaymentRepository userRepaymentRepository;
 
     private static final String USER_TRANCATIONID = "userTrancationId";
+    private static final String REQUEST_SEQ = "requestSeq";
 
     private static final String TWENTY_PERCENT = "0.2";
 
@@ -227,13 +228,35 @@ public class RepayService {
      */
     public void repayAll(RepayAllRequest request) {
         Long bidId = request.getBidId();
-        comService.getBidNoRepay(bidId, LocalDateTime.now());
+        Bid bid = bidRepository.findByIdWithExp(bidId);
+
+        // 提前生成转账交易后的流水号放入threadLocal中
+        String requestSeq = String.valueOf(IdentifierGenerator.nextId());
+        ThreadLocalUtil.set(REQUEST_SEQ, requestSeq);
+        // TODO 走资金流
+        // 走信息流
+        repayInformationFlow(request.getBidId(), bid.getLoanAmount(), LocalDateTime.now());
 
 
     }
 
     /**
      * 部分还款
+     * 走信息流和资金流
+     */
+    public void repayPart(RepayPartRequest request) {
+        // 提前生成转账交易后的流水号放入threadLocal中
+        String requestSeq = String.valueOf(IdentifierGenerator.nextId());
+        ThreadLocalUtil.set(REQUEST_SEQ, requestSeq);
+
+        // TODO 走资金流
+        // 走信息流
+        repayInformationFlow(request.getBidId(), request.getRepayAmount(), LocalDateTime.now());
+
+    }
+
+    /**
+     * 还款走信息流，包括全部结清和部分还款
      * 保存 t_loan_user_repayment 还款记录表
      * 保存 t_loan_bill_ledger 台账表
      * 保存 t_loan_bill 账单表
@@ -242,12 +265,14 @@ public class RepayService {
      * 保存 t_loan_user_transaction 用户交易记录表
      */
     @Transactional(rollbackFor = Exception.class)
-    public void repayPart(RepayPartRequest request) {
-        Long bidId = request.getBidId();
-        BigDecimal repayAmount = request.getRepayAmount();
+    public void repayInformationFlow(Long bidId, BigDecimal repayAmount, LocalDateTime realRepaymentTime) {
+        // 判断还款金额是否大于项目待还总额
+        BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, realRepaymentTime);
+        if (repayAmount.compareTo(bidNoRepay) > 0) {
+            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "还款金额是否大于项目待还总额");
+        }
+
         Bid bid = bidRepository.findByIdWithExp(bidId);
-        // TODO 调用转账交易后的流水号 可以提前生成，可放入threadLocal中
-        String requestSeq = String.valueOf(IdentifierGenerator.nextId());
 
         // 保存 t_loan_user_transaction 用户交易记录表
         long userTrancationId = IdentifierGenerator.nextId();
@@ -259,7 +284,7 @@ public class RepayService {
         userTransaction.setBidId(bidId);
         userTransaction.setType(TransactionTypeEnum.OUT.getCode().byteValue());
         userTransaction.setAmount(repayAmount);
-        userTransaction.setRequestSeq(requestSeq);
+        userTransaction.setRequestSeq(ThreadLocalUtil.get(REQUEST_SEQ));
         userTransaction.setBank(bid.getInBank());
         userTransaction.setAccount(bid.getInAccount());
         userTransaction.setMode((byte) 1);

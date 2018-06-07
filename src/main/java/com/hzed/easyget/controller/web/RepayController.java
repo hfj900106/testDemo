@@ -29,7 +29,6 @@ public class RepayController {
         return Response.getSuccessResponse(repayService.repaidList());
     }
 
-    /** TODO */
     @ModuleFunc("结清全部")
     @PostMapping("/repayAll")
     public Response repayAll(@RequestBody RepayAllRequest request){

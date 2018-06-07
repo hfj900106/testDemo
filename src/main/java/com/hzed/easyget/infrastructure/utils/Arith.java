@@ -9,6 +9,11 @@ import java.math.BigDecimal;
  */
 public class Arith {
 
+    /**
+     * 误差小数后两位
+     */
+    public static BigDecimal ZERO = new BigDecimal(0.01D);
+
     public static BigDecimal add(BigDecimal s1, BigDecimal s2) {
         return s1.add(s2);
     }

@@ -15,6 +15,7 @@ import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -39,6 +40,8 @@ public class RepayService {
     private BillLedgerRepository billLedgerRepository;
     @Autowired
     private UserTransactionRepository userTransactionRepository;
+    @Autowired
+    private UserRepaymentRepository userRepaymentRepository;
 
     private static final String USER_TRANCATIONID = "userTrancationId";
 
@@ -205,7 +208,7 @@ public class RepayService {
         if ((BidStatusEnum.CLEARED.getCode().toString()).equals(bid.getStatus().toString())) {
             repayDetailResponse.setStatus(String.valueOf(RepayStatusEnum.CLEAR_REPAY.getCode()));
         } else {
-            int days =  DateUtil.daysBetween(bill.getRepaymentTime(), LocalDateTime.now());
+            int days = DateUtil.daysBetween(bill.getRepaymentTime(), LocalDateTime.now());
             if (days > 0) {
                 repayDetailResponse.setStatus(String.valueOf(RepayStatusEnum.OVDUE_UN_REPAY.getCode()));
             } else {
@@ -238,6 +241,7 @@ public class RepayService {
      * 保存 t_loan_bid 标的表（主要是更新结清操作，部分还款不用更新）
      * 保存 t_loan_user_transaction 用户交易记录表
      */
+    @Transactional(rollbackFor = Exception.class)
     public void repayPart(RepayPartRequest request) {
         Long bidId = request.getBidId();
         BigDecimal repayAmount = request.getRepayAmount();
@@ -280,8 +284,8 @@ public class RepayService {
 
         // 保存 t_loan_bid 标的表（主要是更新结清操作，部分还款不用更新）
         Bill billAfter = billRepository.findAllBillByBidIdWithExp(bidId).get(0);
-        if(BillStatusEnum.NORMAL_CLEAR.getCode().equals(billAfter.getStatus())
-                || BillStatusEnum.OVERDUE_CLEAR.getCode().equals(billAfter.getStatus())) {
+        if (BillStatusEnum.NORMAL_CLEAR.getCode().intValue() == billAfter.getStatus().intValue()
+                || BillStatusEnum.OVERDUE_CLEAR.getCode().intValue() == billAfter.getStatus().intValue()) {
             // 账单已结清 修改标的状态为结清
             Bid bidUpdate = new Bid();
             bidUpdate.setId(bidId);
@@ -310,7 +314,7 @@ public class RepayService {
         // 还本金
         BigDecimal restAmount3 = repayBillLedger(billId, BillLedgerItemEnum.CORPUS.getCode().intValue(), restAmount2, realRepaymentTime);
         // 本次还款金额
-        BigDecimal repayAmountNow = restAmount3.compareTo(BigDecimal.ZERO) >= 0 ? repayAmount.subtract(restAmount3) : repayAmount;
+        BigDecimal repayAmountNow = restAmount3.compareTo(Arith.ZERO) >= 0 ? repayAmount.subtract(restAmount3) : repayAmount;
         // 更新账单表
         Bill billUpdate = new Bill();
         billUpdate.setId(billId);
@@ -329,9 +333,7 @@ public class RepayService {
             // 部分还款
             billUpdate.setIsPartialRepayment(true);
         }
-
         billRepository.update(billUpdate);
-
         return restAmount3;
     }
 
@@ -346,19 +348,19 @@ public class RepayService {
      */
     private BigDecimal repayBillLedger(Long billId, Integer item, BigDecimal repayAmount, LocalDateTime realRepaymentTime) {
         // 还款金额为0
-        if (repayAmount == null || repayAmount.compareTo(BigDecimal.ZERO) <= 0) {
+        if (repayAmount == null || repayAmount.compareTo(Arith.ZERO) <= 0) {
             return BigDecimal.ZERO;
         }
         // 待还总额
         BigDecimal billItemNoRepay = comService.getBillItemNoRepay(billId, item, realRepaymentTime);
         // 已结清则直接返回还款金额
-        if (billItemNoRepay.compareTo(BigDecimal.ZERO) <= 0) {
+        if (billItemNoRepay.compareTo(Arith.ZERO) <= 0) {
             return repayAmount;
         }
         // 剩余金额
         BigDecimal restAmount = repayAmount.subtract(billItemNoRepay);
         // 本次还款金额
-        BigDecimal repayAmountNow = restAmount.compareTo(BigDecimal.ZERO) <= 0 ? repayAmount : billItemNoRepay;
+        BigDecimal repayAmountNow = restAmount.compareTo(Arith.ZERO) <= 0 ? repayAmount : billItemNoRepay;
 
         // 保存 t_loan_user_repayment 还款记录表
         UserRepayment userRepayment = new UserRepayment();
@@ -370,7 +372,7 @@ public class RepayService {
         userRepayment.setRepaymentAmount(billItemNoRepay);
         userRepayment.setRealRepaymentAmount(repayAmountNow);
         userRepayment.setCreateTime(LocalDateTime.now());
-        // TODO save
+        userRepaymentRepository.insert(userRepayment);
 
         // 新增或更新t_loan_bill_ledger 台账表
         BillLedger ledger = billLedgerRepository.findBillLedgerItemByBillId(billId, item.byteValue());

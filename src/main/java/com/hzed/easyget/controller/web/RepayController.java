@@ -6,10 +6,7 @@ import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 还款
@@ -34,14 +31,14 @@ public class RepayController {
 
     /** TODO */
     @ModuleFunc("结清全部")
-    @GetMapping("/repayAll")
+    @PostMapping("/repayAll")
     public Response repayAll(@RequestBody RepayAllRequest request){
         repayService.repayAll(request);
         return Response.getSuccessResponse();
     }
 
     @ModuleFunc("部分还款")
-    @GetMapping("/repayPart")
+    @PostMapping("/repayPart")
     public Response repayPart(@RequestBody RepayPartRequest request){
         repayService.repayPart(request);
         return Response.getSuccessResponse();

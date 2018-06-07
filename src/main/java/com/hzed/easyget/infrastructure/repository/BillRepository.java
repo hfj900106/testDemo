@@ -22,7 +22,7 @@ public class BillRepository {
     @Autowired
     private BillMapper billMapper;
 
-    public Bill findRepayTimeByBid(Long bid) {
+    public Bill findByBid(Long bid) {
         BillExample example = new BillExample();
         example.createCriteria().andBidIdEqualTo(bid);
         return billMapper.selectOneByExample(example);

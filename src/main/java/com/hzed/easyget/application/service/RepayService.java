@@ -2,6 +2,8 @@ package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
+import com.hzed.easyget.controller.model.*;
+import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.controller.model.RepayAllRequest;
 import com.hzed.easyget.controller.model.RepayListResponse;
 import com.hzed.easyget.controller.model.RepayPartRequest;
@@ -50,29 +52,30 @@ public class RepayService {
 
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
-        List<Bid> bidList = bidRepository.findBStatusByUserId(userId, Lists.newArrayList((byte) 3, (byte) 4));
+        List<Bid> bidList = bidRepository.findBStatusByUserId(userId, Lists.newArrayList(BidStatusEnum.REPAYMENT.getCode().byteValue(),BidStatusEnum.CLEARED.getCode().byteValue()));
         //没有借款记录
         if (bidList.isEmpty() || bidList.size() <= 0) {
             return RepayListResponse.builder().build();
         }
         List<RepaymentResponse> repaymentResponseList = Lists.newArrayList();
-        RepaymentResponse repaymentResponse = new RepaymentResponse();
+        RepaymentResponse repaymentResponse = null;
         //应还总金额
-        BigDecimal totalRepayAmount = new BigDecimal(1);
+        BigDecimal totalRepayAmount = new BigDecimal(0);
         for (Bid bid : bidList) {
+            repaymentResponse = new RepaymentResponse();
             Long bidId = bid.getId();
             BidProgress bidProgress = bidProgressRepository.findHandleTimeByBidAndType(bidId, BidProgressTypeEnum.CLEAR.getCode().toString());
-            Bill loanBill = billRepository.findRepayTimeByBid(bidId);
+            Bill loanBill = billRepository.findByBid(bidId);
             Long billId = loanBill.getId();
 
 
             //借款金额
             repaymentResponse.setLoanMount(bid.getLoanAmount().toString());
             //已结清
-            if (BidStatusEnum.CLEARED.getCode().equals(bid.getStatus())) {
-                repaymentResponse.setLoanTime(bidProgress.getHandleTime().toString());
+            if ((BidStatusEnum.CLEARED.getCode().toString()).equals(bid.getStatus().toString())) {
+                repaymentResponse.setRepayTime(bidProgress.getHandleTime().toString());
                 repaymentResponse.setStatus(String.valueOf(RepayStatusEnum.CLEAR_REPAY.getCode()));
-
+                repaymentResponseList.add(repaymentResponse);
             } else {//未结清
 
                 //查询应还时间与当前时间对比，大于当前时间:逾期，小于:没到期
@@ -110,11 +113,12 @@ public class RepayService {
                     totalRepayAmount = unRepaymentAmount;
 
                 }
-
+                repaymentResponse.setBid(String.valueOf(bidId));
+                repaymentResponseList.add(repaymentResponse);
             }
 
         }
-        repaymentResponseList.add(repaymentResponse);
+
         return RepayListResponse.builder().repaymentInfo(repaymentResponseList).TotalAmount(String.valueOf(totalRepayAmount)).build();
 
     }
@@ -214,6 +218,47 @@ public class RepayService {
 
 
     }
+
+    private BigDecimal repayOverdueFee() {
+        return null;
+    }
+
+    /**
+     * 还款详情
+     * @param request
+     * @return
+     */
+    public RepayDetailResponse repayDetail(RepayDetailRequest request) {
+        RepayDetailResponse  repayDetailResponse= new RepayDetailResponse();
+        String bidStr = request.getBid();
+        long bidId = Long.valueOf(bidStr);
+        //获取标的待还总费用
+        BigDecimal bidNoRepay = comService.getBidNoRepay(bidId);
+        //获取账单待还逾期费
+        Bill bill = billRepository.findByBid(bidId);
+        BigDecimal billOverFeeNoRepay = comService.getBillOverFeeNoRepay(bill.getId());
+        //待应还总额
+        BigDecimal totalRepayAmount = bidNoRepay.add(billOverFeeNoRepay);
+        //借款期限
+        Bid bid = bidRepository.findById(bidId);
+        Integer period = bid.getPeriod();
+        //贷款时间
+        BidProgress bidProgress = bidProgressRepository.findHandleTimeByBidAndType(bidId, BidProgressTypeEnum.LOAN.getCode().toString());
+        LocalDateTime loanTime = bidProgress.getHandleTime();
+        //还款时间或实际已还时间
+        int status = bill.getStatus();
+        if(BillStatusEnum.WAIT_CLEAR.getCode().equals(status)){
+            repayDetailResponse.setRepayTime(DateUtil.dateToStr(bill.getRepaymentTime()));
+        }else{
+            repayDetailResponse.setRepayTime(DateUtil.dateToStr(bill.getSettlementTime()));
+        }
+        repayDetailResponse.setPeriod(period);
+        repayDetailResponse.setTotalRepayAmount(totalRepayAmount.toString());
+        repayDetailResponse.setLoanTime(DateUtil.dateToStr(loanTime));
+        return repayDetailResponse;
+
+    }
+
 
     /**
      * 账单还款

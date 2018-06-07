@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RepaymentResponse {
     private String loanMount;
-    private String loanTime;
+    private String repayTime;
     private String status;
-    private String type;
     private String days;
+    private String bid;
 }

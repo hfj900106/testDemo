@@ -1,9 +1,7 @@
 package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.RepayService;
-import com.hzed.easyget.controller.model.RepayAllRequest;
-import com.hzed.easyget.controller.model.RepayListResponse;
-import com.hzed.easyget.controller.model.RepayPartRequest;
+import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
@@ -49,6 +47,12 @@ public class RepayController {
         return Response.getSuccessResponse();
     }
 
+    @ModuleFunc("还款详情")
+    @GetMapping("/repayDetail")
+    public Response<RepayDetailResponse> repayDetail(@RequestBody RepayDetailRequest request){
+
+        return Response.getSuccessResponse(repayService.repayDetail(request));
+    }
 
 
 }

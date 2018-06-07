@@ -34,8 +34,8 @@ public class JobService {
         //查询中间表，拿到所有推送资产失败大于等于5次的ids
         List<TempTable> tempList = tempTableRepository.getByJobName();
         List<Long> ids = Lists.newArrayList();
-        if(tempList.size()>0 && !tempList.isEmpty()){
-            for (TempTable temp:tempList ) {
+        if (tempList.size() > 0 && !tempList.isEmpty()) {
+            for (TempTable temp : tempList) {
                 ids.add(temp.getId());
             }
         }
@@ -56,13 +56,13 @@ public class JobService {
             for (TempTable temp : tempList2) {
                 if (bid.getId().equals(temp.getId())) {
                     hasRun = true;
-                    times= temp.getReRunTimes().intValue()+1;
+                    times = temp.getReRunTimes().intValue() + 1;
                 }
             }
             //已经跑过，update
-            if(hasRun){
+            if (hasRun) {
                 tempTableRepository.upDateTemp(TempTable.builder().id(bid.getId()).createTime(LocalDateTime.now()).reRunTimes(times.byteValue()).build());
-            }else {
+            } else {
                 //没跑过的新增
                 Long jobId = IdentifierGenerator.nextId();
                 tempTableRepository.insertJob(TempTable.builder().id(jobId).relaseId(bid.getId()).jobName("pushBid").remark("推送资产").createTime(LocalDateTime.now()).build());
@@ -70,13 +70,13 @@ public class JobService {
             // TODO 推送-调风控接口
 
             //推送成功后 写标进度数据到t_loan_bid_progress，并删除job中数据
-            if(isSuccess){
-                tempTableRepository.afterPushBid(buildBidProgress(bid.getId(),BidProgressTypeEnum.AUDIT.getMsg()),bid.getId());
+            if (isSuccess) {
+                tempTableRepository.afterPushBid(buildBidProgress(bid.getId(), BidProgressTypeEnum.AUDIT.getMsg()), bid.getId());
             }
         });
     }
 
-    private BidProgress buildBidProgress (Long bidId , String result){
+    private BidProgress buildBidProgress(Long bidId, String result) {
         BidProgress bidProgress = new BidProgress();
         bidProgress.setId(IdentifierGenerator.nextId());
         bidProgress.setBidId(bidId);

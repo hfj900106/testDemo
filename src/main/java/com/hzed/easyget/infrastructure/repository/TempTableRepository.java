@@ -33,14 +33,14 @@ public class TempTableRepository {
         tempMapper.deleteByPrimaryKey(jobId);
     }
 
-    public List<TempTable> getByJobName(){
+    public List<TempTable> getByJobName() {
         TempTableExample example = new TempTableExample();
         example.createCriteria().andJobNameEqualTo("pushBid").andReRunTimesGreaterThanOrEqualTo(Integer.valueOf(5).byteValue());
         List<TempTable> jobs = tempMapper.selectByExampleSelective(example);
         return jobs;
     }
 
-    public List<TempTable> getByJobNameAndId(Long id){
+    public List<TempTable> getByJobNameAndId(Long id) {
         TempTableExample example = new TempTableExample();
         example.createCriteria().andJobNameEqualTo("pushBid").andIdEqualTo(id);
         List<TempTable> jobs = tempMapper.selectByExampleSelective(example);

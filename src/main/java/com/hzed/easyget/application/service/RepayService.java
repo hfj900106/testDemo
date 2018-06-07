@@ -3,11 +3,6 @@ package com.hzed.easyget.application.service;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.controller.model.*;
-import com.hzed.easyget.application.enums.*;
-import com.hzed.easyget.controller.model.RepayAllRequest;
-import com.hzed.easyget.controller.model.RepayListResponse;
-import com.hzed.easyget.controller.model.RepayPartRequest;
-import com.hzed.easyget.controller.model.RepaymentResponse;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
@@ -175,6 +170,42 @@ public class RepayService {
     }
 
     /**
+     * 还款详情
+     * @param request
+     * @return
+     */
+    public RepayDetailResponse repayDetail(RepayDetailRequest request) {
+        RepayDetailResponse  repayDetailResponse= new RepayDetailResponse();
+        String bidStr = request.getBid();
+        long bidId = Long.valueOf(bidStr);
+        //获取标的待还总费用
+        BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, LocalDateTime.now());
+        //获取账单待还逾期费
+        Bill bill = billRepository.findByBid(bidId);
+        BigDecimal billOverFeeNoRepay = comService.getBillOverFeeNoRepay(bill.getId(), LocalDateTime.now());
+        //待应还总额
+        BigDecimal totalRepayAmount = bidNoRepay.add(billOverFeeNoRepay);
+        //借款期限
+        Bid bid = bidRepository.findById(bidId);
+        Integer period = bid.getPeriod();
+        //贷款时间
+        BidProgress bidProgress = bidProgressRepository.findHandleTimeByBidAndType(bidId, BidProgressTypeEnum.LOAN.getCode().toString());
+        LocalDateTime loanTime = bidProgress.getHandleTime();
+        //还款时间或实际已还时间
+        int status = bill.getStatus();
+        if(BillStatusEnum.WAIT_CLEAR.getCode().equals(status)){
+            repayDetailResponse.setRepayTime(DateUtil.dateToStr(bill.getRepaymentTime()));
+        }else{
+            repayDetailResponse.setRepayTime(DateUtil.dateToStr(bill.getSettlementTime()));
+        }
+        repayDetailResponse.setPeriod(period);
+        repayDetailResponse.setTotalRepayAmount(totalRepayAmount.toString());
+        repayDetailResponse.setLoanTime(DateUtil.dateToStr(loanTime));
+        return repayDetailResponse;
+
+    }
+
+    /**
      * 结清全部
      */
     public void repayAll(RepayAllRequest request) {
@@ -222,43 +253,6 @@ public class RepayService {
     private BigDecimal repayOverdueFee() {
         return null;
     }
-
-    /**
-     * 还款详情
-     * @param request
-     * @return
-     */
-    public RepayDetailResponse repayDetail(RepayDetailRequest request) {
-        RepayDetailResponse  repayDetailResponse= new RepayDetailResponse();
-        String bidStr = request.getBid();
-        long bidId = Long.valueOf(bidStr);
-        //获取标的待还总费用
-        BigDecimal bidNoRepay = comService.getBidNoRepay(bidId);
-        //获取账单待还逾期费
-        Bill bill = billRepository.findByBid(bidId);
-        BigDecimal billOverFeeNoRepay = comService.getBillOverFeeNoRepay(bill.getId());
-        //待应还总额
-        BigDecimal totalRepayAmount = bidNoRepay.add(billOverFeeNoRepay);
-        //借款期限
-        Bid bid = bidRepository.findById(bidId);
-        Integer period = bid.getPeriod();
-        //贷款时间
-        BidProgress bidProgress = bidProgressRepository.findHandleTimeByBidAndType(bidId, BidProgressTypeEnum.LOAN.getCode().toString());
-        LocalDateTime loanTime = bidProgress.getHandleTime();
-        //还款时间或实际已还时间
-        int status = bill.getStatus();
-        if(BillStatusEnum.WAIT_CLEAR.getCode().equals(status)){
-            repayDetailResponse.setRepayTime(DateUtil.dateToStr(bill.getRepaymentTime()));
-        }else{
-            repayDetailResponse.setRepayTime(DateUtil.dateToStr(bill.getSettlementTime()));
-        }
-        repayDetailResponse.setPeriod(period);
-        repayDetailResponse.setTotalRepayAmount(totalRepayAmount.toString());
-        repayDetailResponse.setLoanTime(DateUtil.dateToStr(loanTime));
-        return repayDetailResponse;
-
-    }
-
 
     /**
      * 账单还款

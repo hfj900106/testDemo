@@ -192,6 +192,13 @@ public final class DateUtil {
     }
 
     /**
+     * 根据分为单位添加天数
+     */
+    public static LocalDateTime addDaysBymin(LocalDateTime date, int days) {
+        return date.plusMinutes(days);
+    }
+
+    /**
      * 获取当前日期所在月的最后一天
      */
     public static LocalDate getLastDayOfMonth(LocalDate date) {

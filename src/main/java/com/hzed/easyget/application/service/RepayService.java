@@ -176,7 +176,7 @@ public class RepayService {
      * @return
      */
     public RepayDetailResponse repayDetail(RepayDetailRequest request) {
-        RepayDetailResponse  repayDetailResponse= new RepayDetailResponse();
+        RepayDetailResponse repayDetailResponse = new RepayDetailResponse();
         String bidStr = request.getBid();
         long bidId = Long.valueOf(bidStr);
         //获取标的待还总费用
@@ -194,16 +194,16 @@ public class RepayService {
         LocalDateTime loanTime = bidProgress.getHandleTime();
         //还款时间或实际已还时间
         int status = bill.getStatus();
-        if(BillStatusEnum.WAIT_CLEAR.getCode().equals(status)){
+        if (BillStatusEnum.WAIT_CLEAR.getCode().equals(status)) {
             repayDetailResponse.setRepayTime(DateUtil.dateToStr(bill.getRepaymentTime()));
-        }else{
+        } else {
             repayDetailResponse.setRepayTime(DateUtil.dateToStr(bill.getSettlementTime()));
         }
         //还款状态
         if ((BidStatusEnum.CLEARED.getCode().toString()).equals(bid.getStatus().toString())) {
             repayDetailResponse.setStatus(String.valueOf(RepayStatusEnum.CLEAR_REPAY.getCode()));
         } else {
-            int days =  DateUtil.daysBetween(bill.getRepaymentTime(), LocalDateTime.now());
+            int days = DateUtil.daysBetween(bill.getRepaymentTime(), LocalDateTime.now());
             if (days > 0) {
                 repayDetailResponse.setStatus(String.valueOf(RepayStatusEnum.OVDUE_UN_REPAY.getCode()));
             } else {

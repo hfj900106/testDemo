@@ -74,4 +74,12 @@ public class AuthController {
         authService.operatorAuth(request);
         return Response.getSuccessResponse();
     }
+
+    @ModuleFunc("专业信息认证")
+    @PostMapping("/professional")
+    public Response professionalAuth(@RequestBody ProfessionalRequest request) {
+        authService.professionalAuth(request);
+        return Response.getSuccessResponse();
+    }
+
 }

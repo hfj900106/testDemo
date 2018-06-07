@@ -23,6 +23,7 @@ import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.SmsLog;
 import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserToken;
+import com.hzed.indonesia.sms.constants.SmsCodeEnum;
 import com.hzed.indonesia.sms.model.request.NxSmsDownRequest;
 import com.hzed.indonesia.sms.model.response.NxSmsDownResponse;
 import com.hzed.indonesia.sms.utils.NxSmsUtil;
@@ -137,7 +138,6 @@ public class LoginService {
     }
 
     public void sendSmsCode(SmsCodeRequest request) {
-        String isSuccess = "0";
         String mobile = request.getMobile();
         String hasBeenSend = redisService.getCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile);
         if (StringUtils.isNotBlank(hasBeenSend)) {
@@ -155,7 +155,7 @@ public class LoginService {
         smsDownRequest.setContent(content);
         NxSmsDownResponse smsDownResponse = NxSmsUtil.smsSend(smsDownRequest);
         //发送失败
-        if(!isSuccess.equals(smsDownResponse.getCode())){
+        if(!SmsCodeEnum.OK.getKey().equals(smsDownResponse.getCode())){
             throw new ComBizException(BizCodeEnum.SMS_CODE_SEND_FAIL);
         }
         // 保存到数据库短信记录表

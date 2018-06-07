@@ -94,10 +94,10 @@ public class AuthService {
      * @param userId
      * @param remark
      */
-    public UserAuthStatus buildUserAuthStatus(Long userId, Long userAuthStatusId, String remark) {
+    public UserAuthStatus buildUserAuthStatus(Long userId, String remark) {
         //保存到数据库短信记录表
         UserAuthStatus userAuthStatus = new UserAuthStatus();
-        userAuthStatus.setId(userAuthStatusId);
+        userAuthStatus.setId(IdentifierGenerator.nextId());
         userAuthStatus.setUserId(userId);
         userAuthStatus.setAuthCode(AuthCodeEnum.CONTACTS.getCode());
         userAuthStatus.setAuthStatus(Integer.valueOf(AuthStatusEnum.HAS_AUTH.getCode()));
@@ -186,7 +186,7 @@ public class AuthService {
      */
     public void authPersonInfo(PersonInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), IdentifierGenerator.nextId(), "个人信息认证");
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "个人信息认证");
         Profile profile = new Profile();
         profile.setId(IdentifierGenerator.nextId());
         profile.setUserId(user.getUserId());
@@ -248,7 +248,7 @@ public class AuthService {
         userPic.setCreateTime(LocalDateTime.now());
         userPic.setRemark("身份信息认证");
         //获取UserAuthStatus对象
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), IdentifierGenerator.nextId(), "身份信息认证");
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "身份信息认证");
         workRepository.insertIdentityInfo(userPic, userAuthStatus, userObj);
     }
 
@@ -268,7 +268,7 @@ public class AuthService {
         work.setCreateTime(LocalDateTime.now());
         work.setRemark("专业信息认证");
         //获取UserAuthStatus对象
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), IdentifierGenerator.nextId(), "专业信息认证");
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "专业信息认证");
         professionalRepository.insertProfessionalAndUserAuthStatus(work, userAuthStatus);
     }
 }

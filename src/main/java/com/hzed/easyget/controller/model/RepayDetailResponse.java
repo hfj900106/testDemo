@@ -15,4 +15,5 @@ public class RepayDetailResponse {
     private Integer period;
     private String loanTime;
     private String repayTime;
+    private String status;
 }

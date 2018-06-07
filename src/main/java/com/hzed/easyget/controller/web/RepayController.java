@@ -48,7 +48,7 @@ public class RepayController {
     }
 
     @ModuleFunc("还款详情")
-    @GetMapping("/repqyDetail")
+    @GetMapping("/repayDetail")
     public Response<RepayDetailResponse> repayDetail(@RequestBody RepayDetailRequest request){
 
         return Response.getSuccessResponse(repayService.repayDetail(request));

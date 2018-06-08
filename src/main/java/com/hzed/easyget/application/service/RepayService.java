@@ -60,63 +60,46 @@ public class RepayService {
         List<RepaymentResponse> repaymentResponseList = Lists.newArrayList();
         RepaymentResponse repaymentResponse = null;
         //应还总金额
-        BigDecimal totalRepayAmount = new BigDecimal(0);
+        BigDecimal totalRepayAmount = BigDecimal.ZERO;
         for (Bid bid : bidList) {
             repaymentResponse = new RepaymentResponse();
             Long bidId = bid.getId();
             BidProgress bidProgress = bidProgressRepository.findByBidId(bidId, BidProgressTypeEnum.CLEAR.getCode().byteValue());
-            Bill loanBill = billRepository.findByBid(bidId);
-            Long billId = loanBill.getId();
-
-
+            Bill bill = billRepository.findByBid(bidId);
+            //获取标的待还总费用
+            BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, LocalDateTime.now());
+            //获取账单待还逾期费
+            BigDecimal billOverFeeNoRepay = comService.getBillOverFeeNoRepay(bill.getId(), LocalDateTime.now());
+            //待应还总额
+            totalRepayAmount = bidNoRepay.add(billOverFeeNoRepay);
             //借款金额
             repaymentResponse.setLoanMount(bid.getLoanAmount().toString());
+
             //已结清
             if ((BidStatusEnum.CLEARED.getCode().toString()).equals(bid.getStatus().toString())) {
                 repaymentResponse.setRepayTime(bidProgress.getHandleTime().toString());
                 repaymentResponse.setStatus(String.valueOf(RepayStatusEnum.CLEAR_REPAY.getCode()));
                 repaymentResponse.setBid(String.valueOf(bidId));
                 repaymentResponseList.add(repaymentResponse);
-            } else {//未结清
-
-                //查询应还时间与当前时间对比，大于当前时间:逾期，小于:没到期
-                int days = DateUtil.daysBetween(loanBill.getRepaymentTime(), LocalDateTime.now());
-                //计算总的未还总额
-                BigDecimal unRepaymentAmount = getRepaymentAmount(billId);
-
-                //逾期未结清
-                if (days > 0) {
-
-                    //计算总逾期费
-                    BigDecimal totalOverdue = getTotalOverdee(billId, days);
-                    //逾期部分已还
-                    if (loanBill.getIsPartialRepayment()) {
-
-                        //已还逾期费
-                        BillLedger loanBillLedgerOver = billLedgerRepository.findBillLedgerItemByBillId(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode().byteValue());
-                        BigDecimal realRepayOver = loanBillLedgerOver.getRealRepaymentAmount();
-
-                        //最终逾期费
-                        BigDecimal overdue = Arith.sub(totalOverdue, realRepayOver);
-
-                        totalRepayAmount = Arith.add(unRepaymentAmount, overdue);
-
-                    } else {//逾期未还
-
-                        totalRepayAmount = Arith.add(unRepaymentAmount, totalOverdue);
-                    }
-                    repaymentResponse.setStatus(RepayStatusEnum.OVDUE_UN_REPAY.getCode().toString());
-                    repaymentResponse.setDays(String.valueOf(days));
-                } else {//正常未还
-                    repaymentResponse.setStatus(RepayStatusEnum.UN_REPAY.getCode().toString());
-                    days = DateUtil.daysBetween(LocalDateTime.now(), loanBill.getRepaymentTime());
-                    repaymentResponse.setDays(String.valueOf(days));
-                    totalRepayAmount = unRepaymentAmount;
-
-                }
-                repaymentResponse.setBid(String.valueOf(bidId));
-                repaymentResponseList.add(repaymentResponse);
+                return RepayListResponse.builder().repaymentInfo(repaymentResponseList).TotalAmount(String.valueOf(totalRepayAmount)).build();
             }
+
+            //未结清
+            //查询应还时间与当前时间对比，大于当前时间:逾期，小于:没到期
+            int days = DateUtil.daysBetween(bill.getRepaymentTime(), LocalDateTime.now());
+
+            //逾期未结清
+            if (days > 0) {
+                repaymentResponse.setStatus(RepayStatusEnum.OVDUE_UN_REPAY.getCode().toString());
+                repaymentResponse.setDays(String.valueOf(days));
+            } else { //正常未还
+                repaymentResponse.setStatus(RepayStatusEnum.UN_REPAY.getCode().toString());
+                days = DateUtil.daysBetween(LocalDateTime.now(), bill.getRepaymentTime());
+                repaymentResponse.setDays(String.valueOf(days));
+            }
+
+            repaymentResponse.setBid(String.valueOf(bidId));
+            repaymentResponseList.add(repaymentResponse);
 
         }
 
@@ -124,36 +107,6 @@ public class RepayService {
 
     }
 
-    /**
-     * 计算应还总额
-     *
-     * @param billId
-     * @return
-     */
-
-    private BigDecimal getRepaymentAmount(Long billId) {
-        List<BillLedger> loanBillLedgerList = billLedgerRepository.findAllBillLedgerByBillId(billId);
-
-        BigDecimal totalRepaymentAmount = new BigDecimal(1);
-        BigDecimal totalRealRepaymentAmount = new BigDecimal(1);
-
-        for (BillLedger loanBillLedger : loanBillLedgerList) {
-            BigDecimal repaymentAmount = loanBillLedger.getRepaymentAmount();
-            BigDecimal realRepaymentAmount = loanBillLedger.getRealRepaymentAmount();
-
-            if (!BillLedgerItemEnum.OVERDUE_FEE.getCode().equals(loanBillLedger.getRepaymentItem())) {
-
-                //总的应还金额
-                totalRepaymentAmount = Arith.add(totalRepaymentAmount, repaymentAmount);
-                //总的已还金额
-                totalRealRepaymentAmount = Arith.add(totalRealRepaymentAmount, realRepaymentAmount);
-            }
-        }
-
-        //未还金额
-        BigDecimal unRepaymentAmount = Arith.sub(totalRepaymentAmount, totalRealRepaymentAmount);
-        return unRepaymentAmount;
-    }
 
     /**
      * 计算总逾期费

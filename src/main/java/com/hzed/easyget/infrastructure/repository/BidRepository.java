@@ -1,15 +1,17 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.example.BidExample;
 import com.hzed.easyget.persistence.auto.mapper.BidMapper;
+import com.hzed.easyget.persistence.ext.entity.BidExt;
+import com.hzed.easyget.persistence.ext.mapper.BidExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wuchengwu
@@ -20,6 +22,8 @@ public class BidRepository {
 
     @Autowired
     private BidMapper bidMapper;
+    @Autowired
+    private BidExtMapper bidExtMapper;
 
     public List<Bid> findBStatusByUserId(Long userId, List<Byte> statuses) {
         BidExample example = new BidExample();
@@ -47,9 +51,8 @@ public class BidRepository {
     public int save(Bid bid) {
         return bidMapper.insertSelective(bid);
     }
-    public List<Bid> gitBidsToPush(List<Long> ids){
-        BidExample example = new BidExample();
-        example.createCriteria().andStatusEqualTo(BidStatusEnum.RISK_ING.getCode().byteValue()).andIdNotIn(ids);
-        return bidMapper.selectByExample(example);
+
+    public List<BidExt> gitBidsToPush(Map<String,Object> map){
+        return bidExtMapper.selectBidsToPush(map);
     }
 }

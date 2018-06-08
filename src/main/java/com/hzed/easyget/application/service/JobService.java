@@ -1,6 +1,7 @@
 package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.JobStatusEnum;
 import com.hzed.easyget.infrastructure.repository.BidProgressRepository;
@@ -8,16 +9,17 @@ import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayInfoFlowJobRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.BidProgress;
 import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
 import com.hzed.easyget.persistence.auto.entity.TempTable;
+import com.hzed.easyget.persistence.ext.entity.BidExt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author hfj
@@ -38,50 +40,50 @@ public class JobService {
     private RepayService repayService;
 
     public void pushBid() {
-        //查出所有待推送的标
-        //查询中间表，拿到所有推送资产失败大于等于5次的ids，次数小与5的可以重跑
-        List<TempTable> tempList = tempTableRepository.getByJobName();
-        List<Long> ids = Lists.newArrayList();
-        if (tempList.size() > 0 && !tempList.isEmpty()) {
-            for (TempTable temp : tempList) {
-                ids.add(temp.getId());
-            }
-        }
-        List<Bid> bidList = bidRepository.gitBidsToPush(ids);
-        if (bidList.size() <= 0 || bidList.isEmpty()) {
+//        //查询中间表，拿到所有推送资产失败大于5次的ids，次数小与等于5的可以重跑
+
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("jobName", "pushBid");
+        map.put("reRunTimes", 5);
+        List<BidExt> bids = bidRepository.gitBidsToPush(map);
+        if (bids.size() <= 0 || bids.isEmpty()) {
             return;
         }
-        bidList.forEach(bid -> {
-            Boolean isSuccess = false;
-
-            //要是已经推送过则更新重跑次数和推送时间
-            List<TempTable> tempList2 = tempTableRepository.getByJobNameAndId(bid.getId());
-            if (tempList2.size() <= 0 || tempList2.isEmpty()) {
-                return;
-            }
-            Boolean hasRun = false;
-            Integer times = 0;
-            for (TempTable temp : tempList2) {
-                if (bid.getId().equals(temp.getId())) {
+        for (BidExt bidExt : bids) {
+            Long tempId = 0L;
+            try {
+                Boolean isSuccess = false;
+                Boolean hasRun = false;
+                Integer times = 0;
+                //要是已经推送过则更新重跑次数和推送时间
+                List<TempTable> tempList2 = tempTableRepository.getTempByJobNameAndReId("pushBid", bidExt.getBidId());
+                tempId = tempList2.get(0).getId();
+                if (tempList2.size() > 0) {
                     hasRun = true;
-                    times = temp.getReRunTimes().intValue() + 1;
+                    times = tempList2.get(0).getReRunTimes() + 1;
                 }
-            }
-            //已经跑过，update
-            if (hasRun) {
-                tempTableRepository.upDateTemp(TempTable.builder().id(bid.getId()).createTime(LocalDateTime.now()).reRunTimes(times.byteValue()).build());
-            } else {
-                //没跑过的新增
-                Long jobId = IdentifierGenerator.nextId();
-                tempTableRepository.insertJob(TempTable.builder().id(jobId).relaseId(bid.getId()).jobName("pushBid").remark("推送资产").createTime(LocalDateTime.now()).reRunTimes(Integer.valueOf(1).byteValue()).build());
-            }
-            // TODO 推送-调风控接口
+                //已经跑过，update
+                if (hasRun) {
+                    tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).reRunTimes(times.byteValue()).build());
+                } else {
+                    //没跑过的新增
+                    Long jobId = IdentifierGenerator.nextId();
+                    tempTableRepository.insertJob(TempTable.builder().id(jobId).relaseId(bidExt.getBidId()).jobName("pushBid").remark("推送资产").createTime(LocalDateTime.now()).reRunTimes(Integer.valueOf(1).byteValue()).build());
+                }
+                // TODO 推送-调风控接口
 
-            //推送成功后 写标进度数据到t_loan_bid_progress，并删除job中数据
-            if (isSuccess) {
-                tempTableRepository.afterPushBid(buildBidProgress(bid.getId(), BidProgressTypeEnum.AUDIT.getMsg()), bid.getId());
+                //推送成功后 写标进度数据到t_loan_bid_progress，并删除job中数据
+                //TODO
+                isSuccess = true;
+                if (isSuccess) {
+                    tempTableRepository.afterPushBid(buildBidProgress(bidExt.getBidId(), BidProgressTypeEnum.AUDIT.getMsg()), bidExt.getBidId());
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                //TODO
+                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark(ex.getStackTrace().toString().substring(0, 32)).build());
             }
-        });
+        }
     }
 
     private BidProgress buildBidProgress(Long bidId, String result) {

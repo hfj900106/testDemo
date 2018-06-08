@@ -2,14 +2,16 @@ package com.hzed.easyget.infrastructure.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author hfj
  * @date 2018/6/7
  */
 @Data
+@Configuration
 @ConfigurationProperties(prefix="system.loanJob")
 public class JobProp {
-    private Boolean pushBid;
+    private boolean pushBid;
     private String pushBidCron;
 }

@@ -33,8 +33,6 @@ public class JobService {
     @Autowired
     private TempTableRepository tempTableRepository;
     @Autowired
-    private BidProgressRepository progressRepository;
-    @Autowired
     private RepayInfoFlowJobRepository repayInfoFlowJobRepository;
     @Autowired
     private RepayService repayService;
@@ -78,7 +76,7 @@ public class JobService {
             } catch (Exception ex) {
                 ex.printStackTrace();
                 //TODO
-                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark(ex.getStackTrace().toString().substring(0, 32)).build());
+                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark(ex.getMessage()).build());
             }
         }
     }

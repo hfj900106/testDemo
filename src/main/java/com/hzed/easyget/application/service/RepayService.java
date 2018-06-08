@@ -444,4 +444,19 @@ public class RepayService {
         return restAmount.compareTo(BigDecimal.ZERO) <= 0 ? BigDecimal.ZERO : restAmount;
     }
 
+    public RepayPartDetailResponse repayPartDetail(RepayPartDetailRequest request) {
+        String bidStr = request.getBid();
+        Long bidId = Long.valueOf(bidStr);
+        //获取标的待还总费用
+        BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, LocalDateTime.now());
+        //获取账单待还逾期费
+        Bill bill = billRepository.findByBid(bidId);
+        BigDecimal billOverFeeNoRepay = comService.getBillOverFeeNoRepay(bill.getId(), LocalDateTime.now());
+        //待应还总额
+        BigDecimal totalRepayAmount = bidNoRepay.add(billOverFeeNoRepay);
+        Bid bid = bidRepository.findByIdWithExp(bidId);
+        //todo 计算最小应还金额
+
+        return RepayPartDetailResponse.builder().totalAmount(totalRepayAmount.toString()).inAccount(bid.getInAccount()).build();
+    }
 }

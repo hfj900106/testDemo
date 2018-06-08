@@ -40,9 +40,9 @@ public class TempTableRepository {
         return jobs;
     }
 
-    public List<TempTable> getByJobNameAndId(Long id) {
+    public List<TempTable> getTempByJobNameAndReId(String name,Long id) {
         TempTableExample example = new TempTableExample();
-        example.createCriteria().andJobNameEqualTo("pushBid").andIdEqualTo(id);
+        example.createCriteria().andJobNameEqualTo(name).andRelaseIdEqualTo(id);
         List<TempTable> jobs = tempMapper.selectByExampleSelective(example);
         return jobs;
     }

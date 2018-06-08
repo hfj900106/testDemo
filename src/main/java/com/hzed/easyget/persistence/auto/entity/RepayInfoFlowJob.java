@@ -35,6 +35,11 @@ public class RepayInfoFlowJob implements Serializable {
     private Byte repaymentType;
 
     /**
+     * 还款流水号
+     */
+    private String requestseq;
+
+    /**
      * 状态 1-待处理 2-处理失败 3-处理成功
      */
     private Byte status;
@@ -109,6 +114,14 @@ public class RepayInfoFlowJob implements Serializable {
         this.repaymentType = repaymentType;
     }
 
+    public String getRequestseq() {
+        return requestseq;
+    }
+
+    public void setRequestseq(String requestseq) {
+        this.requestseq = requestseq == null ? null : requestseq.trim();
+    }
+
     public Byte getStatus() {
         return status;
     }
@@ -161,6 +174,7 @@ public class RepayInfoFlowJob implements Serializable {
         sb.append(", realRepaymentTime=").append(realRepaymentTime);
         sb.append(", repaymentMode=").append(repaymentMode);
         sb.append(", repaymentType=").append(repaymentType);
+        sb.append(", requestseq=").append(requestseq);
         sb.append(", status=").append(status);
         sb.append(", times=").append(times);
         sb.append(", createTime=").append(createTime);
@@ -212,6 +226,11 @@ public class RepayInfoFlowJob implements Serializable {
             return this;
         }
 
+        public Builder requestseq(String requestseq) {
+            obj.setRequestseq(requestseq);
+            return this;
+        }
+
         public Builder status(Byte status) {
             obj.setStatus(status);
             return this;
@@ -249,6 +268,7 @@ public class RepayInfoFlowJob implements Serializable {
         realRepaymentTime("real_repayment_time"),
         repaymentMode("repayment_mode"),
         repaymentType("repayment_type"),
+        requestseq("requestSeq"),
         status("status"),
         times("times"),
         createTime("create_time"),

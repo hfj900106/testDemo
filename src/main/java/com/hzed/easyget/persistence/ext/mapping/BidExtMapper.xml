@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzed.easyget.persistence.ext.mapper.BidExtMapper">
+
+    <select id="selectBidsToPush" parameterType="java.util.Map" resultType="com.hzed.easyget.persistence.ext.entity.BidExt">
+      select t_loan_bid.id as bidId
+      from t_loan_bid
+      where id not in
+        (select t_loan_bid.id
+         from t_loan_bid
+         left join t_loan_temp_table
+         on t_loan_bid.id=t_loan_temp_table.relase_id
+         where t_loan_temp_table.job_name='pushBid'
+         and t_loan_temp_table.re_run_times>5)
+    </select>
+</mapper>

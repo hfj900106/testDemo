@@ -42,7 +42,7 @@ public class JobAspect {
 
         // 设置运行标志-false
         setRunFlag(methodName, false);
-        ComUtil.putTrace();// 放入日志追踪标志
+//        ComUtil.putTrace();// 放入日志追踪标志
         // 定时任务名
         MDCUtil.put("jobName", jobAnnotation.value());
         log.info("=====定时任务 开始 =====");

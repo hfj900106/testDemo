@@ -41,10 +41,7 @@ public class JobService {
 
     public void pushBid() {
 //        //查询中间表，拿到所有推送资产失败大于5次的ids，次数小与等于5的可以重跑
-
         Map<String, Object> map = Maps.newHashMap();
-        map.put("jobName", "pushBid");
-        map.put("reRunTimes", 5);
         List<BidExt> bids = bidRepository.gitBidsToPush(map);
         if (bids.size() <= 0 || bids.isEmpty()) {
             return;
@@ -57,8 +54,8 @@ public class JobService {
                 Integer times = 0;
                 //要是已经推送过则更新重跑次数和推送时间
                 List<TempTable> tempList2 = tempTableRepository.getTempByJobNameAndReId("pushBid", bidExt.getBidId());
-                tempId = tempList2.get(0).getId();
                 if (tempList2.size() > 0) {
+                    tempId = tempList2.get(0).getId();
                     hasRun = true;
                     times = tempList2.get(0).getReRunTimes() + 1;
                 }
@@ -72,10 +69,10 @@ public class JobService {
                 }
                 // TODO 推送-调风控接口
 
-                //推送成功后 写标进度数据到t_loan_bid_progress，并删除job中数据
-                //TODO
+                //TODO 风控结果
                 isSuccess = true;
                 if (isSuccess) {
+                    //推送成功后 写标进度数据到t_loan_bid_progress，并删除job中数据
                     tempTableRepository.afterPushBid(buildBidProgress(bidExt.getBidId(), BidProgressTypeEnum.AUDIT.getMsg()), bidExt.getBidId());
                 }
             } catch (Exception ex) {

@@ -30,7 +30,9 @@ public class TempTableRepository {
     @Transactional(rollbackFor = Exception.class)
     public void afterPushBid(BidProgress bidProgress, Long jobId) {
         bidProgressMapper.insert(bidProgress);
-        tempMapper.deleteByPrimaryKey(jobId);
+        TempTableExample tableExample = new TempTableExample();
+        tableExample.createCriteria().andRelaseIdEqualTo(jobId).andJobNameEqualTo("pushBid");
+        tempMapper.deleteByExample(tableExample);
     }
 
     public List<TempTable> getByJobName() {
@@ -43,7 +45,7 @@ public class TempTableRepository {
     public List<TempTable> getTempByJobNameAndReId(String name,Long id) {
         TempTableExample example = new TempTableExample();
         example.createCriteria().andJobNameEqualTo(name).andRelaseIdEqualTo(id);
-        List<TempTable> jobs = tempMapper.selectByExampleSelective(example);
+        List<TempTable> jobs = tempMapper.selectByExample(example);
         return jobs;
     }
 

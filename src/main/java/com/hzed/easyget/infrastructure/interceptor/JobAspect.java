@@ -3,6 +3,7 @@ package com.hzed.easyget.infrastructure.interceptor;
 import com.hzed.easyget.infrastructure.annotation.JobAnnotation;
 import com.hzed.easyget.infrastructure.config.JobProp;
 import com.hzed.easyget.infrastructure.utils.ComUtil;
+import com.hzed.easyget.infrastructure.utils.MDCUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -43,8 +44,7 @@ public class JobAspect {
         setRunFlag(methodName, false);
         ComUtil.putTrace();// 放入日志追踪标志
         // 定时任务名
-        //TODO
-//        MDCUtil.put("jobName", jobAnnotation.value());
+        MDCUtil.put("jobName", jobAnnotation.value());
         log.info("=====定时任务 开始 =====");
         try {
             result = pPoint.proceed();
@@ -56,8 +56,6 @@ public class JobAspect {
         setRunFlag(methodName, true);
         return result;
     }
-
-
 
     /**
      * 根据方法名获取运行标志

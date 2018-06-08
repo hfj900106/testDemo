@@ -50,5 +50,11 @@ public class RepayController {
         return Response.getSuccessResponse(repayService.repayDetail(request));
     }
 
+    @ModuleFunc("部分还款详情")
+    @RequestMapping("/repayPartDetail")
+    public Response<RepayPartDetailResponse> repayPartDetail(@RequestBody RepayPartDetailRequest request){
+        return Response.getSuccessResponse(repayService.repayPartDetail(request));
+    }
+
 
 }

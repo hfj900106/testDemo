@@ -25,4 +25,11 @@ public class RepayInfoFlowJobRepository {
         return repayInfoFlowJobMapper.selectByExample(example);
     }
 
+    public void update(RepayInfoFlowJob jobUpdate) {
+        repayInfoFlowJobMapper.updateByPrimaryKeySelective(jobUpdate);
+    }
+
+    public void insert(RepayInfoFlowJob jobInsert) {
+        repayInfoFlowJobMapper.insertSelective(jobInsert);
+    }
 }

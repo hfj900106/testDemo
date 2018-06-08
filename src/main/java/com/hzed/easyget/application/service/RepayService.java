@@ -42,6 +42,8 @@ public class RepayService {
     private UserTransactionRepository userTransactionRepository;
     @Autowired
     private UserRepaymentRepository userRepaymentRepository;
+    @Autowired
+    private RepayInfoFlowJobRepository repayInfoFlowJobRepository;
 
     private static final String USER_TRANCATIONID = "userTrancationId";
     private static final String REQUEST_SEQ = "requestSeq";
@@ -228,14 +230,27 @@ public class RepayService {
      */
     public void repayAll(RepayAllRequest request) {
         Long bidId = request.getBidId();
-        Bid bid = bidRepository.findByIdWithExp(bidId);
+        BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, LocalDateTime.now());
 
         // 提前生成转账交易后的流水号放入threadLocal中
         String requestSeq = String.valueOf(IdentifierGenerator.nextId());
-        ThreadLocalUtil.set(REQUEST_SEQ, requestSeq);
+
         // TODO 走资金流
+
+        // 信息流入库
+        RepayInfoFlowJob jobInsert = new RepayInfoFlowJob();
+        jobInsert.setId(IdentifierGenerator.nextId());
+        jobInsert.setBidId(bidId);
+        jobInsert.setRepaymentAmount(bidNoRepay);
+        jobInsert.setRealRepaymentTime(LocalDateTime.now());
+        jobInsert.setRepaymentMode(RepayModeEnum.ONLINE.getCode().byteValue());
+        jobInsert.setRepaymentType(RepayTypeEnum.CLEAR.getCode().byteValue());
+        jobInsert.setRequestseq(requestSeq);
+        jobInsert.setCreateTime(LocalDateTime.now());
+        repayInfoFlowJobRepository.insert(jobInsert);
+
         // 走信息流
-        repayInformationFlow(request.getBidId(), bid.getLoanAmount(), LocalDateTime.now());
+//        repayInformationFlow(request.getBidId(), bidNoRepay, LocalDateTime.now(), requestSeq, null);
 
 
     }
@@ -245,15 +260,31 @@ public class RepayService {
      * 走信息流和资金流
      */
     public void repayPart(RepayPartRequest request) {
+        Long bidId = request.getBidId();
+        BigDecimal repayAmount = request.getRepayAmount();
         // 提前生成转账交易后的流水号放入threadLocal中
         String requestSeq = String.valueOf(IdentifierGenerator.nextId());
-        ThreadLocalUtil.set(REQUEST_SEQ, requestSeq);
 
         // TODO 走资金流
+
+        // 信息流入库
+        RepayInfoFlowJob jobInsert = new RepayInfoFlowJob();
+        jobInsert.setId(IdentifierGenerator.nextId());
+        jobInsert.setBidId(bidId);
+        jobInsert.setRepaymentAmount(repayAmount);
+        jobInsert.setRealRepaymentTime(LocalDateTime.now());
+        jobInsert.setRepaymentMode(RepayModeEnum.ONLINE.getCode().byteValue());
+        jobInsert.setRepaymentType(RepayTypeEnum.PART.getCode().byteValue());
+        jobInsert.setRequestseq(requestSeq);
+        jobInsert.setCreateTime(LocalDateTime.now());
+        repayInfoFlowJobRepository.insert(jobInsert);
+
+
         // 走信息流
-        repayInformationFlow(request.getBidId(), request.getRepayAmount(), LocalDateTime.now());
+//        repayInformationFlow(request.getBidId(), repayAmount, LocalDateTime.now(), requestSeq, null);
 
     }
+
 
     /**
      * 还款走信息流，包括全部结清和部分还款
@@ -263,9 +294,14 @@ public class RepayService {
      * 保存 t_loan_bid_progress 标的进度表（主要更新还款信息）
      * 保存 t_loan_bid 标的表（主要是更新结清操作，部分还款不用更新）
      * 保存 t_loan_user_transaction 用户交易记录表
+     *
+     * @param bidId             标id
+     * @param repayAmount       还款金额
+     * @param realRepaymentTime 实际还款时间
+     * @param job               定时任务标志，不是定时任务传null
      */
     @Transactional(rollbackFor = Exception.class)
-    public void repayInformationFlow(Long bidId, BigDecimal repayAmount, LocalDateTime realRepaymentTime) {
+    public void repayInformationFlow(Long bidId, BigDecimal repayAmount, LocalDateTime realRepaymentTime, String requestSeq, RepayInfoFlowJob job) {
         // 判断还款金额是否大于项目待还总额
         BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, realRepaymentTime);
         if (repayAmount.compareTo(bidNoRepay) > 0) {
@@ -284,7 +320,7 @@ public class RepayService {
         userTransaction.setBidId(bidId);
         userTransaction.setType(TransactionTypeEnum.OUT.getCode().byteValue());
         userTransaction.setAmount(repayAmount);
-        userTransaction.setRequestSeq(ThreadLocalUtil.get(REQUEST_SEQ));
+        userTransaction.setRequestSeq(requestSeq);
         userTransaction.setBank(bid.getInBank());
         userTransaction.setAccount(bid.getInAccount());
         userTransaction.setMode((byte) 1);
@@ -315,6 +351,15 @@ public class RepayService {
             bidUpdate.setStatus(BidStatusEnum.CLEARED.getCode().byteValue());
             bidUpdate.setUpdateTime(LocalDateTime.now());
             bidRepository.update(bidUpdate);
+        }
+
+        if (job != null) {
+            RepayInfoFlowJob jobUpdate = new RepayInfoFlowJob();
+            jobUpdate.setId(job.getId());
+            jobUpdate.setStatus(JobStatusEnum.SUCCESS.getCode().byteValue());
+            jobUpdate.setTimes((byte) (job.getTimes().intValue() + 1));
+            jobUpdate.setUpdateTime(LocalDateTime.now());
+            repayInfoFlowJobRepository.update(jobUpdate);
         }
 
     }

@@ -522,6 +522,76 @@ public class RepayInfoFlowJobExample {
             return (Criteria) this;
         }
 
+        public Criteria andRequestseqIsNull() {
+            addCriterion("requestSeq is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqIsNotNull() {
+            addCriterion("requestSeq is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqEqualTo(String value) {
+            addCriterion("requestSeq =", value, "requestseq");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqNotEqualTo(String value) {
+            addCriterion("requestSeq <>", value, "requestseq");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqGreaterThan(String value) {
+            addCriterion("requestSeq >", value, "requestseq");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqGreaterThanOrEqualTo(String value) {
+            addCriterion("requestSeq >=", value, "requestseq");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqLessThan(String value) {
+            addCriterion("requestSeq <", value, "requestseq");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqLessThanOrEqualTo(String value) {
+            addCriterion("requestSeq <=", value, "requestseq");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqLike(String value) {
+            addCriterion("requestSeq like", value, "requestseq");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqNotLike(String value) {
+            addCriterion("requestSeq not like", value, "requestseq");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqIn(List<String> values) {
+            addCriterion("requestSeq in", values, "requestseq");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqNotIn(List<String> values) {
+            addCriterion("requestSeq not in", values, "requestseq");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqBetween(String value1, String value2) {
+            addCriterion("requestSeq between", value1, value2, "requestseq");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqNotBetween(String value1, String value2) {
+            addCriterion("requestSeq not between", value1, value2, "requestseq");
+            return (Criteria) this;
+        }
+
         public Criteria andStatusIsNull() {
             addCriterion("status is null");
             return (Criteria) this;
@@ -829,6 +899,11 @@ public class RepayInfoFlowJobExample {
 
         public Criteria andRemarkNotBetween(String value1, String value2) {
             addCriterion("remark not between", value1, value2, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRequestseqLikeInsensitive(String value) {
+            addCriterion("upper(requestSeq) like", value.toUpperCase(), "requestseq");
             return (Criteria) this;
         }
 

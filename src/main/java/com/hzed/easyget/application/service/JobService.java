@@ -2,16 +2,20 @@ package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.BidProgressTypeEnum;
+import com.hzed.easyget.application.enums.JobStatusEnum;
 import com.hzed.easyget.infrastructure.repository.BidProgressRepository;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
+import com.hzed.easyget.infrastructure.repository.RepayInfoFlowJobRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.BidProgress;
+import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
 import com.hzed.easyget.persistence.auto.entity.TempTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,11 +27,15 @@ import java.util.List;
 @Service
 public class JobService {
     @Autowired
-    BidRepository bidRepository;
+    private BidRepository bidRepository;
     @Autowired
-    TempTableRepository tempTableRepository;
+    private TempTableRepository tempTableRepository;
     @Autowired
-    BidProgressRepository progressRepository;
+    private BidProgressRepository progressRepository;
+    @Autowired
+    private RepayInfoFlowJobRepository repayInfoFlowJobRepository;
+    @Autowired
+    private RepayService repayService;
 
     public void pushBid() {
         //查出所有待推送的标
@@ -86,6 +94,37 @@ public class JobService {
         bidProgress.setHandleResult(result);
         bidProgress.setRemark("推送资产");
         return bidProgress;
+    }
+
+    /**
+     * 还款走信息流
+     * TODO 日志打印
+     */
+    public void repayInfoFlow() {
+        List<RepayInfoFlowJob> jobList = repayInfoFlowJobRepository.findJobList(Lists.newArrayList((byte) 1, (byte) 2), 2);
+        if (jobList == null || jobList.isEmpty()) {
+            return;
+        }
+
+        jobList.forEach(repayjob -> {
+            try {
+                // 走信息流
+                Long bidId = repayjob.getBidId();
+                BigDecimal repaymentAmount = repayjob.getRepaymentAmount();
+                LocalDateTime realRepaymentTime = repayjob.getRealRepaymentTime();
+                repayService.repayInformationFlow(bidId, repaymentAmount, realRepaymentTime, repayjob.getRequestseq(), repayjob);
+            } catch (Exception e) {
+                RepayInfoFlowJob jobUpdate = new RepayInfoFlowJob();
+                jobUpdate.setId(repayjob.getId());
+                jobUpdate.setStatus(JobStatusEnum.FALI.getCode().byteValue());
+                jobUpdate.setTimes((byte) (repayjob.getTimes().intValue() + 1));
+                jobUpdate.setUpdateTime(LocalDateTime.now());
+                jobUpdate.setRemark(e.getMessage());
+                repayInfoFlowJobRepository.update(jobUpdate);
+            }
+        });
+
+
     }
 
 

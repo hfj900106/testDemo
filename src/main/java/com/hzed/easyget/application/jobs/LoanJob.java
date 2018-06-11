@@ -9,19 +9,13 @@ import org.springframework.stereotype.Component;
 
 /**
  * 定时任务
- *
- * @author hfj
- * @date 2018/6/7
- */
-/**
- * 定时任务
  * <p>
  * 注意：
  * 1、定时任务的方法名必须与application.yml中的system.job下的属性一致才能生效
  * 2、有异常直接抛出
  *
  * @author guichang
- * @date 2018/05/10
+ * @date 2018/06/11
  */
 
 @Slf4j

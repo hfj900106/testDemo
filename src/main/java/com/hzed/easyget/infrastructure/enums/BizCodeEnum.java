@@ -46,7 +46,9 @@ public enum BizCodeEnum {
     SMS_CODE_SEND_FAIL("1017", "短信发送失败"),
     PIC_CODE_TO_CHECK("1018", "需要图片验证码校验"),
 
-
+    // 2-上传文件异常
+    FILE_FORMAT_ERROR("","此格式不支持"),
+    FILE_NULL_ERROR("","文件不能为空"),
 
     ;
 

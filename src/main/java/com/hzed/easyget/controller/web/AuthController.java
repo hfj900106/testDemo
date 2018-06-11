@@ -27,7 +27,7 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @ModuleFunc("通讯录认证")
+    @ModuleFunc(value = "通讯录认证", isParameterValidate = false)
     @PostMapping("/contacts")
     public Response contacts(@RequestBody ContactsRequest request) {
         authService.authContacts(request);
@@ -48,7 +48,7 @@ public class AuthController {
         return Response.getSuccessResponse();
     }
 
-    @ModuleFunc(value="身份信息认证", isParameterPrint=false)
+    @ModuleFunc(value = "身份信息认证", isParameterPrint = false)
     @PostMapping("/identityInfo")
     public Response identityInformationAuth(@RequestBody IdentityInfoAuthRequest request) {
         authService.identityInfoAuth(request);

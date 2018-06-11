@@ -14,12 +14,12 @@ import java.time.LocalDateTime;
  */
 @Data
 public class PushBidCallBackRequest {
-    @NotNull(message = "[bidId]标的ID不能为空")
+    @NotNull(message = "标的ID不能为空")
     private Long bidId;
-    @NotNull(message = "[loanAmount]审核借款金额不能为空")
+    @NotNull(message = "审核借款金额不能为空")
     private BigDecimal loanAmount;
-    @NotBlank(message = "[resultCode]审核结果码不能为空")
+    @NotBlank(message = "审核结果码不能为空")
     private String resultCode;
-    @NotBlank(message = "[handleTime]处理时间不能为空")
+    @NotBlank(message = "处理时间不能为空")
     private LocalDateTime handleTime;
 }

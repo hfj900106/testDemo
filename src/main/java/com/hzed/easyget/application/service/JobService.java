@@ -6,6 +6,7 @@ import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.ProductService;
 import com.hzed.easyget.application.service.product.model.EasyGetPruduct;
+import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayInfoFlowJobRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
@@ -17,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author hfj
@@ -104,6 +107,8 @@ public class JobService {
             tempTableRepository.insertJob(TempTable.builder().id(tempId).jobName("bankLoan").relaseId(bid.getBidId()).remark("放款").createTime(LocalDateTime.now()).reRunTimes((byte) 1).build());
             try {
                 //TODO 调放款接口
+
+
                 boolean isSuccess = false;
                 //根据返回结果
                 if (isSuccess) {
@@ -116,9 +121,7 @@ public class JobService {
 
                     //TODO 交易流水号
                     String requestSeq = "";
-                    String bank = "";
-                    String account = "";
-                    UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bid.getBidId(), TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), requestSeq, bank, account);
+                    UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bid.getBidId(), TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), requestSeq,bidInfo.getInBank() ,bidInfo.getInAccount() );
 
                     tempTableRepository.afterBankLoan(
                             Bid.builder().id(bid.getBidId()).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetPruduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),

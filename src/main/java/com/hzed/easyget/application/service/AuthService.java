@@ -20,6 +20,7 @@ import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,7 +83,7 @@ public class AuthService {
     }
 
     /**
-     * 通讯录认证
+     * 通讯录认证通讯录和通话记录都可能为空
      */
     public void authContacts(ContactsRequest request) {
         GlobalUser user = getGlobalUser();
@@ -91,12 +92,12 @@ public class AuthService {
         //TODO 待定参数
         map.put("sign", "1212");
         map.put("contacts", request.getContacts());
+        map.put("callLogs", request.getCallLogs());
         map.put("userId", user.getUserId());
         map.put("source", "android".equals(platForm)?ComConsts.IS_ANDROID:ComConsts.IS_IOS);
         //TODO 待验证方式
         String response = template.postForObject("/app/risk/Contacts/add", map, String.class);
         afterResponse(response,"通讯录认证返回数据异常",user.getUserId(),"通讯录认证");
-
     }
 
     /**
@@ -236,40 +237,45 @@ public class AuthService {
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         String faceBase64ImgStr = request.getFaceBase64ImgStr();
         String picSuffix = request.getPicSuffix();
-        //TODO 上传至阿里云
-
+        Map<String, Object> map = new HashMap<>(16);
+        map.put("imgBase64", idCardBase64ImgStr);
+        map.put("pictureSuffix", picSuffix);
         String idCardPhotoPath ;
         String facePhotoPath ;
         try {
-            idCardPhotoPath = aliyunService.uploadBase64PicStr(idCardBase64ImgStr,picSuffix);
-            facePhotoPath = aliyunService.uploadBase64PicStr(faceBase64ImgStr,picSuffix);
+            UploadImgResponse response = template.postForObject("/hzed/easy-get/upload", map, UploadImgResponse.class);
+            idCardPhotoPath = response.getVisitUrl();
+
+            map.put("imgBase64", faceBase64ImgStr);
+            UploadImgResponse response2 = template.postForObject("/hzed/easy-get/upload", map, UploadImgResponse.class);
+            facePhotoPath = response2.getVisitUrl();
+
+            //根据拿到json串组装对象
+            User userObj = new User();
+            UserPic userPic = new UserPic();
+            //组装user对象
+            userObj.setId(user.getUserId());
+            userObj.setRealName(realName);
+            userObj.setIdCardNo(idCardNo);
+            userObj.setGender(gender.byteValue());
+            userObj.setUpdateTime(LocalDateTime.now());
+            userObj.setUpdateBy(user.getUserId());
+            //组装faceIdcardAuth对象
+            Long faceIdcardAuthId = IdentifierGenerator.nextId();
+            userPic.setId(faceIdcardAuthId);
+            userPic.setUserId(user.getUserId());
+            userPic.setIdCardPhoto(idCardPhotoPath);
+            userPic.setFacePhoto(facePhotoPath);
+            userPic.setCreateBy(faceIdcardAuthId);
+            userPic.setCreateTime(LocalDateTime.now());
+            userPic.setRemark("身份信息认证");
+            //获取UserAuthStatus对象
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "身份信息认证");
+            workRepository.insertIdentityInfo(userPic, userAuthStatus, userObj);
         } catch (NestedException e) {
-            //上传base64图片字符串失败
-            log.error(e.getMessage());
-            return;
+            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION,"身份认证失败");
         }
-        //根据拿到json串组装对象
-        User userObj = new User();
-        UserPic userPic = new UserPic();
-        //组装user对象
-        userObj.setId(user.getUserId());
-        userObj.setRealName(realName);
-        userObj.setIdCardNo(idCardNo);
-        userObj.setGender(gender.byteValue());
-        userObj.setUpdateTime(LocalDateTime.now());
-        userObj.setUpdateBy(user.getUserId());
-        //组装faceIdcardAuth对象
-        Long faceIdcardAuthId = IdentifierGenerator.nextId();
-        userPic.setId(faceIdcardAuthId);
-        userPic.setUserId(user.getUserId());
-        userPic.setIdCardPhoto(idCardPhotoPath);
-        userPic.setFacePhoto(facePhotoPath);
-        userPic.setCreateBy(faceIdcardAuthId);
-        userPic.setCreateTime(LocalDateTime.now());
-        userPic.setRemark("身份信息认证");
-        //获取UserAuthStatus对象
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "身份信息认证");
-        workRepository.insertIdentityInfo(userPic, userAuthStatus, userObj);
+
     }
 
     /**
@@ -282,8 +288,8 @@ public class AuthService {
         work.setUserId(user.getUserId());
         work.setJobType(request.getJobType().byteValue());
         work.setMonthlyIncome(request.getMonthlyIncome().byteValue());
-        work.setEmployeeCard(request.getEmployeeCard());
-        work.setWorkplace(request.getWorkplace());
+        work.setEmployeeCard(request.getEmployeeCardBase64ImgStr());
+        work.setWorkplace(request.getWorkplaceBase64ImgStr());
         work.setCreateBy(user.getUserId());
         work.setCreateTime(LocalDateTime.now());
         work.setRemark("专业信息认证");

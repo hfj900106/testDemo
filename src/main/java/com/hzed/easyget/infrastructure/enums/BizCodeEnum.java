@@ -21,6 +21,8 @@ public enum BizCodeEnum {
 
     // 8-交易码
     sahfsdkfsahd("8001", "用户余额不足"),
+    LOAN_TRANSACTION_ERROR("8002","支付放款接口异常"),
+    RECEIVER_TRANSACTION_ERROR("8003","支付收款接口异常"),
 
     // 1-请求业务校验
     ILLEGAL_PARAM("1000", "请求参数非法"),

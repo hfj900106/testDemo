@@ -285,8 +285,8 @@ public class AuthService {
         work.setUserId(user.getUserId());
         work.setJobType(request.getJobType().byteValue());
         work.setMonthlyIncome(request.getMonthlyIncome().byteValue());
-        work.setEmployeeCard(request.getEmployeeCard());
-        work.setWorkplace(request.getWorkplace());
+        work.setEmployeeCard(request.getEmployeeCardBase64ImgStr());
+        work.setWorkplace(request.getWorkplaceBase64ImgStr());
         work.setCreateBy(user.getUserId());
         work.setCreateTime(LocalDateTime.now());
         work.setRemark("专业信息认证");

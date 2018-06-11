@@ -25,10 +25,10 @@ public class ProfessionalRequest {
      * 工作证
      */
     @NotBlank(message = "工作证不能为空")
-    private String employeeCard ;
+    private String employeeCardBase64ImgStr ;
     /**
      * 工作场所照片
      */
     @NotBlank(message = "工作场所照片不能为空")
-    private String workplace ;
+    private String workplaceBase64ImgStr ;
 }

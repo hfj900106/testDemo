@@ -32,11 +32,8 @@ public class AuthController {
     @PostMapping("/contacts")
     public Response contacts(@RequestBody ContactsRequest request) {
         ValidatorUtil.validateWithNull(request);
-
         request.getContacts().forEach(contact -> ValidatorUtil.validateWithNull(contact));
         request.getCallLogs().forEach(callLog -> ValidatorUtil.validateWithNull(callLog));
-
-
         authService.authContacts(request);
         return Response.getSuccessResponse();
     }

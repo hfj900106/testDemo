@@ -145,6 +145,10 @@ public class LoginService {
             //发送过于频繁
             throw new ComBizException(BizCodeEnum.FREQUENTLY_SEND);
         }
+        if(StringUtils.isNotBlank(redisService.getCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile))){
+            //10分钟内重发需要验证码
+            throw new ComBizException(BizCodeEnum.PIC_CODE_TO_CHECK);
+        }
         String code = SmsUtils.getCode();
         String content = "您的注册验证码是：" + code + " ，两分钟内有效，欢迎使用本平台";
         //发送短信
@@ -161,6 +165,8 @@ public class LoginService {
         redisService.setCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile, code, 120L);
         //60秒后可以重发
         redisService.setCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile, mobile, 60L);
+        //10分钟内重发需要验证码
+        redisService.setCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile, mobile, 600L);
     }
 
     /**

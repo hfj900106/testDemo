@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @ExceptionAnno
 @RestController
-@RequestMapping("/upload")
+@RequestMapping("/easy-get/upload")
 public class UploadImgController {
 
    @Autowired

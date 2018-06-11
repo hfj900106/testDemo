@@ -28,7 +28,7 @@ public class FileUtil {
      * @return Response
      */
 
-    private static String basePath;
+    private static String basePath = "uploadImg";
 
 
     public static Response<FileModel> uploadByBase64(String imgStr, String fileSuffix) {
@@ -38,6 +38,10 @@ public class FileUtil {
         }
         OutputStream out = null;
         FileModel module = null;
+        File fileSourcePath = new File(basePath);
+        if (!fileSourcePath.exists()) {
+            fileSourcePath.mkdirs();
+        }
         try {
             // 解密
             byte[] b = Base64.decodeBase64(imgStr);
@@ -48,7 +52,7 @@ public class FileUtil {
                 }
             }
             String filename = IdentifierGenerator.nextId() + "." + fileSuffix;
-            out = new FileOutputStream(basePath + File.separator + filename);
+            out = new FileOutputStream(new File(fileSourcePath + File.separator + filename));
             out.write(b);
             out.flush();
             module = new FileModel();

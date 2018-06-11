@@ -1,4 +1,5 @@
 import com.hzed.BootApplication;
+import com.hzed.easyget.application.service.FileService;
 import com.hzed.easyget.infrastructure.config.aliyun.AliyunService;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.utils.PicUtil;
@@ -19,6 +20,8 @@ public class BootTest {
     private RedisService redisService;
     @Autowired
     private AliyunService aliyunService;
+    @Autowired
+    private FileService fileService;
 
     @Test
     public void redisTest() {
@@ -28,10 +31,19 @@ public class BootTest {
 
     @Test
     public void uploadPicTest() throws Exception {
+        String imgPath = "C:\\Users\\Administrator\\Desktop\\1.png";
+        String base64String = PicUtil.picToBase64(imgPath);
+//        String aliyunPath = aliyunService.uploadBase64PicStr(base64String, "png");
+//        System.out.println(aliyunPath);
+        System.out.println(base64String);
+    }
+
+    @Test
+    public void uploadImg() throws Exception {
         String imgPath = "C:\\Users\\Administrator\\Desktop\\jifei.png";
         String base64String = PicUtil.picToBase64(imgPath);
-        String aliyunPath = aliyunService.uploadBase64PicStr(base64String, "png");
-        System.out.println(aliyunPath);
+        String path = fileService.uploadBase64Img(base64String, "png");
+        System.out.println(path);
     }
 
 

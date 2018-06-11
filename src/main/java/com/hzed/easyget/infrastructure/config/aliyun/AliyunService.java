@@ -83,7 +83,7 @@ public class AliyunService {
      */
     public String uploadBase64PicStr(String base64ImgStr, String picSuffix) {
         try {
-            String imgPathAbs = PicUtil.generateImage(base64ImgStr, picSuffix);
+            String imgPathAbs = PicUtil.uploadImage(base64ImgStr, picSuffix);
             String fileName = PicUtil.getFileName(imgPathAbs);
             return upload(fileName, imgPathAbs, true);
         } catch (Exception e) {

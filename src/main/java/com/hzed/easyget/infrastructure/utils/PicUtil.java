@@ -25,7 +25,23 @@ public class PicUtil {
      * @param picSuffix    图片文件后缀如：jpg,png
      * @return 生成文件的完整路径
      */
-    public static String generateImage(String base64ImgStr, String picSuffix) throws Exception {
+    public static String uploadImage(String base64ImgStr, String picSuffix) throws Exception {
+        String imgPathAbs = basePath + File.separator + IdentifierGenerator.nextId() + "." + picSuffix;
+        return uploadImageAbs(base64ImgStr, imgPathAbs);
+
+    }
+
+    /**
+     * 将base64编码字符串转换为图片
+     *
+     * @param base64ImgStr base64编码字符串
+     * @param absFilePath  保存的绝对路径 如 c://123.png
+     * @return 保存的绝对路径
+     */
+    public static String uploadImageAbs(String base64ImgStr, String absFilePath) throws Exception {
+        // 不存在就创建目录
+        String fileDir = absFilePath.substring(0, absFilePath.lastIndexOf(File.separator));
+        new File(fileDir).mkdirs();
         // 解密
         byte[] b = Base64.decodeBase64(base64ImgStr);
         // 处理数据
@@ -35,12 +51,11 @@ public class PicUtil {
             }
         }
         // 生成文件的完整路径
-        String imgPathAbs = basePath + File.separator + IdentifierGenerator.nextId() + "." + picSuffix;
-        OutputStream out = new FileOutputStream(imgPathAbs);
+        OutputStream out = new FileOutputStream(absFilePath);
         out.write(b);
         out.flush();
         out.close();
-        return imgPathAbs;
+        return absFilePath;
 
     }
 

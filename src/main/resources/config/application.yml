@@ -5,6 +5,7 @@ server.context-path: /hzed
 
 # TODO 密码加密 https://blog.csdn.net/linhongwangok/article/details/79076178;https://github.com/ulisesbocchio/jasypt-spring-boot
 spring:
+  resources.static-locations: file:${system.imgUploadPath} # 静态资源文件路径，多个用逗号隔开 classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${web.upload-path}
   profiles.active: dev # 环境
   application.name: easy-get
   datasource:
@@ -34,6 +35,12 @@ aliyun:
   accessKeySecret: IwfH6vAH0rZWK3wL2aK3hTopsWVb6t
   bucketName: hzed-ccard #存储空间目录
 
+# 第三方
+thirdParty:
+  domain: http://localhost:8080 # 请求架构组bulepay域名地址
+  loanTransactionUrl: # 放款接口链接
+  receiverTransactionUrl: # 收款接口链接
+
 #======================================= 系统参数 开始 =======================================#
 system:
   tokenExpire: 7 # token失效时间 7 天
@@ -41,15 +48,10 @@ system:
   expected_lending_time_interval: 60 #预计放款时间间隔 单位分
   #定时任务
   job:
-      pushBid: false # 推送资产
-      pushBidCron: 0/5 * * * * ?
-      bankLoan: false # 放款
-      bankLoanCron: 0/5 * * * * ?
-# 第三方
-thirdParty:
-  domain: http://localhost:8080 # 请求架构组bulepay域名地址
-  loanTransactionUrl: # 放款接口链接
-  receiverTransactionUrl: # 收款接口链接
-
+    pushBid: false # 推送资产
+    pushBidCron: 0/5 * * * * ?
+    bankLoan: false # 放款
+    bankLoanCron: 0/5 * * * * ?
+  imgUploadPath: c://imgUpload # 上传图片文件目录
 
 #======================================= 系统参数 结束 =======================================#

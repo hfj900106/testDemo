@@ -22,7 +22,7 @@ import java.util.List;
 
 @ExceptionAnno
 @RestController
-@RequestMapping("/home")
+@RequestMapping("/easy-get/home")
 public class HomeController {
     @Autowired
     private HomeService homeService;

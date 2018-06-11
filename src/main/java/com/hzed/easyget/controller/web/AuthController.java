@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @ExceptionAnno
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/easy-get/auth")
 public class AuthController {
     @Autowired
     private AuthService authService;

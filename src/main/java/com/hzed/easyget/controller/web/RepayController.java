@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @ExceptionAnno
 @RestController
-@RequestMapping("/repay")
+@RequestMapping("/easy-get/repay")
 public class RepayController {
 
     @Autowired

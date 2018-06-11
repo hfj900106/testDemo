@@ -18,7 +18,7 @@ public class ReceiverTransactionRequest {
     /**
      * 价格
      */
-    @NotBlank(message = "[price]价格不能为空")
+    @NotBlank(message = "价格不能为空")
     private String price;
     /**
      * 渠道id 固定1000
@@ -31,21 +31,21 @@ public class ReceiverTransactionRequest {
     /**
      * 手机号
      */
-    @NotBlank(message = "[msisdn]手机号不能为空")
+    @NotBlank(message = "手机号不能为空")
     private Integer msisdn;
     /**
      * 支付方式
      */
-    @NotBlank(message = "[payType]支付方式不能为空")
+    @NotBlank(message = "支付方式不能为空")
     private String payType;
     /**
      * 银行类型
      */
-    @NotBlank(message = "[bankType]银行类型不能为空")
+    @NotBlank(message = "银行类型不能为空")
     private String bankType;
     /**
      * 产品id
      */
-    @NotBlank(message = "[productId]产品id不能为空")
+    @NotBlank(message = "产品id不能为空")
     private String productId;
 }

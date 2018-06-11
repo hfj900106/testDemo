@@ -15,6 +15,6 @@ import javax.validation.constraints.NotNull;
 @Data
 public class MessagesRequest {
 
-    @NotBlank(message = "[message]不能为空")
+    @NotBlank(message = "短信内容不能为空")
     private String message;
 }

@@ -16,28 +16,28 @@ import java.util.List;
 
 @Data
 public class ContactsRequest {
-    @NotNull(message = "[contacts]不能为空")
+    @NotNull(message = "通讯录不能为空")
     private List<Contact> contacts;
-    @NotNull(message = "[callLog]不能为空")
+    @NotNull(message = "通话记录不能为空")
     private List<CallLog> callLogs;
 
     @Data
     public static class Contact {
-        @NotBlank(message = "[name]不能为空")
+        @NotBlank(message = "通讯录姓名不能为空")
         private String name;
-        @NotBlank(message = "[mobile]不能为空")
+        @NotBlank(message = "通讯录手机号不能为空")
         private String mobile;
     }
 
     @Data
     public static class CallLog {
-        @NotBlank(message = "[name]不能为空")
+        @NotBlank(message = "通话记录姓名不能为空")
         private String name;
-        @NotBlank(message = "[mobile]不能为空")
+        @NotBlank(message = "通话记录手机号不能为空")
         private String mobile;
-        @NotNull(message = "[type]不能为空")
+        @NotNull(message = "通话类型不能为空")
         private Integer type;
-        @NotBlank(message = "[date]不能为空")
+        @NotBlank(message = "通话时间不能为空")
         private String date;
     }
 

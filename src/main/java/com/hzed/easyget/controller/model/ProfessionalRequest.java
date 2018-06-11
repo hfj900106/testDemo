@@ -14,21 +14,21 @@ public class ProfessionalRequest {
     /**
      * 工作类型
      */
-    @NotNull(message = "[jobType]不能为空")
+    @NotNull(message = "工作类型不能为空")
     private Integer jobType ;
     /**
      * 月收入
      */
-    @NotNull(message = "[monthlyIncome]不能为空")
+    @NotNull(message = "月收入不能为空")
     private Integer monthlyIncome ;
     /**
-     * 工作证保存路径
+     * 工作证
      */
-    @NotBlank(message = "[employeeCard]不能为空")
+    @NotBlank(message = "工作证不能为空")
     private String employeeCard ;
     /**
-     * 工作场所照片保存路径
+     * 工作场所照片
      */
-    @NotBlank(message = "[employeeCard]不能为空")
+    @NotBlank(message = "工作场所照片不能为空")
     private String workplace ;
 }

@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Data
 public class PeratorAuthRequest {
 
-    @NotBlank(message = "[smsCode]不能为空")
+    @NotBlank(message = "验证码不能为空")
     private String smsCode;
 
 }

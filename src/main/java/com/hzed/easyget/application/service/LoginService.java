@@ -24,10 +24,6 @@ import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.SmsLog;
 import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserToken;
-import com.hzed.indonesia.sms.constants.SmsCodeEnum;
-import com.hzed.indonesia.sms.model.request.NxSmsDownRequest;
-import com.hzed.indonesia.sms.model.response.NxSmsDownResponse;
-import com.hzed.indonesia.sms.utils.NxSmsUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -81,9 +77,6 @@ public class LoginService {
             user.setId(IdentifierGenerator.nextId());
             user.setMobileAccount(mobile);
             user.setPlatform(platform);
-            user.setIsLocked(false);
-            user.setIsBlacklist(false);
-            user.setCreateTime(LocalDateTime.now());
             userRepository.insert(user);
         }
 
@@ -114,8 +107,8 @@ public class LoginService {
         //放入redis 3个小时
         redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 3 * 3600L);
 
-        //更新用户最后登录时间
-        userRepository.updateLastLoginTime(User.builder().id(userId).lastLoginTime(LocalDateTime.now()).build());
+        // TODO 更新用户最后登录时间
+//        userRepository.updateLastLoginTime(User.builder().id(userId).lastLoginTime(LocalDateTime.now()).build());
 
         return LoginByCodeResponse.builder().token(token).build();
     }

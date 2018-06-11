@@ -3,56 +3,40 @@ package com.hzed.easyget.persistence.auto.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class User implements Serializable {
+public class UserLogin implements Serializable {
     /**
-     * 主键
      */
     private Long id;
 
     /**
-     * 手机号账号
+     * 用户id
      */
-    private String mobileAccount;
+    private Long userId;
 
     /**
-     * 密码（加密保存）
-     */
-    private String password;
-
-    /**
-     * 用户头像
-     */
-    private String profilePhoto;
-
-    /**
-     * 昵称
-     */
-    private String nickName;
-
-    /**
-     * 性别 0-未知 1-男 2-女 3-女改男 4-男改女 5-其他
-     */
-    private Byte gender;
-
-    /**
-     * 真实姓名
-     */
-    private String realName;
-
-    /**
-     * 身份证号
-     */
-    private String idCardNo;
-
-    /**
-     * 注册平台 android、ios等等
+     * 登录平台 android、ios等等
      */
     private String platform;
 
     /**
-     * 注册渠道 1-印尼APP
+     * 登录渠道 1-印尼APP
      */
     private Byte client;
+
+    /**
+     * 登录ip
+     */
+    private String loginIp;
+
+    /**
+     * 登录设备
+     */
+    private String loginPhone;
+
+    /**
+     * 登录时间
+     */
+    private LocalDateTime loginTime;
 
     /**
      */
@@ -84,60 +68,12 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getMobileAccount() {
-        return mobileAccount;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setMobileAccount(String mobileAccount) {
-        this.mobileAccount = mobileAccount == null ? null : mobileAccount.trim();
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password == null ? null : password.trim();
-    }
-
-    public String getProfilePhoto() {
-        return profilePhoto;
-    }
-
-    public void setProfilePhoto(String profilePhoto) {
-        this.profilePhoto = profilePhoto == null ? null : profilePhoto.trim();
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName == null ? null : nickName.trim();
-    }
-
-    public Byte getGender() {
-        return gender;
-    }
-
-    public void setGender(Byte gender) {
-        this.gender = gender;
-    }
-
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName == null ? null : realName.trim();
-    }
-
-    public String getIdCardNo() {
-        return idCardNo;
-    }
-
-    public void setIdCardNo(String idCardNo) {
-        this.idCardNo = idCardNo == null ? null : idCardNo.trim();
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getPlatform() {
@@ -154,6 +90,30 @@ public class User implements Serializable {
 
     public void setClient(Byte client) {
         this.client = client;
+    }
+
+    public String getLoginIp() {
+        return loginIp;
+    }
+
+    public void setLoginIp(String loginIp) {
+        this.loginIp = loginIp == null ? null : loginIp.trim();
+    }
+
+    public String getLoginPhone() {
+        return loginPhone;
+    }
+
+    public void setLoginPhone(String loginPhone) {
+        this.loginPhone = loginPhone == null ? null : loginPhone.trim();
+    }
+
+    public LocalDateTime getLoginTime() {
+        return loginTime;
+    }
+
+    public void setLoginTime(LocalDateTime loginTime) {
+        this.loginTime = loginTime;
     }
 
     public Long getCreateBy() {
@@ -203,15 +163,12 @@ public class User implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", mobileAccount=").append(mobileAccount);
-        sb.append(", password=").append(password);
-        sb.append(", profilePhoto=").append(profilePhoto);
-        sb.append(", nickName=").append(nickName);
-        sb.append(", gender=").append(gender);
-        sb.append(", realName=").append(realName);
-        sb.append(", idCardNo=").append(idCardNo);
+        sb.append(", userId=").append(userId);
         sb.append(", platform=").append(platform);
         sb.append(", client=").append(client);
+        sb.append(", loginIp=").append(loginIp);
+        sb.append(", loginPhone=").append(loginPhone);
+        sb.append(", loginTime=").append(loginTime);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -222,15 +179,15 @@ public class User implements Serializable {
         return sb.toString();
     }
 
-    public static User.Builder builder() {
-        return new User.Builder();
+    public static UserLogin.Builder builder() {
+        return new UserLogin.Builder();
     }
 
     public static class Builder {
-        private User obj;
+        private UserLogin obj;
 
         public Builder() {
-            this.obj = new User();
+            this.obj = new UserLogin();
         }
 
         public Builder id(Long id) {
@@ -238,38 +195,8 @@ public class User implements Serializable {
             return this;
         }
 
-        public Builder mobileAccount(String mobileAccount) {
-            obj.setMobileAccount(mobileAccount);
-            return this;
-        }
-
-        public Builder password(String password) {
-            obj.setPassword(password);
-            return this;
-        }
-
-        public Builder profilePhoto(String profilePhoto) {
-            obj.setProfilePhoto(profilePhoto);
-            return this;
-        }
-
-        public Builder nickName(String nickName) {
-            obj.setNickName(nickName);
-            return this;
-        }
-
-        public Builder gender(Byte gender) {
-            obj.setGender(gender);
-            return this;
-        }
-
-        public Builder realName(String realName) {
-            obj.setRealName(realName);
-            return this;
-        }
-
-        public Builder idCardNo(String idCardNo) {
-            obj.setIdCardNo(idCardNo);
+        public Builder userId(Long userId) {
+            obj.setUserId(userId);
             return this;
         }
 
@@ -280,6 +207,21 @@ public class User implements Serializable {
 
         public Builder client(Byte client) {
             obj.setClient(client);
+            return this;
+        }
+
+        public Builder loginIp(String loginIp) {
+            obj.setLoginIp(loginIp);
+            return this;
+        }
+
+        public Builder loginPhone(String loginPhone) {
+            obj.setLoginPhone(loginPhone);
+            return this;
+        }
+
+        public Builder loginTime(LocalDateTime loginTime) {
+            obj.setLoginTime(loginTime);
             return this;
         }
 
@@ -308,22 +250,19 @@ public class User implements Serializable {
             return this;
         }
 
-        public User build() {
+        public UserLogin build() {
             return this.obj;
         }
     }
 
     public enum Column {
         id("id"),
-        mobileAccount("mobile_account"),
-        password("password"),
-        profilePhoto("profile_photo"),
-        nickName("nick_name"),
-        gender("gender"),
-        realName("real_name"),
-        idCardNo("id_card_no"),
+        userId("user_id"),
         platform("platform"),
         client("client"),
+        loginIp("login_ip"),
+        loginPhone("login_phone"),
+        loginTime("login_time"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

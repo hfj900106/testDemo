@@ -27,7 +27,7 @@ public class RiskCallBackService {
         Long bidId = request.getBidId();
         BigDecimal loanAmount = request.getLoanAmount();
         String resultCode = request.getResultCode();
-        LocalDateTime dateTime = request.getDateTime();
+        LocalDateTime dateTime = request.getHandleTime();
         tempTableRepository.pushBidCallBack(
                 Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime)
                         .status("0000".equals(resultCode) ? BidStatusEnum.AUDIT_PASS.getCode().byteValue() : BidStatusEnum.AUDIT_FAIL.getCode().byteValue()).build(),

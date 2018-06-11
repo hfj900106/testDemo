@@ -17,10 +17,4 @@ public class MessagesRequest {
 
     @NotBlank(message = "[message]不能为空")
     private String message;
-    /**
-     * 1 标识安卓，2 标识IOS
-     */
-    @NotNull(message = "[source]不能为空")
-    private Integer source;
-
 }

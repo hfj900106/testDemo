@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 定时任务
+ *
  * @author hfj
  * @date 2018/6/7
  */
@@ -19,9 +20,15 @@ public class LoanJob {
     private JobService jobService;
 
     @JobAnnotation("走风控")
-    @Scheduled(cron="0/5 * * * * ?")
-    public void pushBid() throws Exception{
+    @Scheduled(cron = "0/5 * * * * ?")
+    public void pushBid() throws Exception {
         jobService.pushBid();
+    }
+
+    @JobAnnotation("银行放款")
+    @Scheduled(cron = "0/5 * * * * ?")
+    public void bankLoan() throws Exception {
+        jobService.bankLoan();
     }
 
 }

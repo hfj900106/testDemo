@@ -3,14 +3,25 @@
 <mapper namespace="com.hzed.easyget.persistence.ext.mapper.BidExtMapper">
 
     <select id="selectBidsToPush" parameterType="java.util.Map" resultType="com.hzed.easyget.persistence.ext.entity.BidExt">
-      select t_loan_bid.id as bidId
-      from t_loan_bid
-      where id not in
-        (select t_loan_bid.id
-         from t_loan_bid
-         left join t_loan_temp_table
-         on t_loan_bid.id=t_loan_temp_table.relase_id
-         where t_loan_temp_table.job_name='pushBid'
-         and t_loan_temp_table.re_run_times>5)
+      select bd.id as bidId
+      from t_loan_bid bd
+      where bd.status=1 and bd.id not in
+        (select bd.id
+         from t_loan_bid bd
+         left join t_loan_temp_table tt
+         on bd.id=tt.relase_id
+         where tt.job_name='pushBid'
+        )
+    </select>
+    <select id="findBankLoanBids" parameterType="java.util.Map" resultType="com.hzed.easyget.persistence.ext.entity.BidExt">
+        select bd.id as bidId
+        from t_loan_bid bd
+        where bd.status=4 and bd.id not in
+        (select bd.id
+        from t_loan_bid bd
+        left join t_loan_temp_table tt
+        on bd.id=tt.relase_id
+        where tt.job_name='bankLoan'
+        )
     </select>
 </mapper>

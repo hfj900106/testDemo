@@ -59,7 +59,10 @@ public class BidRepository {
         userBankMapper.insertSelective(userBank);
     }
 
-    public List<BidExt> gitBidsToPush(Map<String,Object> map){
-        return bidExtMapper.selectBidsToPush(map);
+    public List<BidExt> gitBidsToPush(){
+        return bidExtMapper.selectBidsToPush();
+    }
+    public List<BidExt> findBankLoanBids() {
+        return bidExtMapper.findBankLoanBids();
     }
 }

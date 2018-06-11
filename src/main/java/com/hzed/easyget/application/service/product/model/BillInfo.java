@@ -4,43 +4,39 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
+import java.time.LocalDateTime;
 
 /**
- * 账单信息
+ * 账单明细
+ * @author guichang
  */
 
 @Data
 public class BillInfo implements Serializable {
 
     /**
-     * 借款本金
+     * 期数
      */
-    private BigDecimal corpus;
+    private Integer indexPeriod;
 
     /**
-     * 借款利息
+     * 应还时间
      */
-    private BigDecimal interest;
+    private LocalDateTime repaymentTime;
 
     /**
-     * 借款本息
+     * 应还金额
      */
-    private BigDecimal corpusAndinterest;
+    private BigDecimal repaymentAmount;
 
     /**
-     * 砍头息（快速信审费）-放款时收取
+     * 还款类型
      */
-    private BigDecimal headFee;
+    private BigDecimal repaymentType;
 
     /**
-     * 尾款-还款时收取
+     * 还款状态
      */
-    private BigDecimal tailFee;
-
-    /**
-     * 账单列表
-     */
-    List<BillDetail> bills;
+    private Integer status;
 
 }

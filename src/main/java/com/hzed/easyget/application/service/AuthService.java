@@ -1,11 +1,13 @@
 package com.hzed.easyget.application.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.aliyun.AliyunService;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
+import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
@@ -13,6 +15,7 @@ import com.hzed.easyget.infrastructure.exception.NestedException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
+import com.hzed.easyget.infrastructure.utils.FaJsonUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
@@ -27,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.hzed.easyget.infrastructure.consts.ComConsts.RISK_OK;
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 
 /**
@@ -56,6 +60,7 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
 
+
     /**
      * 获取用户认证状态
      */
@@ -79,13 +84,17 @@ public class AuthService {
      * 通讯录认证
      */
     public void authContacts(ContactsRequest request) {
-//        GlobalUser user = getGlobalUser();
-//        //写入用户授权信息返回值
-//        //TODO 调风控接口
-//        Long userAuthId = IdentifierGenerator.nextId();
-//        AuthContent authContent = buildAuthContent(request.getContacts(), userAuthId, "通讯录授权");
-//        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthId, "通讯录授权");
-//        authContentRepository.insertContactAndUserAuthStatus(authContent, userAuthStatus);
+        GlobalUser user = getGlobalUser();
+        Map<String, Object> map = new HashMap<>(16);
+        //TODO 待定参数
+        map.put("sign", "1212");
+        map.put("contacts", request.getContacts());
+        map.put("userId", user.getUserId());
+        map.put("source", request.getSource());
+        //TODO 待验证方式
+        String response = template.postForObject("/app/risk/Contacts/add", map, String.class);
+        afterResponse(response,"通讯录认证返回数据异常",user.getUserId(),"通讯录认证");
+
     }
 
     /**
@@ -113,12 +122,16 @@ public class AuthService {
      * 短信认证
      */
     public void authMessages(MessagesRequest request) {
-//        GlobalUser user = getGlobalUser();
-//        //写入用户授权信息返回值
-//        //TODO 调风控接口
-//        Long userAuthId = IdentifierGenerator.nextId();
-//        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), userAuthId, "短信授权");
-//        authContentRepository.insertContactAndUserAuthStatus(authContent, userAuthStatus);
+        GlobalUser user = getGlobalUser();
+        Map<String, Object> map = new HashMap<>(16);
+        //TODO 待定参数
+        map.put("sign", "1212");
+        map.put("sms", request.getMessage());
+        map.put("userId", user.getUserId());
+        map.put("source", request.getSource());
+        //TODO 待验证方式
+        String response = template.postForObject("/app/risk/Sms/add", map, String.class);
+        afterResponse(response,"短信认证返回数据异常",user.getUserId(),"短信认证");
     }
 
     /**
@@ -152,9 +165,16 @@ public class AuthService {
         //TODO 待验证方式
         String response = template.postForObject("/app/riskOperator/createTaskAndlogin", map, String.class);
         if (StringUtils.isNotBlank(response)) {
-            //TODO 解析返回值并保存taskId 到 Redis ,一小时有效，调认证接口用
-            String taskId = "wewe";
-            redisService.setCache(RedisConsts.IDENTITY_AUTH_CODE + RedisConsts.SPLIT + userInfo.getId(), taskId, 3600L);
+            JSONObject jsonObject = FaJsonUtil.parseObj(response,JSONObject.class);
+            if(null==jsonObject){
+                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION,"运营商认证发送验证码返回数据异常");
+            }
+            if(Integer.valueOf(jsonObject.get("code").toString())==ComConsts.RISK_OK){
+                String taskId = jsonObject.get("task_id").toString();
+                redisService.setCache(RedisConsts.IDENTITY_AUTH_CODE + RedisConsts.SPLIT + userInfo.getId(), taskId, 3600L);
+            }else {
+                throw new ComBizException(BizCodeEnum.UN_IDENTITY_AUTH);
+            }
         }
 
     }
@@ -175,10 +195,7 @@ public class AuthService {
         map.put("smsCode",request.getSmsCode());
         //TODO 待验证方式
         String response = template.postForObject("/app/riskOperator/sendSmsCode", map, String.class);
-        if (StringUtils.isNotBlank(response)) {
-            //TODO 解析返回值并保存
-
-        }
+        afterResponse(response,"运营商验证码认证返回数据异常",user.getUserId(),"运营商认证");
     }
 
     /**
@@ -216,7 +233,7 @@ public class AuthService {
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         String faceBase64ImgStr = request.getFaceBase64ImgStr();
         String picSuffix = request.getPicSuffix();
-        //上传至阿里云
+        //TODO 上传至阿里云
 
         String idCardPhotoPath ;
         String facePhotoPath ;
@@ -270,5 +287,21 @@ public class AuthService {
         //获取UserAuthStatus对象
         UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "专业信息认证");
         professionalRepository.insertProfessionalAndUserAuthStatus(work, userAuthStatus);
+    }
+
+    private void afterResponse(String response,String ExMsg,Long userId,String remark){
+        if (StringUtils.isNotBlank(response)) {
+            JSONObject jsonObject = FaJsonUtil.parseObj(response,JSONObject.class);
+            if(null==jsonObject){
+                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION,ExMsg);
+            }
+            if(Integer.valueOf(jsonObject.get("code").toString())==ComConsts.RISK_OK){
+                //修改认证表的状态
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(userId, remark);
+                authStatusRepository.insertSelective(userAuthStatus);
+            }else {
+                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION,jsonObject.get("msg").toString());
+            }
+        }
     }
 }

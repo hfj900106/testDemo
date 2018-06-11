@@ -1,25 +1,25 @@
 package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.hzed.easyget.application.enums.BidProgressTypeEnum;
-import com.hzed.easyget.application.enums.JobStatusEnum;
-import com.hzed.easyget.infrastructure.repository.BidProgressRepository;
+import com.hzed.easyget.application.enums.*;
+import com.hzed.easyget.application.service.product.ProductEnum;
+import com.hzed.easyget.application.service.product.ProductFactory;
+import com.hzed.easyget.application.service.product.ProductService;
+import com.hzed.easyget.application.service.product.model.BillInfo;
+import com.hzed.easyget.application.service.product.model.EasyGetPruduct;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayInfoFlowJobRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.BidProgress;
-import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
-import com.hzed.easyget.persistence.auto.entity.TempTable;
+import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author hfj
@@ -37,46 +37,32 @@ public class JobService {
     @Autowired
     private RepayService repayService;
 
+    /**
+     * 推风控
+     */
     public void pushBid() {
-//        //查询中间表，拿到所有推送资产失败大于5次的ids，次数小与等于5的可以重跑
-        Map<String, Object> map = Maps.newHashMap();
-        List<BidExt> bids = bidRepository.gitBidsToPush(map);
+        //关联中间表，拿到所有推送资产的ids
+        List<BidExt> bids = bidRepository.gitBidsToPush();
         if (bids.size() <= 0 || bids.isEmpty()) {
             return;
         }
         for (BidExt bidExt : bids) {
-            Long tempId = 0L;
+            Long tempId = IdentifierGenerator.nextId();
+            //推送bid写入中间表
+            tempTableRepository.insertJob(TempTable.builder().id(tempId).relaseId(bidExt.getBidId()).jobName("pushBid").remark("推送资产").createTime(LocalDateTime.now()).reRunTimes((byte) 1).build());
             try {
                 Boolean isSuccess = false;
-                Boolean hasRun = false;
-                Integer times = 0;
-                //要是已经推送过则更新重跑次数和推送时间
-                List<TempTable> tempList2 = tempTableRepository.getTempByJobNameAndReId("pushBid", bidExt.getBidId());
-                if (tempList2.size() > 0) {
-                    tempId = tempList2.get(0).getId();
-                    hasRun = true;
-                    times = tempList2.get(0).getReRunTimes() + 1;
-                }
-                //已经跑过，update
-                if (hasRun) {
-                    tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).reRunTimes(times.byteValue()).build());
-                } else {
-                    //没跑过的新增
-                    Long jobId = IdentifierGenerator.nextId();
-                    tempTableRepository.insertJob(TempTable.builder().id(jobId).relaseId(bidExt.getBidId()).jobName("pushBid").remark("推送资产").createTime(LocalDateTime.now()).reRunTimes(Integer.valueOf(1).byteValue()).build());
-                }
                 // TODO 推送-调风控接口
 
                 //TODO 风控结果
                 isSuccess = true;
                 if (isSuccess) {
-                    //推送成功后 写标进度数据到t_loan_bid_progress，并删除job中数据
-                    tempTableRepository.afterPushBid(buildBidProgress(bidExt.getBidId(), BidProgressTypeEnum.AUDIT.getMsg()), bidExt.getBidId());
+                    //推送成功后 写标进度数据到t_loan_bid_progress
+                    tempTableRepository.afterPushBid(buildBidProgress(bidExt.getBidId(), BidProgressTypeEnum.AUDIT.getMsg()));
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
-                //TODO
-                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark(ex.getMessage()).build());
+                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark("推送失败：" + ex.getMessage()).build());
             }
         }
     }
@@ -122,6 +108,74 @@ public class JobService {
         });
 
 
+    }
+
+    /**
+     * 银行放款
+     */
+    public void bankLoan() {
+        //关联中间表查出要放款的标的
+        List<BidExt> bidList = bidRepository.findBankLoanBids();
+        if (bidList == null || bidList.isEmpty()) {
+            return;
+        }
+        bidList.forEach(bid -> {
+            //插入中间表
+            Long tempId = IdentifierGenerator.nextId();
+            tempTableRepository.insertJob(TempTable.builder().id(tempId).jobName("bankLoan").relaseId(bid.getBidId()).remark("放款").createTime(LocalDateTime.now()).reRunTimes((byte) 1).build());
+            try {
+                //TODO 调放款接口
+                boolean isSuccess = false;
+                //根据返回结果
+                if (isSuccess) {
+                    Bid bidInfo = bidRepository.findById(bid.getBidId());
+                    //改标的状态,砍头息、插入账单、台账、标进度、交易记录表，删除中间表数据
+                    //工厂类获取bill和billLedgers
+                    ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
+                    List<Bill> bills = product.createBills(bidInfo);
+                    List<BillLedger> billLedgers = product.createBillLedger(bidInfo);
+
+                    //TODO 交易流水号
+                    String requestSeq = "";
+                    String bank = "";
+                    String account = "";
+                    UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bid.getBidId(), TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), requestSeq, bank, account);
+
+                    tempTableRepository.afterBankLoan(
+                            Bid.builder().id(bid.getBidId()).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetPruduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
+                            BidProgress.builder().bidId(bid.getBidId()).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").build(),
+                            bills.get(0),
+                            billLedgers,
+                            tempId,
+                            transaction
+                    );
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark("放款失败：" + ex.getMessage()).build());
+            }
+
+
+        });
+
+
+    }
+
+    private UserTransaction buildUserTransaction(Long userId, Long bidId, Byte type, BigDecimal amount, String requestSeq, String bank, String account) {
+        UserTransaction transaction = new UserTransaction();
+        transaction.setId(IdentifierGenerator.nextId());
+        transaction.setUserId(userId);
+        transaction.setBidId(bidId);
+        transaction.setType(type);
+        transaction.setAmount(amount);
+        transaction.setRequestSeq(requestSeq);
+        transaction.setBank(bank);
+        transaction.setAccount(account);
+        transaction.setMode((byte) 1);
+        transaction.setIsDisplay(true);
+        transaction.setCreateTime(LocalDateTime.now());
+        transaction.setRemark("放款");
+        return transaction;
     }
 
 

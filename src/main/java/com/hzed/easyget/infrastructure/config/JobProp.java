@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix="system.loanJob")
+@ConfigurationProperties(prefix="system.job")
 public class JobProp {
     private boolean pushBid;
     private String pushBidCron;

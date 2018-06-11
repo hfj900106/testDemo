@@ -40,7 +40,7 @@ system:
   expected_audit_time_interval: 1440 #预计审核时间间隔 单位分
   expected_lending_time_interval: 60 #预计放款时间间隔 单位分
   #定时任务
-  loanJob:
+  job:
       pushBid: false # 推送资产
       pushBidCron: 0/5 * * * * ?
       bankLoan: false # 放款

@@ -108,7 +108,7 @@ public class LoginService {
         redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 3 * 3600L);
 
         // TODO 更新用户最后登录时间
-//        userRepository.updateLastLoginTime(User.builder().id(userId).lastLoginTime(LocalDateTime.now()).build());
+///        userRepository.updateLastLoginTime(User.builder().id(userId).lastLoginTime(LocalDateTime.now()).build());
 
         return LoginByCodeResponse.builder().token(token).build();
     }

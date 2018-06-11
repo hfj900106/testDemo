@@ -13,6 +13,17 @@ import org.springframework.stereotype.Component;
  * @author hfj
  * @date 2018/6/7
  */
+/**
+ * 定时任务
+ * <p>
+ * 注意：
+ * 1、定时任务的方法名必须与application.yml中的system.job下的属性一致才能生效
+ * 2、有异常直接抛出
+ *
+ * @author guichang
+ * @date 2018/05/10
+ */
+
 @Slf4j
 @Component
 public class LoanJob {
@@ -30,5 +41,17 @@ public class LoanJob {
     public void bankLoan() throws Exception {
         jobService.bankLoan();
     }
+
+    @JobAnnotation("神策")
+    @Scheduled(cron = "0/5 * * * * ?")
+    public void bankLoan1() throws Exception {
+//        jobService.bankLoan();
+        Thread.sleep(10000);
+        System.out.println(12312);
+    }
+
+
+
+
 
 }

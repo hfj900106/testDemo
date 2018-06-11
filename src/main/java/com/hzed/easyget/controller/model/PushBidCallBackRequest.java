@@ -18,8 +18,8 @@ public class PushBidCallBackRequest {
     private Long bidId;
     @NotNull(message = "[loanAmount]审核借款金额不能为空")
     private BigDecimal loanAmount;
-    @NotBlank(message = "[result]审核结果不能为空")
-    private String result;
-    @NotBlank(message = "[dateTime]处理时间不能为空")
-    private LocalDateTime dateTime;
+    @NotBlank(message = "[resultCode]审核结果码不能为空")
+    private String resultCode;
+    @NotBlank(message = "[handleTime]处理时间不能为空")
+    private LocalDateTime handleTime;
 }

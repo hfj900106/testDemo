@@ -37,9 +37,9 @@ public class TempTableRepository {
     public void pushBidCallBack( Bid bid,BidProgress bidProgress,Long bidId  ) {
         bidMapper.updateByPrimaryKeySelective(bid);
         bidProgressMapper.insert(bidProgress);
-//        TempTableExample tableExample  = new TempTableExample();
-//        tableExample.createCriteria().andRelaseIdEqualTo(bidId).andJobNameEqualTo("bankLoan");
-//        tempMapper.deleteByExample(tableExample);
+        TempTableExample tableExample  = new TempTableExample();
+        tableExample.createCriteria().andRelaseIdEqualTo(bidId).andJobNameEqualTo("bankLoan");
+        tempMapper.deleteByExample(tableExample);
     }
 
 

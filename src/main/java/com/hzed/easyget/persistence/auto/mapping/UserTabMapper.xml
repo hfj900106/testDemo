@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hzed.easyget.persistence.auto.mapper.UserMapper">
-  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.User">
+<mapper namespace="com.hzed.easyget.persistence.auto.mapper.UserTabMapper">
+  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.UserTab">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="mobile_account" jdbcType="VARCHAR" property="mobileAccount" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="profile_photo" jdbcType="VARCHAR" property="profilePhoto" />
-    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
-    <result column="gender" jdbcType="TINYINT" property="gender" />
-    <result column="real_name" jdbcType="VARCHAR" property="realName" />
-    <result column="id_card_no" jdbcType="VARCHAR" property="idCardNo" />
-    <result column="platform" jdbcType="VARCHAR" property="platform" />
-    <result column="client" jdbcType="TINYINT" property="client" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -77,16 +70,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, mobile_account, password, profile_photo, nick_name, gender, real_name, id_card_no, 
-    platform, client, create_by, create_time, update_by, update_time, remark
+    id, user_id, description, create_by, create_time, update_by, update_time, remark
   </sql>
-  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTabExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_loan_user
+    from t_loan_user_tab
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -110,7 +102,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_user
+    from t_loan_user_tab
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -121,7 +113,7 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from t_loan_user
+    from t_loan_user_tab
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -129,65 +121,38 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_user
+    from t_loan_user_tab
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_loan_user
+    delete from t_loan_user_tab
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserExample">
-    delete from t_loan_user
+  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTabExample">
+    delete from t_loan_user_tab
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.User">
-    insert into t_loan_user (id, mobile_account, password, 
-      profile_photo, nick_name, gender, 
-      real_name, id_card_no, platform, 
-      client, create_by, create_time, 
-      update_by, update_time, remark
-      )
-    values (#{id,jdbcType=BIGINT}, #{mobileAccount,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{profilePhoto,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{gender,jdbcType=TINYINT}, 
-      #{realName,jdbcType=VARCHAR}, #{idCardNo,jdbcType=VARCHAR}, #{platform,jdbcType=VARCHAR}, 
-      #{client,jdbcType=TINYINT}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
-      )
+  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserTab">
+    insert into t_loan_user_tab (id, user_id, description, 
+      create_by, create_time, update_by, 
+      update_time, remark)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.User">
-    insert into t_loan_user
+  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserTab">
+    insert into t_loan_user_tab
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="mobileAccount != null">
-        mobile_account,
+      <if test="userId != null">
+        user_id,
       </if>
-      <if test="password != null">
-        password,
-      </if>
-      <if test="profilePhoto != null">
-        profile_photo,
-      </if>
-      <if test="nickName != null">
-        nick_name,
-      </if>
-      <if test="gender != null">
-        gender,
-      </if>
-      <if test="realName != null">
-        real_name,
-      </if>
-      <if test="idCardNo != null">
-        id_card_no,
-      </if>
-      <if test="platform != null">
-        platform,
-      </if>
-      <if test="client != null">
-        client,
+      <if test="description != null">
+        description,
       </if>
       <if test="createBy != null">
         create_by,
@@ -209,32 +174,11 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="mobileAccount != null">
-        #{mobileAccount,jdbcType=VARCHAR},
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
       </if>
-      <if test="password != null">
-        #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="profilePhoto != null">
-        #{profilePhoto,jdbcType=VARCHAR},
-      </if>
-      <if test="nickName != null">
-        #{nickName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="realName != null">
-        #{realName,jdbcType=VARCHAR},
-      </if>
-      <if test="idCardNo != null">
-        #{idCardNo,jdbcType=VARCHAR},
-      </if>
-      <if test="platform != null">
-        #{platform,jdbcType=VARCHAR},
-      </if>
-      <if test="client != null">
-        #{client,jdbcType=TINYINT},
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -253,44 +197,23 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserExample" resultType="java.lang.Long">
-    select count(*) from t_loan_user
+  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTabExample" resultType="java.lang.Long">
+    select count(*) from t_loan_user_tab
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_loan_user
+    update t_loan_user_tab
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.mobileAccount != null">
-        mobile_account = #{record.mobileAccount,jdbcType=VARCHAR},
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
       </if>
-      <if test="record.password != null">
-        password = #{record.password,jdbcType=VARCHAR},
-      </if>
-      <if test="record.profilePhoto != null">
-        profile_photo = #{record.profilePhoto,jdbcType=VARCHAR},
-      </if>
-      <if test="record.nickName != null">
-        nick_name = #{record.nickName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.gender != null">
-        gender = #{record.gender,jdbcType=TINYINT},
-      </if>
-      <if test="record.realName != null">
-        real_name = #{record.realName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.idCardNo != null">
-        id_card_no = #{record.idCardNo,jdbcType=VARCHAR},
-      </if>
-      <if test="record.platform != null">
-        platform = #{record.platform,jdbcType=VARCHAR},
-      </if>
-      <if test="record.client != null">
-        client = #{record.client,jdbcType=TINYINT},
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
       </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
@@ -313,17 +236,10 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_loan_user
+    update t_loan_user_tab
     set id = #{record.id,jdbcType=BIGINT},
-      mobile_account = #{record.mobileAccount,jdbcType=VARCHAR},
-      password = #{record.password,jdbcType=VARCHAR},
-      profile_photo = #{record.profilePhoto,jdbcType=VARCHAR},
-      nick_name = #{record.nickName,jdbcType=VARCHAR},
-      gender = #{record.gender,jdbcType=TINYINT},
-      real_name = #{record.realName,jdbcType=VARCHAR},
-      id_card_no = #{record.idCardNo,jdbcType=VARCHAR},
-      platform = #{record.platform,jdbcType=VARCHAR},
-      client = #{record.client,jdbcType=TINYINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      description = #{record.description,jdbcType=VARCHAR},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -333,35 +249,14 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.User">
-    update t_loan_user
+  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserTab">
+    update t_loan_user_tab
     <set>
-      <if test="mobileAccount != null">
-        mobile_account = #{mobileAccount,jdbcType=VARCHAR},
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
       </if>
-      <if test="password != null">
-        password = #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="profilePhoto != null">
-        profile_photo = #{profilePhoto,jdbcType=VARCHAR},
-      </if>
-      <if test="nickName != null">
-        nick_name = #{nickName,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        gender = #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="realName != null">
-        real_name = #{realName,jdbcType=VARCHAR},
-      </if>
-      <if test="idCardNo != null">
-        id_card_no = #{idCardNo,jdbcType=VARCHAR},
-      </if>
-      <if test="platform != null">
-        platform = #{platform,jdbcType=VARCHAR},
-      </if>
-      <if test="client != null">
-        client = #{client,jdbcType=TINYINT},
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
@@ -381,17 +276,10 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.User">
-    update t_loan_user
-    set mobile_account = #{mobileAccount,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      profile_photo = #{profilePhoto,jdbcType=VARCHAR},
-      nick_name = #{nickName,jdbcType=VARCHAR},
-      gender = #{gender,jdbcType=TINYINT},
-      real_name = #{realName,jdbcType=VARCHAR},
-      id_card_no = #{idCardNo,jdbcType=VARCHAR},
-      platform = #{platform,jdbcType=VARCHAR},
-      client = #{client,jdbcType=TINYINT},
+  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserTab">
+    update t_loan_user_tab
+    set user_id = #{userId,jdbcType=BIGINT},
+      description = #{description,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
@@ -399,10 +287,10 @@
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserExample" resultMap="BaseResultMap">
+  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTabExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_loan_user
+    from t_loan_user_tab
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -416,7 +304,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_user
+    from t_loan_user_tab
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -426,21 +314,18 @@
     limit 1
   </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_loan_user
-    (id, mobile_account, password, profile_photo, nick_name, gender, real_name, id_card_no, 
-      platform, client, create_by, create_time, update_by, update_time, remark)
+    insert into t_loan_user_tab
+    (id, user_id, description, create_by, create_time, update_by, update_time, remark
+      )
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.mobileAccount,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, 
-        #{item.profilePhoto,jdbcType=VARCHAR}, #{item.nickName,jdbcType=VARCHAR}, #{item.gender,jdbcType=TINYINT}, 
-        #{item.realName,jdbcType=VARCHAR}, #{item.idCardNo,jdbcType=VARCHAR}, #{item.platform,jdbcType=VARCHAR}, 
-        #{item.client,jdbcType=TINYINT}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
-        )
+      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.description,jdbcType=VARCHAR}, 
+        #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_loan_user (
+    insert into t_loan_user_tab (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
@@ -452,32 +337,11 @@
         <if test="'id' == column.value">
           #{item.id,jdbcType=BIGINT}
         </if>
-        <if test="'mobile_account' == column.value">
-          #{item.mobileAccount,jdbcType=VARCHAR}
+        <if test="'user_id' == column.value">
+          #{item.userId,jdbcType=BIGINT}
         </if>
-        <if test="'password' == column.value">
-          #{item.password,jdbcType=VARCHAR}
-        </if>
-        <if test="'profile_photo' == column.value">
-          #{item.profilePhoto,jdbcType=VARCHAR}
-        </if>
-        <if test="'nick_name' == column.value">
-          #{item.nickName,jdbcType=VARCHAR}
-        </if>
-        <if test="'gender' == column.value">
-          #{item.gender,jdbcType=TINYINT}
-        </if>
-        <if test="'real_name' == column.value">
-          #{item.realName,jdbcType=VARCHAR}
-        </if>
-        <if test="'id_card_no' == column.value">
-          #{item.idCardNo,jdbcType=VARCHAR}
-        </if>
-        <if test="'platform' == column.value">
-          #{item.platform,jdbcType=VARCHAR}
-        </if>
-        <if test="'client' == column.value">
-          #{item.client,jdbcType=TINYINT}
+        <if test="'description' == column.value">
+          #{item.description,jdbcType=VARCHAR}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

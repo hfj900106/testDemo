@@ -14,12 +14,8 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class ContactsRequest {
-
-    @NotBlank(message = "[contacts]不能为空")
-    private String contacts;
-    /**
-     * 1 标识安卓，2 标识IOS
-     */
-    @NotNull(message = "[source]不能为空")
-    private Integer source;
+    @NotNull(message = "[contacts]不能为空")
+    private String[] contacts;
+    @NotNull(message = "[callLog]不能为空")
+    private String[] callLog;
 }

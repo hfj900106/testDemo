@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @ExceptionAnno
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/easy-get/login")
 public class LoginController {
     @Autowired
     private LoginService loginService;

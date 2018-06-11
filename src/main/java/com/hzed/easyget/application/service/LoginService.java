@@ -24,10 +24,6 @@ import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.SmsLog;
 import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserToken;
-import com.hzed.indonesia.sms.constants.SmsCodeEnum;
-import com.hzed.indonesia.sms.model.request.NxSmsDownRequest;
-import com.hzed.indonesia.sms.model.response.NxSmsDownResponse;
-import com.hzed.indonesia.sms.utils.NxSmsUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -81,9 +77,6 @@ public class LoginService {
             user.setId(IdentifierGenerator.nextId());
             user.setMobileAccount(mobile);
             user.setPlatform(platform);
-            user.setIsLocked(false);
-            user.setIsBlacklist(false);
-            user.setCreateTime(LocalDateTime.now());
             userRepository.insert(user);
         }
 
@@ -114,8 +107,8 @@ public class LoginService {
         //放入redis 3个小时
         redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 3 * 3600L);
 
-        //更新用户最后登录时间
-        userRepository.updateLastLoginTime(User.builder().id(userId).lastLoginTime(LocalDateTime.now()).build());
+        // TODO 更新用户最后登录时间
+///        userRepository.updateLastLoginTime(User.builder().id(userId).lastLoginTime(LocalDateTime.now()).build());
 
         return LoginByCodeResponse.builder().token(token).build();
     }
@@ -145,6 +138,10 @@ public class LoginService {
             //发送过于频繁
             throw new ComBizException(BizCodeEnum.FREQUENTLY_SEND);
         }
+        if(StringUtils.isNotBlank(redisService.getCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile))){
+            //10分钟内重发需要验证码
+            throw new ComBizException(BizCodeEnum.PIC_CODE_TO_CHECK);
+        }
         String code = SmsUtils.getCode();
         String content = "您的注册验证码是：" + code + " ，两分钟内有效，欢迎使用本平台";
         //发送短信
@@ -161,6 +158,8 @@ public class LoginService {
         redisService.setCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile, code, 120L);
         //60秒后可以重发
         redisService.setCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile, mobile, 60L);
+        //10分钟内重发需要验证码
+        redisService.setCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile, mobile, 600L);
     }
 
     /**

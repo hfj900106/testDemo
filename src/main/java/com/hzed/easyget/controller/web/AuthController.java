@@ -22,19 +22,19 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @ExceptionAnno
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/easy-get/auth")
 public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @ModuleFunc("通讯录上传")
+    @ModuleFunc("通讯录认证")
     @PostMapping("/contacts")
     public Response contacts(@RequestBody ContactsRequest request) {
         authService.authContacts(request);
         return Response.getSuccessResponse();
     }
 
-    @ModuleFunc("短信上传")
+    @ModuleFunc("短信认证")
     @PostMapping("/messages")
     public Response messages(@RequestBody MessagesRequest request) {
         authService.authMessages(request);

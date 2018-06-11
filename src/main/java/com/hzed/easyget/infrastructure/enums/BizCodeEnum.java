@@ -45,6 +45,7 @@ public enum BizCodeEnum {
     OVER_TIME_SMS_CODE("1015", "验证码超时"),
     FREQUENTLY_SEND("1016", "短信发送过于频繁"),
     SMS_CODE_SEND_FAIL("1017", "短信发送失败"),
+    PIC_CODE_TO_CHECK("1018", "需要图片验证码校验"),
 
     // 2-上传文件异常
     FILE_FORMAT_ERROR("","此格式不支持"),

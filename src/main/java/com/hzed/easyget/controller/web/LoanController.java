@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @ExceptionAnno
 @RestController
-@RequestMapping("/loan")
+@RequestMapping("/easy-get/loan")
 public class LoanController {
 
     @Autowired

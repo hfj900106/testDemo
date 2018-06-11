@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.hzed.easyget.infrastructure.consts.ComConsts.RISK_OK;
+import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalHead;
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 
 /**
@@ -85,12 +86,13 @@ public class AuthService {
      */
     public void authContacts(ContactsRequest request) {
         GlobalUser user = getGlobalUser();
+        String platForm = getGlobalHead().getPlatform();
         Map<String, Object> map = new HashMap<>(16);
         //TODO 待定参数
         map.put("sign", "1212");
         map.put("contacts", request.getContacts());
         map.put("userId", user.getUserId());
-        map.put("source", request.getSource());
+        map.put("source", "android".equals(platForm)?ComConsts.IS_ANDROID:ComConsts.IS_IOS);
         //TODO 待验证方式
         String response = template.postForObject("/app/risk/Contacts/add", map, String.class);
         afterResponse(response,"通讯录认证返回数据异常",user.getUserId(),"通讯录认证");
@@ -123,12 +125,13 @@ public class AuthService {
      */
     public void authMessages(MessagesRequest request) {
         GlobalUser user = getGlobalUser();
+        String platForm = getGlobalHead().getPlatform();
         Map<String, Object> map = new HashMap<>(16);
         //TODO 待定参数
         map.put("sign", "1212");
         map.put("sms", request.getMessage());
         map.put("userId", user.getUserId());
-        map.put("source", request.getSource());
+        map.put("source", "android".equals(platForm)?ComConsts.IS_ANDROID:ComConsts.IS_IOS);
         //TODO 待验证方式
         String response = template.postForObject("/app/risk/Sms/add", map, String.class);
         afterResponse(response,"短信认证返回数据异常",user.getUserId(),"短信认证");

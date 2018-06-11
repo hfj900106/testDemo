@@ -10,6 +10,9 @@ import com.hzed.easyget.persistence.auto.entity.BidProgress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 /**
  * @author hfj
  * @date 2018/6/9
@@ -21,14 +24,16 @@ public class RiskCallBackService {
     private TempTableRepository tempTableRepository;
 
     public void pushBidCallBack(PushBidCallBackRequest request) {
-
-        //TODO 审核结果 ，是不是审核不通过  将status设为人审？还是直接不通过？审核通过删除temp，不通过则更新temp？
-
+        Long bidId = request.getBidId();
+        BigDecimal loanAmount = request.getLoanAmount();
+        String resultCode = request.getResultCode();
+        LocalDateTime dateTime = request.getHandleTime();
         tempTableRepository.pushBidCallBack(
-                Bid.builder().id(request.getBidId()).loanAmount(request.getLoanAmount()).updateTime(request.getDateTime())
-                        .status("0000".equals(request.getResult()) ? BidStatusEnum.AUDIT_PASS.getCode().byteValue() : BidStatusEnum.MANMADE_ING.getCode().byteValue()).build(),
+                Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime)
+                        .status("0000".equals(resultCode) ? BidStatusEnum.AUDIT_PASS.getCode().byteValue() : BidStatusEnum.AUDIT_FAIL.getCode().byteValue()).build(),
                 BidProgress.builder().bidId(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.AUDIT.getCode().byteValue())
-                        .createTime(request.getDateTime()).build(),
-                request.getBidId());
+                        .createTime(dateTime).build(),
+                bidId);
     }
+
 }

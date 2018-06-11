@@ -17,6 +17,8 @@ public class ComConsts {
     public static final int EXPIRE_DAYS = 7;
     public static final int APP_PAGESIZE = 18;
     public static final int RISK_OK = 0;
+    public static final int IS_ANDROID = 1;
+    public static final int IS_IOS = 2;
 
 
 

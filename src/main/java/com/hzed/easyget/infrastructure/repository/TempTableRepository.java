@@ -33,11 +33,6 @@ public class TempTableRepository {
         tempMapper.insert(tempTable);
     }
 
-
-    public void afterPushBid(BidProgress bidProgress ) {
-        bidProgressMapper.insert(bidProgress);
-    }
-
     @Transactional(rollbackFor = Exception.class)
     public void pushBidCallBack( Bid bid,BidProgress bidProgress,Long bidId  ) {
         bidMapper.updateByPrimaryKeySelective(bid);

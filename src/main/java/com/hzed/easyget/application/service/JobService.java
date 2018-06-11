@@ -5,7 +5,6 @@ import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.ProductService;
-import com.hzed.easyget.application.service.product.model.BillInfo;
 import com.hzed.easyget.application.service.product.model.EasyGetPruduct;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayInfoFlowJobRepository;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,32 +49,13 @@ public class JobService {
             //推送bid写入中间表
             tempTableRepository.insertJob(TempTable.builder().id(tempId).relaseId(bidExt.getBidId()).jobName("pushBid").remark("推送资产").createTime(LocalDateTime.now()).reRunTimes((byte) 1).build());
             try {
-                Boolean isSuccess = false;
                 // TODO 推送-调风控接口
 
-                //TODO 风控结果
-                isSuccess = true;
-                if (isSuccess) {
-                    //推送成功后 写标进度数据到t_loan_bid_progress
-                    tempTableRepository.afterPushBid(buildBidProgress(bidExt.getBidId(), BidProgressTypeEnum.AUDIT.getMsg()));
-                }
             } catch (Exception ex) {
                 ex.printStackTrace();
                 tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark("推送失败：" + ex.getMessage()).build());
             }
         }
-    }
-
-    private BidProgress buildBidProgress(Long bidId, String result) {
-        BidProgress bidProgress = new BidProgress();
-        bidProgress.setId(IdentifierGenerator.nextId());
-        bidProgress.setBidId(bidId);
-        bidProgress.setType(BidProgressTypeEnum.AUDIT.getCode().byteValue());
-        bidProgress.setHandleTime(LocalDateTime.now());
-        bidProgress.setCreateTime(LocalDateTime.now());
-        bidProgress.setHandleResult(result);
-        bidProgress.setRemark("推送资产");
-        return bidProgress;
     }
 
     /**

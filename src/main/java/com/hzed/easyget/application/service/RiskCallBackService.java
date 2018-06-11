@@ -26,7 +26,7 @@ public class RiskCallBackService {
         tempTableRepository.pushBidCallBack(
                 Bid.builder().id(request.getBidId()).loanAmount(request.getLoanAmount()).updateTime(request.getDateTime())
                         .status("0000".equals(request.getResult()) ? BidStatusEnum.AUDIT_PASS.getCode().byteValue() : BidStatusEnum.MANMADE_ING.getCode().byteValue()).build(),
-                BidProgress.builder().bidId(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue())
+                BidProgress.builder().bidId(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.AUDIT.getCode().byteValue())
                         .createTime(request.getDateTime()).build(),
                 request.getBidId());
     }

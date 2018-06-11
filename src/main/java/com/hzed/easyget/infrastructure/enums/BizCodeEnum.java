@@ -24,6 +24,7 @@ public enum BizCodeEnum {
     LOAN_TRANSACTION_ERROR("8002","支付放款接口异常"),
     RECEIVER_TRANSACTION_ERROR("8003","支付收款接口异常"),
 
+
     // 1-请求业务校验
     ILLEGAL_PARAM("1000", "请求参数非法"),
     ILLEGAL_APPKEY("1001", "无效的appKey"),
@@ -45,7 +46,9 @@ public enum BizCodeEnum {
     FREQUENTLY_SEND("1016", "短信发送过于频繁"),
     SMS_CODE_SEND_FAIL("1017", "短信发送失败"),
 
-
+    // 2-上传文件异常
+    FILE_FORMAT_ERROR("","此格式不支持"),
+    FILE_NULL_ERROR("","文件不能为空"),
 
     ;
 

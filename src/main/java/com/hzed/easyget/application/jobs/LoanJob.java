@@ -42,15 +42,6 @@ public class LoanJob {
         jobService.bankLoan();
     }
 
-    @JobAnnotation("神策")
-    @Scheduled(cron = "0/5 * * * * ?")
-    public void bankLoan1() throws Exception {
-//        jobService.bankLoan();
-        Thread.sleep(10000);
-        System.out.println(12312);
-    }
-
-
 
 
 

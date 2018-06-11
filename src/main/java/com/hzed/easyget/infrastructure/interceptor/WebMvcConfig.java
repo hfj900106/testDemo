@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 /**
  * 配置拦截器
+ *
  * @author guichang
  */
 @Configuration
@@ -28,7 +29,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(webInterceptor).addPathPatterns("/hzed/**");
+//        registry.addInterceptor(webInterceptor).addPathPatterns("/hzed/**");
+        registry.addInterceptor(webInterceptor).addPathPatterns("/*");
     }
 
     /**
@@ -39,10 +41,9 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         super.addCorsMappings(registry);
         registry.addMapping("/hzed/**")
                 .allowedHeaders("*")
-                .allowedMethods("POST","GET")
+                .allowedMethods("POST", "GET")
                 .allowedOrigins("*");
 
-//        registry.addMapping("/**").allowedOrigins("*").exposedHeaders("token");
     }
 
 

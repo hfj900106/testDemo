@@ -3,12 +3,15 @@ package com.hzed.easyget.infrastructure.repository;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.persistence.auto.entity.Bid;
+import com.hzed.easyget.persistence.auto.entity.UserBank;
 import com.hzed.easyget.persistence.auto.entity.example.BidExample;
 import com.hzed.easyget.persistence.auto.mapper.BidMapper;
+import com.hzed.easyget.persistence.auto.mapper.UserBankMapper;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
 import com.hzed.easyget.persistence.ext.mapper.BidExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +27,8 @@ public class BidRepository {
     private BidMapper bidMapper;
     @Autowired
     private BidExtMapper bidExtMapper;
+    @Autowired
+    private UserBankMapper userBankMapper;
 
     public List<Bid> findByUserIdAndStatus(Long userId, List<Byte> statuses) {
         BidExample example = new BidExample();
@@ -48,8 +53,10 @@ public class BidRepository {
         bidMapper.updateByPrimaryKeySelective(bid);
     }
 
-    public int save(Bid bid) {
-        return bidMapper.insertSelective(bid);
+    @Transactional(rollbackFor = Exception.class)
+    public void save(Bid bid, UserBank userBank) {
+        bidMapper.insertSelective(bid);
+        userBankMapper.insertSelective(userBank);
     }
 
     public List<BidExt> gitBidsToPush(Map<String,Object> map){

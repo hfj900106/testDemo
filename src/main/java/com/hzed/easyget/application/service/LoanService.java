@@ -12,6 +12,7 @@ import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.Bid;
+import com.hzed.easyget.persistence.auto.entity.UserBank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,7 +66,12 @@ public class LoanService {
         bid.setClient((byte)1);
         bid.setStatus(BidStatusEnum.RISK_ING.getCode().byteValue());
 
-        bidRepository.save(bid);
+        UserBank userBank = new UserBank();
+        userBank.setId(Long.valueOf(IdentifierGenerator.nextId()));
+        userBank.setInBank(request.getInBank());
+        userBank.setInAccount(request.getInAccount());
+        userBank.setCreateTime(LocalDateTime.now());
+        bidRepository.save(bid,userBank);
         return SubmitLoanResponse.builder().bid(String.valueOf(bidId)).build();
 
     }

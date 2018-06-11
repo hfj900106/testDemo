@@ -20,6 +20,7 @@ import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,16 +88,18 @@ public class AuthService {
     public void authContacts(ContactsRequest request) {
         GlobalUser user = getGlobalUser();
         String platForm = getGlobalHead().getPlatform();
+        List<ContactsRequest.Contact>  contactList = request.getContacts();
+        List<ContactsRequest.CallLog>  callLogs = request.getCallLogs();
         Map<String, Object> map = new HashMap<>(16);
         //TODO 待定参数
         map.put("sign", "1212");
-        map.put("contacts", request.getContacts());
+        map.put("contacts", JSONArray.fromObject(contactList).toString());
+        map.put("callLogs", JSONArray.fromObject(callLogs).toString());
         map.put("userId", user.getUserId());
         map.put("source", "android".equals(platForm)?ComConsts.IS_ANDROID:ComConsts.IS_IOS);
         //TODO 待验证方式
         String response = template.postForObject("/app/risk/Contacts/add", map, String.class);
         afterResponse(response,"通讯录认证返回数据异常",user.getUserId(),"通讯录认证");
-
     }
 
     /**

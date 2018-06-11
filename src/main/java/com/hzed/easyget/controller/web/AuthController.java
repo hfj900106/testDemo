@@ -5,6 +5,7 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
+import com.hzed.easyget.infrastructure.utils.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +28,15 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @ModuleFunc("通讯录认证")
+    @ModuleFunc(value = "通讯录认证", isParameterValidate = false)
     @PostMapping("/contacts")
     public Response contacts(@RequestBody ContactsRequest request) {
+        ValidatorUtil.validateWithNull(request);
+
+        request.getContacts().forEach(contact -> ValidatorUtil.validateWithNull(contact));
+        request.getCallLogs().forEach(callLog -> ValidatorUtil.validateWithNull(callLog));
+
+
         authService.authContacts(request);
         return Response.getSuccessResponse();
     }
@@ -48,7 +55,7 @@ public class AuthController {
         return Response.getSuccessResponse();
     }
 
-    @ModuleFunc(value="身份信息认证", isParameterPrint=false)
+    @ModuleFunc(value = "身份信息认证", isParameterPrint = false)
     @PostMapping("/identityInfo")
     public Response identityInformationAuth(@RequestBody IdentityInfoAuthRequest request) {
         authService.identityInfoAuth(request);

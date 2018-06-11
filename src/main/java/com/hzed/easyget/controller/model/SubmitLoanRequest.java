@@ -3,6 +3,8 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.math.BigDecimal;
+
 /**
  * 提交借款请求参数
  *
@@ -12,10 +14,10 @@ import org.hibernate.validator.constraints.NotBlank;
 @Data
 public class SubmitLoanRequest {
     @NotBlank(message = "[applyAmount]借款金额不能为空")
-    private String applyAmount;
+    private BigDecimal applyAmount;
     @NotBlank(message = "[period]借款期限不能为空")
-    private String period;
-    @NotBlank(message = "[inBank]收款银行卡不能为空")
+    private Integer period;
+    @NotBlank(message = "[inBank]收款银行不能为空")
     private String inBank;
     @NotBlank(message = "[inAccount]收款账户不能为空")
     private String inAccount;

@@ -16,5 +16,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubmitLoanResponse {
-    private String bid;
+    private Long bid;
 }

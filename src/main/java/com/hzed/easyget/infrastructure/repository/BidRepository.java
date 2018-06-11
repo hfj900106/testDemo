@@ -54,7 +54,7 @@ public class BidRepository {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void save(Bid bid, UserBank userBank) {
+    public void insertBidAndUserBank(Bid bid, UserBank userBank) {
         bidMapper.insertSelective(bid);
         userBankMapper.insertSelective(userBank);
     }

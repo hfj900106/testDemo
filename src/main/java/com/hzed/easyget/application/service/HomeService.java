@@ -165,7 +165,7 @@ public class HomeService {
     public LoanResponse startLoan() {
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
-        List<Bid> bid = bidRepository.findBStatusByUserId(userId, Lists.newArrayList((byte) 1, (byte) 5));
+        List<Bid> bid = bidRepository.findByUserIdAndStatus(userId, Lists.newArrayList((byte) 1, (byte) 5));
         if (bid.isEmpty() || bid.size() == 0) {
             return LoanResponse.builder().isLoan(true).build();
         }

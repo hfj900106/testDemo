@@ -19,6 +19,7 @@ import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
+import com.hzed.easyget.infrastructure.utils.SmsUtils;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.SmsLog;
 import com.hzed.easyget.persistence.auto.entity.User;
@@ -144,20 +145,10 @@ public class LoginService {
             //发送过于频繁
             throw new ComBizException(BizCodeEnum.FREQUENTLY_SEND);
         }
-        String code = StringUtils.leftPad(String.valueOf(new Random().nextInt(9999)), 4, "0");
+        String code = SmsUtils.getCode();
         String content = "您的注册验证码是：" + code + " ，两分钟内有效，欢迎使用本平台";
         //发送短信
-        NxSmsDownRequest smsDownRequest = new NxSmsDownRequest();
-        smsDownRequest.setPhone(mobile);
-        smsDownRequest.setTimestamp(String.valueOf(System.currentTimeMillis()));
-        smsDownRequest.setSourceadd("hztele");
-        smsDownRequest.setExtno(123);
-        smsDownRequest.setContent(content);
-        NxSmsDownResponse smsDownResponse = NxSmsUtil.smsSend(smsDownRequest);
-        //发送失败
-        if(!SmsCodeEnum.OK.getKey().equals(smsDownResponse.getCode())){
-            throw new ComBizException(BizCodeEnum.SMS_CODE_SEND_FAIL);
-        }
+        SmsUtils.sendSms(mobile,content);
         // 保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();
         smsLog.setId(IdentifierGenerator.nextId());

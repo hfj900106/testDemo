@@ -12,10 +12,12 @@ import java.util.Map;
 public interface BidExtMapper {
     /**
      * 查找要推送的资产
-     * @param map
-     * @return
      */
-    List<BidExt> selectBidsToPush(Map<String,Object> map);
+    List<BidExt> selectBidsToPush();
+    /**
+     * 查找要放款的标
+     */
+    List<BidExt> findBankLoanBids();
 }
 
 

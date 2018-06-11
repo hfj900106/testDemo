@@ -2,6 +2,8 @@ package com.hzed.easyget.controller.model;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * 还款详情返回参数
  *
@@ -11,9 +13,11 @@ import lombok.Data;
 @Data
 public class RepayDetailResponse {
 
-    private String totalRepayAmount;
+    private BigDecimal totalRepayAmount;
     private Integer period;
+    /** 借款时间 */
     private String loanTime;
+    /** 到期时间或结清时间 */
     private String repayTime;
-    private String status;
+    private Integer status;
 }

@@ -1,11 +1,9 @@
 package com.hzed.easyget.infrastructure.repository;
 
 
-import com.hzed.easyget.persistence.auto.entity.BidProgress;
-import com.hzed.easyget.persistence.auto.entity.TempTable;
+import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.auto.entity.example.TempTableExample;
-import com.hzed.easyget.persistence.auto.mapper.BidProgressMapper;
-import com.hzed.easyget.persistence.auto.mapper.TempTableMapper;
+import com.hzed.easyget.persistence.auto.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,35 +20,47 @@ public class TempTableRepository {
     TempTableMapper tempMapper;
     @Autowired
     private BidProgressMapper bidProgressMapper;
+    @Autowired
+    private BidMapper bidMapper;
+    @Autowired
+    private BillMapper billMapper;
+    @Autowired
+    private BillLedgerMapper billLedgerMapper;
+    @Autowired
+    private UserTransactionMapper transactionMapper;
 
     public void insertJob(TempTable tempTable) {
         tempMapper.insert(tempTable);
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void afterPushBid(BidProgress bidProgress, Long jobId) {
+
+    public void afterPushBid(BidProgress bidProgress ) {
         bidProgressMapper.insert(bidProgress);
-        TempTableExample tableExample = new TempTableExample();
-        tableExample.createCriteria().andRelaseIdEqualTo(jobId).andJobNameEqualTo("pushBid");
-        tempMapper.deleteByExample(tableExample);
     }
 
-    public List<TempTable> getByJobName() {
-        TempTableExample example = new TempTableExample();
-        example.createCriteria().andJobNameEqualTo("pushBid").andReRunTimesGreaterThanOrEqualTo(Integer.valueOf(5).byteValue());
-        List<TempTable> jobs = tempMapper.selectByExampleSelective(example);
-        return jobs;
+    @Transactional(rollbackFor = Exception.class)
+    public void pushBidCallBack( Bid bid,BidProgress bidProgress,Long bidId  ) {
+        bidMapper.updateByPrimaryKeySelective(bid);
+        bidProgressMapper.insert(bidProgress);
+//        TempTableExample tableExample  = new TempTableExample();
+//        tableExample.createCriteria().andRelaseIdEqualTo(bidId).andJobNameEqualTo("bankLoan");
+//        tempMapper.deleteByExample(tableExample);
     }
 
-    public List<TempTable> getTempByJobNameAndReId(String name,Long id) {
-        TempTableExample example = new TempTableExample();
-        example.createCriteria().andJobNameEqualTo(name).andRelaseIdEqualTo(id);
-        List<TempTable> jobs = tempMapper.selectByExample(example);
-        return jobs;
-    }
+
 
     public void upDateTemp(TempTable tempTable) {
         tempMapper.updateByPrimaryKeySelective(tempTable);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void afterBankLoan(Bid bid , BidProgress bidProgress,Bill bill, List<BillLedger> billLedgers,Long  tempId,UserTransaction transaction) {
+        bidMapper.updateByPrimaryKeySelective(bid);
+        bidProgressMapper.insertSelective(bidProgress);
+        billMapper.insertSelective(bill);
+        //TODO
+        billLedgerMapper.batchInsertSelective(billLedgers);
+        tempMapper.deleteByPrimaryKey(tempId);
+        transactionMapper.insertSelective(transaction);
+    }
 }

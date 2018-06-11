@@ -37,13 +37,12 @@ public class LoanService {
 
         Bid bid = bidRepository.findByIdWithExp(request.getBid());
         loanDetailResponse.setApplyAmount(bid.getApplyAmount().toString());
-        loanDetailResponse.setApplyTime(DateUtil.dateToStr(bid.getCreateTime()));
+        loanDetailResponse.setApplyTime(DateUtil.localDateTimeToStr2(bid.getCreateTime()));
         loanDetailResponse.setInBank(bid.getInBank());
         loanDetailResponse.setInAccount(bid.getInAccount());
-        LocalDateTime auditTime = DateUtil.addDaysBymin(bid.getCreateTime(), systemProp.getExpectedAuditTimeInterval().intValue());
-        loanDetailResponse.setAuditTime(DateUtil.dateToStr(auditTime));
-        loanDetailResponse.setLoanTime(DateUtil.dateToStr(DateUtil.addDaysBymin(auditTime, systemProp.getExpectedLendingTimeInterval().intValue())));
-
+        LocalDateTime auditTime = DateUtil.addMins(bid.getCreateTime(), systemProp.getExpectedAuditTimeInterval().intValue());
+        loanDetailResponse.setAuditTime(DateUtil.localDateTimeToStr2(auditTime));
+        loanDetailResponse.setLoanTime(DateUtil.localDateTimeToStr2(DateUtil.addMins(auditTime,systemProp.getExpectedLendingTimeInterval().intValue())));
         return loanDetailResponse;
     }
 

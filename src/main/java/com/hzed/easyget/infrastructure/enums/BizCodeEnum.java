@@ -19,9 +19,8 @@ public enum BizCodeEnum {
     ILLEGAL_REQUEST("9997", "无效的请求"),
     ALIYUN_EXCEPTION("9996", "阿里云操作异常"),
 
-    // 8 第三方接口异常
-    LOAN_TRANSACTION_ERROR("8001","支付放款接口异常"),
-    RECEIVER_TRANSACTION_ERROR("8002","支付收款接口异常"),
+    // 8-交易码
+    sahfsdkfsahd("8001", "用户余额不足"),
 
     // 1-请求业务校验
     ILLEGAL_PARAM("1000", "请求参数非法"),
@@ -41,7 +40,7 @@ public enum BizCodeEnum {
     ILLEGAL_PICTURECODE("1013", "图片验证码错误"),
     UN_IDENTITY_AUTH("1014", "用户未进行身份认证"),
     OVER_TIME_SMS_CODE("1015", "验证码超时"),
-    FREQUENTLY_SEND("1016", "发送过于频繁"),
+    FREQUENTLY_SEND("1016", "短信发送过于频繁"),
     SMS_CODE_SEND_FAIL("1017", "短信发送失败"),
 
 

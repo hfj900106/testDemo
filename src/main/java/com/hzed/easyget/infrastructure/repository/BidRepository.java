@@ -30,7 +30,7 @@ public class BidRepository {
     @Autowired
     private UserBankMapper userBankMapper;
 
-    public List<Bid> findBStatusByUserId(Long userId, List<Byte> statuses) {
+    public List<Bid> findByUserIdAndStatus(Long userId, List<Byte> statuses) {
         BidExample example = new BidExample();
         example.createCriteria().andUserIdEqualTo(userId).andStatusIn(statuses);
         return bidMapper.selectByExample(example);
@@ -59,7 +59,10 @@ public class BidRepository {
         userBankMapper.insertSelective(userBank);
     }
 
-    public List<BidExt> gitBidsToPush(Map<String,Object> map){
-        return bidExtMapper.selectBidsToPush(map);
+    public List<BidExt> gitBidsToPush(){
+        return bidExtMapper.selectBidsToPush();
+    }
+    public List<BidExt> findBankLoanBids() {
+        return bidExtMapper.findBankLoanBids();
     }
 }

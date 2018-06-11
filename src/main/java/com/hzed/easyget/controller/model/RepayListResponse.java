@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -16,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RepayListResponse {
-
-    private String TotalAmount;
+    private BigDecimal totalAmount;
     private List<RepaymentResponse> repaymentInfo;
 }

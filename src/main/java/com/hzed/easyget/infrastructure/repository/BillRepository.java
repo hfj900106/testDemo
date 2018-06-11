@@ -26,7 +26,6 @@ public class BillRepository {
         BillExample example = new BillExample();
         example.createCriteria().andBidIdEqualTo(bid);
         return billMapper.selectOneByExample(example);
-
     }
 
     public Bill findById(Long id) {

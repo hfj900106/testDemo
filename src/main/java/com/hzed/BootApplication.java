@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hzed.easyget.infrastructure.annotation.EnableAliyun;
 import com.hzed.easyget.infrastructure.annotation.EnableRedis;
 import com.hzed.easyget.infrastructure.annotation.EnableRest;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -27,6 +28,7 @@ import javax.sql.DataSource;
  * @author guichang
  */
 
+@Slf4j
 @SpringBootApplication
 @MapperScan(value = {"com.hzed.easyget.persistence.auto.mapper", "com.hzed.easyget.persistence.ext.mapper"})
 @EnableAsync
@@ -71,5 +73,6 @@ public class BootApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(BootApplication.class, args);
+        log.info("==========恭喜大佬，贺喜大佬，项目启动成功！==========");
     }
 }

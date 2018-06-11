@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ExceptionAnno
 @RestController
 @RequestMapping("/riskCallBack")
-public class RiskCallBack {
+public class RiskCallBackController {
     @Autowired
     private RiskCallBackService riskCallBackService;
 

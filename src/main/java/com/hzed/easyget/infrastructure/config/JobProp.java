@@ -14,4 +14,6 @@ import org.springframework.context.annotation.Configuration;
 public class JobProp {
     private boolean pushBid;
     private String pushBidCron;
+    private boolean bankLoan;
+    private String bankLoanCron;
 }

@@ -21,6 +21,7 @@ public class RiskCallBackService {
     private TempTableRepository tempTableRepository;
 
     public void pushBidCallBack(PushBidCallBackRequest request) {
+
         //TODO 审核结果 ，是不是审核不通过  将status设为人审？还是直接不通过？审核通过删除temp，不通过则更新temp？
 
         tempTableRepository.pushBidCallBack(

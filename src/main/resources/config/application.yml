@@ -43,6 +43,8 @@ system:
   loanJob:
       pushBid: false # 推送资产
       pushBidCron: 0/5 * * * * ?
+      bankLoan: false # 放款
+      bankLoanCron: 0/5 * * * * ?
 # 第三方
 thirdParty:
   domain: http://localhost:8080 # 请求架构组bulepay域名地址

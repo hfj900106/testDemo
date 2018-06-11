@@ -20,6 +20,7 @@ import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,7 +83,7 @@ public class AuthService {
     }
 
     /**
-     * 通讯录认证
+     * 通讯录认证通讯录和通话记录都可能为空
      */
     public void authContacts(ContactsRequest request) {
         GlobalUser user = getGlobalUser();
@@ -91,12 +92,12 @@ public class AuthService {
         //TODO 待定参数
         map.put("sign", "1212");
         map.put("contacts", request.getContacts());
+        map.put("callLogs", request.getCallLogs());
         map.put("userId", user.getUserId());
         map.put("source", "android".equals(platForm)?ComConsts.IS_ANDROID:ComConsts.IS_IOS);
         //TODO 待验证方式
         String response = template.postForObject("/app/risk/Contacts/add", map, String.class);
         afterResponse(response,"通讯录认证返回数据异常",user.getUserId(),"通讯录认证");
-
     }
 
     /**
@@ -282,8 +283,8 @@ public class AuthService {
         work.setUserId(user.getUserId());
         work.setJobType(request.getJobType().byteValue());
         work.setMonthlyIncome(request.getMonthlyIncome().byteValue());
-        work.setEmployeeCard(request.getEmployeeCard());
-        work.setWorkplace(request.getWorkplace());
+        work.setEmployeeCard(request.getEmployeeCardBase64ImgStr());
+        work.setWorkplace(request.getWorkplaceBase64ImgStr());
         work.setCreateBy(user.getUserId());
         work.setCreateTime(LocalDateTime.now());
         work.setRemark("专业信息认证");

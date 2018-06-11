@@ -5,7 +5,6 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
-import com.hzed.easyget.infrastructure.utils.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,9 +30,6 @@ public class AuthController {
     @ModuleFunc(value = "通讯录认证", isParameterValidate = false)
     @PostMapping("/contacts")
     public Response contacts(@RequestBody ContactsRequest request) {
-        ValidatorUtil.validateWithNull(request);
-        request.getContacts().forEach(contact -> ValidatorUtil.validateWithNull(contact));
-        request.getCallLogs().forEach(callLog -> ValidatorUtil.validateWithNull(callLog));
         authService.authContacts(request);
         return Response.getSuccessResponse();
     }

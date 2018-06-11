@@ -83,18 +83,16 @@ public class AuthService {
     }
 
     /**
-     * 通讯录认证
+     * 通讯录认证通讯录和通话记录都可能为空
      */
     public void authContacts(ContactsRequest request) {
         GlobalUser user = getGlobalUser();
         String platForm = getGlobalHead().getPlatform();
-        List<ContactsRequest.Contact>  contactList = request.getContacts();
-        List<ContactsRequest.CallLog>  callLogs = request.getCallLogs();
         Map<String, Object> map = new HashMap<>(16);
         //TODO 待定参数
         map.put("sign", "1212");
-        map.put("contacts", JSONArray.fromObject(contactList).toString());
-        map.put("callLogs", JSONArray.fromObject(callLogs).toString());
+        map.put("contacts", request.getContacts());
+        map.put("callLogs", request.getCallLogs());
         map.put("userId", user.getUserId());
         map.put("source", "android".equals(platForm)?ComConsts.IS_ANDROID:ComConsts.IS_IOS);
         //TODO 待验证方式

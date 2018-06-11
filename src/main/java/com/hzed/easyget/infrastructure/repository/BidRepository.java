@@ -25,7 +25,7 @@ public class BidRepository {
     @Autowired
     private BidExtMapper bidExtMapper;
 
-    public List<Bid> findBStatusByUserId(Long userId, List<Byte> statuses) {
+    public List<Bid> findByUserIdAndStatus(Long userId, List<Byte> statuses) {
         BidExample example = new BidExample();
         example.createCriteria().andUserIdEqualTo(userId).andStatusIn(statuses);
         return bidMapper.selectByExample(example);

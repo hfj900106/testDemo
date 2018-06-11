@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author wuchengwu
@@ -15,9 +17,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RepaymentResponse {
-    private String loanMount;
+    /** 借款金额 */
+    private BigDecimal loanAmount;
+    /** 实际还款时间 或 到期时间 -结清才会显示*/
     private String repayTime;
-    private String status;
-    private String days;
-    private String bid;
+    private Integer status;
+    private Integer days;
+    private Long bid;
 }

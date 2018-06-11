@@ -12,5 +12,5 @@ import org.hibernate.validator.constraints.NotBlank;
 @Data
 public class RepayDetailRequest {
     @NotBlank(message = "bid不能为空")
-    private String bid;
+    private Long bid;
 }

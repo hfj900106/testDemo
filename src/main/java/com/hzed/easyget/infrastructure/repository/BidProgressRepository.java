@@ -17,7 +17,7 @@ public class BidProgressRepository {
     @Autowired
     private BidProgressMapper bidProgressMapper;
 
-    public BidProgress findByBidId(Long bidId, Byte type) {
+    public BidProgress findByBidIdAndType(Long bidId, Byte type) {
         BidProgressExample example = new BidProgressExample();
         example.createCriteria().andBidIdEqualTo(bidId).andTypeEqualTo(type);
 

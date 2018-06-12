@@ -1,6 +1,7 @@
 package com.hzed.easyget.infrastructure.interceptor;
 
 import com.hzed.easyget.application.service.ComService;
+import com.hzed.easyget.application.service.LocaleMessageSourceService;
 import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.consts.LogConsts;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -57,6 +59,20 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
             comService.validateToken(globalHeadr);
         }
 
+        String i18n = globalHeadr.getI18n();
+        Locale locale = null;
+        switch (i18n) {
+            case "id-ID":
+                locale = LocaleMessageSourceService.ind;
+                break;
+            case "zh-CN":
+                locale = Locale.CHINA;
+                break;
+            default:
+                locale = Locale.US;
+                break;
+        }
+        LocaleMessageSourceService.LOCALES.set(locale);
         return true;
     }
 

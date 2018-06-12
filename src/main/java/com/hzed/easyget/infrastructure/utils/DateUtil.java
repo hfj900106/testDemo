@@ -60,6 +60,10 @@ public final class DateUtil {
         return localDateTimeToStr(localDateTime, FORMAT2);
     }
 
+    public static String localDateTimeToStr3(LocalDateTime localDateTime) {
+        return localDateTimeToStr(localDateTime, FORMAT3);
+    }
+
     /**
      * 获取两个日期的秒数
      */

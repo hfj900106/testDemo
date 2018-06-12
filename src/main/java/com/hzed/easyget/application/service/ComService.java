@@ -1,13 +1,15 @@
 package com.hzed.easyget.application.service;
 
+import com.google.common.collect.Lists;
+import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.BillLedgerItemEnum;
 import com.hzed.easyget.application.enums.BillStatusEnum;
-import com.hzed.easyget.application.service.product.model.EasyGetPruduct;
+import com.hzed.easyget.application.service.product.model.EasyGetProduct;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
-import com.hzed.easyget.infrastructure.model.GlobalHeadr;
+import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.BillLedgerRepository;
@@ -50,7 +52,7 @@ public class ComService {
     /**
      * 校验请求头非token参数
      */
-    public void validateHeader(GlobalHeadr globalHeadr) {
+    public void validateHeader(GlobalHead globalHeadr) {
         if (StringUtils.isBlank(globalHeadr.getAppKey())) {
             throw new ComBizException(BizCodeEnum.ILLEGAL_APPKEY);
         }
@@ -71,7 +73,7 @@ public class ComService {
     /**
      * 校验token参数
      */
-    public void validateToken(GlobalHeadr globalHeadr) {
+    public void validateToken(GlobalHead globalHeadr) {
         String imei = globalHeadr.getImei();
         String token = globalHeadr.getToken();
         if (StringUtils.isBlank(token)) {
@@ -177,13 +179,25 @@ public class ComService {
 
         Bid bid = bidRepository.findByIdWithExp(bill.getBidId());
 
-        EasyGetPruduct product = new EasyGetPruduct(bid.getLoanAmount(), bid.getPeriod());
+        EasyGetProduct product = new EasyGetProduct(bid.getLoanAmount(), bid.getPeriod());
         // 总逾期费
         BigDecimal allOverFee = product.getOverFee(overDays);
         // 已还逾期费
         BillLedger overDueLedger = billLedgerRepository.findBillLedgerItemByBillId(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode().byteValue());
 
         return overDueLedger == null ? allOverFee : allOverFee.subtract(overDueLedger.getRealRepaymentAmount());
+    }
+
+    /**
+     * 根据bid状态判断用户是否有贷款资格
+     */
+    public boolean isLoan(Long userId){
+        List<Bid> bidList = bidRepository.findByUserIdAndStatus(userId, Lists.newArrayList(BidStatusEnum.RISK_ING.getCode().byteValue(), BidStatusEnum.MANMADE_ING.getCode().byteValue(),
+                BidStatusEnum.AUDIT_PASS.getCode().byteValue(), BidStatusEnum.REPAYMENT.getCode().byteValue()));
+        if (bidList == null || bidList.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
 }

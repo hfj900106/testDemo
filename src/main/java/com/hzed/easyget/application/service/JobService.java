@@ -5,8 +5,7 @@ import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.ProductService;
-import com.hzed.easyget.application.service.product.model.EasyGetPruduct;
-import com.hzed.easyget.infrastructure.consts.ComConsts;
+import com.hzed.easyget.application.service.product.model.EasyGetProduct;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayInfoFlowJobRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
@@ -18,9 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author hfj
@@ -124,7 +121,7 @@ public class JobService {
                     UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bid.getBidId(), TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), requestSeq,bidInfo.getInBank() ,bidInfo.getInAccount() );
 
                     tempTableRepository.afterBankLoan(
-                            Bid.builder().id(bid.getBidId()).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetPruduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
+                            Bid.builder().id(bid.getBidId()).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetProduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
                             BidProgress.builder().bidId(bid.getBidId()).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").build(),
                             bills.get(0),
                             billLedgers,

@@ -49,14 +49,12 @@ public class HomeController {
     @ModuleFunc("token更新")
     @PostMapping("/updateToken")
     public Response<UpdateTokenResponse> updateToken(){
-
-
         return Response.getSuccessResponse(homeService.updateToken());
     }
 
     @ModuleFunc("获取公告列表")
-    @PostMapping("/getBombList")
-    public Response<List<BombResponse>> getNewsList(){
+    @PostMapping("/getNewsList")
+    public Response<List<NewsResponse>> getNewsList(){
         return Response.getSuccessResponse(homeService.getNewsList());
     }
 

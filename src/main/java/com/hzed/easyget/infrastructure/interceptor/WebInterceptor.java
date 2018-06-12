@@ -5,7 +5,7 @@ import com.hzed.easyget.application.service.LocaleMessageSourceService;
 import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.consts.LogConsts;
-import com.hzed.easyget.infrastructure.model.GlobalHeadr;
+import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -50,7 +50,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         }
 
         // header中一些必要参数校验
-        GlobalHeadr globalHeadr = RequestUtil.getGlobalHead();
+        GlobalHead globalHeadr = RequestUtil.getGlobalHead();
         comService.validateHeader(globalHeadr);
 
         // token验证

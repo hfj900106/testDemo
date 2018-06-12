@@ -7,6 +7,8 @@ import com.hzed.easyget.controller.model.LoanDetailResponse;
 import com.hzed.easyget.controller.model.SubmitLoanRequest;
 import com.hzed.easyget.controller.model.SubmitLoanResponse;
 import com.hzed.easyget.infrastructure.config.SystemProp;
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
@@ -31,6 +33,8 @@ public class LoanService {
     private BidRepository bidRepository;
     @Autowired
     private SystemProp systemProp;
+    @Autowired
+    private ComService comService;
 
     public LoanDetailResponse loanDetail(LoanDetailRequest request) {
         LoanDetailResponse loanDetailResponse = new LoanDetailResponse();
@@ -47,11 +51,14 @@ public class LoanService {
     }
 
     public SubmitLoanResponse submitLoan(SubmitLoanRequest request) {
-
+        Long userId = RequestUtil.getGlobalUser().getUserId();
+        if (!comService.isLoan(userId)) {
+            throw new ComBizException(BizCodeEnum.HAS_EXISTS_BID);
+        }
         Bid bid = new Bid();
         Long bidId = IdentifierGenerator.nextId();
         bid.setId(bidId);
-        bid.setUserId(RequestUtil.getGlobalUser().getUserId());
+        bid.setUserId(userId);
         bid.setBidNo(String.valueOf(IdentifierGenerator.nextId()));
         bid.setTitle("消费贷");
         bid.setProductCode(ProductEnum.PRODUCT_CODE.getCode());

@@ -28,9 +28,9 @@ public class UserController {
     private UserService userService;
 
     @ModuleFunc("我的")
-    @PostMapping("/getAcountInfo")
-    public Response<UserResponse> getAcountInfo() {
-        return Response.getSuccessResponse(userService.getAcountInfo());
+    @PostMapping("/getAccountInfo")
+    public Response<UserResponse> getAccountInfo() {
+        return Response.getSuccessResponse(userService.getAccountInfo());
     }
 
     @ModuleFunc("交易记录")

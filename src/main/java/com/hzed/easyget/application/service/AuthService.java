@@ -20,7 +20,6 @@ import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.hzed.easyget.infrastructure.consts.ComConsts.RISK_OK;
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalHead;
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 
@@ -68,8 +66,7 @@ public class AuthService {
      */
     public List<AuthStatusResponse> getAuthStatus() {
         List<AuthStatusResponse> authStatusList = Lists.newArrayList();
-        GlobalUser globalUser = RequestUtil.getGlobalUser();
-        Long userId = globalUser.getUserId();
+        Long userId = RequestUtil.getGlobalUser().getUserId();
         List<UserAuthStatus> userAuthStatus = authStatusRepository.getAuthStatusByUserId(userId);
         for (UserAuthStatus uas : userAuthStatus) {
             AuthItem auth = authStatusRepository.findAuthByCode(uas.getAuthCode());

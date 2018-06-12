@@ -243,12 +243,10 @@ public class AuthService {
         String idCardPhotoPath ;
         String facePhotoPath ;
         try {
-            UploadImgResponse response = template.postForObject("/hzed/easy-get/upload", map, UploadImgResponse.class);
-            idCardPhotoPath = response.getVisitUrl();
+            idCardPhotoPath = getPhotoPath(map);
 
             map.put("imgBase64", faceBase64ImgStr);
-            UploadImgResponse response2 = template.postForObject("/hzed/easy-get/upload", map, UploadImgResponse.class);
-            facePhotoPath = response2.getVisitUrl();
+            facePhotoPath = getPhotoPath(map);
 
             //根据拿到json串组装对象
             User userObj = new User();
@@ -282,20 +280,36 @@ public class AuthService {
      * 专业信息认证
      */
     public void professionalAuth(ProfessionalRequest request){
-        GlobalUser user = getGlobalUser();
-        Work work =new Work();
-        work.setId(IdentifierGenerator.nextId());
-        work.setUserId(user.getUserId());
-        work.setJobType(request.getJobType().byteValue());
-        work.setMonthlyIncome(request.getMonthlyIncome().byteValue());
-        work.setEmployeeCard(request.getEmployeeCardBase64ImgStr());
-        work.setWorkplace(request.getWorkplaceBase64ImgStr());
-        work.setCreateBy(user.getUserId());
-        work.setCreateTime(LocalDateTime.now());
-        work.setRemark("专业信息认证");
-        //获取UserAuthStatus对象
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "专业信息认证");
-        professionalRepository.insertProfessionalAndUserAuthStatus(work, userAuthStatus);
+        Map<String, Object> map = new HashMap<>(16);
+        map.put("imgBase64", request.getEmployeeCardBase64ImgStr());
+        map.put("pictureSuffix", request.getPicSuffix());
+        String employeeCardPhotoPath ;
+        String workplacePhotoPath ;
+        try {
+            //照片上传
+            employeeCardPhotoPath = getPhotoPath(map);
+
+            map.put("imgBase64", request.getEmployeeCardBase64ImgStr());
+            workplacePhotoPath = getPhotoPath(map);
+
+            GlobalUser user = getGlobalUser();
+            Work work =new Work();
+            work.setId(IdentifierGenerator.nextId());
+            work.setUserId(user.getUserId());
+            work.setJobType(request.getJobType().byteValue());
+            work.setMonthlyIncome(request.getMonthlyIncome().byteValue());
+            work.setEmployeeCard(employeeCardPhotoPath);
+            work.setWorkplace(workplacePhotoPath);
+            work.setCreateBy(user.getUserId());
+            work.setCreateTime(LocalDateTime.now());
+            work.setRemark("专业信息认证");
+            //获取UserAuthStatus对象
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "专业信息认证");
+            professionalRepository.insertProfessionalAndUserAuthStatus(work, userAuthStatus);
+        }catch (Exception ex){
+            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION,"专业信息认证失败");
+        }
+
     }
 
     private void afterResponse(String response,String ExMsg,Long userId,String remark){
@@ -312,5 +326,10 @@ public class AuthService {
                 throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION,jsonObject.get("msg").toString());
             }
         }
+    }
+
+    private String getPhotoPath(Map<String, Object> map){
+        UploadImgResponse response = template.postForObject("/hzed/easy-get/upload", map, UploadImgResponse.class);
+        return response.getVisitUrl();
     }
 }

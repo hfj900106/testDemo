@@ -1,14 +1,12 @@
 package com.hzed.easyget.controller.web;
 
 
-import com.hzed.easyget.application.service.FileService;
 import com.hzed.easyget.application.service.LoginService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.model.Response;
-import com.hzed.easyget.infrastructure.utils.PicUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,8 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
     @Autowired
     private LoginService loginService;
-    @Autowired
-    private FileService fileService;
 
     @TokenIgnore
     @ModuleFunc("发送短信验证码")
@@ -47,17 +43,6 @@ public class LoginController {
     @PostMapping("/loginByCode")
     public Response<LoginByCodeResponse> loginByCode(@RequestBody LoginByCodeRequest request) {
         LoginByCodeResponse response = loginService.loginByCode(request);
-
-        try {
-            String imgPath = "C:\\Users\\Administrator\\Desktop\\jifei.png";
-            String base64String = PicUtil.picToBase64(imgPath);
-            String s = fileService.uploadBase64Img(base64String, "png");
-            System.out.println("=====" + s);
-        } catch (Exception e) {
-
-        }
-
-
         return Response.getSuccessResponse(response);
     }
 

@@ -1,6 +1,7 @@
 package com.hzed.easyget.persistence.auto.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Product implements Serializable {
@@ -58,6 +59,21 @@ public class Product implements Serializable {
      * 可用标志 0-不可用 1-可用
      */
     private Boolean isUse;
+
+    /**
+     * 快速信审费
+     */
+    private BigDecimal auditFree;
+
+    /**
+     * 尾款
+     */
+    private BigDecimal paymentFree;
+
+    /**
+     * 逾期费
+     */
+    private BigDecimal overdueFree;
 
     /**
      */
@@ -169,6 +185,30 @@ public class Product implements Serializable {
         this.isUse = isUse;
     }
 
+    public BigDecimal getAuditFree() {
+        return auditFree;
+    }
+
+    public void setAuditFree(BigDecimal auditFree) {
+        this.auditFree = auditFree;
+    }
+
+    public BigDecimal getPaymentFree() {
+        return paymentFree;
+    }
+
+    public void setPaymentFree(BigDecimal paymentFree) {
+        this.paymentFree = paymentFree;
+    }
+
+    public BigDecimal getOverdueFree() {
+        return overdueFree;
+    }
+
+    public void setOverdueFree(BigDecimal overdueFree) {
+        this.overdueFree = overdueFree;
+    }
+
     public Long getCreateBy() {
         return createBy;
     }
@@ -226,6 +266,9 @@ public class Product implements Serializable {
         sb.append(", description=").append(description);
         sb.append(", picture=").append(picture);
         sb.append(", isUse=").append(isUse);
+        sb.append(", auditFree=").append(auditFree);
+        sb.append(", paymentFree=").append(paymentFree);
+        sb.append(", overdueFree=").append(overdueFree);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -302,6 +345,21 @@ public class Product implements Serializable {
             return this;
         }
 
+        public Builder auditFree(BigDecimal auditFree) {
+            obj.setAuditFree(auditFree);
+            return this;
+        }
+
+        public Builder paymentFree(BigDecimal paymentFree) {
+            obj.setPaymentFree(paymentFree);
+            return this;
+        }
+
+        public Builder overdueFree(BigDecimal overdueFree) {
+            obj.setOverdueFree(overdueFree);
+            return this;
+        }
+
         public Builder createBy(Long createBy) {
             obj.setCreateBy(createBy);
             return this;
@@ -344,6 +402,9 @@ public class Product implements Serializable {
         description("description"),
         picture("picture"),
         isUse("is_use"),
+        auditFree("audit_free"),
+        paymentFree("payment_free"),
+        overdueFree("overdue_free"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

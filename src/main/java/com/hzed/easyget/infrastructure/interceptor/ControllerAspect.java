@@ -1,14 +1,17 @@
 package com.hzed.easyget.infrastructure.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.hzed.easyget.application.service.I18nService;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.consts.LogConsts;
+import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.utils.ValidatorUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,6 +24,9 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class ControllerAspect {
+
+    @Autowired
+    private I18nService i18nService;
 
     @Around("@annotation(moduleFunc)")
     public Object aroundMethod(ProceedingJoinPoint joinPoint, ModuleFunc moduleFunc) throws Throwable {
@@ -52,6 +58,12 @@ public class ControllerAspect {
         // 打印返回报文
         if (printParameter) {
             log.info("返回报文：{}", JSON.toJSONString(result));
+        }
+        // 统一做国际化处理
+        if (result instanceof Response) {
+            Response resp = (Response) result;
+            resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
+            result = resp;
         }
         return result;
     }

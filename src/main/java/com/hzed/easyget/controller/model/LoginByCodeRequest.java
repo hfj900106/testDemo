@@ -13,4 +13,6 @@ public class LoginByCodeRequest {
     private String mobile;
     @NotBlank(message = "短信验证码不能为空")
     private String smsCode;
+    @NotBlank(message = "手机品牌不能为空")
+    private String device;
 }

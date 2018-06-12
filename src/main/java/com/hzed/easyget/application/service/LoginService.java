@@ -16,13 +16,11 @@ import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
-import com.hzed.easyget.infrastructure.utils.DateUtil;
-import com.hzed.easyget.infrastructure.utils.JwtUtil;
-import com.hzed.easyget.infrastructure.utils.RequestUtil;
-import com.hzed.easyget.infrastructure.utils.SmsUtils;
+import com.hzed.easyget.infrastructure.utils.*;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.SmsLog;
 import com.hzed.easyget.persistence.auto.entity.User;
+import com.hzed.easyget.persistence.auto.entity.UserLogin;
 import com.hzed.easyget.persistence.auto.entity.UserToken;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +30,7 @@ import org.springframework.stereotype.Service;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -66,51 +63,83 @@ public class LoginService {
         String smsCode = request.getSmsCode();
         String platform = globalHead.getPlatform();
         String imei = globalHead.getImei();
+        String device = request.getDevice();
+        // TODO IP
+        String ip = "";
         //校验验证码
         checkSmsCode(mobile, smsCode);
 
         // 用户是否存在,不存在去注册
         User user = userRepository.findByMobile(mobile);
-
+        Long userId;
+        String token;
+        //用户为空，那么该用户的token肯定也为空
         if (user == null) {
+            userId = IdentifierGenerator.nextId();
+            //build User
             user = new User();
-            user.setId(IdentifierGenerator.nextId());
+            user.setId(userId);
             user.setMobileAccount(mobile);
             user.setPlatform(platform);
-            userRepository.insert(user);
-        }
-
-        Long userId = user.getId();
-        // 生成token
-        GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
-        String token = JwtUtil.createToken(newUserToken);
-        UserToken userToken = userTokenRepository.findByUserIdAndImei(userId, imei);
-        if (userToken != null) {
-            UserToken userTokenUpdate = new UserToken();
-            userTokenUpdate.setId(userToken.getId());
-            userTokenUpdate.setUpdateTime(LocalDateTime.now());
-            userTokenUpdate.setToken(token);
-            userTokenUpdate.setImei(imei);
-            userTokenUpdate.setExpireTime(DateUtil.addDays(LocalDateTime.now(), systemProp.getTokenExpire()));
-            userTokenRepository.updateByUserIdAndImei(userTokenUpdate);
-        } else {
-            userToken = new UserToken();
-            userToken.setId(IdentifierGenerator.nextId());
-            userToken.setUserId(userId);
-            userToken.setToken(token);
-            userToken.setImei(imei);
-            userToken.setExpireTime(DateUtil.addDays(LocalDateTime.now(), systemProp.getTokenExpire()));
+            user.setClient((byte) 1);
+            // 生成token
+            GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
+            token = JwtUtil.createToken(newUserToken);
+            //build UserToken
+            UserToken userToken = buildUserToken(IdentifierGenerator.nextId(), userId, token, imei);
             userToken.setCreateTime(LocalDateTime.now());
-            userTokenRepository.insertByUserIdAndImei(userToken);
+            // UserLogin
+            UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
+            userRepository.insertUserAndTokenAndLogin(user, userToken, userLogin);
+        } else {
+            userId = user.getId();
+            // 生成token
+            GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
+            token = JwtUtil.createToken(newUserToken);
+            UserToken userToken = userTokenRepository.findByUserIdAndImei(userId, imei);
+            if (userToken != null) {
+                // UserToken
+                UserToken userTokenUpdate = buildUserToken(userToken.getId(), userId, token, imei);
+                userTokenUpdate.setUpdateTime(LocalDateTime.now());
+                // UserLogin
+                UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
+                userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
+            } else {
+                //有用户但是没token，说明过期要重新登录
+                UserToken userTokenInsert = buildUserToken(IdentifierGenerator.nextId(), userId, token, imei);
+                userTokenInsert.setCreateTime(LocalDateTime.now());
+                // UserLogin
+                UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
+                userRepository.insertTokenAndLogin(userTokenInsert, userLogin);
+            }
         }
-
         //放入redis 3个小时
         redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 3 * 3600L);
-
-        // TODO 更新用户最后登录时间
-///        userRepository.updateLastLoginTime(User.builder().id(userId).lastLoginTime(LocalDateTime.now()).build());
-
         return LoginByCodeResponse.builder().token(token).build();
+    }
+
+    private UserLogin buildUserLogin(Long userId, String platform, String ip, String device) {
+        UserLogin userLogin = new UserLogin();
+        userLogin.setId(IdentifierGenerator.nextId());
+        userLogin.setUserId(userId);
+        userLogin.setPlatform(platform);
+        userLogin.setClient((byte) 1);
+        userLogin.setLoginIp(ip);
+        userLogin.setLoginDevice(device);
+        userLogin.setLoginTime(LocalDateTime.now());
+        userLogin.setCreateBy(userId);
+        userLogin.setCreateTime(LocalDateTime.now());
+        return userLogin;
+    }
+
+    private UserToken buildUserToken(Long id, Long userId, String token, String imei) {
+        UserToken userToken = new UserToken();
+        userToken.setId(id);
+        userToken.setUserId(userId);
+        userToken.setToken(token);
+        userToken.setImei(imei);
+        userToken.setExpireTime(DateUtil.addDays(LocalDateTime.now(), systemProp.getTokenExpire()));
+        return userToken;
     }
 
     /**
@@ -138,7 +167,7 @@ public class LoginService {
             //发送过于频繁
             throw new ComBizException(BizCodeEnum.FREQUENTLY_SEND);
         }
-        if(StringUtils.isNotBlank(redisService.getCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile))){
+        if (StringUtils.isNotBlank(redisService.getCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile))) {
             //10分钟内重发需要验证码
             throw new ComBizException(BizCodeEnum.PIC_CODE_TO_CHECK);
         }
@@ -163,69 +192,19 @@ public class LoginService {
         redisService.setCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile, mobile, 600L);
     }
 
-    /**
-     * 随机字符串，去掉易混淆的字符
-     */
-    private String codeStr = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
-    /**
-     * 绘制字符串
-     */
-    private String drowString(Graphics g, String randomString, int i) {
 
-        Random random = new Random();
-        g.setFont(new Font("Fixedsys", Font.CENTER_BASELINE, 18));
-        g.setColor(new Color(random.nextInt(101), random.nextInt(111), random.nextInt(121)));
-        String rand = String.valueOf(getRandomString(random.nextInt(codeStr.length())));
-        randomString += rand;
-        g.translate(random.nextInt(3), random.nextInt(3));
-        g.drawString(rand, 13 * i, 16);
-        return randomString;
-    }
-
-    /**
-     * 获取随机的字符
-     */
-    public String getRandomString(int num) {
-        return String.valueOf(codeStr.charAt(num));
-    }
     /**
      * 生成随机图片
      */
     public PictureCodeResponse getPictureCode(String mobile) {
-        PictureCodeResponse codeResponse = new PictureCodeResponse();
-        // BufferedImage类是具有缓冲区的Image类,Image类是用于描述图像信息的类
-        BufferedImage image = new BufferedImage(80, 26, BufferedImage.TYPE_INT_BGR);
-        // 产生Image对象的Graphics对象,改对象可以在图像上进行各种绘制操作
-        Graphics graphics = image.getGraphics();
-        graphics.fillRect(0, 0, 80, 26);
-        graphics.setFont(new Font("Times New Roman", Font.ROMAN_BASELINE, 18));
-        graphics.setColor(new Color(225, 255, 255));
-        // 绘制随机字符
-        String randomString = "";
-        for (int i = 1; i <= 4; i++) {
-            randomString = drowString(graphics, randomString, i);
-        }
+        //获取验证码字符串
+        String code = PicUtil.getCode(4);
+        //获取图片流
+        byte[] pic = PicUtil.getPictureCode(code, 4);
         //保存到Redis，五分钟有效时间
-        redisService.setCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile, randomString, 300L);
-        //销毁graphics图形界面资源
-        graphics.dispose();
-        //返回图片二进制
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(image, "jpg", bos);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new BaseBizException(BizCodeEnum.SERVICE_EXCEPTION.getCode(), "获取验证码图片时，图片转二进制异常" + e.getStackTrace().toString());
-        } finally {
-            if (bos != null) {
-                try {
-                    bos.close(); // 关闭流
-                } catch (IOException e) {
-                    throw new BaseBizException(BizCodeEnum.SERVICE_EXCEPTION.getCode(), "获取验证码图片时，关闭流异常" + e.getStackTrace().toString());
-                }
-            }
-        }
-        codeResponse.setPicture(bos.toByteArray());
+        redisService.setCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile, code, 300L);
+        PictureCodeResponse codeResponse = new PictureCodeResponse();
+        codeResponse.setPicture(pic);
         return codeResponse;
     }
 
@@ -239,7 +218,6 @@ public class LoginService {
             throw new ComBizException(BizCodeEnum.ILLEGAL_PICTURECODE);
         }
     }
-
 
 
 }

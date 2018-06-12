@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 用户登录
  *
  * @author hfj
- * @date 2018/2132/
+ * @date 2018/06/12
  */
 
 @Slf4j

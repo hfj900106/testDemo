@@ -2,6 +2,8 @@ package com.hzed.easyget.controller.model;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 通讯录验证请求
  *
@@ -13,4 +15,6 @@ import lombok.Data;
 public class ContactsRequest {
     private String contacts;
     private String callLogs;
+    @NotNull(message = "时间戳不能为空")
+    private Long timeStamp;
 }

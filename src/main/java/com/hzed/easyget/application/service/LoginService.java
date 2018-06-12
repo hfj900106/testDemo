@@ -145,7 +145,8 @@ public class LoginService {
         String code = SmsUtils.getCode();
         String content = "您的注册验证码是：" + code + " ，两分钟内有效，欢迎使用本平台";
         //发送短信
-        SmsUtils.sendSms(mobile,content);
+        //todo 余额不足，暂时注销
+//        SmsUtils.sendSms(mobile,content);
         // 保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();
         smsLog.setId(IdentifierGenerator.nextId());

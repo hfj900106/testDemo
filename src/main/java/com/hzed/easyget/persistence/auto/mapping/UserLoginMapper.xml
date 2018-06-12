@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hzed.easyget.persistence.auto.mapper.UserLoginMapper">
   <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.UserLogin">
-    <result column="id" jdbcType="BIGINT" property="id" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="platform" jdbcType="VARCHAR" property="platform" />
     <result column="client" jdbcType="TINYINT" property="client" />
     <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
-    <result column="login_phone" jdbcType="VARCHAR" property="loginPhone" />
+    <result column="login_device" jdbcType="VARCHAR" property="loginDevice" />
     <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -74,7 +74,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, platform, client, login_ip, login_phone, login_time, create_by, create_time, 
+    id, user_id, platform, client, login_ip, login_device, login_time, create_by, create_time, 
     update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserLoginExample" resultMap="BaseResultMap">
@@ -115,6 +115,24 @@
       order by ${example.orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_loan_user_login
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
+    select
+    <foreach collection="selective" item="column" separator=",">
+      ${column.value}
+    </foreach>
+    from t_loan_user_login
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_loan_user_login
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
   <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserLoginExample">
     delete from t_loan_user_login
     <if test="_parameter != null">
@@ -123,12 +141,12 @@
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserLogin">
     insert into t_loan_user_login (id, user_id, platform, 
-      client, login_ip, login_phone, 
+      client, login_ip, login_device, 
       login_time, create_by, create_time, 
       update_by, update_time, remark
       )
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{platform,jdbcType=VARCHAR}, 
-      #{client,jdbcType=TINYINT}, #{loginIp,jdbcType=VARCHAR}, #{loginPhone,jdbcType=VARCHAR}, 
+      #{client,jdbcType=TINYINT}, #{loginIp,jdbcType=VARCHAR}, #{loginDevice,jdbcType=VARCHAR}, 
       #{loginTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
       )
@@ -151,8 +169,8 @@
       <if test="loginIp != null">
         login_ip,
       </if>
-      <if test="loginPhone != null">
-        login_phone,
+      <if test="loginDevice != null">
+        login_device,
       </if>
       <if test="loginTime != null">
         login_time,
@@ -189,8 +207,8 @@
       <if test="loginIp != null">
         #{loginIp,jdbcType=VARCHAR},
       </if>
-      <if test="loginPhone != null">
-        #{loginPhone,jdbcType=VARCHAR},
+      <if test="loginDevice != null">
+        #{loginDevice,jdbcType=VARCHAR},
       </if>
       <if test="loginTime != null">
         #{loginTime,jdbcType=TIMESTAMP},
@@ -236,8 +254,8 @@
       <if test="record.loginIp != null">
         login_ip = #{record.loginIp,jdbcType=VARCHAR},
       </if>
-      <if test="record.loginPhone != null">
-        login_phone = #{record.loginPhone,jdbcType=VARCHAR},
+      <if test="record.loginDevice != null">
+        login_device = #{record.loginDevice,jdbcType=VARCHAR},
       </if>
       <if test="record.loginTime != null">
         login_time = #{record.loginTime,jdbcType=TIMESTAMP},
@@ -269,7 +287,7 @@
       platform = #{record.platform,jdbcType=VARCHAR},
       client = #{record.client,jdbcType=TINYINT},
       login_ip = #{record.loginIp,jdbcType=VARCHAR},
-      login_phone = #{record.loginPhone,jdbcType=VARCHAR},
+      login_device = #{record.loginDevice,jdbcType=VARCHAR},
       login_time = #{record.loginTime,jdbcType=TIMESTAMP},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -279,6 +297,60 @@
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserLogin">
+    update t_loan_user_login
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="platform != null">
+        platform = #{platform,jdbcType=VARCHAR},
+      </if>
+      <if test="client != null">
+        client = #{client,jdbcType=TINYINT},
+      </if>
+      <if test="loginIp != null">
+        login_ip = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDevice != null">
+        login_device = #{loginDevice,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null">
+        login_time = #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserLogin">
+    update t_loan_user_login
+    set user_id = #{userId,jdbcType=BIGINT},
+      platform = #{platform,jdbcType=VARCHAR},
+      client = #{client,jdbcType=TINYINT},
+      login_ip = #{loginIp,jdbcType=VARCHAR},
+      login_device = #{loginDevice,jdbcType=VARCHAR},
+      login_time = #{loginTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserLoginExample" resultMap="BaseResultMap">
     select
@@ -306,21 +378,14 @@
     </if>
     limit 1
   </select>
-  <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
-    select
-    <foreach collection="selective" item="column" separator=",">
-      ${column.value}
-    </foreach>
-    from t_loan_user_login
-  </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_user_login
-    (id, user_id, platform, client, login_ip, login_phone, login_time, create_by, create_time, 
+    (id, user_id, platform, client, login_ip, login_device, login_time, create_by, create_time, 
       update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.platform,jdbcType=VARCHAR}, 
-        #{item.client,jdbcType=TINYINT}, #{item.loginIp,jdbcType=VARCHAR}, #{item.loginPhone,jdbcType=VARCHAR}, 
+        #{item.client,jdbcType=TINYINT}, #{item.loginIp,jdbcType=VARCHAR}, #{item.loginDevice,jdbcType=VARCHAR}, 
         #{item.loginTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
         #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
         )
@@ -351,8 +416,8 @@
         <if test="'login_ip' == column.value">
           #{item.loginIp,jdbcType=VARCHAR}
         </if>
-        <if test="'login_phone' == column.value">
-          #{item.loginPhone,jdbcType=VARCHAR}
+        <if test="'login_device' == column.value">
+          #{item.loginDevice,jdbcType=VARCHAR}
         </if>
         <if test="'login_time' == column.value">
           #{item.loginTime,jdbcType=TIMESTAMP}

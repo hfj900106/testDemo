@@ -35,12 +35,12 @@ public class PicUtil {
      * 将base64编码字符串转换为图片
      *
      * @param base64ImgStr base64编码字符串
-     * @param absFilePath  保存的绝对路径 如 c://123.png
+     * @param absFilePath  保存的绝对路径 如 c:/123.png
      * @return 保存的绝对路径
      */
     public static String uploadImageAbs(String base64ImgStr, String absFilePath) throws Exception {
         // 不存在就创建目录
-        String fileDir = absFilePath.substring(0, absFilePath.lastIndexOf(File.separator));
+        String fileDir = absFilePath.substring(0, absFilePath.lastIndexOf("/"));
         new File(fileDir).mkdirs();
         // 解密
         byte[] b = Base64.decodeBase64(base64ImgStr);

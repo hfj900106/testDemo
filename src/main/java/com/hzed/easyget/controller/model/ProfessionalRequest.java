@@ -31,4 +31,7 @@ public class ProfessionalRequest {
      */
     @NotBlank(message = "工作场所照片不能为空")
     private String workplaceBase64ImgStr ;
+
+    @NotBlank(message = "图片后缀不能为空")
+    private String picSuffix;
 }

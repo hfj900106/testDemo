@@ -481,73 +481,73 @@ public class UserLoginExample {
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneIsNull() {
-            addCriterion("login_phone is null");
+        public Criteria andLoginDeviceIsNull() {
+            addCriterion("login_device is null");
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneIsNotNull() {
-            addCriterion("login_phone is not null");
+        public Criteria andLoginDeviceIsNotNull() {
+            addCriterion("login_device is not null");
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneEqualTo(String value) {
-            addCriterion("login_phone =", value, "loginPhone");
+        public Criteria andLoginDeviceEqualTo(String value) {
+            addCriterion("login_device =", value, "loginDevice");
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneNotEqualTo(String value) {
-            addCriterion("login_phone <>", value, "loginPhone");
+        public Criteria andLoginDeviceNotEqualTo(String value) {
+            addCriterion("login_device <>", value, "loginDevice");
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneGreaterThan(String value) {
-            addCriterion("login_phone >", value, "loginPhone");
+        public Criteria andLoginDeviceGreaterThan(String value) {
+            addCriterion("login_device >", value, "loginDevice");
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneGreaterThanOrEqualTo(String value) {
-            addCriterion("login_phone >=", value, "loginPhone");
+        public Criteria andLoginDeviceGreaterThanOrEqualTo(String value) {
+            addCriterion("login_device >=", value, "loginDevice");
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneLessThan(String value) {
-            addCriterion("login_phone <", value, "loginPhone");
+        public Criteria andLoginDeviceLessThan(String value) {
+            addCriterion("login_device <", value, "loginDevice");
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneLessThanOrEqualTo(String value) {
-            addCriterion("login_phone <=", value, "loginPhone");
+        public Criteria andLoginDeviceLessThanOrEqualTo(String value) {
+            addCriterion("login_device <=", value, "loginDevice");
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneLike(String value) {
-            addCriterion("login_phone like", value, "loginPhone");
+        public Criteria andLoginDeviceLike(String value) {
+            addCriterion("login_device like", value, "loginDevice");
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneNotLike(String value) {
-            addCriterion("login_phone not like", value, "loginPhone");
+        public Criteria andLoginDeviceNotLike(String value) {
+            addCriterion("login_device not like", value, "loginDevice");
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneIn(List<String> values) {
-            addCriterion("login_phone in", values, "loginPhone");
+        public Criteria andLoginDeviceIn(List<String> values) {
+            addCriterion("login_device in", values, "loginDevice");
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneNotIn(List<String> values) {
-            addCriterion("login_phone not in", values, "loginPhone");
+        public Criteria andLoginDeviceNotIn(List<String> values) {
+            addCriterion("login_device not in", values, "loginDevice");
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneBetween(String value1, String value2) {
-            addCriterion("login_phone between", value1, value2, "loginPhone");
+        public Criteria andLoginDeviceBetween(String value1, String value2) {
+            addCriterion("login_device between", value1, value2, "loginDevice");
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneNotBetween(String value1, String value2) {
-            addCriterion("login_phone not between", value1, value2, "loginPhone");
+        public Criteria andLoginDeviceNotBetween(String value1, String value2) {
+            addCriterion("login_device not between", value1, value2, "loginDevice");
             return (Criteria) this;
         }
 
@@ -931,8 +931,8 @@ public class UserLoginExample {
             return (Criteria) this;
         }
 
-        public Criteria andLoginPhoneLikeInsensitive(String value) {
-            addCriterion("upper(login_phone) like", value.toUpperCase(), "loginPhone");
+        public Criteria andLoginDeviceLikeInsensitive(String value) {
+            addCriterion("upper(login_device) like", value.toUpperCase(), "loginDevice");
             return (Criteria) this;
         }
 

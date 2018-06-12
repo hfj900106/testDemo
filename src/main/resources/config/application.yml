@@ -56,6 +56,6 @@ system:
     pushBidCron: 0/5 * * * * ?
     bankLoan: false # 放款
     bankLoanCron: 0/5 * * * * ?
-  imgUploadPath: c://imgUpload # 上传图片文件目录
+  imgUploadPath: c:/imgUpload # 上传图片文件目录
 
 #======================================= 系统参数 结束 =======================================#

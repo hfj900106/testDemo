@@ -1,7 +1,7 @@
 package com.hzed.easyget.infrastructure.interceptor;
 
 import com.hzed.easyget.application.service.ComService;
-import com.hzed.easyget.application.service.LocaleMessageSourceService;
+import com.hzed.easyget.application.service.I18nService;
 import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.consts.LogConsts;
@@ -16,7 +16,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -30,6 +29,8 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     private ComService comService;
+    @Autowired
+    private I18nService i18nService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -45,12 +46,14 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 
         // 请求头忽略标志
         HeaderIgnore headerIgnore = mHandler.getMethodAnnotation(HeaderIgnore.class);
-        if(headerIgnore != null) {
+        if (headerIgnore != null) {
             return true;
         }
 
-        // header中一些必要参数校验
         GlobalHead globalHeadr = RequestUtil.getGlobalHead();
+        // 设置地区
+        i18nService.setLocale(globalHeadr.getI18n());
+        // header中一些必要参数校验
         comService.validateHeader(globalHeadr);
 
         // token验证
@@ -59,22 +62,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
             comService.validateToken(globalHeadr);
         }
 
-        String i18n = globalHeadr.getI18n();
-        Locale locale = null;
-        switch (i18n) {
-            case "id-ID":
-                locale = LocaleMessageSourceService.ind;
-                break;
-            case "zh-CN":
-                locale = Locale.CHINA;
-                break;
-            default:
-                locale = Locale.US;
-                break;
-        }
-        LocaleMessageSourceService.LOCALES.set(locale);
         return true;
     }
 
 }
-

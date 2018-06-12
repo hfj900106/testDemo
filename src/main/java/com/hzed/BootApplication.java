@@ -73,6 +73,6 @@ public class BootApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(BootApplication.class, args);
-//        log.info("==========恭喜大佬，贺喜大佬，项目启动成功！==========");
+        log.info("==========恭喜大佬，贺喜大佬，项目启动成功！==========");
     }
 }

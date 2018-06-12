@@ -171,7 +171,7 @@ public class ComService {
         }
 
         // 逾期天数
-        int overDays = DateUtil.daysBetween(bill.getRepaymentTime(), realRepaymentTime);
+        int overDays = DateUtil.getBetweenDays(bill.getRepaymentTime(), realRepaymentTime);
         // 逾期天数小于0则没有逾期费
         if (overDays <= 0) {
             return BigDecimal.ZERO;
@@ -179,7 +179,7 @@ public class ComService {
 
         Bid bid = bidRepository.findByIdWithExp(bill.getBidId());
 
-        EasyGetProduct product = new EasyGetProduct(bid.getLoanAmount(), bid.getPeriod());
+        EasyGetProduct product = new EasyGetProduct(bid.getLoanAmount());
         // 总逾期费
         BigDecimal allOverFee = product.getOverFee(overDays);
         // 已还逾期费

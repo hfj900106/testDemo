@@ -14,6 +14,7 @@ import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.NestedException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.*;
+import com.hzed.easyget.infrastructure.utils.AesUtil;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.FaJsonUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -86,8 +88,7 @@ public class AuthService {
         GlobalUser user = getGlobalUser();
         String platForm = getGlobalHead().getPlatform();
         Map<String, Object> map = new HashMap<>(16);
-        //TODO 待定参数
-        map.put("sign", "1212");
+        map.put("sign", AesUtil.aesEncode(user.getUserId(),request.getTimeStamp()));
         map.put("contacts", request.getContacts());
         map.put("callLogs", request.getCallLogs());
         map.put("userId", user.getUserId());
@@ -125,8 +126,7 @@ public class AuthService {
         GlobalUser user = getGlobalUser();
         String platForm = getGlobalHead().getPlatform();
         Map<String, Object> map = new HashMap<>(16);
-        //TODO 待定参数
-        map.put("sign", "1212");
+        map.put("sign", AesUtil.aesEncode(user.getUserId(),request.getTimeStamp()));
         map.put("sms", request.getMessage());
         map.put("userId", user.getUserId());
         map.put("source", "android".equals(platForm)?ComConsts.IS_ANDROID:ComConsts.IS_IOS);
@@ -138,7 +138,7 @@ public class AuthService {
     /**
      * 运营商认证 - 发送验证码接口
      */
-    public void operatorSendSmsCode(){
+    public void operatorSendSmsCode(@RequestBody PeratorSendRequest request){
         GlobalUser user = getGlobalUser();
         String isSend = redisService.getCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
         if (StringUtils.isNotBlank(isSend)) {
@@ -155,8 +155,8 @@ public class AuthService {
         //redis存一个发送标识，避免频繁发送
         redisService.setCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + userInfo.getId(), "operatorAuth", 60L);
         Map<String, Object> map = new HashMap<>(16);
+        map.put("sign", AesUtil.aesEncode(user.getUserId(),request.getTimeStamp()));
         //TODO 待定参数
-        map.put("sign", "1212");
         map.put("channelType", "1212");
         map.put("channelCode", "1212");
         map.put("realName", userInfo.getRealName());
@@ -190,8 +190,7 @@ public class AuthService {
             throw new ComBizException(BizCodeEnum.OVER_TIME_SMS_CODE);
         }
         Map<String, Object> map = new HashMap<>(16);
-        //TODO 待定参数
-        map.put("sign", "1212");
+        map.put("sign", AesUtil.aesEncode(user.getUserId(),request.getTimeStamp()));
         map.put("taskId", taskId);
         map.put("smsCode",request.getSmsCode());
         //TODO 待验证方式

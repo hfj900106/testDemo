@@ -17,4 +17,6 @@ public class MessagesRequest {
 
     @NotBlank(message = "短信内容不能为空")
     private String message;
+    @NotNull(message = "时间戳不能为空")
+    private Long timeStamp;
 }

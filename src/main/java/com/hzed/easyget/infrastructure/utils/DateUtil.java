@@ -72,6 +72,18 @@ public final class DateUtil {
     }
 
     /**
+     * 获取两个日期的天数差,去掉时分秒
+     */
+    public static int getBetweenDays(LocalDateTime startTime, LocalDateTime endTime) {
+
+        LocalDateTime start = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), 0, 0);
+        LocalDateTime end = LocalDateTime.of(endTime.getYear(), endTime.getMonth(), endTime.getDayOfMonth(), 0, 0);
+
+
+        return (int)Duration.between(start, end).toDays();
+    }
+
+    /**
      * 添加月
      */
     public static LocalDateTime addMonth(LocalDateTime startDate, int month) {
@@ -146,10 +158,10 @@ public final class DateUtil {
      * @param smdate 较小的时间
      * @param bdate  较大的时间
      */
-    public static int daysBetween(LocalDateTime smdate, LocalDateTime bdate) {
+   /* public static int daysBetween(LocalDateTime smdate, LocalDateTime bdate) {
         Duration duration = Duration.between(smdate, bdate);
         return (int) duration.toDays();
-    }
+    }*/
 
     /**
      * 判断大小

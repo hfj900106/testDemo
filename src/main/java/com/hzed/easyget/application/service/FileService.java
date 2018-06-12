@@ -1,5 +1,6 @@
 package com.hzed.easyget.application.service;
 
+import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.PicUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.time.LocalDateTime;
 
 /**
  * 文件操作
@@ -33,7 +35,7 @@ public class FileService {
 
         StringBuffer requestURL = request.getRequestURL();
         String requestPath = requestURL.substring(0, requestURL.indexOf("easy-get"));
-        String suffixPath = File.separator + "20180611" + File.separator + IdentifierGenerator.nextId() + "." + picSuffix;
+        String suffixPath = DateUtil.localDateTimeToStr3(LocalDateTime.now()) + File.separator + IdentifierGenerator.nextId() + "." + picSuffix;
         String s = requestPath + suffixPath;
         System.out.println("============="+s.replaceAll("\\\\", "/"));
         return PicUtil.uploadImageAbs(base64Img, imgUploadPath + suffixPath);

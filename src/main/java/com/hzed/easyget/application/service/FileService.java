@@ -22,6 +22,9 @@ public class FileService {
     @Value("${system.imgUploadPath}")
     private String imgUploadPath;
 
+    @Value("${server.context-path}")
+    private String contextPath;
+
     /**
      * 上传base64编码的图片到服务器目录
      *

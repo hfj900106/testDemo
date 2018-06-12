@@ -29,9 +29,9 @@ public class UserLogin implements Serializable {
     private String loginIp;
 
     /**
-     * 登录设备
+     * 登录设备,手机品牌如 vivo
      */
-    private String loginPhone;
+    private String loginDevice;
 
     /**
      * 登录时间
@@ -100,12 +100,12 @@ public class UserLogin implements Serializable {
         this.loginIp = loginIp == null ? null : loginIp.trim();
     }
 
-    public String getLoginPhone() {
-        return loginPhone;
+    public String getLoginDevice() {
+        return loginDevice;
     }
 
-    public void setLoginPhone(String loginPhone) {
-        this.loginPhone = loginPhone == null ? null : loginPhone.trim();
+    public void setLoginDevice(String loginDevice) {
+        this.loginDevice = loginDevice == null ? null : loginDevice.trim();
     }
 
     public LocalDateTime getLoginTime() {
@@ -167,7 +167,7 @@ public class UserLogin implements Serializable {
         sb.append(", platform=").append(platform);
         sb.append(", client=").append(client);
         sb.append(", loginIp=").append(loginIp);
-        sb.append(", loginPhone=").append(loginPhone);
+        sb.append(", loginDevice=").append(loginDevice);
         sb.append(", loginTime=").append(loginTime);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
@@ -215,8 +215,8 @@ public class UserLogin implements Serializable {
             return this;
         }
 
-        public Builder loginPhone(String loginPhone) {
-            obj.setLoginPhone(loginPhone);
+        public Builder loginDevice(String loginDevice) {
+            obj.setLoginDevice(loginDevice);
             return this;
         }
 
@@ -261,7 +261,7 @@ public class UserLogin implements Serializable {
         platform("platform"),
         client("client"),
         loginIp("login_ip"),
-        loginPhone("login_phone"),
+        loginDevice("login_device"),
         loginTime("login_time"),
         createBy("create_by"),
         createTime("create_time"),

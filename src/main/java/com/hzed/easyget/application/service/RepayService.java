@@ -77,7 +77,7 @@ public class RepayService {
                 repayListResponse.setTotalAmount(comService.getBidNoRepay(bidId, LocalDateTime.now()));
 
                 // 查询应还时间与当前时间对比，大于当前时间表示逾期，小于等于表示没到期
-                int days = DateUtil.daysBetween(bill.getRepaymentTime(), LocalDateTime.now());
+                int days = DateUtil.getBetweenDays(bill.getRepaymentTime(), LocalDateTime.now());
 
                 // 逾期未结清
                 if (days > 0) {
@@ -87,7 +87,7 @@ public class RepayService {
                 // 正常未结清
                 else {
                     repaymentResponse.setStatus(RepayStatusEnum.UN_REPAY.getCode().intValue());
-                    int days1 = DateUtil.daysBetween(LocalDateTime.now(), bill.getRepaymentTime());
+                    int days1 = DateUtil.getBetweenDays(LocalDateTime.now(), bill.getRepaymentTime());
                     repaymentResponse.setDays(days1);
                 }
             }
@@ -129,7 +129,7 @@ public class RepayService {
         if ((BidStatusEnum.CLEARED.getCode().toString()).equals(bid.getStatus().toString())) {
             repayDetailResponse.setStatus(RepayStatusEnum.CLEAR_REPAY.getCode());
         } else {
-            int days = DateUtil.daysBetween(bill.getRepaymentTime(), LocalDateTime.now());
+            int days = DateUtil.getBetweenDays(bill.getRepaymentTime(), LocalDateTime.now());
             repayDetailResponse.setStatus(days > 0 ? RepayStatusEnum.OVDUE_UN_REPAY.getCode() : RepayStatusEnum.UN_REPAY.getCode());
 
         }

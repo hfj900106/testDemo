@@ -9,7 +9,6 @@ import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
-import com.hzed.easyget.infrastructure.exception.BaseBizException;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
@@ -27,12 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
 import java.time.LocalDateTime;
-import java.util.Random;
 
 /**
  * @author wuchengwu
@@ -165,7 +159,7 @@ public class LoginService {
         String hasBeenSend = redisService.getCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile);
         if (StringUtils.isNotBlank(hasBeenSend)) {
             //发送过于频繁
-            throw new ComBizException(BizCodeEnum.FREQUENTLY_SEND);
+            throw new ComBizException(BizCodeEnum.FREQUENTLY_SMS_SEND);
         }
         if (StringUtils.isNotBlank(redisService.getCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile))) {
             //10分钟内重发需要验证码
@@ -215,7 +209,7 @@ public class LoginService {
         //获取缓存数据
         String cacheCode = redisService.getCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile);
         if (StringUtils.isBlank(cacheCode) || !code.equals(cacheCode)) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PICTURECODE);
+            throw new ComBizException(BizCodeEnum.PIC_CODE_ERROR);
         }
     }
 

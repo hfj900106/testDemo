@@ -19,10 +19,11 @@ public enum BizCodeEnum {
     ILLEGAL_REQUEST("9997", "无效的请求"),
     ALIYUN_EXCEPTION("9996", "阿里云操作异常"),
 
-    // 8-交易码
-    sahfsdkfsahd("8001", "用户余额不足"),
-    LOAN_TRANSACTION_ERROR("8002","支付放款接口异常"),
-    RECEIVER_TRANSACTION_ERROR("8003","支付收款接口异常"),
+    // 8-支付交易
+    NOT_ENOUGH_MONEY("8001", "用户余额不足"),
+    LOAN_TRANSACTION_ERROR("8002", "支付放款接口异常"),
+    RECEIVER_TRANSACTION_ERROR("8003", "支付收款接口异常"),
+    OVER_REPAYMENT_MONEY("8004", "还款金额大于项目待还总额"),
 
     // 1-请求业务校验
     ILLEGAL_PARAM("1000", "请求参数非法"),
@@ -34,24 +35,18 @@ public enum BizCodeEnum {
     ILLEGAL_IMEI("1006", "无效的imei"),
 
     ILLEGAL_SMSCODE("1007", "无效的验证码"),
-    ERROR_SMSCODE("1008","验证码错误或已过期"),
+    ERROR_SMSCODE("1008", "验证码错误或已过期"),
     USER_NOTEXISTS("1009", "用户不存在"),
     DICT_NOTEXISTS("1010", "字典不存在"),
     NO_USEFUL_PRODUCT("1011", "无可用产品"),
     TOKEN_EXPIRE("1012", "用户登录信息失效"),
-    ILLEGAL_PICTURECODE("1013", "图片验证码错误"),
+    PIC_CODE_ERROR("1013", "图片验证码错误"),
     UN_IDENTITY_AUTH("1014", "用户未进行身份认证"),
     OVER_TIME_SMS_CODE("1015", "验证码超时"),
-    FREQUENTLY_SEND("1016", "短信发送过于频繁"),
+    FREQUENTLY_SMS_SEND("1016", "短信发送过于频繁"),
     SMS_CODE_SEND_FAIL("1017", "短信发送失败"),
     PIC_CODE_TO_CHECK("1018", "需要图片验证码校验"),
-    HAS_EXISTS_BID("1019","有未结清标地"),
-
-    // 2-上传文件异常
-    FILE_FORMAT_ERROR("","此格式不支持"),
-    FILE_NULL_ERROR("","文件不能为空"),
-
-    ;
+    BID_EXISTS("1019", "有未结清标的"),;
 
 
     // 20-

@@ -143,7 +143,7 @@ public class AuthService {
         String isSend = redisService.getCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
         if (StringUtils.isNotBlank(isSend)) {
             //发送过于频繁
-            throw new ComBizException(BizCodeEnum.FREQUENTLY_SEND);
+            throw new ComBizException(BizCodeEnum.FREQUENTLY_SMS_SEND);
         }
         User userInfo = userRepository.findById(user.getUserId());
         String realName = userInfo.getRealName();

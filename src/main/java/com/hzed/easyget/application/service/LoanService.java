@@ -53,7 +53,7 @@ public class LoanService {
     public SubmitLoanResponse submitLoan(SubmitLoanRequest request) {
         Long userId = RequestUtil.getGlobalUser().getUserId();
         if (!comService.isLoan(userId)) {
-            throw new ComBizException(BizCodeEnum.HAS_EXISTS_BID);
+            throw new ComBizException(BizCodeEnum.BID_EXISTS);
         }
         Bid bid = new Bid();
         Long bidId = IdentifierGenerator.nextId();

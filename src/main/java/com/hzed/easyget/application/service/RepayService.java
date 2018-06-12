@@ -223,7 +223,7 @@ public class RepayService {
         // 判断还款金额是否大于项目待还总额
         BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, realRepaymentTime);
         if (repayAmount.compareTo(bidNoRepay) > 0) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "还款金额是否大于项目待还总额");
+            throw new ComBizException(BizCodeEnum.OVER_REPAYMENT_MONEY);
         }
 
         Bid bid = bidRepository.findByIdWithExp(bidId);

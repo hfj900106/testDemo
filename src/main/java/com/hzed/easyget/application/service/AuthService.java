@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -88,14 +87,14 @@ public class AuthService {
         GlobalUser user = getGlobalUser();
         String platForm = getGlobalHead().getPlatform();
         Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(),request.getTimeStamp()));
+        map.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
         map.put("contacts", request.getContacts());
         map.put("callLogs", request.getCallLogs());
         map.put("userId", user.getUserId());
-        map.put("source", "android".equals(platForm)?ComConsts.IS_ANDROID:ComConsts.IS_IOS);
+        map.put("source", "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS);
         //TODO 待验证方式
         String response = template.postForObject("/app/risk/Contacts/add", map, String.class);
-        afterResponse(response,"通讯录认证返回数据异常",user.getUserId(),"通讯录认证");
+        afterResponse(response, "通讯录认证返回数据异常", user.getUserId(), "通讯录认证");
     }
 
     /**
@@ -126,19 +125,19 @@ public class AuthService {
         GlobalUser user = getGlobalUser();
         String platForm = getGlobalHead().getPlatform();
         Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(),request.getTimeStamp()));
+        map.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
         map.put("sms", request.getMessage());
         map.put("userId", user.getUserId());
-        map.put("source", "android".equals(platForm)?ComConsts.IS_ANDROID:ComConsts.IS_IOS);
+        map.put("source", "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS);
         //TODO 待验证方式
         String response = template.postForObject("/app/risk/Sms/add", map, String.class);
-        afterResponse(response,"短信认证返回数据异常",user.getUserId(),"短信认证");
+        afterResponse(response, "短信认证返回数据异常", user.getUserId(), "短信认证");
     }
 
     /**
      * 运营商认证 - 发送验证码接口
      */
-    public void operatorSendSmsCode(@RequestBody PeratorSendRequest request){
+    public void operatorSendSmsCode(PeratorSendRequest request) {
         GlobalUser user = getGlobalUser();
         String isSend = redisService.getCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
         if (StringUtils.isNotBlank(isSend)) {
@@ -155,7 +154,7 @@ public class AuthService {
         //redis存一个发送标识，避免频繁发送
         redisService.setCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + userInfo.getId(), "operatorAuth", 60L);
         Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(),request.getTimeStamp()));
+        map.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
         //TODO 待定参数
         map.put("channelType", "1212");
         map.put("channelCode", "1212");
@@ -166,14 +165,14 @@ public class AuthService {
         //TODO 待验证方式
         String response = template.postForObject("/app/riskOperator/createTaskAndlogin", map, String.class);
         if (StringUtils.isNotBlank(response)) {
-            JSONObject jsonObject = FaJsonUtil.parseObj(response,JSONObject.class);
-            if(null==jsonObject){
-                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION,"运营商认证发送验证码返回数据异常");
+            JSONObject jsonObject = FaJsonUtil.parseObj(response, JSONObject.class);
+            if (null == jsonObject) {
+                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "运营商认证发送验证码返回数据异常");
             }
-            if(Integer.valueOf(jsonObject.get("code").toString())==ComConsts.RISK_OK){
+            if (Integer.valueOf(jsonObject.get("code").toString()) == ComConsts.RISK_OK) {
                 String taskId = jsonObject.get("task_id").toString();
                 redisService.setCache(RedisConsts.IDENTITY_AUTH_CODE + RedisConsts.SPLIT + userInfo.getId(), taskId, 3600L);
-            }else {
+            } else {
                 throw new ComBizException(BizCodeEnum.UN_IDENTITY_AUTH);
             }
         }
@@ -183,19 +182,19 @@ public class AuthService {
     /**
      * 运营商认证 - 输入验证码认证运行商
      */
-    public void operatorAuth(PeratorAuthRequest request){
+    public void operatorAuth(PeratorAuthRequest request) {
         GlobalUser user = getGlobalUser();
         String taskId = redisService.getCache(RedisConsts.IDENTITY_AUTH_CODE + RedisConsts.SPLIT + user.getUserId());
-        if(StringUtils.isBlank(taskId)){
+        if (StringUtils.isBlank(taskId)) {
             throw new ComBizException(BizCodeEnum.OVER_TIME_SMS_CODE);
         }
         Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(),request.getTimeStamp()));
+        map.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
         map.put("taskId", taskId);
-        map.put("smsCode",request.getSmsCode());
+        map.put("smsCode", request.getSmsCode());
         //TODO 待验证方式
         String response = template.postForObject("/app/riskOperator/sendSmsCode", map, String.class);
-        afterResponse(response,"运营商验证码认证返回数据异常",user.getUserId(),"运营商认证");
+        afterResponse(response, "运营商验证码认证返回数据异常", user.getUserId(), "运营商认证");
     }
 
     /**
@@ -236,8 +235,8 @@ public class AuthService {
         Map<String, Object> map = new HashMap<>(16);
         map.put("imgBase64", idCardBase64ImgStr);
         map.put("pictureSuffix", picSuffix);
-        String idCardPhotoPath ;
-        String facePhotoPath ;
+        String idCardPhotoPath;
+        String facePhotoPath;
         try {
             idCardPhotoPath = getPhotoPath(map);
 
@@ -267,7 +266,7 @@ public class AuthService {
             UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "身份信息认证");
             workRepository.insertIdentityInfo(userPic, userAuthStatus, userObj);
         } catch (NestedException e) {
-            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION,"身份认证失败");
+            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "身份认证失败");
         }
 
     }
@@ -275,12 +274,12 @@ public class AuthService {
     /**
      * 专业信息认证
      */
-    public void professionalAuth(ProfessionalRequest request){
+    public void professionalAuth(ProfessionalRequest request) {
         Map<String, Object> map = new HashMap<>(16);
         map.put("imgBase64", request.getEmployeeCardBase64ImgStr());
         map.put("pictureSuffix", request.getPicSuffix());
-        String employeeCardPhotoPath ;
-        String workplacePhotoPath ;
+        String employeeCardPhotoPath;
+        String workplacePhotoPath;
         try {
             //照片上传
             employeeCardPhotoPath = getPhotoPath(map);
@@ -289,7 +288,7 @@ public class AuthService {
             workplacePhotoPath = getPhotoPath(map);
 
             GlobalUser user = getGlobalUser();
-            Work work =new Work();
+            Work work = new Work();
             work.setId(IdentifierGenerator.nextId());
             work.setUserId(user.getUserId());
             work.setJobType(request.getJobType().byteValue());
@@ -302,29 +301,29 @@ public class AuthService {
             //获取UserAuthStatus对象
             UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "专业信息认证");
             professionalRepository.insertProfessionalAndUserAuthStatus(work, userAuthStatus);
-        }catch (Exception ex){
-            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION,"专业信息认证失败");
+        } catch (Exception ex) {
+            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "专业信息认证失败");
         }
 
     }
 
-    private void afterResponse(String response,String ExMsg,Long userId,String remark){
+    private void afterResponse(String response, String ExMsg, Long userId, String remark) {
         if (StringUtils.isNotBlank(response)) {
-            JSONObject jsonObject = FaJsonUtil.parseObj(response,JSONObject.class);
-            if(null==jsonObject){
-                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION,ExMsg);
+            JSONObject jsonObject = FaJsonUtil.parseObj(response, JSONObject.class);
+            if (null == jsonObject) {
+                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, ExMsg);
             }
-            if(Integer.valueOf(jsonObject.get("code").toString())==ComConsts.RISK_OK){
+            if (Integer.valueOf(jsonObject.get("code").toString()) == ComConsts.RISK_OK) {
                 //修改认证表的状态
                 UserAuthStatus userAuthStatus = buildUserAuthStatus(userId, remark);
                 authStatusRepository.insertSelective(userAuthStatus);
-            }else {
-                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION,jsonObject.get("msg").toString());
+            } else {
+                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, jsonObject.get("msg").toString());
             }
         }
     }
 
-    private String getPhotoPath(Map<String, Object> map){
+    private String getPhotoPath(Map<String, Object> map) {
         UploadImgResponse response = template.postForObject("/hzed/easy-get/upload", map, UploadImgResponse.class);
         return response.getVisitUrl();
     }

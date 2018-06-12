@@ -2,6 +2,8 @@ package com.hzed.easyget.controller.model;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * 试算接口返回参数
  *
@@ -10,5 +12,5 @@ import lombok.Data;
  */
 @Data
 public class LoanCalculateResponse {
-    private String totalAmount;
+    private BigDecimal totalAmount;
 }

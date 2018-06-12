@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.BillLedgerItemEnum;
 import com.hzed.easyget.application.enums.BillStatusEnum;
 import com.hzed.easyget.application.service.product.model.BillInfo;
-import com.hzed.easyget.application.service.product.model.EasyGetPruduct;
+import com.hzed.easyget.application.service.product.model.EasyGetProduct;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -37,7 +37,7 @@ public class EasyGetService implements ProductService {
     @Override
     public List<Bill> createBills(Bid bid) {
         List<Bill> lists = Lists.newArrayList();
-        lists.add(buildBill(bid.getId() ,new EasyGetPruduct(bid.getLoanAmount()).getRepaymentAmount()));
+        lists.add(buildBill(bid.getId() ,new EasyGetProduct(bid.getLoanAmount()).getRepaymentAmount()));
         return lists;
     }
 
@@ -45,9 +45,9 @@ public class EasyGetService implements ProductService {
     public List<BillLedger> createBillLedger(Bill bill,Bid bid) {
         List<BillLedger> lists = Lists.newArrayList();
         //本金台账
-        lists.add(buildBillLedger( bill.getId(),new EasyGetPruduct(bid.getLoanAmount()).getAmount(), BillLedgerItemEnum.CORPUS.getCode().byteValue()));
+        lists.add(buildBillLedger( bill.getId(),new EasyGetProduct(bid.getLoanAmount()).getAmount(), BillLedgerItemEnum.CORPUS.getCode().byteValue()));
         //砍头息台账
-        lists.add(buildBillLedger( bill.getId(),new EasyGetPruduct(bid.getLoanAmount()).getTailFee(),BillLedgerItemEnum.TAIL_FEE.getCode().byteValue()));
+        lists.add(buildBillLedger( bill.getId(),new EasyGetProduct(bid.getLoanAmount()).getTailFee(),BillLedgerItemEnum.TAIL_FEE.getCode().byteValue()));
         return lists;
     }
 

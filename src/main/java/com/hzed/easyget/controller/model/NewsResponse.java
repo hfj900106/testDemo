@@ -15,9 +15,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BombResponse {
+public class NewsResponse {
 
-    private String bombTitle;
+    private String newsTitle;
     private String imgUrl;
     private String toUrl;
 }

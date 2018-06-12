@@ -11,7 +11,7 @@ import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.BaseBizException;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
-import com.hzed.easyget.infrastructure.model.GlobalHeadr;
+import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
@@ -61,7 +61,7 @@ public class LoginService {
 
     public LoginByCodeResponse loginByCode(LoginByCodeRequest request) {
 
-        GlobalHeadr globalHead = RequestUtil.getGlobalHead();
+        GlobalHead globalHead = RequestUtil.getGlobalHead();
         String mobile = request.getMobile();
         String smsCode = request.getSmsCode();
         String platform = globalHead.getPlatform();

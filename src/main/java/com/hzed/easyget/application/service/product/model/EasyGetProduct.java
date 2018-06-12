@@ -15,11 +15,11 @@ import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
-public class EasyGetPruduct {
+public class EasyGetProduct {
     private BigDecimal amount;
     private Integer time;
 
-    public EasyGetPruduct(BigDecimal amount) {
+    public EasyGetProduct(BigDecimal amount) {
         this.amount = amount;
     }
 

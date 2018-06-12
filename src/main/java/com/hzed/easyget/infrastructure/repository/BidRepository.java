@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wuchengwu
@@ -64,5 +63,11 @@ public class BidRepository {
     }
     public List<BidExt> findBankLoanBids() {
         return bidExtMapper.findBankLoanBids();
+    }
+
+    public List<Bid> findByUserId(Long userId) {
+        BidExample example = new BidExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        return bidMapper.selectByExample(example);
     }
 }

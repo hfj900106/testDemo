@@ -5,6 +5,7 @@ import com.hzed.easyget.persistence.auto.entity.example.UserTokenExample;
 import com.hzed.easyget.persistence.auto.mapper.UserTokenMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author wuchengwu
@@ -23,6 +24,7 @@ public class UserTokenRepository {
         return userTokenMapper.selectOneByExample(example);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int updateByUserIdAndImei(UserToken userToken) {
         UserTokenExample example = new UserTokenExample();
         example.createCriteria().andIdEqualTo(userToken.getId());

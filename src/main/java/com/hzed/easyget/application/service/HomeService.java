@@ -15,7 +15,10 @@ import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
-import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.auto.entity.Dict;
+import com.hzed.easyget.persistence.auto.entity.News;
+import com.hzed.easyget.persistence.auto.entity.Product;
+import com.hzed.easyget.persistence.auto.entity.UserToken;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,9 +46,7 @@ public class HomeService {
     @Autowired
     private NewsRepository newsRepository;
     @Autowired
-    private BidRepository bidRepository;
-    @Autowired
-    private BillRepository billRepository;
+    private ComService comService;
 
     private static final String ANDROID_BOMB = "android_bomb";
     private static final String IOS_BOMB = "ios_bomb";
@@ -160,15 +161,7 @@ public class HomeService {
 
     public LoanResponse startLoan() {
         Long userId = RequestUtil.getGlobalUser().getUserId();
-        List<Bid> bidList = bidRepository.findByUserId(userId);
-
-        if (bidList.isEmpty() || bidList == null) {
-            return LoanResponse.builder().isLoan(true).build();
-        }
-        for (Bid bid : bidList) {
-            //通过bidId获取账单，账单存在未结清，不可借
-         //   billRepository.findBillByBidId(bid.getId());
-        }
-        return LoanResponse.builder().isLoan(false).build();
+        boolean isLoan = comService.isLoan(userId);
+        return LoanResponse.builder().isLoan(isLoan).build();
     }
 }

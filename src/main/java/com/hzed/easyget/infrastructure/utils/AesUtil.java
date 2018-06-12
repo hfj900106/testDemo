@@ -147,14 +147,16 @@ public class AesUtil {
 
     /**
      * 加密
-     *
-     * @param data
+     * @param userId
+     * @param timeStamp
      * @return
-     * @author lfq
-     * @date 2017年11月6日
      */
-    public static String aesEncode(String data) {
-        return aesEncode(PRIVATE_KEY, data);
+    public static String aesEncode(Long userId, Long timeStamp) {
+        Map<String, Long> param = Maps.newHashMap();
+        param.put("userId", userId);
+        param.put("timeStamp", timeStamp);
+        return aesEncode(PRIVATE_KEY, param.toString());
+
     }
 
     public static void main(String[] args) {
@@ -162,7 +164,7 @@ public class AesUtil {
         Long timeStamp = System.currentTimeMillis();
         param.put("userId", "123");
         param.put("timeStamp", timeStamp);
-        System.out.println(aesEncode(param.toString()));
+//        System.out.println(aesEncode(param.toString()));
         System.out.println(timeStamp);
     }
 

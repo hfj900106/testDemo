@@ -7,8 +7,6 @@ import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.time.LocalDateTime;
 
 /**
@@ -31,16 +29,20 @@ public class FileService {
      * 上传base64编码的图片到服务器目录
      *
      * @param base64Img 图片
+     * @param picSuffix 后缀 如png、jpg
      * @return 服务器路径
      */
     public String uploadBase64Img(String base64Img, String picSuffix) throws Exception {
-        HttpServletRequest request = RequestUtil.getHttpServletRequest();
-
-        StringBuffer requestURL = request.getRequestURL();
-        String requestPath = requestURL.substring(0, requestURL.indexOf("easy-get"));
-        String suffixPath = DateUtil.localDateTimeToStr3(LocalDateTime.now()) + File.separator + IdentifierGenerator.nextId() + "." + picSuffix;
-        String s = requestPath + suffixPath;
-        System.out.println("============="+s.replaceAll("\\\\", "/"));
-        return PicUtil.uploadImageAbs(base64Img, imgUploadPath + suffixPath);
+        // 请求url
+        StringBuffer requestURL = RequestUtil.getHttpServletRequest().getRequestURL();
+        // 取有效路径 如 http://localhost:8150/hzed
+        String requestPath = requestURL.substring(0, requestURL.indexOf(contextPath) + contextPath.length());
+        // 文件地址 如 /20180612/3214234234234.png
+        String suffixPath = "/" + DateUtil.localDateTimeToStr3(LocalDateTime.now()) + "/" + IdentifierGenerator.nextId() + "." + picSuffix;
+        // 可访问地址 如 http://localhost:8150/hzed/20180612/3214234234234.png
+        String returnUrl = requestPath + suffixPath;
+        // 上传至 配置的 imgUploadPath 目录
+        PicUtil.uploadImageAbs(base64Img, imgUploadPath + suffixPath);
+        return returnUrl;
     }
 }

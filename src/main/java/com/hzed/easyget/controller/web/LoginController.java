@@ -51,7 +51,8 @@ public class LoginController {
         try {
             String imgPath = "C:\\Users\\Administrator\\Desktop\\jifei.png";
             String base64String = PicUtil.picToBase64(imgPath);
-            fileService.uploadBase64Img(base64String, "png");
+            String s = fileService.uploadBase64Img(base64String, "png");
+            System.out.println("=====" + s);
         } catch (Exception e) {
 
         }
@@ -71,7 +72,7 @@ public class LoginController {
     @ModuleFunc("验证图片验证码")
     @PostMapping("/checkPictureCode")
     public Response checkPictureCode(@RequestBody CheckPictureCodeRequest request) {
-        loginService.checkPictureCode(request.getMobile(),request.getCode());
+        loginService.checkPictureCode(request.getMobile(), request.getCode());
         return Response.getSuccessResponse();
     }
 }

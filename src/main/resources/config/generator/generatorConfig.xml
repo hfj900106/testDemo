@@ -54,11 +54,11 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table tableName="t_loan_repay_info_flow_job" domainObjectName="RepayInfoFlowJob">
-            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-            <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-            <columnOverride column="real_repayment_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-        </table>
+        <!--<table tableName="t_loan_repay_info_flow_job" domainObjectName="RepayInfoFlowJob">-->
+            <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="real_repayment_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
 
         <!--<table tableName="t_loan_auth_item" domainObjectName="AuthItem" >-->
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
@@ -130,10 +130,20 @@
         <!--<table tableName="t_loan_user" domainObjectName="User" >-->
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
             <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
-            <!--<columnOverride column="last_login_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
-            <!--<columnOverride column="locked_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
-            <!--<columnOverride column="blacklist_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
+        <table tableName="t_loan_user_login" domainObjectName="UserLogin" >
+            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+            <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+            <columnOverride column="login_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        </table>
+        <table tableName="t_loan_user_tab" domainObjectName="UserTab" >
+            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+            <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        </table>
+        <table tableName="t_loan_user_status" domainObjectName="UserStatus" >
+            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+            <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        </table>
 
         <!--<table tableName="t_loan_user_auth_status" domainObjectName="UserAuthStatus" >-->
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->

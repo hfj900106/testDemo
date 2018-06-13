@@ -124,7 +124,7 @@ public class PicUtil {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
         // 产生Image对象的Graphics对象,改对象可以在图像上进行各种绘制操作
         Graphics graphics = image.getGraphics();
-        graphics.setColor(Color.green);
+        graphics.setColor(new Color(232, 245, 243));
         graphics.fillRect(0, 0, width, height);
         // 绘制随机字符
         String randomString = "";

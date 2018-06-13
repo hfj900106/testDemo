@@ -29,44 +29,6 @@ public class ExpHandlerAdvice {
     @Autowired
     private I18nService i18nService;
 
-//    @ExceptionHandler(Exception.class)
-//    public Response handler(Exception ex) {
-//
-//        Response resp = Response.getFailResponse();
-//        if (ex instanceof ComBizException) {
-//            ComBizException cbEx = (ComBizException) ex;
-//            log.error("业务异常：{}", cbEx.getSerializeMsg(), cbEx);
-//            resp.setCode(cbEx.getErrorCode());
-//            resp.setMessage(cbEx.getSerializeMsg());
-//        } else if (ex instanceof WarnException) {
-//            WarnException wEx = (WarnException) ex;
-//            log.warn("业务警告：{}", wEx.getSerializeMsg(), wEx);
-//            resp.setCode(wEx.getErrorCode());
-//            resp.setMessage(wEx.getSerializeMsg());
-//        } else if (ex instanceof NestedException) {
-//            NestedException nEx = (NestedException) ex;
-//            log.warn("内部异常：{}", nEx.getSerializeMsg());
-//            resp.setCode(nEx.getErrorCode());
-//            resp.setMessage(nEx.getSerializeMsg());
-//        } else {
-//            // 单独处理不传请求参数的情况
-//            String requiredRequestBodyIsMissing = "Required request body is missing";
-//            if (ex.toString().indexOf(requiredRequestBodyIsMissing) > 0) {
-//                resp.setCode(BizCodeEnum.ILLEGAL_PARAM.getCode());
-//                resp.setMessage(BizCodeEnum.ILLEGAL_PARAM.getMessage());
-//            }
-//
-//            log.error("其他异常：", ex);
-//        }
-//
-//
-//        // 统一做国际化处理
-//        resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
-//
-//        return resp;
-//    }
-
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Response handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         List<ObjectError> errors = ex.getBindingResult().getAllErrors();
@@ -88,15 +50,15 @@ public class ExpHandlerAdvice {
     }
 
     @ExceptionHandler(WarnException.class)
-    public Response handlerWarnException(WarnException wEx) {
-        log.warn("业务警告：{}", wEx.getSerializeMsg(), wEx);
-        return new Response(wEx.getErrorCode(), wEx.getSerializeMsg());
+    public Response handlerWarnException(WarnException ex) {
+        log.warn("业务警告：{}", ex.getSerializeMsg(), ex);
+        return new Response(ex.getErrorCode(), i18nService.getBizCodeMessage(ex.getErrorCode()));
     }
 
     @ExceptionHandler(NestedException.class)
-    public Response handlerNestedException(NestedException nEx) {
-        log.warn("内部异常：{}", nEx.getSerializeMsg());
-        return new Response(nEx.getErrorCode(), nEx.getSerializeMsg());
+    public Response handlerNestedException(NestedException ex) {
+        log.warn("内部异常：{}", ex.getSerializeMsg());
+        return new Response(ex.getErrorCode(), i18nService.getBizCodeMessage(ex.getErrorCode()));
     }
 
     @ExceptionHandler(Exception.class)
@@ -110,7 +72,7 @@ public class ExpHandlerAdvice {
         }
 
         log.error("其他异常：", ex);
-
+        resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
         return resp;
     }
 

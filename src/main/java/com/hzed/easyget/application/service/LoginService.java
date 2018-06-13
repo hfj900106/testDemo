@@ -76,6 +76,7 @@ public class LoginService {
             user.setMobileAccount(mobile);
             user.setPlatform(platform);
             user.setClient((byte) 1);
+            user.setImei(RequestUtil.getGlobalHead().getImei());
             // 生成token
             GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
             token = JwtUtil.createToken(newUserToken);

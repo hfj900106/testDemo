@@ -20,16 +20,25 @@ public class I18nService {
      * 根据资源文件的key拿到内容
      * @param bizCode BizCodeEnum中的code
      */
-    public String getBizCodeMessage(String bizCode) {
+    public String getBizCodeMessage(String bizCode, Object[] objs) {
         String key = "bizCode." + bizCode;
-        return getMessage(key);
+        return getMessage(key, objs);
+    }
+
+    public String getBizCodeMessage(String bizCode, Object[] objs, Locale locale) {
+        String key = "bizCode." + bizCode;
+        return getMessage(key, objs, locale);
     }
 
     /**
      * 根据资源文件的key拿到内容
      * @param key key
      */
-    public String getMessage(String key) {
-        return messageSource.getMessage(key, null, Locale.getDefault());
+    public String getMessage(String key, Object[] objs) {
+        return getMessage(key, objs, Locale.getDefault());
+    }
+
+    public String getMessage(String key, Object[] objs, Locale locale) {
+        return messageSource.getMessage(key, objs, locale);
     }
 }

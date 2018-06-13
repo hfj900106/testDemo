@@ -2,6 +2,7 @@ package com.hzed.easyget.infrastructure.exception;
 
 
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import lombok.Getter;
 
 /**
  * 业务异常，对外
@@ -9,7 +10,10 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
  * @author guichang
  * @since 2018/05/16
  */
+@Getter
 public class ComBizException extends BaseBizException {
+
+    private Object[] objs;
 
     /**
      * 构造器 含错误码
@@ -18,6 +22,11 @@ public class ComBizException extends BaseBizException {
      */
     public ComBizException(BizCodeEnum codeEnum) {
         super(codeEnum.getCode(), codeEnum.getMessage());
+    }
+
+    public ComBizException(BizCodeEnum codeEnum, Object... objs) {
+        super(codeEnum.getCode(), codeEnum.getMessage());
+        this.objs = objs;
     }
 
     /**

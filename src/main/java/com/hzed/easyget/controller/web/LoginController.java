@@ -41,7 +41,7 @@ public class LoginController {
     }
 
     @TokenIgnore
-    @ModuleFunc(value = "手机验证码登录")
+    @ModuleFunc("手机验证码登录")
     @PostMapping("/loginByCode")
     public Response<LoginByCodeResponse> loginByCode(@Valid @RequestBody LoginByCodeRequest request) {
         LoginByCodeResponse response = loginService.loginByCode(request);

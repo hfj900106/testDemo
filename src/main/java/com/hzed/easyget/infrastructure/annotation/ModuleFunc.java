@@ -11,8 +11,7 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface
-ModuleFunc {
+public @interface ModuleFunc {
     /**
      * 模块名
      */
@@ -24,6 +23,7 @@ ModuleFunc {
     boolean isParameterPrint() default true;
 
     /**
+     * 已废弃 用@Valid替代
      * 校验请求参数的标志 默认true-校验
      */
     @Deprecated

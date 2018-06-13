@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  * @date 2018/6/9
  */
 @Service
-public class RiskCallBackService {
+public class CallBackService {
 
     @Autowired
     private TempTableRepository tempTableRepository;

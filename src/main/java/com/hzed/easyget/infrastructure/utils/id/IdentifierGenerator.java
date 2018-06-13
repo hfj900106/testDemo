@@ -31,4 +31,8 @@ public class IdentifierGenerator {
 
     }
 
+    public static String nextSeqNo() {
+        return nextId() + "hzed";
+    }
+
 }

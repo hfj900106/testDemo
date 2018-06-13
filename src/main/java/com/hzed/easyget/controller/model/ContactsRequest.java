@@ -15,6 +15,4 @@ import javax.validation.constraints.NotNull;
 public class ContactsRequest {
     private String contacts;
     private String callLogs;
-    @NotNull(message = "{param.auth.timeStamp.isNotEmpty}")
-    private Long timeStamp;
 }

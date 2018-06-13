@@ -83,11 +83,13 @@ public class AuthService {
     public void authContacts(ContactsRequest request) {
         GlobalUser user = getGlobalUser();
         String platForm = getGlobalHead().getPlatform();
+        Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
+        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
+        map.put("userId", user.getUserId());
+        map.put("timeStamp", timeStamp);
         map.put("contacts", request.getContacts());
         map.put("callLogs", request.getCallLogs());
-        map.put("userId", user.getUserId());
         map.put("source", "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS);
         //TODO 待验证方式
         String response = template.postForObject("/app/risk/Contacts/add", map, String.class);
@@ -121,10 +123,12 @@ public class AuthService {
     public void authMessages(MessagesRequest request) {
         GlobalUser user = getGlobalUser();
         String platForm = getGlobalHead().getPlatform();
+        Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
+        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
         map.put("sms", request.getMessage());
         map.put("userId", user.getUserId());
+        map.put("timeStamp", timeStamp);
         map.put("source", "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS);
         //TODO 待验证方式
         String response = template.postForObject("/app/risk/Sms/add", map, String.class);
@@ -134,7 +138,7 @@ public class AuthService {
     /**
      * 运营商认证 - 发送验证码接口
      */
-    public void operatorSendSmsCode(PeratorSendRequest request) {
+    public void operatorSendSmsCode() {
         GlobalUser user = getGlobalUser();
         String isSend = redisService.getCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
         if (StringUtils.isNotBlank(isSend)) {
@@ -150,15 +154,17 @@ public class AuthService {
         }
         //redis存一个发送标识，避免频繁发送
         redisService.setCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + userInfo.getId(), "operatorAuth", 60L);
+        Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
-        //TODO 待定参数
-        map.put("channelType", "1212");
-        map.put("channelCode", "1212");
+        map.put("sign", AesUtil.aesEncode(user.getUserId(),timeStamp));
+        map.put("userId", userInfo.getId());
+        map.put("timeStamp", timeStamp);
         map.put("realName", userInfo.getRealName());
         map.put("identityCode", userInfo.getIdCardNo());
         map.put("userMobile", userInfo.getMobileAccount());
-        map.put("userId", userInfo.getId());
+        //TODO 待定参数
+        map.put("channelType", "1212");
+        map.put("channelCode", "1212");
         //TODO 待验证方式
         String response = template.postForObject("/app/riskOperator/createTaskAndlogin", map, String.class);
         if (StringUtils.isNotBlank(response)) {
@@ -184,8 +190,11 @@ public class AuthService {
         if (StringUtils.isBlank(taskId)) {
             throw new ComBizException(BizCodeEnum.OVER_TIME_SMS_CODE);
         }
+        Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
+        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
+        map.put("userId", user.getUserId());
+        map.put("timeStamp", timeStamp);
         map.put("taskId", taskId);
         map.put("smsCode", request.getSmsCode());
         //TODO 待验证方式
@@ -223,13 +232,13 @@ public class AuthService {
     public IdCardRecognitionResponse idCardRecognition(IdCardRecognitionRequest request) {
         IdCardRecognitionResponse recognitionResponse = new IdCardRecognitionResponse();
         GlobalUser user = getGlobalUser();
-        Long timeStamp = request.getTimeStamp();
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
+        Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
+        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
+        map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
         map.put("ocrImageStr", idCardBase64ImgStr);
-        map.put("userId", user.getUserId());
         //TODO 待验证方式
         String response = template.postForObject("/app/riskOperator/OCR", map, String.class);
         if (StringUtils.isNotBlank(response)) {
@@ -261,13 +270,13 @@ public class AuthService {
      */
     public void faceRecognition(FaceRecognitionRequest request) {
         GlobalUser user = getGlobalUser();
-        Long timeStamp = request.getTimeStamp();
         String faceBase64ImgStr = request.getFaceBase64ImgStr();
+        Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
+        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
+        map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
         map.put("appImageStr", faceBase64ImgStr);
-        map.put("userId", user.getUserId());
         //TODO 待验证方式
         Boolean isSuccess = template.postForObject("/app/riskOperator/faceComparison", map, Boolean.class);
         if (!isSuccess) {
@@ -283,11 +292,12 @@ public class AuthService {
         String realName = request.getRealName();
         String idCardNo = request.getIdCardNo();
         Integer gender = request.getGender();
+        Long timeStamp = System.currentTimeMillis();
         //调风控身份认证接口，认证通过记录表数据
         Map<String, Object> mapRisk = new HashMap<>(16);
-        mapRisk.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
-        mapRisk.put("timeStamp", request.getTimeStamp());
+        mapRisk.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
         mapRisk.put("userId", user.getUserId());
+        mapRisk.put("timeStamp", timeStamp);
         //TODO 待验证方式
         Boolean isSuccess = template.postForObject("/app/riskOperator/getIdentityReport", mapRisk, Boolean.class);
         if (!isSuccess) {

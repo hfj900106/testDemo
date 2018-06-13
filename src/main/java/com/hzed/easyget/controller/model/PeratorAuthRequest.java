@@ -17,7 +17,4 @@ public class PeratorAuthRequest {
 
     @NotBlank(message = "{param.auth.smsCode.isNotEmpty}")
     private String smsCode;
-    @NotNull(message = "{param.auth.timeStamp.isNotEmpty}")
-    private Long timeStamp;
-
 }

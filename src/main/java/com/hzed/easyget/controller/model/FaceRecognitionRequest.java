@@ -17,7 +17,4 @@ public class FaceRecognitionRequest {
 
     @NotBlank(message = "{param.auth.faceBase64ImgStr.isNotEmpty}")
     private String faceBase64ImgStr;
-    @NotNull(message = "{param.auth.timeStamp.isNotEmpty}")
-    private Long timeStamp;
-
 }

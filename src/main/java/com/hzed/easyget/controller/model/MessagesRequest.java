@@ -17,6 +17,5 @@ public class MessagesRequest {
 
     @NotBlank(message = "{param.auth.message.isNotEmpty}")
     private String message;
-    @NotNull(message = "{param.auth.timeStamp.isNotEmpty}")
-    private Long timeStamp;
+
 }

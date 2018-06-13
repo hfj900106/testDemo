@@ -192,15 +192,10 @@ public class LoginService {
      * 生成随机图片
      */
     public PictureCodeResponse getPictureCode(String mobile) {
-        //获取验证码字符串
-        String code = PicUtil.getCode(4);
-        //获取图片流
-        byte[] pic = PicUtil.getPictureCode(code, 4);
+        PictureCodeResponse response = PicUtil.getPictureCode();
         //保存到Redis，五分钟有效时间
-        redisService.setCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile, code, 300L);
-        PictureCodeResponse codeResponse = new PictureCodeResponse();
-        codeResponse.setPicture(pic);
-        return codeResponse;
+        redisService.setCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile, response.getCode(), 300L);
+        return response;
     }
 
     /**

@@ -13,4 +13,5 @@ import javax.websocket.Encoder;
 @Data
 public class PictureCodeResponse {
      private  byte[] picture ;
+     private String code;
 }

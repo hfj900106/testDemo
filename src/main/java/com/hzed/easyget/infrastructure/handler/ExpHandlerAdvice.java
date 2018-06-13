@@ -42,7 +42,7 @@ public class ExpHandlerAdvice {
 
         String errorCode = ex.getErrorCode();
         String message = i18nService.getBizCodeMessage(errorCode, ex.getObjs());
-        // 中文描述
+        // 中文描述 用于打印日志
         String messageCN = i18nService.getBizCodeMessage(errorCode, ex.getObjs(), Locale.CHINA);
 
         log.error("业务异常：{}", messageCN, ex);

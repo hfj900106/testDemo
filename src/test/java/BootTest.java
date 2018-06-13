@@ -1,5 +1,7 @@
 import com.hzed.BootApplication;
 import com.hzed.easyget.application.service.FileService;
+import com.hzed.easyget.application.service.LoginService;
+import com.hzed.easyget.controller.model.PictureCodeResponse;
 import com.hzed.easyget.infrastructure.config.aliyun.AliyunService;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.utils.PicUtil;
@@ -10,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BootApplication.class)
@@ -22,6 +28,8 @@ public class BootTest {
     private AliyunService aliyunService;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private LoginService loginService;
 
     @Test
     public void redisTest() {
@@ -46,5 +54,13 @@ public class BootTest {
         System.out.println(path);
     }
 
+    @Test
+    public void getPicCode() throws Exception{
+        OutputStream out = new FileOutputStream(new File("E:\\"+1314+".jpg"));
+        PictureCodeResponse codeResponse = loginService.getPictureCode("15910086555");
+        out.write(codeResponse.getPicture());
+        out.flush();
+        out.close();
+    }
 
 }

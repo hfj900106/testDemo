@@ -1,5 +1,6 @@
 package com.hzed.easyget.infrastructure.utils;
 
+
 import com.hzed.easyget.controller.model.PictureCodeResponse;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.BaseBizException;
@@ -10,6 +11,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+
 import java.util.Random;
 
 
@@ -85,52 +87,50 @@ public class PicUtil {
         return imgPathAbs.substring(imgPathAbs.lastIndexOf(File.separator) + 1, imgPathAbs.length());
     }
 
+
     /**
      * 随机字符串，去掉易混淆的字符
      */
     private static String codeStr = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
-
     /**
      * 绘制字符串
      */
-    private static void drowString(Graphics graphics, String code, int num) {
-        Random random = new Random();
-        graphics.setFont(new Font("Fixedsys", Font.CENTER_BASELINE, 18));
-        graphics.setColor(new Color(random.nextInt(101), random.nextInt(111), random.nextInt(121)));
-        graphics.translate(random.nextInt(3), random.nextInt(3));
-        graphics.drawString(code, 13 * num, 16);
-    }
+    private static String drowString(Graphics g, String randomString, int i) {
 
-    public static String getCode(int codeNum) {
-        StringBuffer randomString = new StringBuffer();
-        for (int i = 1; i <= codeNum; i++) {
-            randomString.append(String.valueOf(getRandomString(new Random().nextInt(codeStr.length()))));
-        }
-        return randomString.toString();
+        Random random = new Random();
+        g.setFont(new Font("Times New Roman", Font.CENTER_BASELINE, 18));
+        g.setColor(new Color(random.nextInt(101), random.nextInt(111), random.nextInt(121)));
+        String rand = String.valueOf(getRandomString(random.nextInt(codeStr.length())));
+        randomString += rand;
+        g.translate(random.nextInt(3), random.nextInt(3));
+        g.drawString(rand, 13 * i, 16);
+        return randomString;
     }
 
     /**
      * 获取随机的字符
      */
-    private static String getRandomString(int num) {
+    public static String getRandomString(int num) {
         return String.valueOf(codeStr.charAt(num));
     }
-
     /**
      * 生成随机图片
      */
-    public static byte[] getPictureCode(String code, int num) {
-        PictureCodeResponse codeResponse = new PictureCodeResponse();
+    public static PictureCodeResponse getPictureCode() {
+        int width = 80;
+        int height = 26;
+        int strNum =4;
         // BufferedImage类是具有缓冲区的Image类,Image类是用于描述图像信息的类
-        BufferedImage image = new BufferedImage(80, 26, BufferedImage.TYPE_INT_BGR);
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
         // 产生Image对象的Graphics对象,改对象可以在图像上进行各种绘制操作
         Graphics graphics = image.getGraphics();
-        graphics.fillRect(0, 0, 80, 26);
-        graphics.setFont(new Font("Times New Roman", Font.ROMAN_BASELINE, 18));
-        graphics.setColor(new Color(138, 255, 174));
+        graphics.setColor(new Color(232, 245, 243));
+        graphics.fillRect(0, 0, width, height);
         // 绘制随机字符
-        drowString(graphics, code, num);
-
+        String randomString = "";
+        for (int i = 1; i <= strNum; i++) {
+            randomString = drowString(graphics, randomString, i);
+        }
         //销毁graphics图形界面资源
         graphics.dispose();
         //返回图片二进制
@@ -149,9 +149,11 @@ public class PicUtil {
                 }
             }
         }
-        return bos.toByteArray();
+        PictureCodeResponse pictureCodeResponse = new PictureCodeResponse();
+        pictureCodeResponse.setPicture(bos.toByteArray());
+        pictureCodeResponse.setCode(randomString);
+        return pictureCodeResponse;
     }
-
 
     public static void main(String[] args) throws Exception {
         String imgPath = "C:\\Users\\Administrator\\Desktop\\jifei.png";

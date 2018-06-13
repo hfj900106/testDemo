@@ -1,7 +1,7 @@
 package com.hzed.easyget.controller.web;
 
-import com.hzed.easyget.application.service.RiskCallBackService;
-import com.hzed.easyget.controller.model.PushBidCallBackRequest;
+import com.hzed.easyget.application.service.CallbackService;
+import com.hzed.easyget.controller.model.PushBidCallbackRequest;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
@@ -18,16 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @ExceptionAnno
 @RestController
-@RequestMapping("/easy-get/riskCallBack")
-public class RiskCallBackController {
+@RequestMapping("/easy-get")
+public class CallbackController {
     @Autowired
-    private RiskCallBackService riskCallBackService;
+    private CallbackService callbackService;
 
     @ModuleFunc("推送资产-审核回调")
-    @PostMapping("/pushBidCallBack")
-    public Response pushBidCallBack(@RequestBody PushBidCallBackRequest request) {
-        riskCallBackService.pushBidCallBack(request);
+    @PostMapping("/riskCallback/pushBidCallback")
+    public Response pushBidCallback(@RequestBody PushBidCallbackRequest request) {
+        callbackService.pushBidCallback(request);
         return Response.getSuccessResponse();
     }
+
+
 
 }

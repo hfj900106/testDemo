@@ -26,6 +26,7 @@ ModuleFunc {
     /**
      * 校验请求参数的标志 默认true-校验
      */
+    @Deprecated
     boolean isParameterValidate() default true;
 
 }

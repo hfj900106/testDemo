@@ -12,7 +12,9 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -20,8 +22,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.sql.DataSource;
+import javax.validation.Validator;
 
 /**
  * 启动类
@@ -34,6 +38,7 @@ import javax.sql.DataSource;
 @EnableAsync
 @EnableTransactionManagement
 @EnableScheduling
+@ServletComponentScan
 @EnableRedis
 @EnableRest
 @EnableAliyun
@@ -70,6 +75,28 @@ public class BootApplication {
         objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
         return objectMapper;
     }
+
+    @Bean
+    public Validator setValidator() {
+        ResourceBundleMessageSource rbms = new ResourceBundleMessageSource();
+        rbms.setDefaultEncoding("UTF-8");
+        // 此为文件目录 messages是文件名
+        rbms.setBasenames("i18n/messages");
+        // 缓存时间 秒
+        rbms.setCacheSeconds(2000);
+
+        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+        validator.setValidationMessageSource(rbms);
+        return validator;
+
+//        Validator validator = Validation.byDefaultProvider()
+//                .configure()
+//                .messageInterpolator(new ResourceBundleMessageInterpolator(new PlatformResourceBundleLocator("i18n/messages" )))
+//                .buildValidatorFactory()
+//                .getValidator();
+    }
+
+
 
     public static void main(String[] args) {
         SpringApplication.run(BootApplication.class, args);

@@ -1,7 +1,6 @@
 package com.hzed.easyget.infrastructure.interceptor;
 
 import com.hzed.easyget.application.service.ComService;
-import com.hzed.easyget.application.service.I18nService;
 import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.consts.LogConsts;
@@ -29,8 +28,6 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     private ComService comService;
-    @Autowired
-    private I18nService i18nService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -51,8 +48,6 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         }
 
         GlobalHead globalHeadr = RequestUtil.getGlobalHead();
-        // 设置地区
-        i18nService.setLocale(globalHeadr.getI18n());
         // header中一些必要参数校验
         comService.validateHeader(globalHeadr);
 
@@ -61,7 +56,6 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         if (tokenIgnore == null) {
             comService.validateToken(globalHeadr);
         }
-
         return true;
     }
 

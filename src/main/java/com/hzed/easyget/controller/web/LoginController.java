@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 
 /**
  * 用户登录
@@ -39,9 +41,9 @@ public class LoginController {
     }
 
     @TokenIgnore
-    @ModuleFunc("手机验证码登录")
+    @ModuleFunc(value = "手机验证码登录")
     @PostMapping("/loginByCode")
-    public Response<LoginByCodeResponse> loginByCode(@RequestBody LoginByCodeRequest request) {
+    public Response<LoginByCodeResponse> loginByCode(@Valid @RequestBody LoginByCodeRequest request) {
         LoginByCodeResponse response = loginService.loginByCode(request);
         return Response.getSuccessResponse(response);
     }

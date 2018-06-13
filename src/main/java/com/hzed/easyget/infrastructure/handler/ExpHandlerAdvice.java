@@ -9,8 +9,12 @@ import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
 
 /**
  * 拦截由ExceptionAnno标注的controller抛出的异常
@@ -54,10 +58,20 @@ public class ExpHandlerAdvice {
             log.error("其他异常：", ex);
         }
 
+
         // 统一做国际化处理
         resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
 
         return resp;
+    }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Response handlerComBizException(MethodArgumentNotValidException ex) {
+        List<ObjectError> errors = ex.getBindingResult().getAllErrors();
+        StringBuffer errorMsg = new StringBuffer();
+        errors.stream().forEach(x -> errorMsg.append(x.getDefaultMessage()).append(";"));
+        return new Response(BizCodeEnum.ILLEGAL_PARAM.getCode(), errorMsg.toString());
     }
 
 //    @ExceptionHandler(ComBizException.class)

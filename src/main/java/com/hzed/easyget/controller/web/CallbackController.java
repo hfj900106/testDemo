@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @ExceptionAnno
 @RestController
-@RequestMapping("/easy-get/riskCallBack")
-public class RiskCallBackController {
+@RequestMapping("/easy-get/")
+public class CallbackController {
     @Autowired
     private RiskCallBackService riskCallBackService;
 
     @ModuleFunc("推送资产-审核回调")
-    @PostMapping("/pushBidCallBack")
+    @PostMapping("/riskCallBack/pushBidCallBack")
     public Response pushBidCallBack(@RequestBody PushBidCallBackRequest request) {
         riskCallBackService.pushBidCallBack(request);
         return Response.getSuccessResponse();

@@ -391,7 +391,7 @@ public class RepayService {
         // 其他台账做更新操作(本金+尾款)
         else {
             if (ledger == null) {
-                throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "账单ID：" + billId + "的台账类型：" + item + "不存在");
+                throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM123, billId, item);
             }
 
             BillLedger ledgerUpdate = new BillLedger();

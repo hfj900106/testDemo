@@ -46,7 +46,11 @@ public enum BizCodeEnum {
     FREQUENTLY_SMS_SEND("1016", "短信发送过于频繁"),
     SMS_CODE_SEND_FAIL("1017", "短信发送失败"),
     PIC_CODE_TO_CHECK("1018", "需要图片验证码校验"),
-    BID_EXISTS("1019", "有未结清标的"),;
+    BID_EXISTS("1019", "有未结清标的"),
+
+    ILLEGAL_PARAM123("1020", "账单ID{0}的台账类型{1}不存在")
+
+    ;
 
 
     // 20-

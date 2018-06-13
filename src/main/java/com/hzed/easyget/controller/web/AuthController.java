@@ -48,6 +48,19 @@ public class AuthController {
         return Response.getSuccessResponse();
     }
 
+    @ModuleFunc(value = "身份证识别", isParameterPrint = false)
+    @PostMapping("/idCardRecognition")
+    public Response<IdCardRecognitionResponse> idCardRecognition(@RequestBody IdCardRecognitionRequest request) {
+        return Response.getSuccessResponse(authService.idCardRecognition(request));
+    }
+
+    @ModuleFunc(value = "人脸识别", isParameterPrint = false)
+    @PostMapping("/faceRecognition")
+    public Response faceRecognition(@RequestBody FaceRecognitionRequest request) {
+        authService.faceRecognition(request);
+        return Response.getSuccessResponse();
+    }
+
     @ModuleFunc(value = "身份信息认证", isParameterPrint = false)
     @PostMapping("/identityInfo")
     public Response identityInformationAuth(@RequestBody IdentityInfoAuthRequest request) {

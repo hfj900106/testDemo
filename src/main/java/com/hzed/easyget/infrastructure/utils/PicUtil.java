@@ -127,7 +127,7 @@ public class PicUtil {
         Graphics graphics = image.getGraphics();
         graphics.fillRect(0, 0, 80, 26);
         graphics.setFont(new Font("Times New Roman", Font.ROMAN_BASELINE, 18));
-        graphics.setColor(new Color(225, 255, 255));
+        graphics.setColor(new Color(138, 255, 174));
         // 绘制随机字符
         drowString(graphics, code, num);
 

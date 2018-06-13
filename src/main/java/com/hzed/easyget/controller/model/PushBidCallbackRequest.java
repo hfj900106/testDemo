@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * @data 2018/6/9
  */
 @Data
-public class PushBidCallBackRequest {
+public class PushBidCallbackRequest {
     @NotNull(message = "标的ID不能为空")
     private Long bidId;
     @NotNull(message = "审核借款金额不能为空")

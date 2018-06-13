@@ -9,10 +9,11 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class LoginByCodeRequest {
-    @NotBlank(message = "手机号不能为空")
+//    @NotBlank(message = "手机号不能为空")
+    @NotBlank(message = "{param.mobile.isNotEmpty}")
     private String mobile;
     @NotBlank(message = "短信验证码不能为空")
     private String smsCode;
-    @NotBlank(message = "手机品牌不能为空")
+    @NotBlank(message = "{param.device.isNotEmpty}")
     private String device;
 }

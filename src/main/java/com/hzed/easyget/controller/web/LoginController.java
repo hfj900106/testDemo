@@ -35,7 +35,7 @@ public class LoginController {
     @TokenIgnore
     @ModuleFunc("发送短信验证码")
     @PostMapping("/sendSmsCode")
-    public Response sendSmsCode(@RequestBody SmsCodeRequest request) {
+    public Response sendSmsCode(@Valid @RequestBody SmsCodeRequest request) {
         loginService.sendSmsCode(request);
         return Response.getSuccessResponse();
     }

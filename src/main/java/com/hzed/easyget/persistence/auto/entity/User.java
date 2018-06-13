@@ -55,10 +55,16 @@ public class User implements Serializable {
     private Byte client;
 
     /**
+     * 设备唯一标识
+     */
+    private String imei;
+
+    /**
      */
     private Long createBy;
 
     /**
+     * 注册时间
      */
     private LocalDateTime createTime;
 
@@ -156,6 +162,14 @@ public class User implements Serializable {
         this.client = client;
     }
 
+    public String getImei() {
+        return imei;
+    }
+
+    public void setImei(String imei) {
+        this.imei = imei == null ? null : imei.trim();
+    }
+
     public Long getCreateBy() {
         return createBy;
     }
@@ -212,6 +226,7 @@ public class User implements Serializable {
         sb.append(", idCardNo=").append(idCardNo);
         sb.append(", platform=").append(platform);
         sb.append(", client=").append(client);
+        sb.append(", imei=").append(imei);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -283,6 +298,11 @@ public class User implements Serializable {
             return this;
         }
 
+        public Builder imei(String imei) {
+            obj.setImei(imei);
+            return this;
+        }
+
         public Builder createBy(Long createBy) {
             obj.setCreateBy(createBy);
             return this;
@@ -324,6 +344,7 @@ public class User implements Serializable {
         idCardNo("id_card_no"),
         platform("platform"),
         client("client"),
+        imei("imei"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

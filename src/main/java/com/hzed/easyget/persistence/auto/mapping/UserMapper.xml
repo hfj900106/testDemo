@@ -12,6 +12,7 @@
     <result column="id_card_no" jdbcType="VARCHAR" property="idCardNo" />
     <result column="platform" jdbcType="VARCHAR" property="platform" />
     <result column="client" jdbcType="TINYINT" property="client" />
+    <result column="imei" jdbcType="VARCHAR" property="imei" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -78,7 +79,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, mobile_account, password, profile_photo, nick_name, gender, real_name, id_card_no, 
-    platform, client, create_by, create_time, update_by, update_time, remark
+    platform, client, imei, create_by, create_time, update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserExample" resultMap="BaseResultMap">
     select
@@ -146,15 +147,15 @@
     insert into t_loan_user (id, mobile_account, password, 
       profile_photo, nick_name, gender, 
       real_name, id_card_no, platform, 
-      client, create_by, create_time, 
-      update_by, update_time, remark
-      )
+      client, imei, create_by, 
+      create_time, update_by, update_time, 
+      remark)
     values (#{id,jdbcType=BIGINT}, #{mobileAccount,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{profilePhoto,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{gender,jdbcType=TINYINT}, 
       #{realName,jdbcType=VARCHAR}, #{idCardNo,jdbcType=VARCHAR}, #{platform,jdbcType=VARCHAR}, 
-      #{client,jdbcType=TINYINT}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
-      )
+      #{client,jdbcType=TINYINT}, #{imei,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.User">
     insert into t_loan_user
@@ -188,6 +189,9 @@
       </if>
       <if test="client != null">
         client,
+      </if>
+      <if test="imei != null">
+        imei,
       </if>
       <if test="createBy != null">
         create_by,
@@ -235,6 +239,9 @@
       </if>
       <if test="client != null">
         #{client,jdbcType=TINYINT},
+      </if>
+      <if test="imei != null">
+        #{imei,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -292,6 +299,9 @@
       <if test="record.client != null">
         client = #{record.client,jdbcType=TINYINT},
       </if>
+      <if test="record.imei != null">
+        imei = #{record.imei,jdbcType=VARCHAR},
+      </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
       </if>
@@ -324,6 +334,7 @@
       id_card_no = #{record.idCardNo,jdbcType=VARCHAR},
       platform = #{record.platform,jdbcType=VARCHAR},
       client = #{record.client,jdbcType=TINYINT},
+      imei = #{record.imei,jdbcType=VARCHAR},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -363,6 +374,9 @@
       <if test="client != null">
         client = #{client,jdbcType=TINYINT},
       </if>
+      <if test="imei != null">
+        imei = #{imei,jdbcType=VARCHAR},
+      </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
       </if>
@@ -392,6 +406,7 @@
       id_card_no = #{idCardNo,jdbcType=VARCHAR},
       platform = #{platform,jdbcType=VARCHAR},
       client = #{client,jdbcType=TINYINT},
+      imei = #{imei,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
@@ -428,15 +443,15 @@
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_user
     (id, mobile_account, password, profile_photo, nick_name, gender, real_name, id_card_no, 
-      platform, client, create_by, create_time, update_by, update_time, remark)
+      platform, client, imei, create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.mobileAccount,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, 
         #{item.profilePhoto,jdbcType=VARCHAR}, #{item.nickName,jdbcType=VARCHAR}, #{item.gender,jdbcType=TINYINT}, 
         #{item.realName,jdbcType=VARCHAR}, #{item.idCardNo,jdbcType=VARCHAR}, #{item.platform,jdbcType=VARCHAR}, 
-        #{item.client,jdbcType=TINYINT}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
-        )
+        #{item.client,jdbcType=TINYINT}, #{item.imei,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -478,6 +493,9 @@
         </if>
         <if test="'client' == column.value">
           #{item.client,jdbcType=TINYINT}
+        </if>
+        <if test="'imei' == column.value">
+          #{item.imei,jdbcType=VARCHAR}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

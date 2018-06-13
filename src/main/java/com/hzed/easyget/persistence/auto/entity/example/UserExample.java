@@ -831,6 +831,76 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andImeiIsNull() {
+            addCriterion("imei is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiIsNotNull() {
+            addCriterion("imei is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiEqualTo(String value) {
+            addCriterion("imei =", value, "imei");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiNotEqualTo(String value) {
+            addCriterion("imei <>", value, "imei");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiGreaterThan(String value) {
+            addCriterion("imei >", value, "imei");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiGreaterThanOrEqualTo(String value) {
+            addCriterion("imei >=", value, "imei");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiLessThan(String value) {
+            addCriterion("imei <", value, "imei");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiLessThanOrEqualTo(String value) {
+            addCriterion("imei <=", value, "imei");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiLike(String value) {
+            addCriterion("imei like", value, "imei");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiNotLike(String value) {
+            addCriterion("imei not like", value, "imei");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiIn(List<String> values) {
+            addCriterion("imei in", values, "imei");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiNotIn(List<String> values) {
+            addCriterion("imei not in", values, "imei");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiBetween(String value1, String value2) {
+            addCriterion("imei between", value1, value2, "imei");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiNotBetween(String value1, String value2) {
+            addCriterion("imei not between", value1, value2, "imei");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateByIsNull() {
             addCriterion("create_by is null");
             return (Criteria) this;
@@ -1173,6 +1243,11 @@ public class UserExample {
 
         public Criteria andPlatformLikeInsensitive(String value) {
             addCriterion("upper(platform) like", value.toUpperCase(), "platform");
+            return (Criteria) this;
+        }
+
+        public Criteria andImeiLikeInsensitive(String value) {
+            addCriterion("upper(imei) like", value.toUpperCase(), "imei");
             return (Criteria) this;
         }
 

@@ -27,4 +27,6 @@ public class IdentityInfoAuthRequest {
     private String faceBase64ImgStr;
     @NotBlank(message = "图片后缀不能为空")
     private String picSuffix;
+    @NotNull(message = "时间戳不能为空")
+    private Long timeStamp;
 }

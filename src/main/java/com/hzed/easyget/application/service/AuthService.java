@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.controller.model.*;
-import com.hzed.easyget.infrastructure.config.aliyun.AliyunService;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
@@ -52,8 +51,6 @@ public class AuthService {
     private UserAuthStatusRepository authStatusRepository;
     @Autowired
     private ProfessionalRepository professionalRepository;
-    @Autowired
-    private AliyunService aliyunService;
     @Autowired
     private RestTemplate template;
     @Autowired
@@ -169,14 +166,13 @@ public class AuthService {
             if (null == jsonObject) {
                 throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "运营商认证发送验证码返回数据异常");
             }
-            if (Integer.valueOf(jsonObject.get("code").toString()) == ComConsts.RISK_OK) {
+            if (Integer.valueOf(jsonObject.get(ComConsts.RISK_CODE).toString()) == ComConsts.RISK_OK) {
                 String taskId = jsonObject.get("task_id").toString();
                 redisService.setCache(RedisConsts.IDENTITY_AUTH_CODE + RedisConsts.SPLIT + userInfo.getId(), taskId, 3600L);
             } else {
                 throw new ComBizException(BizCodeEnum.UN_IDENTITY_AUTH);
             }
         }
-
     }
 
     /**
@@ -222,6 +218,64 @@ public class AuthService {
     }
 
     /**
+     * 身份证识别
+     */
+    public IdCardRecognitionResponse idCardRecognition(IdCardRecognitionRequest request) {
+        IdCardRecognitionResponse recognitionResponse = new IdCardRecognitionResponse();
+        GlobalUser user = getGlobalUser();
+        Long timeStamp = request.getTimeStamp();
+        String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
+        Map<String, Object> map = new HashMap<>(16);
+        map.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
+        map.put("timeStamp", timeStamp);
+        map.put("ocrImageStr", idCardBase64ImgStr);
+        map.put("userId", user.getUserId());
+        //TODO 待验证方式
+        String response = template.postForObject("/app/riskOperator/OCR", map, String.class);
+        if (StringUtils.isNotBlank(response)) {
+            JSONObject jsonObject = FaJsonUtil.parseObj(response, JSONObject.class);
+            if (null == jsonObject) {
+                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "身份证识别返回数据异常");
+            }
+            if (Integer.valueOf(jsonObject.get(ComConsts.RISK_CODE).toString()) == ComConsts.RISK_OK) {
+                JSONObject data = FaJsonUtil.parseObj(jsonObject.get("data").toString(), JSONObject.class);
+                if (null == data) {
+                    throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "身份证识别返回数据异常");
+                }
+                //TODO 待确认
+                String idNumber = data.get("idNumber").toString();
+                String gender = data.get("gender").toString();
+                String name = data.get("name").toString();
+                recognitionResponse.setIdNumber(idNumber);
+                recognitionResponse.setGender(gender);
+                recognitionResponse.setName(name);
+            } else {
+                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "身份证识别失败");
+            }
+        }
+        return recognitionResponse;
+    }
+
+    /**
+     * 人脸识别
+     */
+    public void faceRecognition(FaceRecognitionRequest request) {
+        GlobalUser user = getGlobalUser();
+        Long timeStamp = request.getTimeStamp();
+        String faceBase64ImgStr = request.getFaceBase64ImgStr();
+        Map<String, Object> map = new HashMap<>(16);
+        map.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
+        map.put("timeStamp", timeStamp);
+        map.put("appImageStr", faceBase64ImgStr);
+        map.put("userId", user.getUserId());
+        //TODO 待验证方式
+        Boolean isSuccess = template.postForObject("/app/riskOperator/faceComparison", map, Boolean.class);
+        if (!isSuccess) {
+            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "人脸识别失败");
+        }
+    }
+
+    /**
      * 身份信息认证，信息分3个表存（用户表、身份信息认证表，认证状态表）
      */
     public void identityInfoAuth(IdentityInfoAuthRequest request) {
@@ -229,6 +283,16 @@ public class AuthService {
         String realName = request.getRealName();
         String idCardNo = request.getIdCardNo();
         Integer gender = request.getGender();
+        //调风控身份认证接口，认证通过记录表数据
+        Map<String, Object> mapRisk = new HashMap<>(16);
+        mapRisk.put("sign", AesUtil.aesEncode(user.getUserId(), request.getTimeStamp()));
+        mapRisk.put("timeStamp", request.getTimeStamp());
+        mapRisk.put("userId", user.getUserId());
+        //TODO 待验证方式
+        Boolean isSuccess = template.postForObject("/app/riskOperator/getIdentityReport", mapRisk, Boolean.class);
+        if (!isSuccess) {
+            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "身份信息认证失败");
+        }
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         String faceBase64ImgStr = request.getFaceBase64ImgStr();
         String picSuffix = request.getPicSuffix();
@@ -313,7 +377,7 @@ public class AuthService {
             if (null == jsonObject) {
                 throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, ExMsg);
             }
-            if (Integer.valueOf(jsonObject.get("code").toString()) == ComConsts.RISK_OK) {
+            if (Integer.valueOf(jsonObject.get(ComConsts.RISK_CODE).toString()) == ComConsts.RISK_OK) {
                 //修改认证表的状态
                 UserAuthStatus userAuthStatus = buildUserAuthStatus(userId, remark);
                 authStatusRepository.insertSelective(userAuthStatus);

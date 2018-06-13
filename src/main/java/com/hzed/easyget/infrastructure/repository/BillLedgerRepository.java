@@ -31,7 +31,7 @@ public class BillLedgerRepository {
     public BillLedger findBillLedgerItemByBillIdWithExp(Long billId, Byte item) {
         BillLedger billLedger = findBillLedgerItemByBillId(billId, item);
         if (billLedger == null) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "账单ID：" + billId + "的台账类型：" + item + "不存在");
+            throw new ComBizException(BizCodeEnum.ILLEGAL_LEDGER_TYPE, billId, item);
         }
         return billLedger;
     }
@@ -45,7 +45,7 @@ public class BillLedgerRepository {
     public List<BillLedger> findAllBillLedgerByBillIdWithExp(Long billId) {
         List<BillLedger> list = findAllBillLedgerByBillId(billId);
         if (list == null || list.isEmpty()) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "账单ID：" + billId + "不存在台账");
+            throw new ComBizException(BizCodeEnum.ILLEGAL_LEDGER,billId);
         }
         return list;
     }

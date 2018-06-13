@@ -65,7 +65,7 @@ public class EasyGetService implements ProductService {
     public void checkBid(Bid bid) {
         // TODO 产品信息
         if(bid.getPeriod()!=15){
-            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "标ID：" + bid.getId() + " 不是印尼15天产品");
+            throw new ComBizException(BizCodeEnum.NOT_INDONESIA_PRODUCT, bid.getId());
         }
     }
 

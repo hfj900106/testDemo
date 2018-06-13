@@ -43,7 +43,7 @@ public class BidRepository {
     public Bid findByIdWithExp(Long id) {
         Bid bid = findById(id);
         if (bid == null) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "标ID：" + id + " 不存在");
+            throw new ComBizException(BizCodeEnum.ILLEGAL_BIDID,id);
         }
         return bid;
     }

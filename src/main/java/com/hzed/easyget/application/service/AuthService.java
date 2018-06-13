@@ -170,7 +170,7 @@ public class AuthService {
         if (StringUtils.isNotBlank(response)) {
             JSONObject jsonObject = FaJsonUtil.parseObj(response, JSONObject.class);
             if (null == jsonObject) {
-                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "运营商认证发送验证码返回数据异常");
+                throw new ComBizException(BizCodeEnum.ERROR_SMS_RESULT);
             }
             if (Integer.valueOf(jsonObject.get(ComConsts.RISK_CODE).toString()) == ComConsts.RISK_OK) {
                 String taskId = jsonObject.get("task_id").toString();
@@ -244,12 +244,12 @@ public class AuthService {
         if (StringUtils.isNotBlank(response)) {
             JSONObject jsonObject = FaJsonUtil.parseObj(response, JSONObject.class);
             if (null == jsonObject) {
-                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "身份证识别返回数据异常");
+                throw new ComBizException(BizCodeEnum.ERROR_IDCARD_RESULT);
             }
             if (Integer.valueOf(jsonObject.get(ComConsts.RISK_CODE).toString()) == ComConsts.RISK_OK) {
                 JSONObject data = FaJsonUtil.parseObj(jsonObject.get("data").toString(), JSONObject.class);
                 if (null == data) {
-                    throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "身份证识别返回数据异常");
+                    throw new ComBizException(BizCodeEnum.ERROR_IDCARD_AUTH_RESULT);
                 }
                 //TODO 待确认
                 String idNumber = data.get("idNumber").toString();
@@ -259,7 +259,7 @@ public class AuthService {
                 recognitionResponse.setGender(gender);
                 recognitionResponse.setName(name);
             } else {
-                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "身份证识别失败");
+                throw new ComBizException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
             }
         }
         return recognitionResponse;
@@ -280,7 +280,7 @@ public class AuthService {
         //TODO 待验证方式
         Boolean isSuccess = template.postForObject("/app/riskOperator/faceComparison", map, Boolean.class);
         if (!isSuccess) {
-            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "人脸识别失败");
+            throw new ComBizException(BizCodeEnum.FAIL_FACE_RECOGNITION);
         }
     }
 
@@ -301,7 +301,7 @@ public class AuthService {
         //TODO 待验证方式
         Boolean isSuccess = template.postForObject("/app/riskOperator/getIdentityReport", mapRisk, Boolean.class);
         if (!isSuccess) {
-            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "身份信息认证失败");
+            throw new ComBizException(BizCodeEnum.FAIL_IDENTITY_AUTH);
         }
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         String faceBase64ImgStr = request.getFaceBase64ImgStr();
@@ -340,7 +340,7 @@ public class AuthService {
             UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "身份信息认证");
             workRepository.insertIdentityInfo(userPic, userAuthStatus, userObj);
         } catch (NestedException e) {
-            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "身份认证失败");
+            throw new ComBizException(BizCodeEnum.FAIL_IDENTITY_AUTH);
         }
 
     }
@@ -376,7 +376,7 @@ public class AuthService {
             UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "专业信息认证");
             professionalRepository.insertProfessionalAndUserAuthStatus(work, userAuthStatus);
         } catch (Exception ex) {
-            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, "专业信息认证失败");
+            throw new ComBizException(BizCodeEnum.FAIL_PROFESSIONAL_AUTH);
         }
 
     }
@@ -392,7 +392,8 @@ public class AuthService {
                 UserAuthStatus userAuthStatus = buildUserAuthStatus(userId, remark);
                 authStatusRepository.insertSelective(userAuthStatus);
             } else {
-                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, jsonObject.get("msg").toString());
+                log.error(jsonObject.get("msg").toString());
+                throw new ComBizException(BizCodeEnum.FAIL_AUTH);
             }
         }
     }

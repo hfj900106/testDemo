@@ -391,7 +391,7 @@ public class RepayService {
         // 其他台账做更新操作(本金+尾款)
         else {
             if (ledger == null) {
-                throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM123, billId, item);
+                throw new ComBizException(BizCodeEnum.ILLEGAL_LEDGER_TYPE, billId, item);
             }
 
             BillLedger ledgerUpdate = new BillLedger();

@@ -35,7 +35,7 @@ public class BillRepository {
     public Bill findByIdWithExp(Long id) {
         Bill bill = findById(id);
         if (bill == null) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "账单ID：" + id + " 不存在");
+            throw new ComBizException(BizCodeEnum.ILLEGAL_BILLID,id);
         }
         return bill;
     }
@@ -49,7 +49,7 @@ public class BillRepository {
     public List<Bill> findAllBillByBidIdWithExp(Long bidId) {
         List<Bill> list = findAllBillByBidId(bidId);
         if (list == null || list.isEmpty()) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM, "标ID：" + bidId + " 的账单不存在");
+            throw new ComBizException(BizCodeEnum.NOT_EXIST_BILL,bidId);
         }
         return list;
     }

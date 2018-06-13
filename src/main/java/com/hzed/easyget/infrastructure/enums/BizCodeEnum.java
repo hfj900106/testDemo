@@ -35,8 +35,8 @@ public enum BizCodeEnum {
     ILLEGAL_IMEI("1006", "无效的imei"),
 
     ILLEGAL_SMSCODE("1007", "无效的验证码"),
-    ERROR_SMSCODE("1008", "验证码错误或已过期"),
-    USER_NOTEXISTS("1009", "用户不存在"),
+    ERROR_SMS_RESULT("1008", "运营商认证发送验证码返回数据异常"),
+    ERROR_IDCARD_RESULT("1009", "身份证识别返回数据异常"),
     DICT_NOTEXISTS("1010", "字典不存在"),
     NO_USEFUL_PRODUCT("1011", "无可用产品"),
     TOKEN_EXPIRE("1012", "用户登录信息失效"),
@@ -47,8 +47,19 @@ public enum BizCodeEnum {
     SMS_CODE_SEND_FAIL("1017", "短信发送失败"),
     PIC_CODE_TO_CHECK("1018", "需要图片验证码校验"),
     BID_EXISTS("1019", "有未结清标的"),
+    ILLEGAL_LEDGER_TYPE("1020", "账单ID：{0}的台账类型{1}不存在"),
+    ERROR_IDCARD_AUTH_RESULT("1021", "身份证识别返回数据异常"),
 
-    ILLEGAL_PARAM123("1020", "账单ID{0}的台账类型{1}不存在")
+    FAIL_IDCARD_RECOGNITION("1022", "身份证识别失败"),
+    FAIL_FACE_RECOGNITION("1023", "人脸识别失败"),
+    FAIL_IDENTITY_AUTH("1024", "身份信息认证失败"),
+    FAIL_PROFESSIONAL_AUTH("1025", "专业信息认证失败"),
+    FAIL_AUTH("1026", "认证失败"),
+    ILLEGAL_BIDID("1027", "标ID：{0}不存在"),
+    NOT_INDONESIA_PRODUCT("1028", "标ID：{0}不是印尼产品"),
+    ILLEGAL_LEDGER("1029", "账单ID：{0}不存在台账"),
+    ILLEGAL_BILLID("1030", "账单ID：{0}不存在"),
+    NOT_EXIST_BILL("1031",  "标ID：{0}的账单不存在"),
 
     ;
 

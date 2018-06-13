@@ -1,6 +1,7 @@
 package com.hzed.easyget.infrastructure.utils;
 
 
+import com.google.common.collect.Maps;
 import com.hzed.easyget.controller.model.PictureCodeResponse;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.BaseBizException;
@@ -12,6 +13,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
+import java.util.Map;
 import java.util.Random;
 
 
@@ -116,7 +118,7 @@ public class PicUtil {
     /**
      * 生成随机图片
      */
-    public static PictureCodeResponse getPictureCode() {
+    public static Map<String,String> getPictureCode() {
         int width = 80;
         int height = 26;
         int strNum =4;
@@ -149,10 +151,10 @@ public class PicUtil {
                 }
             }
         }
-        PictureCodeResponse pictureCodeResponse = new PictureCodeResponse();
-        pictureCodeResponse.setPicture(bos.toByteArray());
-        pictureCodeResponse.setCode(randomString);
-        return pictureCodeResponse;
+        Map<String,String> map = Maps.newHashMap();
+        map.put("picStr", java.util.Base64.getEncoder().encodeToString(bos.toByteArray()));
+        map.put("code",randomString);
+        return map;
     }
 
     public static void main(String[] args) throws Exception {

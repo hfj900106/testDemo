@@ -6,6 +6,7 @@ import com.hzed.easyget.infrastructure.config.aliyun.AliyunService;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.utils.PicUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +57,9 @@ public class BootTest {
 
     @Test
     public void getPicCode() throws Exception{
-        OutputStream out = new FileOutputStream(new File("E:\\"+1314+".jpg"));
+        OutputStream out = new FileOutputStream(new File("E:\\"+131412+".jpg"));
         PictureCodeResponse codeResponse = loginService.getPictureCode("15910086555");
-        out.write(codeResponse.getPicture());
+        out.write(Base64.decodeBase64(codeResponse.getPicture()));
         out.flush();
         out.close();
     }

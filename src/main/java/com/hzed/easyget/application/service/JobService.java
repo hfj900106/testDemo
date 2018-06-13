@@ -1,7 +1,10 @@
 package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
-import com.hzed.easyget.application.enums.*;
+import com.hzed.easyget.application.enums.BidProgressTypeEnum;
+import com.hzed.easyget.application.enums.BidStatusEnum;
+import com.hzed.easyget.application.enums.JobStatusEnum;
+import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.ProductService;
@@ -34,6 +37,8 @@ public class JobService {
     private RepayInfoFlowJobRepository repayInfoFlowJobRepository;
     @Autowired
     private RepayService repayService;
+    @Autowired
+    private TransactionService transactionService;
 
     /**
      * 推风控
@@ -104,10 +109,12 @@ public class JobService {
             tempTableRepository.insertJob(TempTable.builder().id(tempId).jobName("bankLoan").relaseId(bid.getBidId()).remark("放款").createTime(LocalDateTime.now()).reRunTimes((byte) 1).build());
             try {
                 //TODO 调放款接口
-
+                transactionService.loanTransaction(null);
+//                throw new BizCodeEnum(BizCodeEnum.);
 
                 boolean isSuccess = false;
                 //根据返回结果
+                // 回调操作
                 if (isSuccess) {
                     Bid bidInfo = bidRepository.findById(bid.getBidId());
                     //改标的状态,砍头息、插入账单、台账、标进度、交易记录表，删除中间表数据

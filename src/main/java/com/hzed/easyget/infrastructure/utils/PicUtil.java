@@ -117,17 +117,18 @@ public class PicUtil {
      * 生成随机图片
      */
     public static PictureCodeResponse getPictureCode() {
-
+        int width = 80;
+        int height = 26;
+        int strNum =4;
         // BufferedImage类是具有缓冲区的Image类,Image类是用于描述图像信息的类
-        BufferedImage image = new BufferedImage(80, 26, BufferedImage.TYPE_INT_BGR);
-        image.setRGB(0, 0, 0x6bdd74);
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
         // 产生Image对象的Graphics对象,改对象可以在图像上进行各种绘制操作
         Graphics graphics = image.getGraphics();
-        graphics.fillRect(0, 0, 80, 26);
-
+        graphics.setColor(Color.green);
+        graphics.fillRect(0, 0, width, height);
         // 绘制随机字符
         String randomString = "";
-        for (int i = 1; i <= 4; i++) {
+        for (int i = 1; i <= strNum; i++) {
             randomString = drowString(graphics, randomString, i);
         }
         //销毁graphics图形界面资源

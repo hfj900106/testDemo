@@ -13,15 +13,15 @@ import java.math.BigDecimal;
  */
 @Data
 public class SubmitLoanRequest {
-    @NotBlank(message = "借款金额不能为空")
+    @NotBlank(message = "{param.loan.applyAmount.isNotEmpty}")
     private BigDecimal applyAmount;
-    @NotBlank(message = "借款期限不能为空")
+    @NotBlank(message = "{param.loan.period.isNotEmpty}")
     private Integer period;
-    @NotBlank(message = "收款银行不能为空")
+    @NotBlank(message = "{param.loan.inBank.isNotEmpty}")
     private String inBank;
-    @NotBlank(message = "收款账户不能为空")
+    @NotBlank(message = "{param.loan.inAccount.isNotEmpty}")
     private String inAccount;
-    @NotBlank(message = "借款理由不能为空")
+    @NotBlank(message = "{param.loan.purposeId.isNotEmpty}")
     private String purposeId;
 
 }

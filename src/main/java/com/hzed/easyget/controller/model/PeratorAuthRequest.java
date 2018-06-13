@@ -15,9 +15,9 @@ import javax.validation.constraints.NotNull;
 @Data
 public class PeratorAuthRequest {
 
-    @NotBlank(message = "验证码不能为空")
+    @NotBlank(message = "{param.auth.smsCode.isNotEmpty}")
     private String smsCode;
-    @NotNull(message = "时间戳不能为空")
+    @NotNull(message = "{param.auth.timeStamp.isNotEmpty}")
     private Long timeStamp;
 
 }

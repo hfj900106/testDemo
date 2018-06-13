@@ -1,7 +1,6 @@
 package com.hzed.easyget.controller.model;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -14,7 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class PeratorSendRequest {
-    @NotNull(message = "时间戳不能为空")
+    @NotNull(message = "{param.auth.timeStamp.isNotEmpty}")
     private Long timeStamp;
 
 }

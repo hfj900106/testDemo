@@ -13,6 +13,6 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class RepayAllRequest {
-    @NotNull(message = "标ID不可为空")
+    @NotNull(message = "{param.repay.bidId.isNotEmpty}")
     private Long bidId;
 }

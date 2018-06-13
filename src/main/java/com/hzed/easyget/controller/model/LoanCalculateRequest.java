@@ -11,6 +11,6 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class LoanCalculateRequest {
-    @NotBlank(message = "借款金额不能为空")
+    @NotBlank(message = "{param.home.loanAmount.isNotEmpty}")
     private String loanAmount;
 }

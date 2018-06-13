@@ -11,6 +11,6 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class RepayPartDetailRequest {
-    @NotBlank(message = "标ID不能为空")
-    private String bid;
+    @NotBlank(message = "{param.repay.bidId.isNotEmpty}")
+    private String bidId;
 }

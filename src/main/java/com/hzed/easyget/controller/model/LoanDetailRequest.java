@@ -11,6 +11,6 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class LoanDetailRequest {
-    @NotBlank(message = "bid不能为空")
+    @NotBlank(message = "{param.loan.bid.isNotEmpty}")
     private Long bid;
 }

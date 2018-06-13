@@ -110,7 +110,7 @@ public class RepayService {
     public RepayDetailResponse repayDetail(RepayDetailRequest request) {
         RepayDetailResponse repayDetailResponse = new RepayDetailResponse();
 
-        Long bidId = request.getBid();
+        Long bidId = request.getBidId();
         Bid bid = bidRepository.findById(bidId);
         // 账单
         Bill bill = billRepository.findByBid(bidId);
@@ -408,7 +408,7 @@ public class RepayService {
     }
 
     public RepayPartDetailResponse repayPartDetail(RepayPartDetailRequest request) {
-        String bidStr = request.getBid();
+        String bidStr = request.getBidId();
         Long bidId = Long.valueOf(bidStr);
         //获取标的待还总费用
         BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, LocalDateTime.now());

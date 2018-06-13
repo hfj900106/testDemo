@@ -15,8 +15,8 @@ import javax.validation.constraints.NotNull;
 @Data
 public class MessagesRequest {
 
-    @NotBlank(message = "短信内容不能为空")
+    @NotBlank(message = "{param.auth.message.isNotEmpty}")
     private String message;
-    @NotNull(message = "时间戳不能为空")
+    @NotNull(message = "{param.auth.timeStamp.isNotEmpty}")
     private Long timeStamp;
 }

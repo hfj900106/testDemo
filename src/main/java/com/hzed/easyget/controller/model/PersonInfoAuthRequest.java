@@ -13,25 +13,25 @@ import org.hibernate.validator.constraints.NotBlank;
 @Data
 public class PersonInfoAuthRequest {
 
-    @NotBlank(message = "教育情况不能为空")
+    @NotBlank(message = "{param.auth.education.isNotEmpty}")
     private String education;
-    @NotBlank(message = "公司名称不能为空")
+    @NotBlank(message = "{param.auth.companyName.isNotEmpty}")
     private String companyName;
-    @NotBlank(message = "公司地址不能为空")
+    @NotBlank(message = "{param.auth.companyAddr.isNotEmpty}")
     private String companyAddr;
-    @NotBlank(message = "公司详细地址不能为空")
+    @NotBlank(message = "{param.auth.companyAddrDetail.isNotEmpty}")
     private String companyAddrDetail;
-    @NotBlank(message = "邮件不能为空")
+    @NotBlank(message = "{param.auth.email.isNotEmpty}")
     private String email;
-    @NotBlank(message = "父母名称不能为空")
+    @NotBlank(message = "{param.auth.parentName.isNotEmpty}")
     private String parentName;
-    @NotBlank(message = "父母电话不能为空")
+    @NotBlank(message = "{param.auth.parentTel.isNotEmpty}")
     private String parentTel;
-    @NotBlank(message = "亲朋关系不能为空")
+    @NotBlank(message = "{param.auth.relationship.isNotEmpty}")
     private String relationship;
-    @NotBlank(message = "亲朋姓名不能为空")
+    @NotBlank(message = "{param.auth.relatedPersonName.isNotEmpty}")
     private String relatedPersonName;
-    @NotBlank(message = "亲朋电话不能为空")
+    @NotBlank(message = "{param.auth.relatedPersonTel.isNotEmpty}")
     private String relatedPersonTel;
 
 }

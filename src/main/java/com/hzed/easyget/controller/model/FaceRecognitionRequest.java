@@ -15,9 +15,9 @@ import javax.validation.constraints.NotNull;
 @Data
 public class FaceRecognitionRequest {
 
-    @NotBlank(message = "人脸图片不能为空")
+    @NotBlank(message = "{param.auth.faceBase64ImgStr.isNotEmpty}")
     private String faceBase64ImgStr;
-    @NotNull(message = "时间戳不能为空")
+    @NotNull(message = "{param.auth.timeStamp.isNotEmpty}")
     private Long timeStamp;
 
 }

@@ -1,8 +1,9 @@
 package com.hzed.easyget.controller.model;
 
-import javax.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 交易记录
@@ -14,24 +15,24 @@ public class ProfessionalRequest {
     /**
      * 工作类型
      */
-    @NotNull(message = "工作类型不能为空")
+    @NotNull(message = "{param.auth.jobType.isNotEmpty}")
     private Integer jobType ;
     /**
      * 月收入
      */
-    @NotNull(message = "月收入不能为空")
+    @NotNull(message = "{param.auth.monthlyIncome.isNotEmpty}")
     private Integer monthlyIncome ;
     /**
      * 工作证
      */
-    @NotBlank(message = "工作证不能为空")
+    @NotBlank(message = "{param.auth.employeeCardBase64ImgStr.isNotEmpty}")
     private String employeeCardBase64ImgStr ;
     /**
      * 工作场所照片
      */
-    @NotBlank(message = "工作场所照片不能为空")
+    @NotBlank(message = "{param.auth.workplaceBase64ImgStr.isNotEmpty}")
     private String workplaceBase64ImgStr ;
 
-    @NotBlank(message = "图片后缀不能为空")
+    @NotBlank(message = "{param.auth.picSuffix.isNotEmpty}")
     private String picSuffix;
 }

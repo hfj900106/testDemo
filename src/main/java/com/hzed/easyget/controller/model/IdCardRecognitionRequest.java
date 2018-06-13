@@ -15,9 +15,9 @@ import javax.validation.constraints.NotNull;
 @Data
 public class IdCardRecognitionRequest {
 
-    @NotBlank(message = "身份证图片不能为空")
+    @NotBlank(message = "{param.auth.idCardBase64ImgStr.isNotEmpty}")
     private String idCardBase64ImgStr;
-    @NotNull(message = "时间戳不能为空")
+    @NotNull(message = "{param.auth.timeStamp.isNotEmpty}")
     private Long timeStamp;
 
 }

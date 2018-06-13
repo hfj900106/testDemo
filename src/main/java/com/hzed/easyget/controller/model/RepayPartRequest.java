@@ -15,9 +15,9 @@ import java.math.BigDecimal;
 
 @Data
 public class RepayPartRequest {
-    @NotNull(message = "标ID不可为空")
+    @NotNull(message = "{param.repay.bidId.isNotEmpty}")
     private Long bidId;
-    @NotNull(message = "还款金额不可为空")
+    @NotNull(message = "{param.repay.repayAmount.isNotEmpty}")
     @DecimalMin(value="100")
     private BigDecimal repayAmount;
 }

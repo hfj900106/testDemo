@@ -341,6 +341,366 @@ public class UserStatusExample {
             return (Criteria) this;
         }
 
+        public Criteria andIsBlacklistIsNull() {
+            addCriterion("is_blacklist is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlacklistIsNotNull() {
+            addCriterion("is_blacklist is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlacklistEqualTo(Boolean value) {
+            addCriterion("is_blacklist =", value, "isBlacklist");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlacklistNotEqualTo(Boolean value) {
+            addCriterion("is_blacklist <>", value, "isBlacklist");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlacklistGreaterThan(Boolean value) {
+            addCriterion("is_blacklist >", value, "isBlacklist");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlacklistGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_blacklist >=", value, "isBlacklist");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlacklistLessThan(Boolean value) {
+            addCriterion("is_blacklist <", value, "isBlacklist");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlacklistLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_blacklist <=", value, "isBlacklist");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlacklistIn(List<Boolean> values) {
+            addCriterion("is_blacklist in", values, "isBlacklist");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlacklistNotIn(List<Boolean> values) {
+            addCriterion("is_blacklist not in", values, "isBlacklist");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlacklistBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_blacklist between", value1, value2, "isBlacklist");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBlacklistNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_blacklist not between", value1, value2, "isBlacklist");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockIsNull() {
+            addCriterion("is_lock is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockIsNotNull() {
+            addCriterion("is_lock is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockEqualTo(Boolean value) {
+            addCriterion("is_lock =", value, "isLock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockNotEqualTo(Boolean value) {
+            addCriterion("is_lock <>", value, "isLock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockGreaterThan(Boolean value) {
+            addCriterion("is_lock >", value, "isLock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_lock >=", value, "isLock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockLessThan(Boolean value) {
+            addCriterion("is_lock <", value, "isLock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_lock <=", value, "isLock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockIn(List<Boolean> values) {
+            addCriterion("is_lock in", values, "isLock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockNotIn(List<Boolean> values) {
+            addCriterion("is_lock not in", values, "isLock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_lock between", value1, value2, "isLock");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLockNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_lock not between", value1, value2, "isLock");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeIsNull() {
+            addCriterion("blacklist_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeIsNotNull() {
+            addCriterion("blacklist_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeEqualTo(LocalDateTime value) {
+            addCriterion("blacklist_time =", value, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("blacklist_time <>", value, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeGreaterThan(LocalDateTime value) {
+            addCriterion("blacklist_time >", value, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("blacklist_time >=", value, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeLessThan(LocalDateTime value) {
+            addCriterion("blacklist_time <", value, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("blacklist_time <=", value, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeIn(List<LocalDateTime> values) {
+            addCriterion("blacklist_time in", values, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("blacklist_time not in", values, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("blacklist_time between", value1, value2, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("blacklist_time not between", value1, value2, "blacklistTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockTimeIsNull() {
+            addCriterion("lock_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockTimeIsNotNull() {
+            addCriterion("lock_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockTimeEqualTo(LocalDateTime value) {
+            addCriterion("lock_time =", value, "lockTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("lock_time <>", value, "lockTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockTimeGreaterThan(LocalDateTime value) {
+            addCriterion("lock_time >", value, "lockTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("lock_time >=", value, "lockTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockTimeLessThan(LocalDateTime value) {
+            addCriterion("lock_time <", value, "lockTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("lock_time <=", value, "lockTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockTimeIn(List<LocalDateTime> values) {
+            addCriterion("lock_time in", values, "lockTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("lock_time not in", values, "lockTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("lock_time between", value1, value2, "lockTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("lock_time not between", value1, value2, "lockTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockByIsNull() {
+            addCriterion("lock_by is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockByIsNotNull() {
+            addCriterion("lock_by is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockByEqualTo(Long value) {
+            addCriterion("lock_by =", value, "lockBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockByNotEqualTo(Long value) {
+            addCriterion("lock_by <>", value, "lockBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockByGreaterThan(Long value) {
+            addCriterion("lock_by >", value, "lockBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockByGreaterThanOrEqualTo(Long value) {
+            addCriterion("lock_by >=", value, "lockBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockByLessThan(Long value) {
+            addCriterion("lock_by <", value, "lockBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockByLessThanOrEqualTo(Long value) {
+            addCriterion("lock_by <=", value, "lockBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockByIn(List<Long> values) {
+            addCriterion("lock_by in", values, "lockBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockByNotIn(List<Long> values) {
+            addCriterion("lock_by not in", values, "lockBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockByBetween(Long value1, Long value2) {
+            addCriterion("lock_by between", value1, value2, "lockBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andLockByNotBetween(Long value1, Long value2) {
+            addCriterion("lock_by not between", value1, value2, "lockBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistByIsNull() {
+            addCriterion("blacklist_by is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistByIsNotNull() {
+            addCriterion("blacklist_by is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistByEqualTo(Long value) {
+            addCriterion("blacklist_by =", value, "blacklistBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistByNotEqualTo(Long value) {
+            addCriterion("blacklist_by <>", value, "blacklistBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistByGreaterThan(Long value) {
+            addCriterion("blacklist_by >", value, "blacklistBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistByGreaterThanOrEqualTo(Long value) {
+            addCriterion("blacklist_by >=", value, "blacklistBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistByLessThan(Long value) {
+            addCriterion("blacklist_by <", value, "blacklistBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistByLessThanOrEqualTo(Long value) {
+            addCriterion("blacklist_by <=", value, "blacklistBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistByIn(List<Long> values) {
+            addCriterion("blacklist_by in", values, "blacklistBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistByNotIn(List<Long> values) {
+            addCriterion("blacklist_by not in", values, "blacklistBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistByBetween(Long value1, Long value2) {
+            addCriterion("blacklist_by between", value1, value2, "blacklistBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlacklistByNotBetween(Long value1, Long value2) {
+            addCriterion("blacklist_by not between", value1, value2, "blacklistBy");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateByIsNull() {
             addCriterion("create_by is null");
             return (Criteria) this;

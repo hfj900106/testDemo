@@ -5,6 +5,12 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="type" jdbcType="TINYINT" property="type" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="is_blacklist" jdbcType="BIT" property="isBlacklist" />
+    <result column="is_lock" jdbcType="BIT" property="isLock" />
+    <result column="blacklist_time" jdbcType="TIMESTAMP" property="blacklistTime" />
+    <result column="lock_time" jdbcType="TIMESTAMP" property="lockTime" />
+    <result column="lock_by" jdbcType="BIGINT" property="lockBy" />
+    <result column="blacklist_by" jdbcType="BIGINT" property="blacklistBy" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -70,7 +76,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, type, user_id, create_by, create_time, update_by, update_time, remark
+    id, type, user_id, is_blacklist, is_lock, blacklist_time, lock_time, lock_by, blacklist_by, 
+    create_by, create_time, update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserStatusExample" resultMap="BaseResultMap">
     select
@@ -136,9 +143,13 @@
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserStatus">
     insert into t_loan_user_status (id, type, user_id, 
+      is_blacklist, is_lock, blacklist_time, 
+      lock_time, lock_by, blacklist_by, 
       create_by, create_time, update_by, 
       update_time, remark)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=TINYINT}, #{userId,jdbcType=BIGINT}, 
+      #{isBlacklist,jdbcType=BIT}, #{isLock,jdbcType=BIT}, #{blacklistTime,jdbcType=TIMESTAMP}, 
+      #{lockTime,jdbcType=TIMESTAMP}, #{lockBy,jdbcType=BIGINT}, #{blacklistBy,jdbcType=BIGINT}, 
       #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
@@ -153,6 +164,24 @@
       </if>
       <if test="userId != null">
         user_id,
+      </if>
+      <if test="isBlacklist != null">
+        is_blacklist,
+      </if>
+      <if test="isLock != null">
+        is_lock,
+      </if>
+      <if test="blacklistTime != null">
+        blacklist_time,
+      </if>
+      <if test="lockTime != null">
+        lock_time,
+      </if>
+      <if test="lockBy != null">
+        lock_by,
+      </if>
+      <if test="blacklistBy != null">
+        blacklist_by,
       </if>
       <if test="createBy != null">
         create_by,
@@ -179,6 +208,24 @@
       </if>
       <if test="userId != null">
         #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="isBlacklist != null">
+        #{isBlacklist,jdbcType=BIT},
+      </if>
+      <if test="isLock != null">
+        #{isLock,jdbcType=BIT},
+      </if>
+      <if test="blacklistTime != null">
+        #{blacklistTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lockTime != null">
+        #{lockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lockBy != null">
+        #{lockBy,jdbcType=BIGINT},
+      </if>
+      <if test="blacklistBy != null">
+        #{blacklistBy,jdbcType=BIGINT},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -215,6 +262,24 @@
       <if test="record.userId != null">
         user_id = #{record.userId,jdbcType=BIGINT},
       </if>
+      <if test="record.isBlacklist != null">
+        is_blacklist = #{record.isBlacklist,jdbcType=BIT},
+      </if>
+      <if test="record.isLock != null">
+        is_lock = #{record.isLock,jdbcType=BIT},
+      </if>
+      <if test="record.blacklistTime != null">
+        blacklist_time = #{record.blacklistTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lockTime != null">
+        lock_time = #{record.lockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lockBy != null">
+        lock_by = #{record.lockBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.blacklistBy != null">
+        blacklist_by = #{record.blacklistBy,jdbcType=BIGINT},
+      </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
       </if>
@@ -240,6 +305,12 @@
     set id = #{record.id,jdbcType=BIGINT},
       type = #{record.type,jdbcType=TINYINT},
       user_id = #{record.userId,jdbcType=BIGINT},
+      is_blacklist = #{record.isBlacklist,jdbcType=BIT},
+      is_lock = #{record.isLock,jdbcType=BIT},
+      blacklist_time = #{record.blacklistTime,jdbcType=TIMESTAMP},
+      lock_time = #{record.lockTime,jdbcType=TIMESTAMP},
+      lock_by = #{record.lockBy,jdbcType=BIGINT},
+      blacklist_by = #{record.blacklistBy,jdbcType=BIGINT},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -257,6 +328,24 @@
       </if>
       <if test="userId != null">
         user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="isBlacklist != null">
+        is_blacklist = #{isBlacklist,jdbcType=BIT},
+      </if>
+      <if test="isLock != null">
+        is_lock = #{isLock,jdbcType=BIT},
+      </if>
+      <if test="blacklistTime != null">
+        blacklist_time = #{blacklistTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lockTime != null">
+        lock_time = #{lockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lockBy != null">
+        lock_by = #{lockBy,jdbcType=BIGINT},
+      </if>
+      <if test="blacklistBy != null">
+        blacklist_by = #{blacklistBy,jdbcType=BIGINT},
       </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
@@ -280,6 +369,12 @@
     update t_loan_user_status
     set type = #{type,jdbcType=TINYINT},
       user_id = #{userId,jdbcType=BIGINT},
+      is_blacklist = #{isBlacklist,jdbcType=BIT},
+      is_lock = #{isLock,jdbcType=BIT},
+      blacklist_time = #{blacklistTime,jdbcType=TIMESTAMP},
+      lock_time = #{lockTime,jdbcType=TIMESTAMP},
+      lock_by = #{lockBy,jdbcType=BIGINT},
+      blacklist_by = #{blacklistBy,jdbcType=BIGINT},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
@@ -315,10 +410,13 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_user_status
-    (id, type, user_id, create_by, create_time, update_by, update_time, remark)
+    (id, type, user_id, is_blacklist, is_lock, blacklist_time, lock_time, lock_by, blacklist_by, 
+      create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.type,jdbcType=TINYINT}, #{item.userId,jdbcType=BIGINT}, 
+        #{item.isBlacklist,jdbcType=BIT}, #{item.isLock,jdbcType=BIT}, #{item.blacklistTime,jdbcType=TIMESTAMP}, 
+        #{item.lockTime,jdbcType=TIMESTAMP}, #{item.lockBy,jdbcType=BIGINT}, #{item.blacklistBy,jdbcType=BIGINT}, 
         #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
         #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
@@ -341,6 +439,24 @@
         </if>
         <if test="'user_id' == column.value">
           #{item.userId,jdbcType=BIGINT}
+        </if>
+        <if test="'is_blacklist' == column.value">
+          #{item.isBlacklist,jdbcType=BIT}
+        </if>
+        <if test="'is_lock' == column.value">
+          #{item.isLock,jdbcType=BIT}
+        </if>
+        <if test="'blacklist_time' == column.value">
+          #{item.blacklistTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'lock_time' == column.value">
+          #{item.lockTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'lock_by' == column.value">
+          #{item.lockBy,jdbcType=BIGINT}
+        </if>
+        <if test="'blacklist_by' == column.value">
+          #{item.blacklistBy,jdbcType=BIGINT}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

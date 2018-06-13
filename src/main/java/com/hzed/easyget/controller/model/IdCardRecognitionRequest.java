@@ -17,7 +17,4 @@ public class IdCardRecognitionRequest {
 
     @NotBlank(message = "{param.auth.idCardBase64ImgStr.isNotEmpty}")
     private String idCardBase64ImgStr;
-    @NotNull(message = "{param.auth.timeStamp.isNotEmpty}")
-    private Long timeStamp;
-
 }

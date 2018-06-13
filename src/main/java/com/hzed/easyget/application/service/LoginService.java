@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * @author wuchengwu
@@ -192,9 +193,11 @@ public class LoginService {
      * 生成随机图片
      */
     public PictureCodeResponse getPictureCode(String mobile) {
-        PictureCodeResponse response = PicUtil.getPictureCode();
+        Map<String,String> map = PicUtil.getPictureCode();
         //保存到Redis，五分钟有效时间
-        redisService.setCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile, response.getCode(), 300L);
+        redisService.setCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile, map.get("code"), 300L);
+        PictureCodeResponse response = new PictureCodeResponse();
+        response.setPicture(map.get("picStr"));
         return response;
     }
 

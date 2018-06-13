@@ -76,8 +76,8 @@ public class AuthController {
 
     @ModuleFunc("/运营商认证-发送验证码")
     @PostMapping("/operatorSendSmsCode")
-    public Response operatorSendSmsCode(@RequestBody PeratorSendRequest request) {
-        authService.operatorSendSmsCode(request);
+    public Response operatorSendSmsCode() {
+        authService.operatorSendSmsCode();
         return Response.getSuccessResponse();
     }
 

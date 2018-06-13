@@ -27,6 +27,4 @@ public class IdentityInfoAuthRequest {
     private String faceBase64ImgStr;
     @NotBlank(message = "{param.auth.picSuffix.isNotEmpty}")
     private String picSuffix;
-    @NotNull(message = "{param.auth.timeStamp.isNotEmpty}")
-    private Long timeStamp;
 }

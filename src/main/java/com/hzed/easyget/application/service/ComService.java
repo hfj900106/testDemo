@@ -99,6 +99,7 @@ public class ComService {
             } else if (LocalDateTime.now().compareTo(userToken.getExpireTime()) > 0) {
                 throw new ComBizException(BizCodeEnum.TOKEN_EXPIRE);
             } else {
+                //刷新Redis缓存
                 redisService.setCache(tokenCacheKey, userToken.getToken(), RedisConsts.THREE_HOUR);
             }
         } else if (!token.equals(tokenCache)) {

@@ -52,7 +52,7 @@ public class ControllerAspect {
         // 统一做国际化处理
         if (result instanceof Response) {
             Response resp = (Response) result;
-            resp.setMessage(i18nService.getBizCodeMessage(resp.getCode(), null));
+            resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
             result = resp;
         }
         return result;

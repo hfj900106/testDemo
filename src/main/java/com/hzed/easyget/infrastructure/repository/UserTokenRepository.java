@@ -31,8 +31,4 @@ public class UserTokenRepository {
         return userTokenMapper.updateByExampleSelective(userToken, example);
     }
 
-
-    public void insertByUserIdAndImei(UserToken userToken) {
-        userTokenMapper.insertSelective(userToken);
-    }
 }

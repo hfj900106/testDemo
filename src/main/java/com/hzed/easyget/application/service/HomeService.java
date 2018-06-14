@@ -15,10 +15,7 @@ import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
-import com.hzed.easyget.persistence.auto.entity.Dict;
-import com.hzed.easyget.persistence.auto.entity.News;
-import com.hzed.easyget.persistence.auto.entity.Product;
-import com.hzed.easyget.persistence.auto.entity.UserToken;
+import com.hzed.easyget.persistence.auto.entity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +44,8 @@ public class HomeService {
     private NewsRepository newsRepository;
     @Autowired
     private ComService comService;
+    @Autowired
+    private UserRepository userRepository;
 
     private static final String ANDROID_BOMB = "android_bomb";
     private static final String IOS_BOMB = "ios_bomb";
@@ -161,6 +160,10 @@ public class HomeService {
 
     public LoanResponse startLoan() {
         Long userId = RequestUtil.getGlobalUser().getUserId();
+        String imei = RequestUtil.getGlobalHead().getImei();
+        User user = userRepository.findById(userId);
+
+        comService.checkRiskEnableBorrow(user.getMobileAccount(),imei);
         boolean isLoan = comService.isLoan(userId);
         return LoanResponse.builder().isLoan(isLoan).build();
     }

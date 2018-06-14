@@ -27,14 +27,14 @@ public class EasyGetProduct {
      * 砍头息
      */
     public BigDecimal getHeadFee() {
-        return amount.multiply(new BigDecimal(0.15));
+        return amount.multiply(new BigDecimal(0.15)).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     /**
      * 尾款
      */
     public BigDecimal getTailFee() {
-        return amount.multiply(new BigDecimal(0.06));
+        return amount.multiply(new BigDecimal(0.06)).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     /**
@@ -44,12 +44,14 @@ public class EasyGetProduct {
     public BigDecimal getRepaymentAmount() {
         return amount.add(getTailFee());
     }
+
     /**
      * 逾期费
+     *
      * @param overDay 逾期天数
      */
     public BigDecimal getOverFee(Integer overDay) {
-        return Arith.mul(amount, new BigDecimal(overDay), new BigDecimal(0.02));
+        return Arith.mul(amount, new BigDecimal(overDay), new BigDecimal(0.02).setScale(2,BigDecimal.ROUND_HALF_UP));
     }
 
 

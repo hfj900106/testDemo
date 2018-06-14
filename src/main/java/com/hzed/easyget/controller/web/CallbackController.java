@@ -21,14 +21,14 @@ import javax.validation.Valid;
  */
 @ExceptionAnno
 @RestController
-@RequestMapping("/easy-get")
+@RequestMapping("/callback")
 public class CallbackController {
     @Autowired
     private CallbackService callbackService;
 
     @ModuleFunc("推送资产-审核回调")
-    @PostMapping("/riskCallback/pushBidCallback")
-    public Response pushBidCallback(@RequestBody PushBidCallbackRequest request) {
+    @PostMapping("/risk/pushBidCallback")
+    public Response pushBidCallback(@Valid @RequestBody PushBidCallbackRequest request) {
         callbackService.pushBidCallback(request);
         return Response.getSuccessResponse();
     }

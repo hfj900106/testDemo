@@ -27,7 +27,7 @@ import javax.validation.Valid;
 @Slf4j
 @ExceptionAnno
 @RestController
-@RequestMapping("/easy-get/login")
+@RequestMapping("/api/login")
 public class LoginController {
     @Autowired
     private LoginService loginService;
@@ -51,14 +51,14 @@ public class LoginController {
     @TokenIgnore
     @ModuleFunc("获取图片验证码")
     @PostMapping("/getPictureCode")
-    public Response<PictureCodeResponse> getPictureCode(@RequestBody PictureCodeRequest request) {
+    public Response<PictureCodeResponse> getPictureCode(@Valid @RequestBody PictureCodeRequest request) {
         return Response.getSuccessResponse(loginService.getPictureCode(request.getMobile()));
     }
 
     @TokenIgnore
     @ModuleFunc("验证图片验证码")
     @PostMapping("/checkPictureCode")
-    public Response checkPictureCode(@RequestBody CheckPictureCodeRequest request) {
+    public Response checkPictureCode(@Valid @RequestBody CheckPictureCodeRequest request) {
         loginService.checkPictureCode(request.getMobile(), request.getCode());
         return Response.getSuccessResponse();
     }

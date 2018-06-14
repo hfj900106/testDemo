@@ -29,7 +29,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(webInterceptor).addPathPatterns("/easy-get/**");
+        registry.addInterceptor(webInterceptor).addPathPatterns("/api/**");
     }
 
     /**

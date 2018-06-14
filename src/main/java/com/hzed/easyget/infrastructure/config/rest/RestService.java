@@ -5,6 +5,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Iterator;
@@ -29,10 +30,10 @@ public class RestService {
      * @param clazz  方法返回类型
      * @return <T>T
      **/
-    public <T> T postForm(String url, Map<String, String> params, Class<T> clazz) {
+    public <T> T postForm(String url, MultiValueMap<String, String> params, Class<T> clazz) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        HttpEntity<Map<String, String>> request = new HttpEntity<>(params, headers);
+        HttpEntity<Map<String, String>> request = new HttpEntity(params, headers);
         ResponseEntity<T> responseEntity = restTemplate.postForEntity(url, request, clazz);
         return responseEntity.getBody();
     }

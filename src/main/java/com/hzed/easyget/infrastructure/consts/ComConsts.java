@@ -23,19 +23,19 @@ public class ComConsts {
     /**
      * 推送风控定时任务名
      */
-    public static final String PUSH_RISK_TASK="pushBid";
+    public static final String PUSH_RISK_TASK = "pushBid";
     /**
      * 推送放款定时任务名
      */
-    public static final String PUSH_BANK_TASK="bankLoan";
+    public static final String PUSH_BANK_TASK = "bankLoan";
     /**
      * 放款回调
      */
-    public  static final String CASHOUT="cashout";
+    public static final String CASHOUT = "cashout";
     /**
      * 还款回调
      */
-    public  static final String BANK="bank";
+    public static final String BANK = "bank";
 
 
 }

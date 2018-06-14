@@ -37,7 +37,7 @@ public enum BluePayStatusEnum {
 
     private String key;
     private String value;
-    private static Map<String , BluePayStatusEnum> map = new HashMap<String , BluePayStatusEnum>();
+    private static Map<String , BluePayStatusEnum> map = new HashMap();
 
     static {
         map.put(OK.key, OK);

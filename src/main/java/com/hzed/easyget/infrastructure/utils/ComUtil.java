@@ -1,11 +1,11 @@
 package com.hzed.easyget.infrastructure.utils;
 
 
-import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.NestedException;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -14,18 +14,7 @@ import java.util.Random;
 @Slf4j
 public class ComUtil {
 
-    public static void checkComBizExcep(boolean condition, BizCodeEnum codeEnum) {
-        if (condition) {
-            throw new ComBizException(codeEnum);
-        }
-    }
-
-    private static final Random RANDOM = new Random();
-
-    public static void putTrace() {
-        //TODO
-//        MDCUtil.put(Consts.TRACE, Long.toHexString(RANDOM.nextLong()).toLowerCase());
-    }
+    public static Locale IDLOCALE = new Locale("in", "ID");
 
     /**
      * 字符串首字母大写
@@ -34,7 +23,6 @@ public class ComUtil {
         char[] cs = str.toCharArray();
         cs[0] -= 32;
         return String.valueOf(cs);
-
     }
 
     /**

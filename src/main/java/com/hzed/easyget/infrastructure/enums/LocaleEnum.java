@@ -1,5 +1,6 @@
 package com.hzed.easyget.infrastructure.enums;
 
+import com.hzed.easyget.infrastructure.utils.ComUtil;
 import lombok.Getter;
 import org.apache.commons.lang.StringUtils;
 
@@ -15,7 +16,7 @@ public enum LocaleEnum {
     /**
      * 过规则
      */
-    id_ID("id-ID", "印尼语", new Locale("in", "ID")),
+    id_ID("id-ID", "印尼语", ComUtil.IDLOCALE),
     zh_CN("zh-CN", "中文", Locale.CHINA),
     en_US("en-US", "英语", Locale.US);
 

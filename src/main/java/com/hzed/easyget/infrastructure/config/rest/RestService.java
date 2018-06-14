@@ -39,6 +39,22 @@ public class RestService {
     }
 
     /**
+     * post json 请求
+     *
+     * @param url       请求地址
+     * @param parameter 参数对象
+     * @param clazz     方法返回类型
+     * @return <T>T
+     **/
+    public <T> T postJson(String url, Object parameter, Class<T> clazz) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        HttpEntity entity = new HttpEntity(parameter, headers);
+        ResponseEntity<T> responseEntity = restTemplate.postForEntity(url, entity, clazz);
+        return responseEntity.getBody();
+    }
+
+    /**
      * get请求
      *
      * @param url    请求地址
@@ -67,21 +83,5 @@ public class RestService {
         url = url + "?" + param;
         T result = restTemplate.getForObject(url, clazz);
         return result;
-    }
-
-    /**
-     * post json 请求
-     *
-     * @param url       请求地址
-     * @param parameter 参数对象
-     * @param clazz     方法返回类型
-     * @return <T>T
-     **/
-    public <T> T postJson(String url, Object parameter, Class<T> clazz) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        HttpEntity entity = new HttpEntity(parameter, headers);
-        ResponseEntity<T> responseEntity = restTemplate.postForEntity(url, entity, clazz);
-        return responseEntity.getBody();
     }
 }

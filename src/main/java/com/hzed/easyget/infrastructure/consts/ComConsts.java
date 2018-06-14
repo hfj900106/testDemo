@@ -20,7 +20,22 @@ public class ComConsts {
     public static final String RISK_CODE = "code";
     public static final int IS_ANDROID = 1;
     public static final int IS_IOS = 2;
-
+    /**
+     * 推送风控定时任务名
+     */
+    public static final String PUSH_RISK_TASK="pushBid";
+    /**
+     * 推送放款定时任务名
+     */
+    public static final String PUSH_BANK_TASK="bankLoan";
+    /**
+     * 放款回调
+     */
+    public  static final String CASHOUT="cashout";
+    /**
+     * 还款回调
+     */
+    public  static final String BANK="bank";
 
 
 }

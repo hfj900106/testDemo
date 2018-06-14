@@ -4,9 +4,11 @@ package com.hzed.easyget.infrastructure.repository;
 import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.auto.entity.example.TempTableExample;
 import com.hzed.easyget.persistence.auto.mapper.*;
+import com.hzed.easyget.persistence.ext.mapper.BidExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -28,6 +30,8 @@ public class TempTableRepository {
     private BillLedgerMapper billLedgerMapper;
     @Autowired
     private UserTransactionMapper transactionMapper;
+    @Autowired
+    private BidExtMapper bidExtMapper;
 
     public void insertJob(TempTable tempTable) {
         tempMapper.insert(tempTable);
@@ -49,23 +53,21 @@ public class TempTableRepository {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void afterBankLoan(Bid bid , BidProgress bidProgress,Bill bill, List<BillLedger> billLedgers,Long  tempId,UserTransaction transaction) {
+    public void afterBankLoan(Bid bid , BidProgress bidProgress,Bill bill, List<BillLedger> billLedgers,Long  tempId,UserTransaction transaction,boolean flag) {
         bidMapper.updateByPrimaryKeySelective(bid);
         bidProgressMapper.insertSelective(bidProgress);
         billMapper.insertSelective(bill);
         //TODO
         billLedgerMapper.batchInsertSelective(billLedgers);
         tempMapper.deleteByPrimaryKey(tempId);
-        transactionMapper.insertSelective(transaction);
+        if(flag){
+            transactionMapper.insertSelective(transaction);
+        }else{
+            bidExtMapper.updateUserTranceOverstate(transaction);
+        }
     }
-    @Transactional(rollbackFor = Exception.class)
-    public void lendingCallback(Bid bid , BidProgress bidProgress,Bill bill, List<BillLedger> billLedgers,Long  tempId,UserTransaction transaction) {
-        bidMapper.updateByPrimaryKeySelective(bid);
-        bidProgressMapper.insertSelective(bidProgress);
-        billMapper.insertSelective(bill);
-        //TODO
-        billLedgerMapper.batchInsertSelective(billLedgers);
-        tempMapper.deleteByPrimaryKey(tempId);
-        transactionMapper.updateByPrimaryKey(transaction);
+
+    public Long findTempTableByBidNoAndName(Long bidId, String pushBankTask) {
+        return  bidExtMapper.findTempTableByBidNoAndName(bidId,pushBankTask);
     }
 }

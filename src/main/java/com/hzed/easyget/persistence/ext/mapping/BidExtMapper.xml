@@ -37,4 +37,16 @@
         LEFT  JOIN  t_loan_user u ON b.`user_id`=u.`id`
         WHERE  b.bid_no=#{bidId}
     </select>
+    <!--查询推送定时任务-->
+    <select id="findTempTableByBidNoAndName" resultType="java.lang.Long">
+      SELECT id from t_loan_temp_table where relase_id=#{bidNo} and job_name=#{taskName}
+    </select>
+    <!--修改交易状态-->
+    <update id="updateUserTranceOverstate" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransaction">
+        update t_loan_user_transaction
+        set
+        is_over = #{isOver,jdbcType=BIT},
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+        where payment_id = #{paymentId,jdbcType=VARCHAR}
+    </update>
 </mapper>

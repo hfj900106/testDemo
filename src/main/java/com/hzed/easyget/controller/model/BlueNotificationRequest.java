@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 public class BlueNotificationRequest  implements Serializable {
-    
+
     private static final long serialVersionUID = 3030045793860365162L;
     @NotBlank(message = "cmd不能为空!")
     private String cmd;
@@ -30,10 +30,7 @@ public class BlueNotificationRequest  implements Serializable {
     private String status;
     @NotNull(message = "交易金额不能为null!")
     private Integer price;
-    @Pattern(regexp = "^cashout|bank$", message = "值只能为cashout")
-    /**
-     *cashout 放款 bank 还款
-     */
+    @Pattern(regexp = "^cashout|bank$", message = "值只能为cashout|bank")
     private String interfacetype;
     @NotBlank(message = "用户手机号类型不能为空!")
     private String paytype;
@@ -43,5 +40,6 @@ public class BlueNotificationRequest  implements Serializable {
     private Integer productid;
     @NotBlank(message = "加密方式不能为空!")
     private String encrypt;
+
 
 }

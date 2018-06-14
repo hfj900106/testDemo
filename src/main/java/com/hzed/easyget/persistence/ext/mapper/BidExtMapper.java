@@ -1,6 +1,8 @@
 package com.hzed.easyget.persistence.ext.mapper;
 
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
+import com.hzed.easyget.persistence.auto.entity.TempTable;
+import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,7 +23,26 @@ public interface BidExtMapper {
      */
     List<BidExt> findBankLoanBids();
 
+    /**
+     * 查询放款信息
+     * @param bidId
+     * @return
+     */
     LoanTransactionRequest findLoanTransaction(@Param("bidId") Long bidId);
+
+    /**
+     * 修改交易表状态
+     * @param transaction
+     */
+    void updateUserTranceOverstate(UserTransaction transaction);
+
+    /**
+     * 查询放款推送任务
+     * @param bidId
+     * @param pushBankTask
+     * @return
+     */
+    Long findTempTableByBidNoAndName(@Param("bidNo") Long bidId,@Param("taskName") String pushBankTask);
 }
 
 

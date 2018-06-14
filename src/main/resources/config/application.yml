@@ -1,7 +1,7 @@
 # 应用端口号
 server.port: 8150
 # 默认根路径
-server.context-path: /hzed/easy-get
+server.context-path: /hzed
 
 # TODO 密码加密 https://blog.csdn.net/linhongwangok/article/details/79076178;https://github.com/ulisesbocchio/jasypt-spring-boot
 spring:
@@ -23,7 +23,6 @@ spring:
     basename: i18n/messages
     encoding: utf-8
     cacheSeconds: 86400 # 24小时
-
 # 日志文件配置
 logging:
   config: classpath:config/logback-spring.xml # 配置文件路径
@@ -41,13 +40,12 @@ aliyun:
 
 # 第三方
 thirdParty:
-  domain: http://localhost:8080 # 请求架构组bulepay域名地址
-  loanTransactionUrl: # 放款接口链接
-  receiverTransactionUrl: # 收款接口链接
-#风控
-risk:
-  domain: http://10.10.20.198:9611 #风控域名地址
-  checkRiskEnableBorrowUrl: /api/risk/checkRiskEnableBorrow #请求风控获取用户是否符合贷款资格
+  pay:
+    domain: http://10.10.30.114:8080 # 请求架构组bulepay域名地址
+    loanTransactionUrl: /bluepay/transferBalance  # 放款接口链接
+    receiverTransactionUrl: # 收款接口链接
+  risk:
+    domain: http://localhost:8080 # 请求架构组bulepay域名地址
 
 #======================================= 系统参数 开始 =======================================#
 system:

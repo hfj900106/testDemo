@@ -6,12 +6,14 @@ import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
+import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.NestedException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.AesUtil;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -57,7 +59,8 @@ public class AuthService {
     private RedisService redisService;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private RestService restService;
 
     /**
      * 获取用户认证状态
@@ -162,9 +165,6 @@ public class AuthService {
         map.put("realName", userInfo.getRealName());
         map.put("identityCode", userInfo.getIdCardNo());
         map.put("userMobile", userInfo.getMobileAccount());
-        //TODO 待定参数
-        map.put("channelType", "1212");
-        map.put("channelCode", "1212");
         //TODO 待验证方式
         String response = template.postForObject("/app/riskOperator/createTaskAndlogin", map, String.class);
         if (StringUtils.isNotBlank(response)) {
@@ -238,30 +238,16 @@ public class AuthService {
         map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
-        map.put("ocrImageStr", idCardBase64ImgStr);
-        //TODO 待验证方式
-        String response = template.postForObject("/app/riskOperator/OCR", map, String.class);
-        if (StringUtils.isNotBlank(response)) {
-            JSONObject jsonObject = FaJsonUtil.parseObj(response, JSONObject.class);
-            if (null == jsonObject) {
-                throw new ComBizException(BizCodeEnum.ERROR_IDCARD_RESULT);
-            }
-            if (Integer.valueOf(jsonObject.get(ComConsts.RISK_CODE).toString()) == ComConsts.RISK_OK) {
-                JSONObject data = FaJsonUtil.parseObj(jsonObject.get("data").toString(), JSONObject.class);
-                if (null == data) {
-                    throw new ComBizException(BizCodeEnum.ERROR_IDCARD_AUTH_RESULT);
-                }
-                //TODO 待确认
-                String idNumber = data.get("idNumber").toString();
-                String gender = data.get("gender").toString();
-                String name = data.get("name").toString();
-                recognitionResponse.setIdNumber(idNumber);
-                recognitionResponse.setGender(gender);
-                recognitionResponse.setName(name);
-            } else {
-                throw new ComBizException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
-            }
-        }
+        map.put("imageFile", idCardBase64ImgStr);
+        //TODO 本地联调
+        RiskResponse riskResponse = restService.postJson("http://10.10.20.202:9611/api/risk/core/ocr", map, RiskResponse.class);
+        String bobyStr = riskResponse.getBody().toString();
+        String name = JSONObject.parseObject(bobyStr, JSONObject.class).getJSONObject("data").getString("name");
+        String gender = JSONObject.parseObject(bobyStr, JSONObject.class).getJSONObject("data").getString("gender");
+        String idNumber = JSONObject.parseObject(bobyStr, JSONObject.class).getJSONObject("data").getString("idNumber");
+        recognitionResponse.setName(name);
+        recognitionResponse.setGender(gender);
+        recognitionResponse.setIdNumber(idNumber);
         return recognitionResponse;
     }
 
@@ -276,10 +262,11 @@ public class AuthService {
         map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
-        map.put("appImageStr", faceBase64ImgStr);
-        //TODO 待验证方式
-        Boolean isSuccess = template.postForObject("/app/riskOperator/faceComparison", map, Boolean.class);
-        if (!isSuccess) {
+        map.put("imageFile", faceBase64ImgStr);
+        //TODO 本地联调
+        RiskResponse riskResponse = restService.postJson("http://10.10.20.202:9611/api/risk/core/faceComparison",map,RiskResponse.class);
+        if(((Boolean) riskResponse.getBody()).booleanValue()==false){
+            log.error("人脸认证返回数据："+riskResponse);
             throw new ComBizException(BizCodeEnum.FAIL_FACE_RECOGNITION);
         }
     }

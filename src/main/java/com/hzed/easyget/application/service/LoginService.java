@@ -76,7 +76,7 @@ public class LoginService {
             user.setId(userId);
             user.setMobileAccount(mobile);
             user.setPlatform(platform);
-            user.setClient((byte) 1);
+            user.setClient("Rupiah Get");
             user.setImei(RequestUtil.getGlobalHead().getImei());
             // 生成token
             GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
@@ -209,6 +209,9 @@ public class LoginService {
         String cacheCode = redisService.getCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile);
         if (StringUtils.isBlank(cacheCode) || !code.equals(cacheCode)) {
             throw new ComBizException(BizCodeEnum.PIC_CODE_ERROR);
+        }else {
+            //验证通过则删除10分钟重发标识，等发送之后会重新加上
+            redisService.clearCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile);
         }
     }
 

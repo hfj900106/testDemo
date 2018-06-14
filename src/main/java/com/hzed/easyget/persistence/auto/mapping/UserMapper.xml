@@ -11,7 +11,7 @@
     <result column="real_name" jdbcType="VARCHAR" property="realName" />
     <result column="id_card_no" jdbcType="VARCHAR" property="idCardNo" />
     <result column="platform" jdbcType="VARCHAR" property="platform" />
-    <result column="client" jdbcType="TINYINT" property="client" />
+    <result column="client" jdbcType="VARCHAR" property="client" />
     <result column="imei" jdbcType="VARCHAR" property="imei" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -153,7 +153,7 @@
     values (#{id,jdbcType=BIGINT}, #{mobileAccount,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{profilePhoto,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{gender,jdbcType=TINYINT}, 
       #{realName,jdbcType=VARCHAR}, #{idCardNo,jdbcType=VARCHAR}, #{platform,jdbcType=VARCHAR}, 
-      #{client,jdbcType=TINYINT}, #{imei,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, 
+      #{client,jdbcType=VARCHAR}, #{imei,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{remark,jdbcType=VARCHAR})
   </insert>
@@ -238,7 +238,7 @@
         #{platform,jdbcType=VARCHAR},
       </if>
       <if test="client != null">
-        #{client,jdbcType=TINYINT},
+        #{client,jdbcType=VARCHAR},
       </if>
       <if test="imei != null">
         #{imei,jdbcType=VARCHAR},
@@ -297,7 +297,7 @@
         platform = #{record.platform,jdbcType=VARCHAR},
       </if>
       <if test="record.client != null">
-        client = #{record.client,jdbcType=TINYINT},
+        client = #{record.client,jdbcType=VARCHAR},
       </if>
       <if test="record.imei != null">
         imei = #{record.imei,jdbcType=VARCHAR},
@@ -333,7 +333,7 @@
       real_name = #{record.realName,jdbcType=VARCHAR},
       id_card_no = #{record.idCardNo,jdbcType=VARCHAR},
       platform = #{record.platform,jdbcType=VARCHAR},
-      client = #{record.client,jdbcType=TINYINT},
+      client = #{record.client,jdbcType=VARCHAR},
       imei = #{record.imei,jdbcType=VARCHAR},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -372,7 +372,7 @@
         platform = #{platform,jdbcType=VARCHAR},
       </if>
       <if test="client != null">
-        client = #{client,jdbcType=TINYINT},
+        client = #{client,jdbcType=VARCHAR},
       </if>
       <if test="imei != null">
         imei = #{imei,jdbcType=VARCHAR},
@@ -405,7 +405,7 @@
       real_name = #{realName,jdbcType=VARCHAR},
       id_card_no = #{idCardNo,jdbcType=VARCHAR},
       platform = #{platform,jdbcType=VARCHAR},
-      client = #{client,jdbcType=TINYINT},
+      client = #{client,jdbcType=VARCHAR},
       imei = #{imei,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -449,7 +449,7 @@
       (#{item.id,jdbcType=BIGINT}, #{item.mobileAccount,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, 
         #{item.profilePhoto,jdbcType=VARCHAR}, #{item.nickName,jdbcType=VARCHAR}, #{item.gender,jdbcType=TINYINT}, 
         #{item.realName,jdbcType=VARCHAR}, #{item.idCardNo,jdbcType=VARCHAR}, #{item.platform,jdbcType=VARCHAR}, 
-        #{item.client,jdbcType=TINYINT}, #{item.imei,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, 
+        #{item.client,jdbcType=VARCHAR}, #{item.imei,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, 
         #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
         #{item.remark,jdbcType=VARCHAR})
     </foreach>
@@ -492,7 +492,7 @@
           #{item.platform,jdbcType=VARCHAR}
         </if>
         <if test="'client' == column.value">
-          #{item.client,jdbcType=TINYINT}
+          #{item.client,jdbcType=VARCHAR}
         </if>
         <if test="'imei' == column.value">
           #{item.imei,jdbcType=VARCHAR}

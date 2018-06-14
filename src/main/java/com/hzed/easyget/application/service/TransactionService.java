@@ -37,11 +37,12 @@ public class TransactionService {
         log.info("支付放款接口请求报文：{}", JSON.toJSONString(request));
         Response response = restService.postJson(prop.getLoanTransactionUrl(), request, Response.class);
         log.info("支付放款接口返回报文：{}", JSON.toJSONString(response));
-        if (!BizCodeEnum.SUCCESS.equals(response.getCode())) {
+        //判断返回状态 0000 0001 0002
+        if (!BizCodeEnum.SUCCESS.equals(response.getCode()) || !BizCodeEnum.PROCESS_LENDING.equals(response.getCode()) || !BizCodeEnum.REPAYMENTS.equals(response.getCode())) {
 
             throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, response.getMessage());
         }
-        return Response.getSuccessResponse();
+        return response;
     }
 
 

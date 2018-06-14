@@ -24,6 +24,9 @@ public enum BizCodeEnum {
     LOAN_TRANSACTION_ERROR("8002", "支付放款接口异常"),
     RECEIVER_TRANSACTION_ERROR("8003", "支付收款接口异常"),
     OVER_REPAYMENT_MONEY("8004", "还款金额大于项目待还总额"),
+    REPAYMENTS("0001","还款处理中"),
+    PROCESS_LENDING("0002","放款处理中"),
+
 
     // 1-请求业务校验
     ILLEGAL_PARAM("1000", "请求参数非法"),

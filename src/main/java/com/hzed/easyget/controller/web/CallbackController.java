@@ -1,6 +1,7 @@
 package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.CallbackService;
+import com.hzed.easyget.controller.model.BlueNotificationRequest;
 import com.hzed.easyget.controller.model.PushBidCallbackRequest;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /**
  * 风控回调
@@ -30,6 +33,15 @@ public class CallbackController {
         return Response.getSuccessResponse();
     }
 
+    /**
+     * 放款回调接口
+     * @param blueNotificationRequest
+     */
+    @ModuleFunc("放款回调")
+    @PostMapping("/riskCallback/ lendingCallback")
+    public void lendingCallbackController(@Valid @RequestBody BlueNotificationRequest blueNotificationRequest){
+
+    }
 
 
 }

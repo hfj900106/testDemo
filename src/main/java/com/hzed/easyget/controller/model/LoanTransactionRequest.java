@@ -3,6 +3,8 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.math.BigDecimal;
+
 /**
  * 放款交易请求参数
  *
@@ -19,10 +21,6 @@ public class LoanTransactionRequest {
      * 交易id
      */
     private String transactionId;
-    /**
-     * 渠道id,固定值 100
-     */
-    private Integer promotionId = 100;
     /**
      * 收款所在国
      */
@@ -47,7 +45,7 @@ public class LoanTransactionRequest {
      * 收款方手机号
      */
     @NotBlank(message = "收款方手机号不能为空")
-    private Integer payeeMsisdn;
+    private String payeeMsisdn;
     /**
      * 收款方类型,固定值 NORMAL
      */
@@ -56,16 +54,16 @@ public class LoanTransactionRequest {
      * 放款金额
      */
     @NotBlank(message = "放款金额不能为空")
-    private Integer amount;
+    private BigDecimal amount;
     /**
      * 币种值,固定值 IDR
      */
     private String currency = "IDR";
     /**
-     * 产品id
+     * 流水号
      */
-    @NotBlank(message = "产品id不能为空")
-    private Integer productId;
+    @NotBlank(message = "请求流水号不能为空")
+    private String requestNo;
 
 
 

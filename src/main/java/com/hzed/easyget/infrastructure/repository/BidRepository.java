@@ -1,5 +1,6 @@
 package com.hzed.easyget.infrastructure.repository;
 
+import com.hzed.easyget.controller.model.LoanTransactionRequest;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.persistence.auto.entity.Bid;
@@ -69,5 +70,14 @@ public class BidRepository {
         BidExample example = new BidExample();
         example.createCriteria().andUserIdEqualTo(userId);
         return bidMapper.selectByExample(example);
+    }
+
+    /**
+     * 放款信息查询
+     * @param bidId
+     * @return
+     */
+    public LoanTransactionRequest findLoanTransaction(Long bidId) {
+        return bidExtMapper.findLoanTransaction(bidId);
     }
 }

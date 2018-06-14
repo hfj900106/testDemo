@@ -58,4 +58,14 @@ public class TempTableRepository {
         tempMapper.deleteByPrimaryKey(tempId);
         transactionMapper.insertSelective(transaction);
     }
+    @Transactional(rollbackFor = Exception.class)
+    public void lendingCallback(Bid bid , BidProgress bidProgress,Bill bill, List<BillLedger> billLedgers,Long  tempId,UserTransaction transaction) {
+        bidMapper.updateByPrimaryKeySelective(bid);
+        bidProgressMapper.insertSelective(bidProgress);
+        billMapper.insertSelective(bill);
+        //TODO
+        billLedgerMapper.batchInsertSelective(billLedgers);
+        tempMapper.deleteByPrimaryKey(tempId);
+        transactionMapper.updateByPrimaryKey(transaction);
+    }
 }

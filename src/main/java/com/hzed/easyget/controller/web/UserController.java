@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @ExceptionAnno
 @RestController
-@RequestMapping("/easy-get/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired

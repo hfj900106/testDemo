@@ -8,6 +8,8 @@ import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  * 还款
  *
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @ExceptionAnno
 @RestController
-@RequestMapping("/easy-get/repay")
+@RequestMapping("/api/repay")
 public class RepayController {
 
     @Autowired
@@ -31,28 +33,28 @@ public class RepayController {
 
     @ModuleFunc("结清全部")
     @PostMapping("/repayAll")
-    public Response repayAll(@RequestBody RepayAllRequest request){
+    public Response repayAll(@Valid @RequestBody RepayAllRequest request){
         repayService.repayAll(request);
         return Response.getSuccessResponse();
     }
 
     @ModuleFunc("部分还款")
     @PostMapping("/repayPart")
-    public Response repayPart(@RequestBody RepayPartRequest request){
+    public Response repayPart(@Valid @RequestBody RepayPartRequest request){
         repayService.repayPart(request);
         return Response.getSuccessResponse();
     }
 
     @ModuleFunc("还款详情")
     @GetMapping("/repayDetail")
-    public Response<RepayDetailResponse> repayDetail(@RequestBody RepayDetailRequest request){
+    public Response<RepayDetailResponse> repayDetail(@Valid @RequestBody RepayDetailRequest request){
 
         return Response.getSuccessResponse(repayService.repayDetail(request));
     }
 
     @ModuleFunc("部分还款详情")
     @RequestMapping("/repayPartDetail")
-    public Response<RepayPartDetailResponse> repayPartDetail(@RequestBody RepayPartDetailRequest request){
+    public Response<RepayPartDetailResponse> repayPartDetail(@Valid @RequestBody RepayPartDetailRequest request){
         return Response.getSuccessResponse(repayService.repayPartDetail(request));
     }
 

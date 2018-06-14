@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 /**
  * 用户认证
  *
@@ -22,48 +24,48 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @ExceptionAnno
 @RestController
-@RequestMapping("/easy-get/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
     private AuthService authService;
 
     @ModuleFunc(value = "通讯录认证", isParameterValidate = false)
     @PostMapping("/contacts")
-    public Response contacts(@RequestBody ContactsRequest request) {
+    public Response contacts(@Valid @RequestBody ContactsRequest request) {
         authService.authContacts(request);
         return Response.getSuccessResponse();
     }
 
     @ModuleFunc("短信认证")
     @PostMapping("/messages")
-    public Response messages(@RequestBody MessagesRequest request) {
+    public Response messages(@Valid @RequestBody MessagesRequest request) {
         authService.authMessages(request);
         return Response.getSuccessResponse();
     }
 
     @ModuleFunc("个人信息认证")
     @PostMapping("/personInfo")
-    public Response personInfoAuth(@RequestBody PersonInfoAuthRequest request) {
+    public Response personInfoAuth(@Valid @RequestBody PersonInfoAuthRequest request) {
         authService.authPersonInfo(request);
         return Response.getSuccessResponse();
     }
 
     @ModuleFunc(value = "身份证识别", isParameterPrint = false)
     @PostMapping("/idCardRecognition")
-    public Response<IdCardRecognitionResponse> idCardRecognition(@RequestBody IdCardRecognitionRequest request) {
+    public Response<IdCardRecognitionResponse> idCardRecognition(@Valid @RequestBody IdCardRecognitionRequest request) {
         return Response.getSuccessResponse(authService.idCardRecognition(request));
     }
 
     @ModuleFunc(value = "人脸识别", isParameterPrint = false)
     @PostMapping("/faceRecognition")
-    public Response faceRecognition(@RequestBody FaceRecognitionRequest request) {
+    public Response faceRecognition(@Valid @RequestBody FaceRecognitionRequest request) {
         authService.faceRecognition(request);
         return Response.getSuccessResponse();
     }
 
     @ModuleFunc(value = "身份信息认证", isParameterPrint = false)
     @PostMapping("/identityInfo")
-    public Response identityInformationAuth(@RequestBody IdentityInfoAuthRequest request) {
+    public Response identityInformationAuth(@Valid @RequestBody IdentityInfoAuthRequest request) {
         authService.identityInfoAuth(request);
         return Response.getSuccessResponse();
     }
@@ -83,14 +85,14 @@ public class AuthController {
 
     @ModuleFunc("/运营商认证-验证码认证")
     @PostMapping("/operatorAuth")
-    public Response operatorAuth(PeratorAuthRequest request) {
+    public Response operatorAuth(@Valid @RequestBody PeratorAuthRequest request) {
         authService.operatorAuth(request);
         return Response.getSuccessResponse();
     }
 
     @ModuleFunc("专业信息认证")
     @PostMapping("/professional")
-    public Response professionalAuth(@RequestBody ProfessionalRequest request) {
+    public Response professionalAuth(@Valid @RequestBody ProfessionalRequest request) {
         authService.professionalAuth(request);
         return Response.getSuccessResponse();
     }

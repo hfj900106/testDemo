@@ -66,9 +66,10 @@ public class HomeController {
     }
 
     @ModuleFunc("发起借款校验")
-    @PostMapping("/startLoan")
-    public Response<LoanResponse> startLoan(){
-        return Response.getSuccessResponse(homeService.startLoan());
+    @PostMapping("/checkLoan")
+    public Response checkLoan(){
+        homeService.checkLoan();
+        return Response.getSuccessResponse();
     }
 
 }

@@ -9,9 +9,14 @@ import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.repository.*;
+import com.hzed.easyget.infrastructure.model.RiskResponse;
+import com.hzed.easyget.infrastructure.repository.NewsRepository;
+import com.hzed.easyget.infrastructure.repository.ProductRepository;
+import com.hzed.easyget.infrastructure.repository.UserRepository;
+import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
@@ -158,13 +163,25 @@ public class HomeService {
         return bombResponseList;
     }
 
-    public LoanResponse startLoan() {
+    public void checkLoan() {
+
+        final String MK_02 = "MK02";
+
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String imei = RequestUtil.getGlobalHead().getImei();
         User user = userRepository.findById(userId);
 
-        comService.checkRiskEnableBorrow(user.getMobileAccount(),imei);
-        boolean isLoan = comService.isLoan(userId);
-        return LoanResponse.builder().isLoan(isLoan).build();
+        RiskResponse response = comService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
+        String errorCode = response.getHead().getError_code();
+
+        if (StringUtils.isNotBlank(errorCode)) {
+            //每日通过超过数量
+            if (MK_02.equals(errorCode)) {
+                throw new WarnException(BizCodeEnum.INSUFFICIENT_QUOTA);
+            } else {
+                throw new WarnException(BizCodeEnum.UN_LOAN_QUALIFICATION);
+            }
+        }
+
     }
 }

@@ -28,6 +28,7 @@ public enum BizCodeEnum {
     PROCESS_LENDING("0002","放款处理中"),
 
 
+
     // 1-请求业务校验
     ILLEGAL_PARAM("1000", "请求参数非法"),
     ILLEGAL_APPKEY("1001", "无效的appKey"),
@@ -63,6 +64,8 @@ public enum BizCodeEnum {
     ILLEGAL_LEDGER("1029", "账单ID：{0}不存在台账"),
     ILLEGAL_BILLID("1030", "账单ID：{0}不存在"),
     NOT_EXIST_BILL("1031",  "标ID：{0}的账单不存在"),
+    INSUFFICIENT_QUOTA("1032","名额不足"),
+    UN_LOAN_QUALIFICATION("1033","无贷款资格")
 
     ;
 

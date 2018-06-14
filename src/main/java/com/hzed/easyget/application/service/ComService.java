@@ -202,6 +202,7 @@ public class ComService {
     /**
      * 根据bid状态判断用户是否有贷款资格
      */
+    @Deprecated
     public boolean isLoan(Long userId){
         List<Bid> bidList = bidRepository.findByUserIdAndStatus(userId, Lists.newArrayList(BidStatusEnum.RISK_ING.getCode().byteValue(), BidStatusEnum.MANMADE_ING.getCode().byteValue(),
                 BidStatusEnum.AUDIT_PASS.getCode().byteValue(), BidStatusEnum.REPAYMENT.getCode().byteValue()));

@@ -18,6 +18,7 @@ import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.*;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,7 @@ import java.util.Map;
  * @author wuchengwu
  * @date 2018/5/21
  */
+@Slf4j
 @Service
 public class LoginService {
     private static final String DEFAULT_SMS_CODE = "0000";
@@ -64,7 +66,7 @@ public class LoginService {
         User user = userRepository.findByMobile(mobile);
         Long userId;
         String token;
-        //用户为空，那么该用户的token肯定也为空
+        //用户为空，那么该用户的token表数据肯定也为空
         if (user == null) {
             userId = IdentifierGenerator.nextId();
             //build User
@@ -90,25 +92,23 @@ public class LoginService {
             // 生成token
             GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
             token = JwtUtil.createToken(newUserToken);
+            //token统一校验时已经校验了过期时间（7天），所以这里不考虑过期
             UserToken userToken = userTokenRepository.findByUserIdAndImei(userId, imei);
             if (userToken != null) {
-                // UserToken
+                // UserToken 老用户登录都要刷新token表，刷新过期时间
                 UserToken userTokenUpdate = buildUserToken(userToken.getId(), userId, token, imei);
                 userTokenUpdate.setUpdateTime(LocalDateTime.now());
                 // UserLogin
                 UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
                 userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
             } else {
-                //有用户但是没token，说明过期要重新登录
-                UserToken userTokenInsert = buildUserToken(IdentifierGenerator.nextId(), userId, token, imei);
-                userTokenInsert.setCreateTime(LocalDateTime.now());
-                // UserLogin
-                UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
-                userRepository.insertTokenAndLogin(userTokenInsert, userLogin);
+                //有用户但是tonken表没数据，正常情况下不存在这种情况
+                log.error("用户："+user.getId()+"在token表中没有数据");
+                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION);
             }
         }
         //放入redis 3个小时
-        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 3 * 3600L);
+        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token,RedisConsts.THREE_HOUR);
         return LoginByCodeResponse.builder().token(token).build();
     }
 

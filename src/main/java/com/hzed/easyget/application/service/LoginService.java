@@ -17,10 +17,7 @@ import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.*;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.SmsLog;
-import com.hzed.easyget.persistence.auto.entity.User;
-import com.hzed.easyget.persistence.auto.entity.UserLogin;
-import com.hzed.easyget.persistence.auto.entity.UserToken;
+import com.hzed.easyget.persistence.auto.entity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,8 +56,7 @@ public class LoginService {
         String platform = globalHead.getPlatform();
         String imei = globalHead.getImei();
         String device = request.getDevice();
-        // TODO IP
-        String ip = "";
+        String ip = RequestUtil.getIp();
         //校验验证码
         checkSmsCode(mobile, smsCode);
 
@@ -86,7 +82,9 @@ public class LoginService {
             userToken.setCreateTime(LocalDateTime.now());
             // UserLogin
             UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
-            userRepository.insertUserAndTokenAndLogin(user, userToken, userLogin);
+            //UserStatus
+            UserStatus userStatus = buildUserStatus(user.getId());
+            userRepository.insertUserAndTokenAndLoginAndStatus(user, userToken, userLogin, userStatus);
         } else {
             userId = user.getId();
             // 生成token
@@ -136,6 +134,17 @@ public class LoginService {
         userToken.setImei(imei);
         userToken.setExpireTime(DateUtil.addDays(LocalDateTime.now(), systemProp.getTokenExpire()));
         return userToken;
+    }
+
+    private UserStatus buildUserStatus(Long userId) {
+        UserStatus userStatus = new UserStatus();
+        userStatus.setId(IdentifierGenerator.nextId());
+        userStatus.setUserId(userId);
+        userStatus.setIsBlacklist(false);
+        userStatus.setIsLock(false);
+        userStatus.setCreateTime(LocalDateTime.now());
+        userStatus.setRemark("注册");
+        return userStatus;
     }
 
     /**
@@ -193,7 +202,7 @@ public class LoginService {
      * 生成随机图片
      */
     public PictureCodeResponse getPictureCode(String mobile) {
-        Map<String,String> map = PicUtil.getPictureCode();
+        Map<String, String> map = PicUtil.getPictureCode();
         //保存到Redis，五分钟有效时间
         redisService.setCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile, map.get("code"), 300L);
         PictureCodeResponse response = new PictureCodeResponse();
@@ -209,7 +218,7 @@ public class LoginService {
         String cacheCode = redisService.getCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile);
         if (StringUtils.isBlank(cacheCode) || !code.equals(cacheCode)) {
             throw new ComBizException(BizCodeEnum.PIC_CODE_ERROR);
-        }else {
+        } else {
             //验证通过则删除10分钟重发标识，等发送之后会重新加上
             redisService.clearCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile);
         }

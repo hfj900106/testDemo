@@ -50,9 +50,9 @@ public class User implements Serializable {
     private String platform;
 
     /**
-     * 注册渠道 1-印尼APP
+     * 注册渠道 Rupiah Get 表示印尼APP
      */
-    private Byte client;
+    private String client;
 
     /**
      * 设备唯一标识
@@ -154,12 +154,12 @@ public class User implements Serializable {
         this.platform = platform == null ? null : platform.trim();
     }
 
-    public Byte getClient() {
+    public String getClient() {
         return client;
     }
 
-    public void setClient(Byte client) {
-        this.client = client;
+    public void setClient(String client) {
+        this.client = client == null ? null : client.trim();
     }
 
     public String getImei() {
@@ -293,7 +293,7 @@ public class User implements Serializable {
             return this;
         }
 
-        public Builder client(Byte client) {
+        public Builder client(String client) {
             obj.setClient(client);
             return this;
         }

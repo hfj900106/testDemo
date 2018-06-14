@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 /**
  * 借款相关
  *
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @ExceptionAnno
 @RestController
-@RequestMapping("/easy-get/loan")
+@RequestMapping("/api/loan")
 public class LoanController {
 
     @Autowired
@@ -29,14 +31,14 @@ public class LoanController {
 
     @ModuleFunc("借款详情")
     @RequestMapping("/loanDetail")
-    public Response<LoanDetailResponse> loanDetail (@RequestBody LoanDetailRequest request){
+    public Response<LoanDetailResponse> loanDetail (@Valid @RequestBody LoanDetailRequest request){
 
         return Response.getSuccessResponse(loanService.loanDetail(request));
     }
 
     @ModuleFunc("申请借款")
     @RequestMapping("/submitLoan")
-    public Response<SubmitLoanResponse> submitLoan(@RequestBody SubmitLoanRequest request){
+    public Response<SubmitLoanResponse> submitLoan(@Valid @RequestBody SubmitLoanRequest request){
         return Response.getSuccessResponse(loanService.submitLoan(request));
     }
 }

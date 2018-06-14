@@ -1,15 +1,9 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.persistence.auto.entity.User;
-import com.hzed.easyget.persistence.auto.entity.UserLogin;
-import com.hzed.easyget.persistence.auto.entity.UserToken;
-import com.hzed.easyget.persistence.auto.entity.UserTransaction;
+import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.auto.entity.example.UserExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
-import com.hzed.easyget.persistence.auto.mapper.UserLoginMapper;
-import com.hzed.easyget.persistence.auto.mapper.UserMapper;
-import com.hzed.easyget.persistence.auto.mapper.UserTokenMapper;
-import com.hzed.easyget.persistence.auto.mapper.UserTransactionMapper;
+import com.hzed.easyget.persistence.auto.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +28,8 @@ public class UserRepository {
     private UserTokenMapper tokenMapper;
     @Autowired
     private UserLoginMapper loginMapper;
+    @Autowired
+    private UserStatusMapper statusMapper;
 
     public User findByMobile(String mobile) {
         UserExample example = new UserExample();
@@ -58,18 +54,19 @@ public class UserRepository {
         return userMapper.selectByPrimaryKey(id);
     }
 
-    public List<UserTransaction> findTransactionRecordBySelect(Long userId, Boolean isDisplay) {
+    public List<UserTransaction> findTransactionRecordBySelect(Long userId, Boolean isOver) {
         UserTransactionExample example = new UserTransactionExample();
-        example.createCriteria().andUserIdEqualTo(userId).andIsDisplayEqualTo(isDisplay);
+        example.createCriteria().andUserIdEqualTo(userId).andIsOverEqualTo(isOver);
         List<UserTransaction> transactionRecords = userTransactionMapper.selectByExampleSelective(example);
         return transactionRecords;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void insertUserAndTokenAndLogin(User user, UserToken token, UserLogin login) {
+    public void insertUserAndTokenAndLoginAndStatus(User user, UserToken token, UserLogin login, UserStatus status) {
         userMapper.insertSelective(user);
         tokenMapper.insertSelective(token);
         loginMapper.insertSelective(login);
+        statusMapper.insertSelective(status);
     }
 
     @Transactional(rollbackFor = Exception.class)

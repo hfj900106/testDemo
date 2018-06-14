@@ -232,18 +232,19 @@ public class RepayService {
         long userTrancationId = IdentifierGenerator.nextId();
         // 放入threadLocal后面要用
         ThreadLocalUtil.set(USER_TRANCATIONID, userTrancationId);
-        UserTransaction userTransaction = new UserTransaction();
-        userTransaction.setId(userTrancationId);
-        userTransaction.setUserId(RequestUtil.getGlobalUser().getUserId());
-        userTransaction.setBidId(bidId);
-        userTransaction.setType(TransactionTypeEnum.OUT.getCode().byteValue());
-        userTransaction.setAmount(repayAmount);
-        userTransaction.setRequestSeq(requestSeq);
-        userTransaction.setBank(bid.getInBank());
-        userTransaction.setAccount(bid.getInAccount());
-        userTransaction.setMode((byte) 1);
-        userTransaction.setIsDisplay(true);
-        userTransactionRepository.insert(userTransaction);
+        // TODO
+//        UserTransaction userTransaction = new UserTransaction();
+//        userTransaction.setId(userTrancationId);
+//        userTransaction.setUserId(RequestUtil.getGlobalUser().getUserId());
+//        userTransaction.setBidId(bidId);
+//        userTransaction.setType(TransactionTypeEnum.OUT.getCode().byteValue());
+//        userTransaction.setAmount(repayAmount);
+//        userTransaction.setRequestSeq(requestSeq);
+//        userTransaction.setBank(bid.getInBank());
+//        userTransaction.setAccount(bid.getInAccount());
+//        userTransaction.setMode((byte) 1);
+//        userTransaction.setIsDisplay(true);
+//        userTransactionRepository.insert(userTransaction);
 
         // 保存 t_loan_bid_progress 标的进度表
         BidProgress progressInsert = new BidProgress();

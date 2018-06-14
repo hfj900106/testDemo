@@ -123,6 +123,12 @@
             <artifactId>indonesia-sms</artifactId>
             <version>1.0.1</version>
         </dependency>
+        <!--rabbitmq依赖 -->
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+            <version>1.7.4.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>

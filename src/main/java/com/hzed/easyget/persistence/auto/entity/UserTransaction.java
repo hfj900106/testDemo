@@ -11,6 +11,11 @@ public class UserTransaction implements Serializable {
     private Long id;
 
     /**
+     * 支付id
+     */
+    private String paymentId;
+
+    /**
      * 用户id
      */
     private Long userId;
@@ -31,11 +36,6 @@ public class UserTransaction implements Serializable {
     private BigDecimal amount;
 
     /**
-     * 交易流水号
-     */
-    private String requestSeq;
-
-    /**
      * 交易银行
      */
     private String bank;
@@ -46,20 +46,16 @@ public class UserTransaction implements Serializable {
     private String account;
 
     /**
-     * 交易方式 1-APP 2-ATM 3-other
+     * 是否交易完 1-是 0-否
      */
-    private Byte mode;
-
-    /**
-     * 是否显示 1-是 0-否
-     */
-    private Boolean isDisplay;
+    private Boolean isOver;
 
     /**
      */
     private Long createBy;
 
     /**
+     * 交易创建时间
      */
     private LocalDateTime createTime;
 
@@ -68,6 +64,7 @@ public class UserTransaction implements Serializable {
     private Long updateBy;
 
     /**
+     * 交易完成时间
      */
     private LocalDateTime updateTime;
 
@@ -84,6 +81,14 @@ public class UserTransaction implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId == null ? null : paymentId.trim();
     }
 
     public Long getUserId() {
@@ -118,14 +123,6 @@ public class UserTransaction implements Serializable {
         this.amount = amount;
     }
 
-    public String getRequestSeq() {
-        return requestSeq;
-    }
-
-    public void setRequestSeq(String requestSeq) {
-        this.requestSeq = requestSeq == null ? null : requestSeq.trim();
-    }
-
     public String getBank() {
         return bank;
     }
@@ -142,20 +139,12 @@ public class UserTransaction implements Serializable {
         this.account = account == null ? null : account.trim();
     }
 
-    public Byte getMode() {
-        return mode;
+    public Boolean getIsOver() {
+        return isOver;
     }
 
-    public void setMode(Byte mode) {
-        this.mode = mode;
-    }
-
-    public Boolean getIsDisplay() {
-        return isDisplay;
-    }
-
-    public void setIsDisplay(Boolean isDisplay) {
-        this.isDisplay = isDisplay;
+    public void setIsOver(Boolean isOver) {
+        this.isOver = isOver;
     }
 
     public Long getCreateBy() {
@@ -205,15 +194,14 @@ public class UserTransaction implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
+        sb.append(", paymentId=").append(paymentId);
         sb.append(", userId=").append(userId);
         sb.append(", bidId=").append(bidId);
         sb.append(", type=").append(type);
         sb.append(", amount=").append(amount);
-        sb.append(", requestSeq=").append(requestSeq);
         sb.append(", bank=").append(bank);
         sb.append(", account=").append(account);
-        sb.append(", mode=").append(mode);
-        sb.append(", isDisplay=").append(isDisplay);
+        sb.append(", isOver=").append(isOver);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -240,6 +228,11 @@ public class UserTransaction implements Serializable {
             return this;
         }
 
+        public Builder paymentId(String paymentId) {
+            obj.setPaymentId(paymentId);
+            return this;
+        }
+
         public Builder userId(Long userId) {
             obj.setUserId(userId);
             return this;
@@ -260,11 +253,6 @@ public class UserTransaction implements Serializable {
             return this;
         }
 
-        public Builder requestSeq(String requestSeq) {
-            obj.setRequestSeq(requestSeq);
-            return this;
-        }
-
         public Builder bank(String bank) {
             obj.setBank(bank);
             return this;
@@ -275,13 +263,8 @@ public class UserTransaction implements Serializable {
             return this;
         }
 
-        public Builder mode(Byte mode) {
-            obj.setMode(mode);
-            return this;
-        }
-
-        public Builder isDisplay(Boolean isDisplay) {
-            obj.setIsDisplay(isDisplay);
+        public Builder isOver(Boolean isOver) {
+            obj.setIsOver(isOver);
             return this;
         }
 
@@ -317,15 +300,14 @@ public class UserTransaction implements Serializable {
 
     public enum Column {
         id("id"),
+        paymentId("payment_id"),
         userId("user_id"),
         bidId("bid_id"),
         type("type"),
         amount("amount"),
-        requestSeq("request_seq"),
         bank("bank"),
         account("account"),
-        mode("mode"),
-        isDisplay("is_display"),
+        isOver("is_over"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

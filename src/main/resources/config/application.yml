@@ -1,7 +1,7 @@
 # 应用端口号
 server.port: 8150
 # 默认根路径
-server.context-path: /hzed
+server.context-path: /hzed/easy-get
 
 # TODO 密码加密 https://blog.csdn.net/linhongwangok/article/details/79076178;https://github.com/ulisesbocchio/jasypt-spring-boot
 spring:

@@ -222,6 +222,76 @@ public class UserTransactionExample {
             return (Criteria) this;
         }
 
+        public Criteria andPaymentIdIsNull() {
+            addCriterion("payment_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdIsNotNull() {
+            addCriterion("payment_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdEqualTo(String value) {
+            addCriterion("payment_id =", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdNotEqualTo(String value) {
+            addCriterion("payment_id <>", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdGreaterThan(String value) {
+            addCriterion("payment_id >", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdGreaterThanOrEqualTo(String value) {
+            addCriterion("payment_id >=", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdLessThan(String value) {
+            addCriterion("payment_id <", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdLessThanOrEqualTo(String value) {
+            addCriterion("payment_id <=", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdLike(String value) {
+            addCriterion("payment_id like", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdNotLike(String value) {
+            addCriterion("payment_id not like", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdIn(List<String> values) {
+            addCriterion("payment_id in", values, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdNotIn(List<String> values) {
+            addCriterion("payment_id not in", values, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdBetween(String value1, String value2) {
+            addCriterion("payment_id between", value1, value2, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdNotBetween(String value1, String value2) {
+            addCriterion("payment_id not between", value1, value2, "paymentId");
+            return (Criteria) this;
+        }
+
         public Criteria andUserIdIsNull() {
             addCriterion("user_id is null");
             return (Criteria) this;
@@ -462,76 +532,6 @@ public class UserTransactionExample {
             return (Criteria) this;
         }
 
-        public Criteria andRequestSeqIsNull() {
-            addCriterion("request_seq is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqIsNotNull() {
-            addCriterion("request_seq is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqEqualTo(String value) {
-            addCriterion("request_seq =", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqNotEqualTo(String value) {
-            addCriterion("request_seq <>", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqGreaterThan(String value) {
-            addCriterion("request_seq >", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqGreaterThanOrEqualTo(String value) {
-            addCriterion("request_seq >=", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqLessThan(String value) {
-            addCriterion("request_seq <", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqLessThanOrEqualTo(String value) {
-            addCriterion("request_seq <=", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqLike(String value) {
-            addCriterion("request_seq like", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqNotLike(String value) {
-            addCriterion("request_seq not like", value, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqIn(List<String> values) {
-            addCriterion("request_seq in", values, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqNotIn(List<String> values) {
-            addCriterion("request_seq not in", values, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqBetween(String value1, String value2) {
-            addCriterion("request_seq between", value1, value2, "requestSeq");
-            return (Criteria) this;
-        }
-
-        public Criteria andRequestSeqNotBetween(String value1, String value2) {
-            addCriterion("request_seq not between", value1, value2, "requestSeq");
-            return (Criteria) this;
-        }
-
         public Criteria andBankIsNull() {
             addCriterion("bank is null");
             return (Criteria) this;
@@ -672,123 +672,63 @@ public class UserTransactionExample {
             return (Criteria) this;
         }
 
-        public Criteria andModeIsNull() {
-            addCriterion("mode is null");
+        public Criteria andIsOverIsNull() {
+            addCriterion("is_over is null");
             return (Criteria) this;
         }
 
-        public Criteria andModeIsNotNull() {
-            addCriterion("mode is not null");
+        public Criteria andIsOverIsNotNull() {
+            addCriterion("is_over is not null");
             return (Criteria) this;
         }
 
-        public Criteria andModeEqualTo(Byte value) {
-            addCriterion("mode =", value, "mode");
+        public Criteria andIsOverEqualTo(Boolean value) {
+            addCriterion("is_over =", value, "isOver");
             return (Criteria) this;
         }
 
-        public Criteria andModeNotEqualTo(Byte value) {
-            addCriterion("mode <>", value, "mode");
+        public Criteria andIsOverNotEqualTo(Boolean value) {
+            addCriterion("is_over <>", value, "isOver");
             return (Criteria) this;
         }
 
-        public Criteria andModeGreaterThan(Byte value) {
-            addCriterion("mode >", value, "mode");
+        public Criteria andIsOverGreaterThan(Boolean value) {
+            addCriterion("is_over >", value, "isOver");
             return (Criteria) this;
         }
 
-        public Criteria andModeGreaterThanOrEqualTo(Byte value) {
-            addCriterion("mode >=", value, "mode");
+        public Criteria andIsOverGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_over >=", value, "isOver");
             return (Criteria) this;
         }
 
-        public Criteria andModeLessThan(Byte value) {
-            addCriterion("mode <", value, "mode");
+        public Criteria andIsOverLessThan(Boolean value) {
+            addCriterion("is_over <", value, "isOver");
             return (Criteria) this;
         }
 
-        public Criteria andModeLessThanOrEqualTo(Byte value) {
-            addCriterion("mode <=", value, "mode");
+        public Criteria andIsOverLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_over <=", value, "isOver");
             return (Criteria) this;
         }
 
-        public Criteria andModeIn(List<Byte> values) {
-            addCriterion("mode in", values, "mode");
+        public Criteria andIsOverIn(List<Boolean> values) {
+            addCriterion("is_over in", values, "isOver");
             return (Criteria) this;
         }
 
-        public Criteria andModeNotIn(List<Byte> values) {
-            addCriterion("mode not in", values, "mode");
+        public Criteria andIsOverNotIn(List<Boolean> values) {
+            addCriterion("is_over not in", values, "isOver");
             return (Criteria) this;
         }
 
-        public Criteria andModeBetween(Byte value1, Byte value2) {
-            addCriterion("mode between", value1, value2, "mode");
+        public Criteria andIsOverBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_over between", value1, value2, "isOver");
             return (Criteria) this;
         }
 
-        public Criteria andModeNotBetween(Byte value1, Byte value2) {
-            addCriterion("mode not between", value1, value2, "mode");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayIsNull() {
-            addCriterion("is_display is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayIsNotNull() {
-            addCriterion("is_display is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayEqualTo(Boolean value) {
-            addCriterion("is_display =", value, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayNotEqualTo(Boolean value) {
-            addCriterion("is_display <>", value, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayGreaterThan(Boolean value) {
-            addCriterion("is_display >", value, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("is_display >=", value, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayLessThan(Boolean value) {
-            addCriterion("is_display <", value, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayLessThanOrEqualTo(Boolean value) {
-            addCriterion("is_display <=", value, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayIn(List<Boolean> values) {
-            addCriterion("is_display in", values, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayNotIn(List<Boolean> values) {
-            addCriterion("is_display not in", values, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_display between", value1, value2, "isDisplay");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsDisplayNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_display not between", value1, value2, "isDisplay");
+        public Criteria andIsOverNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_over not between", value1, value2, "isOver");
             return (Criteria) this;
         }
 
@@ -1102,8 +1042,8 @@ public class UserTransactionExample {
             return (Criteria) this;
         }
 
-        public Criteria andRequestSeqLikeInsensitive(String value) {
-            addCriterion("upper(request_seq) like", value.toUpperCase(), "requestSeq");
+        public Criteria andPaymentIdLikeInsensitive(String value) {
+            addCriterion("upper(payment_id) like", value.toUpperCase(), "paymentId");
             return (Criteria) this;
         }
 

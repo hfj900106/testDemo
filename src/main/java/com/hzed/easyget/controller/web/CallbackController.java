@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 /**
  * 风控回调
  * @author hfj
@@ -18,14 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @ExceptionAnno
 @RestController
-@RequestMapping("/easy-get")
+@RequestMapping("/callback")
 public class CallbackController {
     @Autowired
     private CallbackService callbackService;
 
     @ModuleFunc("推送资产-审核回调")
-    @PostMapping("/riskCallback/pushBidCallback")
-    public Response pushBidCallback(@RequestBody PushBidCallbackRequest request) {
+    @PostMapping("/risk/pushBidCallback")
+    public Response pushBidCallback(@Valid @RequestBody PushBidCallbackRequest request) {
         callbackService.pushBidCallback(request);
         return Response.getSuccessResponse();
     }

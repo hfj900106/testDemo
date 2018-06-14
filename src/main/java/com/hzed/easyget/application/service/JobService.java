@@ -154,11 +154,11 @@ public class JobService {
         transaction.setBidId(bidId);
         transaction.setType(type);
         transaction.setAmount(amount);
-        transaction.setRequestSeq(requestSeq);
+        // TODO
+//        transaction.setRequestSeq(requestSeq);
         transaction.setBank(bank);
         transaction.setAccount(account);
-        transaction.setMode((byte) 1);
-        transaction.setIsDisplay(true);
+        transaction.setIsOver(false);
         transaction.setCreateTime(LocalDateTime.now());
         transaction.setRemark("放款");
         return transaction;

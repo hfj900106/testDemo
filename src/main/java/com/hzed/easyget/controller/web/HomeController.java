@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ import java.util.List;
 
 @ExceptionAnno
 @RestController
-@RequestMapping("/easy-get/home")
+@RequestMapping("/api/home")
 public class HomeController {
     @Autowired
     private HomeService homeService;
@@ -38,7 +39,7 @@ public class HomeController {
     @TokenIgnore
     @ModuleFunc("版本号检测是否更新")
     @PostMapping("/getAppVersion")
-    public Response<AppVersionResponse> getAppVersion(@RequestBody AppVersionRequest request) {
+    public Response<AppVersionResponse> getAppVersion(@Valid @RequestBody AppVersionRequest request) {
         return Response.getSuccessResponse(homeService.getAppVersion(request));
 
     }
@@ -46,7 +47,7 @@ public class HomeController {
     @TokenIgnore
     @ModuleFunc("产品试算")
     @PostMapping("/loanCalculate")
-    public Response<LoanCalculateResponse> loanCalculate(@RequestBody LoanCalculateRequest request){
+    public Response<LoanCalculateResponse> loanCalculate(@Valid @RequestBody LoanCalculateRequest request){
         return Response.getSuccessResponse(homeService.loanCalculate(request));
     }
 

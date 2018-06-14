@@ -88,12 +88,6 @@ public class BootApplication {
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.setValidationMessageSource(rbms);
         return validator;
-
-//        Validator validator = Validation.byDefaultProvider()
-//                .configure()
-//                .messageInterpolator(new ResourceBundleMessageInterpolator(new PlatformResourceBundleLocator("i18n/messages" )))
-//                .buildValidatorFactory()
-//                .getValidator();
     }
 
 

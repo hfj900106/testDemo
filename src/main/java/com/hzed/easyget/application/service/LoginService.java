@@ -209,6 +209,9 @@ public class LoginService {
         String cacheCode = redisService.getCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile);
         if (StringUtils.isBlank(cacheCode) || !code.equals(cacheCode)) {
             throw new ComBizException(BizCodeEnum.PIC_CODE_ERROR);
+        }else {
+            //验证通过则删除10分钟重发标识，等发送之后会重新加上
+            redisService.clearCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile);
         }
     }
 

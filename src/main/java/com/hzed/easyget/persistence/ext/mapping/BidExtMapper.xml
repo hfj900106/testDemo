@@ -24,4 +24,17 @@
         where tt.job_name='bankLoan'
         )
     </select>
+
+    <!--放款信息查询-->
+    <select id="findLoanTransaction" resultType="com.hzed.easyget.controller.model.LoanTransactionRequest">
+        SELECT
+        u.real_name AS payeeName,/*收款人*/
+        u.mobile_account AS payeeMsisdn, /*收款人手机*/
+        b.in_account AS  payeeAccount,/*收款账户*/
+        b.in_bank as payeeBankName, /*收款银行*/
+        (b.loan_amount - b.audit_fee) AS amount /*放款金额*/
+        FROM t_loan_bid b
+        LEFT  JOIN  t_loan_user u ON b.`user_id`=u.`id`
+        WHERE  b.bid_no=#{bidId}
+    </select>
 </mapper>

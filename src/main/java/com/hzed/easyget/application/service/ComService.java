@@ -5,12 +5,15 @@ import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.BillLedgerItemEnum;
 import com.hzed.easyget.application.enums.BillStatusEnum;
 import com.hzed.easyget.application.service.product.model.EasyGetProduct;
+import com.hzed.easyget.infrastructure.config.RiskProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
+import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.BillLedgerRepository;
 import com.hzed.easyget.infrastructure.repository.BillRepository;
@@ -21,9 +24,12 @@ import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.Bill;
 import com.hzed.easyget.persistence.auto.entity.BillLedger;
 import com.hzed.easyget.persistence.auto.entity.UserToken;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -35,7 +41,7 @@ import java.util.List;
  * @author guichang
  * @since 2018/5/24
  */
-
+@Slf4j
 @Service
 public class ComService {
     @Autowired
@@ -48,6 +54,10 @@ public class ComService {
     private BidRepository bidRepository;
     @Autowired
     private BillLedgerRepository billLedgerRepository;
+    @Autowired
+    private RestService restService;
+    @Autowired
+    private RiskProp riskProp;
 
     /**
      * 校验请求头非token参数
@@ -199,5 +209,23 @@ public class ComService {
         }
         return false;
     }
+
+    /**
+     * 根据用户手机号，imei通过用户查询风控是否有贷款规则
+     */
+
+    public RiskResponse checkRiskEnableBorrow(String mobile,String imei){
+
+        log.info("查询风控是否有贷款规则请求报文：{}",mobile,imei);
+        MultiValueMap<String, String> paramMap= new LinkedMultiValueMap();
+        paramMap.add("mobile",mobile);
+        paramMap.add("imei",imei);
+        RiskResponse response = restService.postForm(riskProp.getAbsCheckRiskEnableBorrowUrl(), paramMap, RiskResponse.class);
+        log.info("查询风控是否有贷款规则返回报文：{}",response);
+        return response;
+
+    }
+
+
 
 }

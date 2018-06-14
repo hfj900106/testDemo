@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @author wuchengwu
- * @since 2018/5/21
+ * @date 2018/5/21
  */
 @Data
 public class LoginByCodeRequest {

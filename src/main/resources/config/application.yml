@@ -44,6 +44,10 @@ thirdParty:
   domain: http://localhost:8080 # 请求架构组bulepay域名地址
   loanTransactionUrl: # 放款接口链接
   receiverTransactionUrl: # 收款接口链接
+#风控
+risk:
+  domain: http://10.10.20.198:9611 #风控域名地址
+  checkRiskEnableBorrowUrl: /api/risk/checkRiskEnableBorrow #请求风控获取用户是否符合贷款资格
 
 #======================================= 系统参数 开始 =======================================#
 system:

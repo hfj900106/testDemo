@@ -22,4 +22,17 @@ public class LoanManagResponse {
     /**
      * 应还时间
      */
+    private String repaymentTime;
+    /**
+     * VA码
+     */
+    private String vaCodel;
+    /**
+     * va码过期时间
+     */
+    private String  expiryTime;
+    /**
+     * 交易方式
+     */
+    private String mode;
 }

@@ -19,7 +19,9 @@ public enum TransactionTypeEnum {
     OTHER(3, "其他"),
     IN_RANSACTION(1,"交易中"),
     SUCCESS_RANSACTION(2,"交易完成"),
-    FAIL_RANSACTION(3,"交易失败");
+    FAIL_RANSACTION(3,"交易失败"),
+    ALL_CLEAR(1,"全部结清"),
+    PARTIAL_CLEARANCE(2,"部分结清");
 
     private Integer code;
     private String msg;

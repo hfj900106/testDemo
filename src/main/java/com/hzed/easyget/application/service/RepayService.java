@@ -44,6 +44,8 @@ public class RepayService {
     private UserRepaymentRepository userRepaymentRepository;
     @Autowired
     private RepayInfoFlowJobRepository repayInfoFlowJobRepository;
+    @Autowired
+    private RepayRepository repayRepository;
 
     /** 用户交易id key */
     private static final String USER_TRANCATIONID = "userTrancationId";
@@ -424,7 +426,13 @@ public class RepayService {
         return RepayPartDetailResponse.builder().totalAmount(totalRepayAmount.toString()).inAccount(bid.getInAccount()).build();
     }
 
-    public LoanManagResponse findloanManagResponse(Long bidId) {
-        return  null;
+    /**
+     * 还款页面标的详情
+     * @param bidId 标id
+     * @param falg 是否全部还清
+     * @return
+     */
+    public LoanManagResponse findloanManagResponse(Long bidId,boolean falg) {
+        return  repayRepository.findloanManagResponse(bidId,falg);
     }
 }

@@ -46,34 +46,43 @@ public class OrderNotificationConsumer implements ChannelAwareMessageListener {
     @Override
     public void onMessage(Message message, Channel channel) throws Exception {
         BlueNotificationRequest bluePayRq = messageConverter.fromMessage(message, BlueNotificationRequest.class);
-        log.info("放款回调，bluepay端返回信息{}", JSONObject.toJSONString(bluePayRq));
+        log.info("放款/还款回调，bluepay端返回信息{}", JSONObject.toJSONString(bluePayRq));
         //判断是否交易完成
         Long tempId = 0L;
-        if (bluePayRq.getInterfacetype().equals(CASHOUT)) {
-            //交易失败直接修改交易记录
-            if(!bluePayRq.getStatus().equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())){
-                transactionService.updateUserTranState(bluePayRq.getT_id(),TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
+        try {
+            //过滤处理中
+            if(bluePayRq.getStatus().equals(BluePayStatusEnum.OK.getKey())){
+                log.info("放款/还款bluepay端正在处理中！");
                 return;
             }
-            //获取交易id 判断是否合法
-            List<UserTransaction> transactionList = transactionService.findUserTranBypayMenid(bluePayRq.getT_id());
-            if (!ObjectUtils.isEmpty(transactionList)) {
-                //判断是否交易成功 防止重复交易
-                UserTransaction userTr = transactionList.get(0);
-                //判断这个交易是否是 交易中
-                if (userTr.getStatus().intValue() == TransactionTypeEnum.IN_RANSACTION.getCode()) {
-                    //查询相应的推送任务信息
-                    tempId = tempTableRepository.findTempTableByBidNoAndName(userTr.getBidId(), ComConsts.PUSH_BANK_TASK);
-                    //修改交易信息
-                    transactionService.callBackupdateUserTrance(userTr, tempId);
+            //过滤失败直接修改交易记录
+            if(!bluePayRq.getStatus().equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())){
+                transactionService.updateUserTranState(bluePayRq.getT_id(),TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
+                log.info("放款bluepay端返回处理失败{}",BluePayStatusEnum.getPayStatusEnum(bluePayRq.getStatus()));
+                return;
+            }
+            //放款
+            if (bluePayRq.getInterfacetype().equals(CASHOUT)) {
+                //获取交易id 判断是否合法
+                List<UserTransaction> transactionList = transactionService.findUserTranBypayMenid(bluePayRq.getT_id());
+                if (!ObjectUtils.isEmpty(transactionList)) {
+                    //判断是否交易成功 防止重复交易
+                    UserTransaction userTr = transactionList.get(0);
+                    //判断这个交易是否是 交易中
+                    if (userTr.getStatus().intValue() == TransactionTypeEnum.IN_RANSACTION.getCode()) {
+                        //查询相应的推送任务信息
+                        tempId = tempTableRepository.findTempTableByBidNoAndName(userTr.getBidId(), ComConsts.PUSH_BANK_TASK);
+                        //修改交易信息
+                        transactionService.callBackupdateUserTrance(userTr, tempId);
+                        log.info("放款bluepay端返回处理成功，本地处理成功");
+                    }
                 }
+            //还款
+            } else if ( bluePayRq.getInterfacetype().equals(BANK)) {
             }
-        } else if ( bluePayRq.getInterfacetype().equals(BANK)) {
-            //还款失败
-            if(!bluePayRq.getStatus().equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())){
-                transactionService.updateUserTranState(bluePayRq.getT_id(),TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
-                return;
-            }
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error("放款/还款回调处理失败{}",e.getMessage());
         }
     }
 

@@ -1,8 +1,7 @@
 package com.hzed.easyget.application.mq;
 
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.support.converter.AbstractJsonMessageConverter;
@@ -17,9 +16,8 @@ import java.io.UnsupportedEncodingException;
  * @author madaijun
  * @date 2018年6月14日 上午9:03:14
  */
+@Slf4j
 public class FastJsonMessageConverter extends AbstractJsonMessageConverter {
-
-    private static Log log = LogFactory.getLog(FastJsonMessageConverter.class);
 
     public static final String DEFAULT_CHARSET = "UTF-8";
 
@@ -59,10 +57,10 @@ public class FastJsonMessageConverter extends AbstractJsonMessageConverter {
         String json;
         try {
             json = new String(message.getBody(), defaultCharset);
-            log.info("MQ消息：" + json);
+            log.info("MQ消息：{}", json);
             return JSONObject.parseObject(json, t);
         } catch (Exception e) {
-            log.error(e);
+            log.error("MQ消息：", e);
         }
         return null;
     }

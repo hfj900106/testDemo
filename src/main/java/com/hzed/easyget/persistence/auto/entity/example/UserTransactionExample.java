@@ -672,63 +672,63 @@ public class UserTransactionExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsOverIsNull() {
-            addCriterion("is_over is null");
+        public Criteria andStatusIsNull() {
+            addCriterion("status is null");
             return (Criteria) this;
         }
 
-        public Criteria andIsOverIsNotNull() {
-            addCriterion("is_over is not null");
+        public Criteria andStatusIsNotNull() {
+            addCriterion("status is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsOverEqualTo(Boolean value) {
-            addCriterion("is_over =", value, "isOver");
+        public Criteria andStatusEqualTo(Byte value) {
+            addCriterion("status =", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andIsOverNotEqualTo(Boolean value) {
-            addCriterion("is_over <>", value, "isOver");
+        public Criteria andStatusNotEqualTo(Byte value) {
+            addCriterion("status <>", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andIsOverGreaterThan(Boolean value) {
-            addCriterion("is_over >", value, "isOver");
+        public Criteria andStatusGreaterThan(Byte value) {
+            addCriterion("status >", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andIsOverGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("is_over >=", value, "isOver");
+        public Criteria andStatusGreaterThanOrEqualTo(Byte value) {
+            addCriterion("status >=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andIsOverLessThan(Boolean value) {
-            addCriterion("is_over <", value, "isOver");
+        public Criteria andStatusLessThan(Byte value) {
+            addCriterion("status <", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andIsOverLessThanOrEqualTo(Boolean value) {
-            addCriterion("is_over <=", value, "isOver");
+        public Criteria andStatusLessThanOrEqualTo(Byte value) {
+            addCriterion("status <=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andIsOverIn(List<Boolean> values) {
-            addCriterion("is_over in", values, "isOver");
+        public Criteria andStatusIn(List<Byte> values) {
+            addCriterion("status in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andIsOverNotIn(List<Boolean> values) {
-            addCriterion("is_over not in", values, "isOver");
+        public Criteria andStatusNotIn(List<Byte> values) {
+            addCriterion("status not in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andIsOverBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_over between", value1, value2, "isOver");
+        public Criteria andStatusBetween(Byte value1, Byte value2) {
+            addCriterion("status between", value1, value2, "status");
             return (Criteria) this;
         }
 
-        public Criteria andIsOverNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_over not between", value1, value2, "isOver");
+        public Criteria andStatusNotBetween(Byte value1, Byte value2) {
+            addCriterion("status not between", value1, value2, "status");
             return (Criteria) this;
         }
 

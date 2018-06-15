@@ -10,7 +10,7 @@
     <result column="amount" jdbcType="DECIMAL" property="amount" />
     <result column="bank" jdbcType="VARCHAR" property="bank" />
     <result column="account" jdbcType="VARCHAR" property="account" />
-    <result column="is_over" jdbcType="BIT" property="isOver" />
+    <result column="status" jdbcType="TINYINT" property="status" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -76,7 +76,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, payment_id, user_id, bid_id, type, amount, bank, account, is_over, create_by,
+    id, payment_id, user_id, bid_id, type, amount, bank, account, status, create_by, 
     create_time, update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample" resultMap="BaseResultMap">
@@ -118,7 +118,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from t_loan_user_transaction
     where id = #{id,jdbcType=BIGINT}
@@ -142,16 +142,16 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransaction">
-    insert into t_loan_user_transaction (id, payment_id, user_id,
-    bid_id, type, amount,
-    bank, account, is_over,
-    create_by, create_time, update_by,
-    update_time, remark)
-    values (#{id,jdbcType=BIGINT}, #{paymentId,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT},
-    #{bidId,jdbcType=BIGINT}, #{type,jdbcType=TINYINT}, #{amount,jdbcType=DECIMAL},
-    #{bank,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{isOver,jdbcType=BIT},
-    #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT},
-    #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+    insert into t_loan_user_transaction (id, payment_id, user_id, 
+      bid_id, type, amount, 
+      bank, account, status, 
+      create_by, create_time, update_by, 
+      update_time, remark)
+    values (#{id,jdbcType=BIGINT}, #{paymentId,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
+      #{bidId,jdbcType=BIGINT}, #{type,jdbcType=TINYINT}, #{amount,jdbcType=DECIMAL}, 
+      #{bank,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransaction">
     insert into t_loan_user_transaction
@@ -180,8 +180,8 @@
       <if test="account != null">
         account,
       </if>
-      <if test="isOver != null">
-        is_over,
+      <if test="status != null">
+        status,
       </if>
       <if test="createBy != null">
         create_by,
@@ -224,8 +224,8 @@
       <if test="account != null">
         #{account,jdbcType=VARCHAR},
       </if>
-      <if test="isOver != null">
-        #{isOver,jdbcType=BIT},
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -277,8 +277,8 @@
       <if test="record.account != null">
         account = #{record.account,jdbcType=VARCHAR},
       </if>
-      <if test="record.isOver != null">
-        is_over = #{record.isOver,jdbcType=BIT},
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
@@ -303,19 +303,19 @@
   <update id="updateByExample" parameterType="map">
     update t_loan_user_transaction
     set id = #{record.id,jdbcType=BIGINT},
-    payment_id = #{record.paymentId,jdbcType=VARCHAR},
-    user_id = #{record.userId,jdbcType=BIGINT},
-    bid_id = #{record.bidId,jdbcType=BIGINT},
-    type = #{record.type,jdbcType=TINYINT},
-    amount = #{record.amount,jdbcType=DECIMAL},
-    bank = #{record.bank,jdbcType=VARCHAR},
-    account = #{record.account,jdbcType=VARCHAR},
-    is_over = #{record.isOver,jdbcType=BIT},
-    create_by = #{record.createBy,jdbcType=BIGINT},
-    create_time = #{record.createTime,jdbcType=TIMESTAMP},
-    update_by = #{record.updateBy,jdbcType=BIGINT},
-    update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-    remark = #{record.remark,jdbcType=VARCHAR}
+      payment_id = #{record.paymentId,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      bid_id = #{record.bidId,jdbcType=BIGINT},
+      type = #{record.type,jdbcType=TINYINT},
+      amount = #{record.amount,jdbcType=DECIMAL},
+      bank = #{record.bank,jdbcType=VARCHAR},
+      account = #{record.account,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=TINYINT},
+      create_by = #{record.createBy,jdbcType=BIGINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      remark = #{record.remark,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -344,8 +344,8 @@
       <if test="account != null">
         account = #{account,jdbcType=VARCHAR},
       </if>
-      <if test="isOver != null">
-        is_over = #{isOver,jdbcType=BIT},
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
       </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
@@ -368,18 +368,18 @@
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransaction">
     update t_loan_user_transaction
     set payment_id = #{paymentId,jdbcType=VARCHAR},
-    user_id = #{userId,jdbcType=BIGINT},
-    bid_id = #{bidId,jdbcType=BIGINT},
-    type = #{type,jdbcType=TINYINT},
-    amount = #{amount,jdbcType=DECIMAL},
-    bank = #{bank,jdbcType=VARCHAR},
-    account = #{account,jdbcType=VARCHAR},
-    is_over = #{isOver,jdbcType=BIT},
-    create_by = #{createBy,jdbcType=BIGINT},
-    create_time = #{createTime,jdbcType=TIMESTAMP},
-    update_by = #{updateBy,jdbcType=BIGINT},
-    update_time = #{updateTime,jdbcType=TIMESTAMP},
-    remark = #{remark,jdbcType=VARCHAR}
+      user_id = #{userId,jdbcType=BIGINT},
+      bid_id = #{bidId,jdbcType=BIGINT},
+      type = #{type,jdbcType=TINYINT},
+      amount = #{amount,jdbcType=DECIMAL},
+      bank = #{bank,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      create_by = #{createBy,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample" resultMap="BaseResultMap">
@@ -410,15 +410,15 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_user_transaction
-    (id, payment_id, user_id, bid_id, type, amount, bank, account, is_over, create_by,
-    create_time, update_by, update_time, remark)
+    (id, payment_id, user_id, bid_id, type, amount, bank, account, status, create_by, 
+      create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.paymentId,jdbcType=VARCHAR}, #{item.userId,jdbcType=BIGINT},
-      #{item.bidId,jdbcType=BIGINT}, #{item.type,jdbcType=TINYINT}, #{item.amount,jdbcType=DECIMAL},
-      #{item.bank,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR}, #{item.isOver,jdbcType=BIT},
-      #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT},
-      #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
+      (#{item.id,jdbcType=BIGINT}, #{item.paymentId,jdbcType=VARCHAR}, #{item.userId,jdbcType=BIGINT}, 
+        #{item.bidId,jdbcType=BIGINT}, #{item.type,jdbcType=TINYINT}, #{item.amount,jdbcType=DECIMAL}, 
+        #{item.bank,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR}, #{item.status,jdbcType=TINYINT}, 
+        #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -455,8 +455,8 @@
         <if test="'account' == column.value">
           #{item.account,jdbcType=VARCHAR}
         </if>
-        <if test="'is_over' == column.value">
-          #{item.isOver,jdbcType=BIT}
+        <if test="'status' == column.value">
+          #{item.status,jdbcType=TINYINT}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

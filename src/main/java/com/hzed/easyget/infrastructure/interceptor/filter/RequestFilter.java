@@ -14,7 +14,7 @@ import java.util.Locale;
  *
  * @author guichang
  */
-@WebFilter(filterName = "requestFilter", urlPatterns = {"/easy-get/*"})
+@WebFilter(filterName = "requestFilter", urlPatterns = {"/api/*"})
 public class RequestFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

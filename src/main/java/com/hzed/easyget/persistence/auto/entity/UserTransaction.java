@@ -46,9 +46,9 @@ public class UserTransaction implements Serializable {
     private String account;
 
     /**
-     * 是否交易完 1-是 0-否
+     * 交易状态 1-交易中 2-交易成功 3-交易失败
      */
-    private Boolean isOver;
+    private Byte status;
 
     /**
      */
@@ -139,12 +139,12 @@ public class UserTransaction implements Serializable {
         this.account = account == null ? null : account.trim();
     }
 
-    public Boolean getIsOver() {
-        return isOver;
+    public Byte getStatus() {
+        return status;
     }
 
-    public void setIsOver(Boolean isOver) {
-        this.isOver = isOver;
+    public void setStatus(Byte status) {
+        this.status = status;
     }
 
     public Long getCreateBy() {
@@ -201,7 +201,7 @@ public class UserTransaction implements Serializable {
         sb.append(", amount=").append(amount);
         sb.append(", bank=").append(bank);
         sb.append(", account=").append(account);
-        sb.append(", isOver=").append(isOver);
+        sb.append(", status=").append(status);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -263,8 +263,8 @@ public class UserTransaction implements Serializable {
             return this;
         }
 
-        public Builder isOver(Boolean isOver) {
-            obj.setIsOver(isOver);
+        public Builder status(Byte status) {
+            obj.setStatus(status);
             return this;
         }
 
@@ -307,7 +307,7 @@ public class UserTransaction implements Serializable {
         amount("amount"),
         bank("bank"),
         account("account"),
-        isOver("is_over"),
+        status("status"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

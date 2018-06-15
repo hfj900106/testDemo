@@ -50,7 +50,7 @@ public class JobServiceTest {
     @Test
     public  void test03(){
         UserTransaction userTransaction=new UserTransaction();
-        userTransaction.setIsOver(false);
+//        userTransaction.setStatus();
         userTransaction.setUpdateTime(LocalDateTime.now());
         userTransaction.setPaymentId("103710541138501632");
         bidExtMapper.updateUserTranceOverstate(userTransaction);

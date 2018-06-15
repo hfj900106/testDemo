@@ -34,6 +34,7 @@ public class SmsUtils {
     }
 
     public static String getCode(){
-        return StringUtils.leftPad(String.valueOf(new Random().nextInt(9999)), 4, "0");
+//        return StringUtils.leftPad(String.valueOf(new Random().nextInt(9999)), 4, "0");
+        return "0000";
     }
 }

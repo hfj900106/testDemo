@@ -16,6 +16,18 @@ import org.springframework.context.annotation.Configuration;
 public class RiskProp {
     private String domain;
     private String checkRiskEnableBorrowUrl;
+    private String idCardRecognitionUrl;
+    private String faceRecognitionUrl;
+    private String contactsUrl;
+    private String messagesUrl;
+    private String operatorSendSmsCodeUrl;
+    private String operatorAuthUrl;
 
     public String getAbsCheckRiskEnableBorrowUrl(){ return this.domain + this.checkRiskEnableBorrowUrl; }
+    public String getIdCardRecognitionUrl(){ return this.domain + this.idCardRecognitionUrl; }
+    public String getFaceRecognitionUrl(){ return this.domain + this.faceRecognitionUrl; }
+    public String getContactsUrl(){ return this.domain + this.contactsUrl; }
+    public String getMessagesUrl(){ return this.domain + this.messagesUrl; }
+    public String getOperatorSendSmsCodeUrl(){ return this.domain + this.operatorSendSmsCodeUrl; }
+    public String getOperatorAuthUrl(){ return this.domain + this.operatorAuthUrl; }
 }

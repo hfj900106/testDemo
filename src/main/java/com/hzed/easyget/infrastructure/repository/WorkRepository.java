@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 /**
  * @author hfj
@@ -25,8 +27,8 @@ public class WorkRepository {
     private UserMapper userMapper;
 
     @Transactional(rollbackFor = Exception.class)
-    public void insertIdentityInfo(UserPic userPic, UserAuthStatus userAuthStatus, User user) {
-        userPicMapper.insertSelective(userPic);
+    public void insertIdentityInfo(List<UserPic> list, UserAuthStatus userAuthStatus, User user) {
+        userPicMapper.batchInsertSelective(list);
         userAuthStatusMapper.insertSelective(userAuthStatus);
         userMapper.updateByPrimaryKeySelective(user);
     }

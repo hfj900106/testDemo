@@ -54,10 +54,10 @@ public class UserRepository {
         return userMapper.selectByPrimaryKey(id);
     }
 
-    public List<UserTransaction> findTransactionRecordBySelect(Long userId, Boolean isOver) {
+    public List<UserTransaction> findTransactionRecordBySelect(Long userId) {
         UserTransactionExample example = new UserTransactionExample();
         example.createCriteria().andUserIdEqualTo(userId).andStatusEqualTo((byte)2);
-        List<UserTransaction> transactionRecords = userTransactionMapper.selectByExampleSelective(example);
+        List<UserTransaction> transactionRecords = userTransactionMapper.selectByExample(example);
         return transactionRecords;
     }
 

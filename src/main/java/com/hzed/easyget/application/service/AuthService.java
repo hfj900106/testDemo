@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -89,14 +88,16 @@ public class AuthService {
         String platForm = getGlobalHead().getPlatform();
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
+//        map.put("sign", ""sign" -> "H6cI5VzWvg5YubD0CAVkg/EDuB68tGEsufeO7jFEppPcfSAuD/4rmpmbfkdIdh24nG+tBjjdUTRbgAV179uhQw=="");"timeStamp" -> "1529057135292""userId" -> "105534315668316160"
         map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
         map.put("contacts", request.getContacts());
-        map.put("callLogs", request.getCallLogs());
+        map.put("callRecord", request.getCallLogs());
         map.put("source", "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS);
         //TODO 待验证方式
-        RiskResponse response = restService.postJson("/app/risk/Contacts/add", map, RiskResponse.class);
+        RiskResponse response = restService.postJson("http://10.10.20.203:9611/api/risk/Contacts/add", map, RiskResponse.class);
+        System.out.println(response.toString());
         //TODO
 //        afterResponse(response, "通讯录认证返回数据异常", user.getUserId(), "通讯录认证");
     }

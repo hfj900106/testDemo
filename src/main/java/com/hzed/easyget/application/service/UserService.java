@@ -49,7 +49,7 @@ public class UserService {
     public TransactionRecordResponse getTransactionRecord() {
         TransactionRecordResponse response = new TransactionRecordResponse();
         GlobalUser user = getGlobalUser();
-        List<UserTransaction> list = queryTransactionRecordForApp(user.getUserId(),true);
+        List<UserTransaction> list = queryTransactionRecordForApp(user.getUserId());
         response.setList(list);
         return response;
     }
@@ -58,8 +58,8 @@ public class UserService {
      * 查询交易记录app
      */
 
-    public  List<UserTransaction> queryTransactionRecordForApp(Long userId,Boolean isDisplay) {
-        return userRepository.findTransactionRecordBySelect(userId,isDisplay);
+    public  List<UserTransaction> queryTransactionRecordForApp(Long userId) {
+        return userRepository.findTransactionRecordBySelect(userId);
     }
 
 

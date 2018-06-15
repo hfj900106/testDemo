@@ -7,7 +7,6 @@ import com.hzed.easyget.controller.model.BlueNotificationRequest;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BluePayStatusEnum;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
-import com.hzed.easyget.persistence.auto.entity.TempTable;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**

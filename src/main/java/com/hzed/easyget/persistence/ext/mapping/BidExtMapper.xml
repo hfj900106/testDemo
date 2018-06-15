@@ -46,7 +46,7 @@
         update t_loan_user_transaction
         set
         status = #{status},
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
         where payment_id = #{paymentId,jdbcType=VARCHAR}
     </update>
 </mapper>

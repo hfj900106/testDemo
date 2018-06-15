@@ -423,4 +423,8 @@ public class RepayService {
 
         return RepayPartDetailResponse.builder().totalAmount(totalRepayAmount.toString()).inAccount(bid.getInAccount()).build();
     }
+
+    public LoanManagResponse findloanManagResponse(Long bidId) {
+        return  null;
+    }
 }

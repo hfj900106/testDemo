@@ -5,6 +5,7 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 @ExceptionAnno
 @RestController
 @RequestMapping("/api/repay")
+@Slf4j
 public class RepayController {
 
     @Autowired
@@ -32,9 +34,16 @@ public class RepayController {
 
     @ModuleFunc("结清全部")
     @PostMapping("/repayAll")
-    public Response repayAll(@Valid @RequestBody RepayAllRequest request){
-        repayService.repayAll(request);
-        return Response.getSuccessResponse();
+    public Response<LoanManagResponse> repayAll(@Valid @RequestBody RepayAllRequest request){
+        try {
+            LoanManagResponse loanManagResponse=repayService.findloanManagResponse(request.getBidId());
+            repayService.repayAll(request);
+            return Response.getSuccessResponse(loanManagResponse);
+        }catch (Exception e) {
+            e.getStackTrace();
+            log.error("结清全部处理异常{}",e.getMessage());
+            return Response.getFailResponse();
+        }
     }
 
     @ModuleFunc("部分还款")

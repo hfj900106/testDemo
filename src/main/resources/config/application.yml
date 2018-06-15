@@ -41,7 +41,7 @@ aliyun:
 # 第三方
 thirdParty:
   pay:
-    domain: http://10.10.30.114:8080 # 请求架构组bulepay域名地址
+    domain: http://10.10.30.114:8081 # 请求架构组bulepay域名地址
     loanTransactionUrl: /bluepay/transferBalance  # 放款接口链接
     receiverTransactionUrl: # 收款接口链接
   risk:

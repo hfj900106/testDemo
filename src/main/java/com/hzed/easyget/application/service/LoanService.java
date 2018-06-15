@@ -44,6 +44,7 @@ public class LoanService {
         loanDetailResponse.setApplyTime(DateUtil.localDateTimeToStr2(bid.getCreateTime()));
         loanDetailResponse.setInBank(bid.getInBank());
         loanDetailResponse.setInAccount(bid.getInAccount());
+        loanDetailResponse.setStatus(String.valueOf(bid.getStatus()));
         LocalDateTime auditTime = DateUtil.addMins(bid.getCreateTime(), systemProp.getExpectedAuditTimeInterval().intValue());
         loanDetailResponse.setAuditTime(DateUtil.localDateTimeToStr2(auditTime));
         loanDetailResponse.setLoanTime(DateUtil.localDateTimeToStr2(DateUtil.addMins(auditTime,systemProp.getExpectedLendingTimeInterval().intValue())));

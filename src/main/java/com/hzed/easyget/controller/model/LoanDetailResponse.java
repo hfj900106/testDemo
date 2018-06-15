@@ -16,4 +16,5 @@ public class LoanDetailResponse {
     private String applyTime;
     private String auditTime;
     private String loanTime;
+    private String status;
 }

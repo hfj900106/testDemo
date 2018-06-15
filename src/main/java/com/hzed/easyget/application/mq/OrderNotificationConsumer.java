@@ -7,17 +7,14 @@ import com.hzed.easyget.controller.model.BlueNotificationRequest;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BluePayStatusEnum;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
-import com.hzed.easyget.persistence.auto.entity.TempTable;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -28,7 +25,7 @@ import java.util.List;
  * @date 2018年6月13日 下午6:10:40
  */
 @Slf4j
-@Component
+//@Component
 public class OrderNotificationConsumer implements ChannelAwareMessageListener {
 
     private FastJsonMessageConverter messageConverter;

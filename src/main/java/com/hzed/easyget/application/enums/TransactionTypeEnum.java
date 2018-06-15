@@ -16,7 +16,10 @@ public enum TransactionTypeEnum {
      */
     IN(1, "入账"),
     OUT(2, "出账"),
-    OTHER(3, "其他");
+    OTHER(3, "其他"),
+    IN_RANSACTION(1,"交易中"),
+    SUCCESS_RANSACTION(2,"交易完成"),
+    FAIL_RANSACTION(3,"交易失败");
 
     private Integer code;
     private String msg;

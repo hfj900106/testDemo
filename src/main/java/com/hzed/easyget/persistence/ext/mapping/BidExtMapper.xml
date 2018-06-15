@@ -35,7 +35,7 @@
         (b.loan_amount - b.audit_fee) AS amount /*放款金额*/
         FROM t_loan_bid b
         LEFT  JOIN  t_loan_user u ON b.`user_id`=u.`id`
-        WHERE  b.bid_no=#{bidId}
+        WHERE  b.id=#{bidId}
     </select>
     <!--查询推送定时任务-->
     <select id="findTempTableByBidNoAndName" resultType="java.lang.Long">
@@ -45,7 +45,7 @@
     <update id="updateUserTranceOverstate" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransaction">
         update t_loan_user_transaction
         set
-        is_over = #{isOver,jdbcType=BIT},
+        status = #{status},
         update_time = #{record.updateTime,jdbcType=TIMESTAMP}
         where payment_id = #{paymentId,jdbcType=VARCHAR}
     </update>

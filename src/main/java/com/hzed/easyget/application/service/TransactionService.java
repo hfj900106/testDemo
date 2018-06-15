@@ -1,6 +1,7 @@
 package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
@@ -10,10 +11,12 @@ import com.hzed.easyget.application.service.product.ProductService;
 import com.hzed.easyget.application.service.product.model.EasyGetProduct;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
 import com.hzed.easyget.controller.model.ReceiverTransactionRequest;
-import com.hzed.easyget.infrastructure.config.ThirdPartyProp;
+import com.hzed.easyget.infrastructure.config.PayProp;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
+import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
@@ -43,7 +46,7 @@ public class TransactionService {
     @Autowired
     private RestService restService;
     @Autowired
-    private ThirdPartyProp prop;
+    private PayProp prop;
     @Autowired
     private BidRepository bidRepository;
     @Autowired
@@ -54,15 +57,19 @@ public class TransactionService {
     /**
      * 放款
      */
-    public Response loanTransaction(LoanTransactionRequest request) {
+    public PayResponse loanTransaction(LoanTransactionRequest request) {
 
         log.info("支付放款接口请求报文：{}", JSON.toJSONString(request));
-        Response response = restService.postJson(prop.getLoanTransactionUrl(), request, Response.class);
-        log.info("支付放款接口返回报文：{}", JSON.toJSONString(response));
+        String result = restService.doPostJson(prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
+        if(result.equals(BizCodeEnum.TIMEOUT.getCode())){
+            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR,BizCodeEnum.TIMEOUT.getMessage());
+        }
+        log.info("支付放款接口返回报文：{}", result);
+        PayResponse response=JSON.parseObject(result,new TypeReference<PayResponse>() {});
         //判断返回状态 0000 0001 0002
         if (!BizCodeEnum.SUCCESS.equals(response.getCode()) || !BizCodeEnum.PROCESS_LENDING.equals(response.getCode()) || !BizCodeEnum.REPAYMENTS.equals(response.getCode())) {
 
-            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, response.getMessage());
+            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, response.getMsg());
         }
         return response;
     }
@@ -88,7 +95,7 @@ public class TransactionService {
      * @param tempId 推送放款记录的中间表id
      * @param paymentId 交易id
      */
-    public void lendingCallback(Long bidNo,Long tempId, String paymentId,boolean isOver,LocalDateTime overTime){
+    public void lendingCallback(Long bidNo,Long tempId, String paymentId,Byte states,LocalDateTime overTime){
         // 回调操作
         Bid bidInfo = bidRepository.findById(bidNo);
         //改标的状态,砍头息、插入账单、台账、标进度、交易记录表，删除中间表数据
@@ -96,7 +103,7 @@ public class TransactionService {
         ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
         List<Bill> bills = product.createBills(bidInfo);
         List<BillLedger> billLedgers = product.createBillLedger(bidInfo);
-        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId,bidInfo.getInBank() ,bidInfo.getInAccount(),isOver,overTime );
+        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId,bidInfo.getInBank() ,bidInfo.getInAccount(),states,overTime );
         tempTableRepository.afterBankLoan(
                 Bid.builder().id(bidNo).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetProduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
                 BidProgress.builder().bidId(bidNo).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").build(),
@@ -117,11 +124,11 @@ public class TransactionService {
      * @param paymentId 交易id
      * @param bank 银行
      * @param account 账号
-     * @param isOver 是否交易完成
+     * @param states 交易状态
      * @param overTime 交易完成时间
      * @return
      */
-    private UserTransaction buildUserTransaction(Long userId, Long bidId, Byte type, BigDecimal amount, String paymentId, String bank, String account, boolean isOver, LocalDateTime overTime) {
+    private UserTransaction buildUserTransaction(Long userId, Long bidId, Byte type, BigDecimal amount, String paymentId, String bank, String account, Byte states, LocalDateTime overTime) {
         UserTransaction transaction = new UserTransaction();
         transaction.setId(IdentifierGenerator.nextId());
         transaction.setUserId(userId);
@@ -129,7 +136,7 @@ public class TransactionService {
         transaction.setType(type);
         transaction.setAmount(amount);
         transaction.setPaymentId(paymentId);
-        transaction.setIsOver(isOver);
+        transaction.setStatus(states);
         transaction.setUpdateTime(overTime);
         transaction.setBank(bank);
         transaction.setAccount(account);
@@ -143,15 +150,15 @@ public class TransactionService {
      * @param bidNo
      * @param transactionId
      * @param overTime 交易完成时间
-     * @param isOver 交易是否完成
+     * @param states 交易状态
      */
-    public void insertUsrTransactionInfo(Long bidNo, String transactionId,boolean isOver,LocalDateTime overTime) {
+    public void insertUsrTransactionInfo(Long bidNo, String transactionId,Byte states,LocalDateTime overTime) {
         Bid bidInfo = bidRepository.findById(bidNo);
-        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), transactionId,bidInfo.getInBank() ,bidInfo.getInAccount(),isOver,overTime );
+        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), transactionId,bidInfo.getInBank() ,bidInfo.getInAccount(),states,overTime );
         userTransactionRepository.insertSelective(transaction);
     }
 
-    /**D:\rabbitmq\erl9.3\bin
+    /**
      * 根据交易id 查询交易记录
      * @param paymnetId
      * @return
@@ -174,7 +181,7 @@ public class TransactionService {
         ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
         List<Bill> bills = product.createBills(bidInfo);
         List<BillLedger> billLedgers = product.createBillLedger(bidInfo);
-        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId,bidInfo.getInBank() ,bidInfo.getInAccount(),true, LocalDateTime.now() );
+        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId,bidInfo.getInBank() ,bidInfo.getInAccount(),TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now() );
         tempTableRepository.afterBankLoan(
                 Bid.builder().id(bidNo).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetProduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
                 BidProgress.builder().bidId(bidNo).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").build(),
@@ -184,5 +191,14 @@ public class TransactionService {
                 transaction,
                 false
         );
+    }
+
+    /**
+     * 修改交易记录状态
+     * @param t_id
+     * @param b
+     */
+    public void updateUserTranState(String t_id, byte b) {
+        bidRepository.updateUserTranState(t_id,b);
     }
 }

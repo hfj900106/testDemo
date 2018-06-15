@@ -5,6 +5,7 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.UserBank;
+import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.example.BidExample;
 import com.hzed.easyget.persistence.auto.mapper.BidMapper;
 import com.hzed.easyget.persistence.auto.mapper.UserBankMapper;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -79,5 +81,10 @@ public class BidRepository {
      */
     public LoanTransactionRequest findLoanTransaction(Long bidId) {
         return bidExtMapper.findLoanTransaction(bidId);
+    }
+
+    public void updateUserTranState(String t_id, byte b) {
+        UserTransaction userTransaction=UserTransaction.builder().paymentId(t_id).status(b).updateTime(LocalDateTime.now()).build();
+        bidExtMapper.updateUserTranceOverstate(userTransaction);
     }
 }

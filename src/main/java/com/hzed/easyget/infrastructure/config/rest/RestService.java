@@ -1,5 +1,13 @@
 package com.hzed.easyget.infrastructure.config.rest;
 
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -83,5 +91,36 @@ public class RestService {
         url = url + "?" + param;
         T result = restTemplate.getForObject(url, clazz);
         return result;
+    }
+    /**
+     * httpPost请求
+     * @param url 请求地址
+     * @param json 请求参数
+     * @return
+     */
+    public  String doPostJson(String url,String json){
+        CloseableHttpClient http = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+        String result=null;
+        try {
+            httpPost.setHeader("Content-Type", "appplication/json");
+            if (StringUtils.isNotBlank(json)) {
+                httpPost.setEntity(new StringEntity(json, "utf-8"));
+            }
+            CloseableHttpResponse response = http.execute(httpPost);
+            if(response != null){
+                org.apache.http.HttpEntity resEntity = response.getEntity();
+                if(resEntity != null){
+                    result = EntityUtils.toString(resEntity,"utf-8");
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            result = BizCodeEnum.TIMEOUT.getCode();
+        }finally{
+            httpPost.releaseConnection();
+        }
+        return result;
+
     }
 }

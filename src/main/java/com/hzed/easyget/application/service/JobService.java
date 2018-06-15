@@ -2,10 +2,11 @@ package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.JobStatusEnum;
+import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
-import com.hzed.easyget.infrastructure.model.Response;
+import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayInfoFlowJobRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
@@ -40,8 +41,6 @@ public class JobService {
     private RepayService repayService;
     @Autowired
     private TransactionService transactionService;
-    @Autowired
-    private CallbackService callbackService;
 
     /**
      * 推风控
@@ -121,19 +120,19 @@ public class JobService {
                     //收款人所在国
                     loan.setPayeeCountry("ID");
                     //TODO 调放款接口
-                    Response response= transactionService.loanTransaction(loan);
+                    PayResponse response= transactionService.loanTransaction(loan);
                     if(response.getCode().equals(BizCodeEnum.SUCCESS.getCode())){
                         //TODO 如果交易放款成功 直接继续
-                        transactionService.lendingCallback(bid.getBidId(),tempId,loan.getTransactionId(),true,LocalDateTime.now());
+                        transactionService.lendingCallback(bid.getBidId(),tempId,loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(),LocalDateTime.now());
                     }else {
                         //TODO 若状态是放款中 还款中在交易表中插入一条 未完成记录
-                        transactionService.insertUsrTransactionInfo(bid.getBidId(),loan.getTransactionId(),false,null);
+                        transactionService.insertUsrTransactionInfo(bid.getBidId(),loan.getTransactionId(),TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(),null);
                     }
                 }
             } catch (Exception ex) {
                 log.info("放款任务失败，标的id{}",bid.getBidId());
                 ex.printStackTrace();
-                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark("放款失败：" + ex.getMessage()).build());
+                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark("放款失败："+ex.getMessage()).build());
             }
         });
 

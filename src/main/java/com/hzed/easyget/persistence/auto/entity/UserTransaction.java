@@ -51,6 +51,11 @@ public class UserTransaction implements Serializable {
     private Byte status;
 
     /**
+     * 还款方式，入账为空  1-全部结清 2-部分还款
+     */
+    private Byte repaymentType;
+
+    /**
      */
     private Long createBy;
 
@@ -147,6 +152,14 @@ public class UserTransaction implements Serializable {
         this.status = status;
     }
 
+    public Byte getRepaymentType() {
+        return repaymentType;
+    }
+
+    public void setRepaymentType(Byte repaymentType) {
+        this.repaymentType = repaymentType;
+    }
+
     public Long getCreateBy() {
         return createBy;
     }
@@ -202,6 +215,7 @@ public class UserTransaction implements Serializable {
         sb.append(", bank=").append(bank);
         sb.append(", account=").append(account);
         sb.append(", status=").append(status);
+        sb.append(", repaymentType=").append(repaymentType);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -268,6 +282,11 @@ public class UserTransaction implements Serializable {
             return this;
         }
 
+        public Builder repaymentType(Byte repaymentType) {
+            obj.setRepaymentType(repaymentType);
+            return this;
+        }
+
         public Builder createBy(Long createBy) {
             obj.setCreateBy(createBy);
             return this;
@@ -308,6 +327,7 @@ public class UserTransaction implements Serializable {
         bank("bank"),
         account("account"),
         status("status"),
+        repaymentType("repayment_type"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

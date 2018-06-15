@@ -14,14 +14,14 @@ public class UserPic implements Serializable {
     private Long userId;
 
     /**
-     * 身份证图片路径
+     * 图片类型 idcad、face、BNI ATM、OTC
      */
-    private String idCardPhoto;
+    private String type;
 
     /**
-     * 活体认证路径
+     * 身份证图片路径
      */
-    private String facePhoto;
+    private String picUrl;
 
     /**
      */
@@ -61,20 +61,20 @@ public class UserPic implements Serializable {
         this.userId = userId;
     }
 
-    public String getIdCardPhoto() {
-        return idCardPhoto;
+    public String getType() {
+        return type;
     }
 
-    public void setIdCardPhoto(String idCardPhoto) {
-        this.idCardPhoto = idCardPhoto == null ? null : idCardPhoto.trim();
+    public void setType(String type) {
+        this.type = type == null ? null : type.trim();
     }
 
-    public String getFacePhoto() {
-        return facePhoto;
+    public String getPicUrl() {
+        return picUrl;
     }
 
-    public void setFacePhoto(String facePhoto) {
-        this.facePhoto = facePhoto == null ? null : facePhoto.trim();
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl == null ? null : picUrl.trim();
     }
 
     public Long getCreateBy() {
@@ -125,8 +125,8 @@ public class UserPic implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
-        sb.append(", idCardPhoto=").append(idCardPhoto);
-        sb.append(", facePhoto=").append(facePhoto);
+        sb.append(", type=").append(type);
+        sb.append(", picUrl=").append(picUrl);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -158,13 +158,13 @@ public class UserPic implements Serializable {
             return this;
         }
 
-        public Builder idCardPhoto(String idCardPhoto) {
-            obj.setIdCardPhoto(idCardPhoto);
+        public Builder type(String type) {
+            obj.setType(type);
             return this;
         }
 
-        public Builder facePhoto(String facePhoto) {
-            obj.setFacePhoto(facePhoto);
+        public Builder picUrl(String picUrl) {
+            obj.setPicUrl(picUrl);
             return this;
         }
 
@@ -201,8 +201,8 @@ public class UserPic implements Serializable {
     public enum Column {
         id("id"),
         userId("user_id"),
-        idCardPhoto("id_card_photo"),
-        facePhoto("face_photo"),
+        type("type"),
+        picUrl("pic_url"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

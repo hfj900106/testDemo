@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hzed.easyget.persistence.auto.mapper.UserPicMapper">
-  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.UserPic">
+<mapper namespace="com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper">
+  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="type" jdbcType="VARCHAR" property="type" />
-    <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
-    <result column="create_by" jdbcType="BIGINT" property="createBy" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="transaction_id" jdbcType="BIGINT" property="transactionId" />
+    <result column="mode" jdbcType="VARCHAR" property="mode" />
+    <result column="va" jdbcType="VARCHAR" property="va" />
+    <result column="va_create_time" jdbcType="TIMESTAMP" property="vaCreateTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="confirm_time" jdbcType="TIMESTAMP" property="confirmTime" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -71,15 +70,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, type, pic_url, create_by, create_time, update_by, update_time, remark
+    id, transaction_id, mode, va, va_create_time, status, confirm_time, remark
   </sql>
-  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserPicExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_loan_user_pic
+    from t_loan_user_transaction_repay
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -103,7 +102,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_user_pic
+    from t_loan_user_transaction_repay
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -114,7 +113,7 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from t_loan_user_pic
+    from t_loan_user_transaction_repay
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -122,55 +121,50 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_user_pic
+    from t_loan_user_transaction_repay
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_loan_user_pic
+    delete from t_loan_user_transaction_repay
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserPicExample">
-    delete from t_loan_user_pic
+  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample">
+    delete from t_loan_user_transaction_repay
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserPic">
-    insert into t_loan_user_pic (id, user_id, type, 
-      pic_url, create_by, create_time, 
-      update_by, update_time, remark
-      )
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, 
-      #{picUrl,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
-      )
+  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
+    insert into t_loan_user_transaction_repay (id, transaction_id, mode, 
+      va, va_create_time, status, 
+      confirm_time, remark)
+    values (#{id,jdbcType=BIGINT}, #{transactionId,jdbcType=BIGINT}, #{mode,jdbcType=VARCHAR}, 
+      #{va,jdbcType=VARCHAR}, #{vaCreateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT}, 
+      #{confirmTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserPic">
-    insert into t_loan_user_pic
+  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
+    insert into t_loan_user_transaction_repay
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="userId != null">
-        user_id,
+      <if test="transactionId != null">
+        transaction_id,
       </if>
-      <if test="type != null">
-        type,
+      <if test="mode != null">
+        mode,
       </if>
-      <if test="picUrl != null">
-        pic_url,
+      <if test="va != null">
+        va,
       </if>
-      <if test="createBy != null">
-        create_by,
+      <if test="vaCreateTime != null">
+        va_create_time,
       </if>
-      <if test="createTime != null">
-        create_time,
+      <if test="status != null">
+        status,
       </if>
-      <if test="updateBy != null">
-        update_by,
-      </if>
-      <if test="updateTime != null">
-        update_time,
+      <if test="confirmTime != null">
+        confirm_time,
       </if>
       <if test="remark != null">
         remark,
@@ -180,64 +174,58 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="userId != null">
-        #{userId,jdbcType=BIGINT},
+      <if test="transactionId != null">
+        #{transactionId,jdbcType=BIGINT},
       </if>
-      <if test="type != null">
-        #{type,jdbcType=VARCHAR},
+      <if test="mode != null">
+        #{mode,jdbcType=VARCHAR},
       </if>
-      <if test="picUrl != null">
-        #{picUrl,jdbcType=VARCHAR},
+      <if test="va != null">
+        #{va,jdbcType=VARCHAR},
       </if>
-      <if test="createBy != null">
-        #{createBy,jdbcType=BIGINT},
+      <if test="vaCreateTime != null">
+        #{vaCreateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
       </if>
-      <if test="updateBy != null">
-        #{updateBy,jdbcType=BIGINT},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
+      <if test="confirmTime != null">
+        #{confirmTime,jdbcType=TIMESTAMP},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserPicExample" resultType="java.lang.Long">
-    select count(*) from t_loan_user_pic
+  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample" resultType="java.lang.Long">
+    select count(*) from t_loan_user_transaction_repay
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_loan_user_pic
+    update t_loan_user_transaction_repay
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.userId != null">
-        user_id = #{record.userId,jdbcType=BIGINT},
+      <if test="record.transactionId != null">
+        transaction_id = #{record.transactionId,jdbcType=BIGINT},
       </if>
-      <if test="record.type != null">
-        type = #{record.type,jdbcType=VARCHAR},
+      <if test="record.mode != null">
+        mode = #{record.mode,jdbcType=VARCHAR},
       </if>
-      <if test="record.picUrl != null">
-        pic_url = #{record.picUrl,jdbcType=VARCHAR},
+      <if test="record.va != null">
+        va = #{record.va,jdbcType=VARCHAR},
       </if>
-      <if test="record.createBy != null">
-        create_by = #{record.createBy,jdbcType=BIGINT},
+      <if test="record.vaCreateTime != null">
+        va_create_time = #{record.vaCreateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.createTime != null">
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=TINYINT},
       </if>
-      <if test="record.updateBy != null">
-        update_by = #{record.updateBy,jdbcType=BIGINT},
-      </if>
-      <if test="record.updateTime != null">
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      <if test="record.confirmTime != null">
+        confirm_time = #{record.confirmTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
@@ -248,43 +236,39 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_loan_user_pic
+    update t_loan_user_transaction_repay
     set id = #{record.id,jdbcType=BIGINT},
-      user_id = #{record.userId,jdbcType=BIGINT},
-      type = #{record.type,jdbcType=VARCHAR},
-      pic_url = #{record.picUrl,jdbcType=VARCHAR},
-      create_by = #{record.createBy,jdbcType=BIGINT},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_by = #{record.updateBy,jdbcType=BIGINT},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      transaction_id = #{record.transactionId,jdbcType=BIGINT},
+      mode = #{record.mode,jdbcType=VARCHAR},
+      va = #{record.va,jdbcType=VARCHAR},
+      va_create_time = #{record.vaCreateTime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=TINYINT},
+      confirm_time = #{record.confirmTime,jdbcType=TIMESTAMP},
       remark = #{record.remark,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserPic">
-    update t_loan_user_pic
+  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
+    update t_loan_user_transaction_repay
     <set>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=BIGINT},
+      <if test="transactionId != null">
+        transaction_id = #{transactionId,jdbcType=BIGINT},
       </if>
-      <if test="type != null">
-        type = #{type,jdbcType=VARCHAR},
+      <if test="mode != null">
+        mode = #{mode,jdbcType=VARCHAR},
       </if>
-      <if test="picUrl != null">
-        pic_url = #{picUrl,jdbcType=VARCHAR},
+      <if test="va != null">
+        va = #{va,jdbcType=VARCHAR},
       </if>
-      <if test="createBy != null">
-        create_by = #{createBy,jdbcType=BIGINT},
+      <if test="vaCreateTime != null">
+        va_create_time = #{vaCreateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
       </if>
-      <if test="updateBy != null">
-        update_by = #{updateBy,jdbcType=BIGINT},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      <if test="confirmTime != null">
+        confirm_time = #{confirmTime,jdbcType=TIMESTAMP},
       </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
@@ -292,22 +276,21 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserPic">
-    update t_loan_user_pic
-    set user_id = #{userId,jdbcType=BIGINT},
-      type = #{type,jdbcType=VARCHAR},
-      pic_url = #{picUrl,jdbcType=VARCHAR},
-      create_by = #{createBy,jdbcType=BIGINT},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_by = #{updateBy,jdbcType=BIGINT},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
+  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
+    update t_loan_user_transaction_repay
+    set transaction_id = #{transactionId,jdbcType=BIGINT},
+      mode = #{mode,jdbcType=VARCHAR},
+      va = #{va,jdbcType=VARCHAR},
+      va_create_time = #{vaCreateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=TINYINT},
+      confirm_time = #{confirmTime,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserPicExample" resultMap="BaseResultMap">
+  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_loan_user_pic
+    from t_loan_user_transaction_repay
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -321,7 +304,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_user_pic
+    from t_loan_user_transaction_repay
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -331,19 +314,17 @@
     limit 1
   </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_loan_user_pic
-    (id, user_id, type, pic_url, create_by, create_time, update_by, update_time, remark
-      )
+    insert into t_loan_user_transaction_repay
+    (id, transaction_id, mode, va, va_create_time, status, confirm_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.type,jdbcType=VARCHAR}, 
-        #{item.picUrl,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
-        )
+      (#{item.id,jdbcType=BIGINT}, #{item.transactionId,jdbcType=BIGINT}, #{item.mode,jdbcType=VARCHAR}, 
+        #{item.va,jdbcType=VARCHAR}, #{item.vaCreateTime,jdbcType=TIMESTAMP}, #{item.status,jdbcType=TINYINT}, 
+        #{item.confirmTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_loan_user_pic (
+    insert into t_loan_user_transaction_repay (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
@@ -355,26 +336,23 @@
         <if test="'id' == column.value">
           #{item.id,jdbcType=BIGINT}
         </if>
-        <if test="'user_id' == column.value">
-          #{item.userId,jdbcType=BIGINT}
+        <if test="'transaction_id' == column.value">
+          #{item.transactionId,jdbcType=BIGINT}
         </if>
-        <if test="'type' == column.value">
-          #{item.type,jdbcType=VARCHAR}
+        <if test="'mode' == column.value">
+          #{item.mode,jdbcType=VARCHAR}
         </if>
-        <if test="'pic_url' == column.value">
-          #{item.picUrl,jdbcType=VARCHAR}
+        <if test="'va' == column.value">
+          #{item.va,jdbcType=VARCHAR}
         </if>
-        <if test="'create_by' == column.value">
-          #{item.createBy,jdbcType=BIGINT}
+        <if test="'va_create_time' == column.value">
+          #{item.vaCreateTime,jdbcType=TIMESTAMP}
         </if>
-        <if test="'create_time' == column.value">
-          #{item.createTime,jdbcType=TIMESTAMP}
+        <if test="'status' == column.value">
+          #{item.status,jdbcType=TINYINT}
         </if>
-        <if test="'update_by' == column.value">
-          #{item.updateBy,jdbcType=BIGINT}
-        </if>
-        <if test="'update_time' == column.value">
-          #{item.updateTime,jdbcType=TIMESTAMP}
+        <if test="'confirm_time' == column.value">
+          #{item.confirmTime,jdbcType=TIMESTAMP}
         </if>
         <if test="'remark' == column.value">
           #{item.remark,jdbcType=VARCHAR}

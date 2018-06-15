@@ -27,7 +27,6 @@ public class RepayController {
     @ModuleFunc("还款列表")
     @GetMapping("/repaidList")
     public Response<RepayListResponse> repaidList(){
-
         return Response.getSuccessResponse(repayService.repaidList());
     }
 
@@ -42,13 +41,13 @@ public class RepayController {
     @PostMapping("/repayPart")
     public Response repayPart(@Valid @RequestBody RepayPartRequest request){
         repayService.repayPart(request);
+
         return Response.getSuccessResponse();
     }
 
     @ModuleFunc("还款详情")
     @GetMapping("/repayDetail")
     public Response<RepayDetailResponse> repayDetail(@Valid @RequestBody RepayDetailRequest request){
-
         return Response.getSuccessResponse(repayService.repayDetail(request));
     }
 

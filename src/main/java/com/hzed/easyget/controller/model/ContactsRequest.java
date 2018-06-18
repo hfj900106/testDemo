@@ -13,6 +13,6 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class ContactsRequest {
-    private String contacts;
-    private String callLogs;
+    private Object contacts;
+    private Object callLogs;
 }

@@ -47,6 +47,11 @@ public class LoginService {
     @Value("${spring.profiles.active}")
     private String env;
 
+    /**
+     * 用户登录注册
+     * @param request
+     * @return
+     */
     public LoginByCodeResponse loginByCode(LoginByCodeRequest request) {
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String mobile = request.getMobile();

@@ -16,7 +16,9 @@ public class PayProp {
     private String domain;
     private String loanTransactionUrl;
     private String receiverTransactionUrl;
+    private String getPaymentCodeUrl;
 
     public String getAbsLoanTransactionUrl(){ return this.domain + this.loanTransactionUrl; }
     public String getAbsReceiverTransactionUrl(){ return this.domain + this.receiverTransactionUrl; }
+    public String getAbsGetPaymentCodeUrl(){return this.domain + this.getPaymentCodeUrl; }
 }

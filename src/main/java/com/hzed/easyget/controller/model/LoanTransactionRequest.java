@@ -20,6 +20,7 @@ public class LoanTransactionRequest {
     /**
      * 交易id
      */
+    @NotBlank(message = "交易id不能为空")
     private String transactionId;
     /**
      * 收款所在国

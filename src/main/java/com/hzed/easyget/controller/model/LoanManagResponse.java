@@ -12,9 +12,9 @@ import java.math.BigDecimal;
 @Data
 public class LoanManagResponse {
     /**
-     * 交易id 唯一
+     * 交易流水
      */
-    private String payMentId;
+    private Long payId;
     /**
      * 标应还金额
      */
@@ -30,7 +30,7 @@ public class LoanManagResponse {
     /**
      * va码过期时间
      */
-    private String  expiryTime;
+    private String  createTime;
     /**
      * 交易方式
      */

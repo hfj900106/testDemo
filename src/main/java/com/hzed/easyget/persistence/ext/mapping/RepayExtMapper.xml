@@ -4,7 +4,6 @@
     <!--还款详情 va 应还信息-->
     <select id="findloanManagResponse" resultType="com.hzed.easyget.controller.model.LoanManagResponse">
         SELECT
-        l.repayment_amount as amount,
         l.repayment_time as repaymentTime
         FROM
         t_loan_bill l WHERE  l.bid_id=#{bidId}
@@ -12,7 +11,22 @@
     </select>
     <!--查询va码-->
     <select id="getVACode" resultType="com.hzed.easyget.controller.model.LoanManagResponse">
-        SELECT va as vaCodel,MAX(va_create_time) as expiryTime,mode
+        SELECT va as vaCodel,MAX(va_create_time) as createTime,mode
          from t_loan_user_transaction_repay WHERE transaction_id=#{id}
+    </select>
+    <!--查询va码-->
+    <select id="findVATranc" resultType="com.hzed.easyget.controller.model.TransactionVAResponse" parameterType="com.hzed.easyget.controller.model.TransactionVARequest">
+      SELECT  va AS vaCodel,va_create_time AS createTime,transaction_id,MODE
+        FROM
+        t_loan_user_transaction_repay
+        GROUP BY id HAVING (TIMESTAMPDIFF(HOUR,MAX(va_create_time),NOW())) &lt;=6 AND transaction_id = #{payId} AND MODE = #{mode}
+    </select>
+    <!--获取交易记录 根据交易id-->
+    <select id="finduserTransBypaymentId" resultType="com.hzed.easyget.controller.model.PaymentCodeRequest">
+        SELECT
+        t.payment_id AS transactionId,
+        t.amount AS price,
+        t.bank AS bankType
+        from t_loan_user_transaction t where t.id=#{id}
     </select>
 </mapper>

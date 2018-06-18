@@ -1,19 +1,22 @@
 package com.hzed.easyget.infrastructure.repository;
 
+import com.hzed.easyget.application.enums.TransactionRepayEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
-import com.hzed.easyget.controller.model.LoanManagResponse;
+import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.Bid;
-import com.hzed.easyget.persistence.auto.entity.UserTransaction;
-import com.hzed.easyget.persistence.auto.mapper.UserBankMapper;
+import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
+import com.hzed.easyget.persistence.auto.mapper.UserPicMapper;
+import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper;
+import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayPicMapper;
 import com.hzed.easyget.persistence.ext.mapper.RepayExtMapper;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**还款 仓储类
 *@description：
@@ -28,6 +31,12 @@ public class RepayRepository {
     private UserTransactionRepository userTransactionRepository;
     @Autowired
     private BidRepository bidRepository;
+    @Autowired
+    private UserTransactionRepayMapper repayMapper;
+    @Autowired
+    private UserPicMapper userPicMapper;
+    @Autowired
+    private UserTransactionRepayPicMapper transactionRepayPicMapper;
     /**
      * 还款详情
      * @param bidId
@@ -38,26 +47,116 @@ public class RepayRepository {
         LoanManagResponse managResponse=repayExtMapper.findloanManagResponse(bidId);
         //查询标的信息
         Bid bid=bidRepository.findById(bidId);
-        //生成交易记录
-        UserTransaction transaction=UserTransaction.builder()
-                .id(IdentifierGenerator.nextId())
-                .userId(bid.getUserId())
-                .paymentId(IdentifierGenerator.nextSeqNo())
-                .bank(bid.getInBank())
-                .type(TransactionTypeEnum.OUT.getCode().byteValue())
-                .amount(managResponse.getAmount())
-                .status(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
-                .repaymentType(flag?TransactionTypeEnum.ALL_CLEAR.getCode().byteValue():TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue())
-                .createTime(LocalDateTime.now())
-                .remark("部分还款").build();
-        userTransactionRepository.insertSelective(transaction);
+        //先查询是否有交易记录
+        UserTransaction trance;
+        trance=userTransactionRepository.findoldTrance(bidId,flag,TransactionTypeEnum.OUT.getCode().byteValue(),TransactionTypeEnum.IN_RANSACTION.getCode().byteValue());
+        if(ObjectUtils.isEmpty(trance)){
+            //生成交易记录
+            trance=UserTransaction.builder()
+                    .id(IdentifierGenerator.nextId())
+                    .userId(bid.getUserId())
+                    .paymentId(IdentifierGenerator.nextSeqNo())
+                    .bank(bid.getInBank())
+                    .type(TransactionTypeEnum.OUT.getCode().byteValue())
+                    .amount(managResponse.getAmount())
+                    .status(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
+                    .repaymentType(flag?TransactionTypeEnum.ALL_CLEAR.getCode().byteValue():TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue())
+                    .createTime(LocalDateTime.now())
+                    .remark(flag?"全部还款":"部分还款").build();
+            userTransactionRepository.insertSelective(trance);
+        }
         //查询va码
-        LoanManagResponse vaCode=repayExtMapper.getVACode(transaction.getId());
+        LoanManagResponse vaCode=repayExtMapper.getVACode(trance.getId());
         if(!ObjectUtils.isEmpty(vaCode)){
             managResponse.setVaCodel(vaCode.getVaCodel());
-            managResponse.setExpiryTime(vaCode.getExpiryTime());
+            managResponse.setCreateTime(vaCode.getCreateTime());
         }
-        managResponse.setPayMentId(transaction.getPaymentId());
+        managResponse.setPayId(trance.getId());
         return  managResponse;
+    }
+
+    /**
+     * 获取va码
+     * @param request
+     * @return
+     */
+    public TransactionVAResponse findVATranc(TransactionVARequest request) {
+        return repayExtMapper.findVATranc(request);
+    }
+
+    /**
+     * 获取交易记录 根据交易id
+     * @param payId
+     * @return
+     */
+    public PaymentCodeRequest finduserTransBypaymentId(Long payId) {
+        return repayExtMapper.finduserTransBypaymentId(payId);
+    }
+
+    /**
+     * 生成va码记录
+     * @param repay
+     */
+    public void insertSelective(UserTransactionRepay repay) {
+        repayMapper.insertSelective(repay);
+    }
+
+    /**
+     * 生成凭证pic记录
+     * @param userPic
+     */
+    public void userPicinsertSelective(UserPic userPic) {
+        userPicMapper.insertSelective(userPic);
+    }
+
+    /**
+     * 获取所有的va码记录
+     * @param request
+     * @return
+     */
+    public List<UserTransactionRepay> finaAllVAcodeBypermas(RepaymentRequest request) {
+        return  userTransactionRepository.finaAllVAcodeBypermas(request);
+    }
+
+    /**
+     * va码应的凭证
+     */
+    public void picinsertSelective(UserTransactionRepayPic repayPic) {
+        transactionRepayPicMapper.insertSelective(repayPic);
+    }
+
+    /**
+     * 修改va码状态 处理中
+     * @param x
+     */
+    public void updateUserTransacRepayState(UserTransactionRepay x) {
+        x.setStatus(TransactionRepayEnum.PROCESS_PROCESSING.getCode().byteValue());
+        userTransactionRepository.updateUserTransacRepayState(x);
+    }
+
+    /**
+     * 还款完成走资金流
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void afterRepayment(UserTransaction transaction, UserTransactionRepay x) {
+        transaction.setStatus(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue());
+        transaction.setUpdateTime(LocalDateTime.now());
+        userTransactionRepository.transactionUpdateByKey(transaction);
+        x.setStatus(TransactionRepayEnum.PROCESS_SUCCESS.getCode().byteValue());
+        x.setConfirmTime(LocalDateTime.now());
+        repayMapper.updateByPrimaryKey(x);
+    }
+
+    /**
+     * 根据交易id获取对应的va码信息
+     * @param id
+     * @return
+     */
+    public UserTransactionRepay findRepayTrans(Long id) {
+        UserTransactionRepayExample repayExample=new UserTransactionRepayExample();
+        repayExample.createCriteria()
+                .andTransactionIdEqualTo(id)
+                .andStatusEqualTo(TransactionRepayEnum.PROCESS_PROCESSING.getCode().byteValue());
+        return repayMapper.selectByExample(repayExample).get(0);
     }
 }

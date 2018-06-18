@@ -48,6 +48,7 @@ public class LoginService {
     private String env;
 
     public LoginByCodeResponse loginByCode(LoginByCodeRequest request) {
+        if(true) throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM);
 
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String mobile = request.getMobile();

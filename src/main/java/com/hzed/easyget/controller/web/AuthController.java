@@ -5,7 +5,6 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
-import com.hzed.easyget.infrastructure.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 用户认证
@@ -32,85 +32,76 @@ public class AuthController {
 
     @ModuleFunc("通讯录认证")
     @PostMapping("/contacts")
-    public Response contacts(@Valid @RequestBody ContactsRequest request) {
+    public void contacts(@Valid @RequestBody ContactsRequest request) {
         authService.authContacts(request);
-        return Response.getSuccessResponse();
     }
 
     @ModuleFunc("短信认证")
     @PostMapping("/messages")
-    public Response messages(@Valid @RequestBody MessagesRequest request) {
+    public void messages(@Valid @RequestBody MessagesRequest request) {
         authService.authMessages(request);
-        return Response.getSuccessResponse();
     }
 
     @ModuleFunc("个人信息认证")
     @PostMapping("/personInfo")
-    public Response personInfoAuth(@Valid @RequestBody PersonInfoAuthRequest request) {
+    public void personInfoAuth(@Valid @RequestBody PersonInfoAuthRequest request) {
         authService.authPersonInfo(request);
-        return Response.getSuccessResponse();
     }
 
-    @ModuleFunc(value = "身份证识别", isParameterPrint = false)
+    @ModuleFunc(value = "身份证识别", printParameterLength = 500)
     @PostMapping("/idCardRecognition")
-    public Response<IdCardRecognitionResponse> idCardRecognition(@Valid @RequestBody IdCardRecognitionRequest request) {
-        return Response.getSuccessResponse(authService.idCardRecognition(request));
+    public IdCardRecognitionResponse idCardRecognition(@Valid @RequestBody IdCardRecognitionRequest request) {
+        return authService.idCardRecognition(request);
     }
 
-    @ModuleFunc(value = "人脸识别", isParameterPrint = false)
+    @ModuleFunc(value = "人脸识别", printParameterLength = 500)
     @PostMapping("/faceRecognition")
-    public Response faceRecognition(@Valid @RequestBody FaceRecognitionRequest request) {
+    public void faceRecognition(@Valid @RequestBody FaceRecognitionRequest request) {
         authService.faceRecognition(request);
-        return Response.getSuccessResponse();
     }
 
-    @ModuleFunc(value = "身份信息认证", isParameterPrint = false)
+    @ModuleFunc(value = "身份信息认证", printParameterLength = 500)
     @PostMapping("/identityInfo")
-    public Response identityInformationAuth(@Valid @RequestBody IdentityInfoAuthRequest request) {
+    public void identityInformationAuth(@Valid @RequestBody IdentityInfoAuthRequest request) {
         authService.identityInfoAuth(request);
-        return Response.getSuccessResponse();
     }
 
     @ModuleFunc("/获取用户认证信息")
     @PostMapping("/getAuthStatus")
-    public Response<AuthStatusResponse> getAuthStatus() {
-        return Response.getSuccessResponse(authService.getAuthStatus());
+    public List<AuthStatusResponse> getAuthStatus() {
+        return authService.getAuthStatus();
     }
 
     @ModuleFunc("/运营商认证-发送验证码")
     @PostMapping("/operatorSendSmsCode")
-    public Response operatorSendSmsCode() {
+    public void operatorSendSmsCode() {
         authService.operatorSendSmsCode();
-        return Response.getSuccessResponse();
     }
 
     @ModuleFunc("/运营商认证-验证码认证")
     @PostMapping("/operatorAuth")
-    public Response operatorAuth(@Valid @RequestBody PeratorAuthRequest request) {
+    public void operatorAuth(@Valid @RequestBody PeratorAuthRequest request) {
         authService.operatorAuth(request);
-        return Response.getSuccessResponse();
     }
 
     @ModuleFunc("专业信息认证")
     @PostMapping("/professional")
-    public Response professionalAuth(@Valid @RequestBody ProfessionalRequest request) {
+    public void professionalAuth(@Valid @RequestBody ProfessionalRequest request) {
         authService.professionalAuth(request);
-        return Response.getSuccessResponse();
     }
 
     @ModuleFunc("facebook认证")
     @PostMapping("/facebook")
     @TokenIgnore
-    public Response facebookAuth(@Valid @RequestBody FacebookRequest request) {
+    public void facebookAuth(@Valid @RequestBody FacebookRequest request) {
         authService.facebookAuth(request);
-        return Response.getSuccessResponse();
     }
+
     @ModuleFunc("ins认证")
     @PostMapping("/ins")
     @TokenIgnore
-    public Response insAuth(@Valid @RequestBody InsRequest request) {
+    public void insAuth(@Valid @RequestBody InsRequest request) {
         authService.insAuth(request);
-        return Response.getSuccessResponse();
     }
 
 }

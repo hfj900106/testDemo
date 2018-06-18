@@ -5,7 +5,6 @@ import com.hzed.easyget.application.service.TransactionService;
 import com.hzed.easyget.controller.model.PushBidCallbackRequest;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,8 @@ public class CallbackController {
 
     @ModuleFunc("推送资产-审核回调")
     @PostMapping("/riskCallback/pushBidCallback")
-    public Response pushBidCallback(@RequestBody PushBidCallbackRequest request) {
+    public void pushBidCallback(@RequestBody PushBidCallbackRequest request) {
         callbackService.pushBidCallback(request);
-        return Response.getSuccessResponse();
     }
 
 }

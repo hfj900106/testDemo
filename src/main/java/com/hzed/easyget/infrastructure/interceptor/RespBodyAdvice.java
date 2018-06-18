@@ -45,16 +45,12 @@ public class RespBodyAdvice implements ResponseBodyAdvice<Object> {
                                   ServerHttpResponse response) {
         Object result = body;
         ModuleFunc moduleFunc = RequestUtil.getModuleFunc();
-        if (moduleFunc != null) {
-            if (moduleFunc.isCommonResponse()) {
-                Response resp = Response.getSuccessResponse(body);
-                resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
-                result = resp;
-            }
-            if (moduleFunc.isParameterPrint()) {
-                log.info("返回报文：{}", JSON.toJSONString(result));
-            }
+        if (moduleFunc != null && moduleFunc.isCommonResponse() && !(body instanceof Response)) {
+            Response resp = Response.getSuccessResponse(body);
+            resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
+            result = resp;
         }
+        log.info("返回报文：{}", JSON.toJSONString(result));
         return result;
     }
 

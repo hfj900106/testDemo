@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.hzed.easyget.application.service.I18nService;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
+import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -27,12 +28,11 @@ public class RespBodyAdvice implements ResponseBodyAdvice<Object> {
     private I18nService i18nService;
 
     /**
-     * 判断是否支持转换
+     * 全部进入
      */
     @Override
     public boolean supports(MethodParameter parameter, Class<? extends HttpMessageConverter<?>> converterType) {
-        ModuleFunc moduleFunc = parameter.getMethodAnnotation(ModuleFunc.class);
-        return moduleFunc.isCommonResponse() ? true : false;
+        return true;
     }
 
     /**
@@ -43,16 +43,19 @@ public class RespBodyAdvice implements ResponseBodyAdvice<Object> {
                                   org.springframework.http.MediaType selectedContentType,
                                   Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,
                                   ServerHttpResponse response) {
-
-        Response resp = Response.getSuccessResponse(body);
-        resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
-
-        ModuleFunc moduleFunc = parameter.getMethodAnnotation(ModuleFunc.class);
-        if (moduleFunc.isParameterPrint()) {
-            log.info("返回报文：{}", JSON.toJSONString(resp));
+        Object result = body;
+        ModuleFunc moduleFunc = RequestUtil.getModuleFunc();
+        if (moduleFunc != null) {
+            if (moduleFunc.isCommonResponse()) {
+                Response resp = Response.getSuccessResponse(body);
+                resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
+                result = resp;
+            }
+            if (moduleFunc.isParameterPrint()) {
+                log.info("返回报文：{}", JSON.toJSONString(result));
+            }
         }
-
-        return resp;
+        return result;
     }
 
 }

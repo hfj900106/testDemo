@@ -10,7 +10,7 @@ platform: android
 version: 1.1.0
 
 {
-	"device":"123123",
+	"device":"21321",
 	"mobile":"14451253635",
 	"smsCode":"0000"
 }

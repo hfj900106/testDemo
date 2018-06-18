@@ -1,6 +1,7 @@
 package com.hzed.easyget.infrastructure.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
@@ -58,6 +59,17 @@ public class RequestUtil {
         return globalUser;
     }
 
+    public static void setModuleFunc(ModuleFunc moduleFunc) {
+        HttpServletRequest request = getHttpServletRequest();
+        request.setAttribute("moduleFunc", moduleFunc);
+    }
+
+    public static ModuleFunc getModuleFunc() {
+        HttpServletRequest request = getHttpServletRequest();
+        Object moduleFunc = request.getAttribute("moduleFunc");
+        return moduleFunc == null ? null : (ModuleFunc) moduleFunc;
+    }
+
     public static String getIp() {
         HttpServletRequest request = getHttpServletRequest();
         String ip = request.getHeader("x-forwarded-for");
@@ -79,6 +91,4 @@ public class RequestUtil {
         }
         return ip;
     }
-
-
 }

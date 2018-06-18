@@ -1,0 +1,37 @@
+### 用户登录
+POST http://localhost:8150/hzed/easy-get/api/login/loginByCode
+Accept: application/json;charset=UTF-8
+Cache-Control: no-cache
+Content-Type: application/json
+imei: 123123
+i18n: zh_CN
+appKey: 1233
+platform: android
+version: 1.1.0
+
+{
+	"device":"123123",
+	"mobile":"14451253635",
+	"smsCode":"0000"
+}
+
+###
+POST http://localhost:8150/hzed/easy-get/api/login/loginByCode
+Accept: application/json;charset=UTF-8
+Cache-Control: no-cache
+Content-Type: application/json
+imei: 123123
+i18n: zh_CN
+appKey: 1233
+platform: android
+version: 1.1.0
+
+{
+	"device":"123123",
+	"mobile":"14451253635",
+	"smsCode":"0000"
+}
+
+###
+
+

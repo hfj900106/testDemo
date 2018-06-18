@@ -29,4 +29,10 @@ public @interface ModuleFunc {
     @Deprecated
     boolean isParameterValidate() default true;
 
+    /**
+     * 是否转换为com.hzed.easyget.infrastructure.model.Response
+     * 默认 true-转换
+     */
+    boolean isCommonResponse() default true;
+
 }

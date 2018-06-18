@@ -60,6 +60,8 @@ public class AuthService {
     private RestService restService;
     @Autowired
     private RiskProp riskProp;
+    @Autowired
+    FileService fileService;
 
     /**
      * 获取用户认证状态
@@ -285,16 +287,9 @@ public class AuthService {
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         String faceBase64ImgStr = request.getFaceBase64ImgStr();
         String picSuffix = request.getPicSuffix();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("imgBase64", idCardBase64ImgStr);
-        map.put("pictureSuffix", picSuffix);
-        String idCardPhotoPath;
-        String facePhotoPath;
         try {
-            idCardPhotoPath = getPhotoPath(map);
-
-            map.put("imgBase64", faceBase64ImgStr);
-            facePhotoPath = getPhotoPath(map);
+            String idCardPhotoPath = getPhotoPath(idCardBase64ImgStr,picSuffix);
+            String facePhotoPath = getPhotoPath(faceBase64ImgStr,picSuffix);
 
             //根据拿到json串组装对象
             User userObj = new User();
@@ -321,17 +316,10 @@ public class AuthService {
      * 专业信息认证
      */
     public void professionalAuth(ProfessionalRequest request) {
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("imgBase64", request.getEmployeeCardBase64ImgStr());
-        map.put("pictureSuffix", request.getPicSuffix());
-        String employeeCardPhotoPath;
-        String workplacePhotoPath;
         try {
             //照片上传
-            employeeCardPhotoPath = getPhotoPath(map);
-
-            map.put("imgBase64", request.getEmployeeCardBase64ImgStr());
-            workplacePhotoPath = getPhotoPath(map);
+            String employeeCardPhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(),request.getPicSuffix());
+            String workplacePhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(),request.getPicSuffix());
 
             GlobalUser user = getGlobalUser();
             Work work = new Work();
@@ -368,12 +356,16 @@ public class AuthService {
 
     /**
      * 获取图片保存路径
-     * @param map
-     * @return
      */
-    private String getPhotoPath(Map<String, Object> map) {
-        UploadImgResponse response = restService.postJson("/hzed/easy-get/upload", map, UploadImgResponse.class);
-        return response.getVisitUrl();
+    private String getPhotoPath(String base64Img, String picSuffix) {
+        String  path ;
+        try {
+            path = fileService.uploadBase64Img(base64Img,picSuffix);
+        } catch (Exception e) {
+            log.error("上传图片异常："+e.getStackTrace().toString());
+           throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION);
+        }
+        return path;
     }
 
     /**

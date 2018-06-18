@@ -7,10 +7,7 @@ import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -66,9 +63,17 @@ public class HomeController {
     }
 
     @ModuleFunc("发起借款校验")
-    @PostMapping("/checkLoan")
+    @GetMapping("/checkLoan")
     public Response checkLoan(){
         homeService.checkLoan();
+        return Response.getSuccessResponse();
+    }
+
+    @ModuleFunc("检测首页是否跳转")
+    @GetMapping("/checkJump")
+    public Response checkJump(){
+
+        homeService.checkJump();
         return Response.getSuccessResponse();
     }
 

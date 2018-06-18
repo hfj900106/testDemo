@@ -23,13 +23,6 @@ public @interface ModuleFunc {
     boolean isParameterPrint() default true;
 
     /**
-     * 已废弃 用@Valid替代
-     * 校验请求参数的标志 默认true-校验
-     */
-    @Deprecated
-    boolean isParameterValidate() default true;
-
-    /**
      * 是否转换为com.hzed.easyget.infrastructure.model.Response
      * 默认 true-转换
      */

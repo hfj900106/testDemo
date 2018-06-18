@@ -6,6 +6,7 @@ import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +28,7 @@ public class AdsController {
 
     @ModuleFunc("获取广告产品列表")
     @PostMapping("/getAdsProductList")
-    public List<AdsProductResponse> getAdsProductList(){
+    public List<AdsProductResponse> getAdsProductList(@RequestBody Object obj){
         return adsService.getAdsProductList();
     }
 }

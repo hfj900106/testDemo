@@ -24,8 +24,8 @@ public class RepayController {
     private RepayService repayService;
 
     @ModuleFunc("还款列表")
-    @GetMapping("/repaidList")
-    public RepayListResponse repaidList() {
+    @PostMapping("/repaidList")
+    public RepayListResponse repaidList(@RequestBody Object obj) {
         return repayService.repaidList();
     }
 

@@ -1,6 +1,7 @@
 package com.hzed.easyget.infrastructure.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.hzed.easyget.application.service.I18nService;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
@@ -50,7 +51,7 @@ public class RespBodyAdvice implements ResponseBodyAdvice<Object> {
             resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
             result = resp;
         }
-        log.info("返回报文：{}", JSON.toJSONString(result));
+        log.info("返回报文：{}", JSON.toJSONString(result, SerializerFeature.WriteMapNullValue));
         return result;
     }
 

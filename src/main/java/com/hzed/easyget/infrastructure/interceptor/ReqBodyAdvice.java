@@ -42,6 +42,9 @@ public class ReqBodyAdvice implements RequestBodyAdvice {
      */
     @Override
     public Object handleEmptyBody(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
+        beforeBodyRead(inputMessage, parameter, targetType, converterType);
+        body = body == null ? "无请求参数" : body;
+        afterBodyRead(body, inputMessage, parameter, targetType, converterType);
         return body;
     }
 

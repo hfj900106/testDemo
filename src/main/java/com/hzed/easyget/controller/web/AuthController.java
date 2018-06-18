@@ -68,13 +68,13 @@ public class AuthController {
 
     @ModuleFunc("/获取用户认证信息")
     @PostMapping("/getAuthStatus")
-    public List<AuthStatusResponse> getAuthStatus() {
+    public List<AuthStatusResponse> getAuthStatus(@RequestBody Object obj) {
         return authService.getAuthStatus();
     }
 
     @ModuleFunc("/运营商认证-发送验证码")
     @PostMapping("/operatorSendSmsCode")
-    public void operatorSendSmsCode() {
+    public void operatorSendSmsCode(@RequestBody Object obj) {
         authService.operatorSendSmsCode();
     }
 

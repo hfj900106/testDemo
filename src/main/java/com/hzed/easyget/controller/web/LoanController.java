@@ -19,7 +19,7 @@ import javax.validation.Valid;
  * 借款相关
  *
  * @author wuchengwu
- * @data 2018/6/7
+ * @date 2018/6/7
  */
 @ExceptionAnno
 @RestController

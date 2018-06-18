@@ -4,7 +4,6 @@ import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,35 +25,32 @@ public class RepayController {
 
     @ModuleFunc("还款列表")
     @GetMapping("/repaidList")
-    public Response<RepayListResponse> repaidList(){
-        return Response.getSuccessResponse(repayService.repaidList());
+    public RepayListResponse repaidList() {
+        return repayService.repaidList();
     }
 
     @ModuleFunc("结清全部")
     @PostMapping("/repayAll")
-    public Response repayAll(@Valid @RequestBody RepayAllRequest request){
+    public void repayAll(@Valid @RequestBody RepayAllRequest request) {
         repayService.repayAll(request);
-        return Response.getSuccessResponse();
     }
 
     @ModuleFunc("部分还款")
     @PostMapping("/repayPart")
-    public Response repayPart(@Valid @RequestBody RepayPartRequest request){
+    public void repayPart(@Valid @RequestBody RepayPartRequest request) {
         repayService.repayPart(request);
-
-        return Response.getSuccessResponse();
     }
 
     @ModuleFunc("还款详情")
     @GetMapping("/repayDetail")
-    public Response<RepayDetailResponse> repayDetail(@Valid @RequestBody RepayDetailRequest request){
-        return Response.getSuccessResponse(repayService.repayDetail(request));
+    public RepayDetailResponse repayDetail(@Valid @RequestBody RepayDetailRequest request) {
+        return repayService.repayDetail(request);
     }
 
     @ModuleFunc("部分还款详情")
     @RequestMapping("/repayPartDetail")
-    public Response<RepayPartDetailResponse> repayPartDetail(@Valid @RequestBody RepayPartDetailRequest request){
-        return Response.getSuccessResponse(repayService.repayPartDetail(request));
+    public RepayPartDetailResponse repayPartDetail(@Valid @RequestBody RepayPartDetailRequest request) {
+        return repayService.repayPartDetail(request);
     }
 
 

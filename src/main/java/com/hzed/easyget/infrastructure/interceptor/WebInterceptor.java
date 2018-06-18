@@ -30,7 +30,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
     private ComService comService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         // 日志加入trace
         MDC.put(LogConsts.TRACE, UUID.randomUUID().toString().replaceAll("-", "").substring(3, 20));
 

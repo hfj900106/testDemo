@@ -53,7 +53,7 @@ public enum BizCodeEnum {
     PIC_CODE_TO_CHECK("1018", "需要图片验证码校验"),
     BID_EXISTS("1019", "有未结清标的"),
     ILLEGAL_LEDGER_TYPE("1020", "账单ID：{0}的台账类型{1}不存在"),
-    ERROR_IDCARD_AUTH_RESULT("1021", "身份证识别返回数据异常"),
+    ERROR_RISK__RESULT("1021", "风控返回数据异常"),
 
     FAIL_IDCARD_RECOGNITION("1022", "身份证识别失败"),
     FAIL_FACE_RECOGNITION("1023", "人脸识别失败"),
@@ -66,7 +66,9 @@ public enum BizCodeEnum {
     ILLEGAL_BILLID("1030", "账单ID：{0}不存在"),
     NOT_EXIST_BILL("1031",  "标ID：{0}的账单不存在"),
     INSUFFICIENT_QUOTA("1032","名额不足"),
-    UN_LOAN_QUALIFICATION("1033","无贷款资格")
+    UN_LOAN_QUALIFICATION("1033","无贷款资格"),
+    NEED_JUMP("1034","需要跳转"),
+    EXIST_USER("1035","用户已经存在")
 
     ;
 

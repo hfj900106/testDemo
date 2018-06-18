@@ -13,10 +13,7 @@ import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
-import com.hzed.easyget.infrastructure.repository.NewsRepository;
-import com.hzed.easyget.infrastructure.repository.ProductRepository;
-import com.hzed.easyget.infrastructure.repository.UserRepository;
-import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
+import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
@@ -51,6 +48,10 @@ public class HomeService {
     private ComService comService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private BidRepository bidRepository;
+    @Autowired
+    private UserVisitRecordRepository userVisitRecordRepository;
 
     private static final String ANDROID_BOMB = "android_bomb";
     private static final String IOS_BOMB = "ios_bomb";
@@ -183,5 +184,19 @@ public class HomeService {
             }
         }
 
+    }
+
+    public void checkJump() {
+
+        Long userId = RequestUtil.getGlobalUser().getUserId();
+        //bid为空或访问记录表不为空无需跳转，0000为无需跳转，其他需跳转
+        List<Bid> bidList = bidRepository.findByUserId(userId);
+        bidList.forEach(bid -> {
+            //首页检测跳转，访问记录表为空需跳转，不为空无需跳转
+            UserVisitRecord userVisitRecord = userVisitRecordRepository.findByUserIdAndBidId(userId, bid.getId());
+            if (userVisitRecord == null) {
+                throw new ComBizException(BizCodeEnum.NEED_JUMP);
+            }
+        });
     }
 }

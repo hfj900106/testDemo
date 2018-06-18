@@ -18,15 +18,15 @@ public @interface ModuleFunc {
     String value() default "未命名模块";
 
     /**
-     * 打印请求和返回参数的标志 默认true-打印
+     * 打印请求参数的长度，部分请求可能请求参数过长，用此参数限制
+     * 默认 -1 表示无限制
      */
-    boolean isParameterPrint() default true;
+    int printParameterLength() default -1;
 
     /**
-     * 已废弃 用@Valid替代
-     * 校验请求参数的标志 默认true-校验
+     * 是否转换为com.hzed.easyget.infrastructure.model.Response
+     * 默认 true-转换
      */
-    @Deprecated
-    boolean isParameterValidate() default true;
+    boolean isCommonResponse() default true;
 
 }

@@ -160,11 +160,8 @@ public class AesUtil {
     }
 
     public static void main(String[] args) {
-        Map param = Maps.newHashMap();
         Long timeStamp = System.currentTimeMillis();
-        param.put("userId", "123");
-        param.put("timeStamp", timeStamp);
-//        System.out.println(aesEncode(param.toString()));
+        System.out.println(aesEncode(105534315668316160L, 1529057739659L));
         System.out.println(timeStamp);
     }
 

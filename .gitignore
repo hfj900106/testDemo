@@ -7,3 +7,4 @@
 /*.project
 /target
 /src/main/resources/config/generator/generatorConfig.xml
+/log/

@@ -5,12 +5,8 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
-import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -32,44 +28,49 @@ public class HomeController {
     @TokenIgnore
     @ModuleFunc("获取产品详情")
     @PostMapping("/getProductInfo")
-    public Response<ProductInfoResponse> getProductInfo() {
-        return Response.getSuccessResponse(homeService.getProductInfo());
+    public ProductInfoResponse getProductInfo(@RequestBody Object obj) {
+        return homeService.getProductInfo();
     }
 
     @TokenIgnore
     @ModuleFunc("版本号检测是否更新")
     @PostMapping("/getAppVersion")
-    public Response<AppVersionResponse> getAppVersion(@Valid @RequestBody AppVersionRequest request) {
-        return Response.getSuccessResponse(homeService.getAppVersion(request));
+    public AppVersionResponse getAppVersion(@Valid @RequestBody AppVersionRequest request) {
+        return homeService.getAppVersion(request);
 
     }
 
     @TokenIgnore
     @ModuleFunc("产品试算")
     @PostMapping("/loanCalculate")
-    public Response<LoanCalculateResponse> loanCalculate(@Valid @RequestBody LoanCalculateRequest request){
-        return Response.getSuccessResponse(homeService.loanCalculate(request));
+    public LoanCalculateResponse loanCalculate(@Valid @RequestBody LoanCalculateRequest request) {
+        return homeService.loanCalculate(request);
     }
 
 
     @ModuleFunc("token更新")
     @PostMapping("/updateToken")
-    public Response<UpdateTokenResponse> updateToken(){
-        return Response.getSuccessResponse(homeService.updateToken());
+    public UpdateTokenResponse updateToken(@RequestBody Object obj) {
+        return homeService.updateToken();
     }
 
     @TokenIgnore
     @ModuleFunc("获取公告列表")
     @PostMapping("/getNewsList")
-    public Response<List<NewsResponse>> getNewsList(){
-        return Response.getSuccessResponse(homeService.getNewsList());
+    public List<NewsResponse> getNewsList(@RequestBody Object obj) {
+        return homeService.getNewsList();
     }
 
     @ModuleFunc("发起借款校验")
-    @PostMapping("/checkLoan")
-    public Response checkLoan(){
+    @GetMapping("/checkLoan")
+    public void checkLoan(@RequestBody Object obj) {
         homeService.checkLoan();
-        return Response.getSuccessResponse();
+    }
+
+    @ModuleFunc("检测首页是否跳转")
+    @GetMapping("/checkJump")
+    public void checkJump() {
+        homeService.checkJump();
     }
 
 }

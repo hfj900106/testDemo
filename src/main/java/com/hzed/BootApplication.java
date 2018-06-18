@@ -14,7 +14,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -43,7 +42,7 @@ import javax.validation.Validator;
 @EnableRedis
 @EnableRest
 @EnableAliyun
-@ImportResource(locations= {"classpath:config/rabbitMQ.xml"})
+//@EnableRabbitMQ
 public class BootApplication {
 
     @Bean

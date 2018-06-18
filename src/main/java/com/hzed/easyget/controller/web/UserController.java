@@ -5,10 +5,10 @@ import com.hzed.easyget.controller.model.TransactionRecordResponse;
 import com.hzed.easyget.controller.model.UserResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-import com.hzed.easyget.infrastructure.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,14 +29,14 @@ public class UserController {
 
     @ModuleFunc("我的")
     @PostMapping("/getAccountInfo")
-    public Response<UserResponse> getAccountInfo() {
-        return Response.getSuccessResponse(userService.getAccountInfo());
+    public UserResponse getAccountInfo(@RequestBody Object obj) {
+        return userService.getAccountInfo();
     }
 
     @ModuleFunc("交易记录")
     @PostMapping("/getTransactionRecord")
-    public Response<TransactionRecordResponse> getTransactionRecord() {
-        return Response.getSuccessResponse(userService.getTransactionRecord());
+    public TransactionRecordResponse getTransactionRecord(@RequestBody Object obj) {
+        return userService.getTransactionRecord();
     }
 
 }

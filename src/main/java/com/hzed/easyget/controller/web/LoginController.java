@@ -6,7 +6,6 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
-import com.hzed.easyget.infrastructure.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,31 +34,35 @@ public class LoginController {
     @TokenIgnore
     @ModuleFunc("发送短信验证码")
     @PostMapping("/sendSmsCode")
-    public Response sendSmsCode(@Valid @RequestBody SmsCodeRequest request) {
+    public void sendSmsCode(@Valid @RequestBody SmsCodeRequest request) {
         loginService.sendSmsCode(request);
-        return Response.getSuccessResponse();
     }
 
     @TokenIgnore
     @ModuleFunc("手机验证码登录")
     @PostMapping("/loginByCode")
-    public Response<LoginByCodeResponse> loginByCode(@Valid @RequestBody LoginByCodeRequest request) {
-        LoginByCodeResponse response = loginService.loginByCode(request);
-        return Response.getSuccessResponse(response);
+    public LoginByCodeResponse loginByCode(@Valid @RequestBody LoginByCodeRequest request) {
+        return loginService.loginByCode(request);
+    }
+
+    @TokenIgnore
+    @ModuleFunc("H5手机验证码注册")
+    @PostMapping("/registerH5")
+    public void registerH5(@Valid @RequestBody RegisterH5Request request) {
+        loginService.registerH5(request);
     }
 
     @TokenIgnore
     @ModuleFunc("获取图片验证码")
     @PostMapping("/getPictureCode")
-    public Response<PictureCodeResponse> getPictureCode(@Valid @RequestBody PictureCodeRequest request) {
-        return Response.getSuccessResponse(loginService.getPictureCode(request.getMobile()));
+    public PictureCodeResponse getPictureCode(@Valid @RequestBody PictureCodeRequest request) {
+        return loginService.getPictureCode(request.getMobile());
     }
 
     @TokenIgnore
     @ModuleFunc("验证图片验证码")
     @PostMapping("/checkPictureCode")
-    public Response checkPictureCode(@Valid @RequestBody CheckPictureCodeRequest request) {
+    public void checkPictureCode(@Valid @RequestBody CheckPictureCodeRequest request) {
         loginService.checkPictureCode(request.getMobile(), request.getCode());
-        return Response.getSuccessResponse();
     }
 }

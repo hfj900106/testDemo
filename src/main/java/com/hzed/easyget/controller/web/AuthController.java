@@ -4,6 +4,7 @@ import com.hzed.easyget.application.service.AuthService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
+import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
 import com.hzed.easyget.infrastructure.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,12 +100,14 @@ public class AuthController {
 
     @ModuleFunc("facebook认证")
     @PostMapping("/facebook")
+    @TokenIgnore
     public Response facebookAuth(@Valid @RequestBody FacebookRequest request) {
         authService.facebookAuth(request);
         return Response.getSuccessResponse();
     }
     @ModuleFunc("ins认证")
     @PostMapping("/ins")
+    @TokenIgnore
     public Response insAuth(@Valid @RequestBody InsRequest request) {
         authService.insAuth(request);
         return Response.getSuccessResponse();

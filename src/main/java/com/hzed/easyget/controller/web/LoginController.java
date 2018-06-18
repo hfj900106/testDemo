@@ -46,6 +46,13 @@ public class LoginController {
     }
 
     @TokenIgnore
+    @ModuleFunc("H5手机验证码注册")
+    @PostMapping("/registerH5")
+    public void registerH5(@Valid @RequestBody RegisterH5Request request) {
+        loginService.registerH5(request);
+    }
+
+    @TokenIgnore
     @ModuleFunc("获取图片验证码")
     @PostMapping("/getPictureCode")
     public PictureCodeResponse getPictureCode(@Valid @RequestBody PictureCodeRequest request) {

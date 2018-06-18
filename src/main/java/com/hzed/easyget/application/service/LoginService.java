@@ -1,10 +1,7 @@
 package com.hzed.easyget.application.service;
 
 import com.hzed.easyget.application.enums.EnvEnum;
-import com.hzed.easyget.controller.model.LoginByCodeRequest;
-import com.hzed.easyget.controller.model.LoginByCodeResponse;
-import com.hzed.easyget.controller.model.PictureCodeResponse;
-import com.hzed.easyget.controller.model.SmsCodeRequest;
+import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
@@ -110,6 +107,35 @@ public class LoginService {
         //放入redis 3个小时
         redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token,RedisConsts.THREE_HOUR);
         return LoginByCodeResponse.builder().token(token).build();
+    }
+
+    /**
+     * H5页面注册
+     * @param request
+     */
+    public void registerH5(RegisterH5Request request){
+        GlobalHead globalHead = RequestUtil.getGlobalHead();
+        String mobile = request.getMobile();
+        String smsCode = request.getSmsCode();
+        String platform = globalHead.getPlatform();
+        User user = userRepository.findByMobile(mobile);
+        if(user!=null){
+            throw new ComBizException(BizCodeEnum.EXIST_USER);
+        }
+        //校验验证码
+        checkSmsCode(mobile, smsCode);
+
+        Long userId = IdentifierGenerator.nextId();
+        //build User
+        user = new User();
+        user.setId(userId);
+        user.setMobileAccount(mobile);
+        user.setPlatform(platform);
+        user.setClient("Rupiah Get");
+        user.setImei(RequestUtil.getGlobalHead().getImei());
+        //UserStatus
+        UserStatus userStatus = buildUserStatus(userId);
+        userRepository.insertUserAndStatus(user,  userStatus);
     }
 
     private UserLogin buildUserLogin(Long userId, String platform, String ip, String device) {

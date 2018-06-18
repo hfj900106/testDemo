@@ -10,11 +10,13 @@ import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
+import com.hzed.easyget.infrastructure.repository.UserVisitRecordRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.UserBank;
+import com.hzed.easyget.persistence.auto.entity.UserVisitRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,19 +37,31 @@ public class LoanService {
     private SystemProp systemProp;
     @Autowired
     private ComService comService;
+    @Autowired
+    private UserVisitRecordRepository userVisitRecordRepository;
 
     public LoanDetailResponse loanDetail(LoanDetailRequest request) {
         LoanDetailResponse loanDetailResponse = new LoanDetailResponse();
-
         Bid bid = bidRepository.findByIdWithExp(request.getBid());
+        Byte status = bid.getStatus();
         loanDetailResponse.setApplyAmount(bid.getApplyAmount().toString());
         loanDetailResponse.setApplyTime(DateUtil.localDateTimeToStr2(bid.getCreateTime()));
         loanDetailResponse.setInBank(bid.getInBank());
         loanDetailResponse.setInAccount(bid.getInAccount());
-        loanDetailResponse.setStatus(String.valueOf(bid.getStatus()));
+        loanDetailResponse.setStatus(status);
         LocalDateTime auditTime = DateUtil.addMins(bid.getCreateTime(), systemProp.getExpectedAuditTimeInterval().intValue());
         loanDetailResponse.setAuditTime(DateUtil.localDateTimeToStr2(auditTime));
         loanDetailResponse.setLoanTime(DateUtil.localDateTimeToStr2(DateUtil.addMins(auditTime,systemProp.getExpectedLendingTimeInterval().intValue())));
+
+        if (BidStatusEnum.AUDIT_FAIL.equals(status) || BidStatusEnum.AUDIT_PASS.equals(status) || BidStatusEnum.REPAYMENT.equals(status)) {
+            UserVisitRecord userVisitRecord = new UserVisitRecord();
+            userVisitRecord.setId(IdentifierGenerator.nextId());
+            userVisitRecord.setUserId(RequestUtil.getGlobalUser().getUserId());
+            userVisitRecord.setBidId(bid.getId());
+            userVisitRecord.setBidStatus(status);
+            userVisitRecordRepository.insert(userVisitRecord);
+
+        }
         return loanDetailResponse;
     }
 

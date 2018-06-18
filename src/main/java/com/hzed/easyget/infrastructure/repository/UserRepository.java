@@ -81,5 +81,9 @@ public class UserRepository {
         loginMapper.insertSelective(login);
     }
 
-
+    @Transactional(rollbackFor = Exception.class)
+    public void insertUserAndStatus(User user, UserStatus status) {
+        userMapper.insertSelective(user);
+        statusMapper.insertSelective(status);
+    }
 }

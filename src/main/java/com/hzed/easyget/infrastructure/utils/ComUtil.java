@@ -4,6 +4,7 @@ package com.hzed.easyget.infrastructure.utils;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.NestedException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
 import java.util.Random;
@@ -15,6 +16,18 @@ import java.util.Random;
 public class ComUtil {
 
     public static Locale IDLOCALE = new Locale("in", "ID");
+
+    public static String subString(String str, int length) {
+        if (length < 0) {
+            return str;
+        } else if (StringUtils.isBlank(str)) {
+            return null;
+        } else if (str.length() <= length) {
+            return str;
+        } else {
+            return str.substring(0, length);
+        }
+    }
 
     /**
      * 字符串首字母大写

@@ -3,9 +3,9 @@ package com.hzed.easyget.infrastructure.interceptor;
 import com.alibaba.fastjson.JSON;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.consts.LogConsts;
+import com.hzed.easyget.infrastructure.utils.ComUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;
@@ -63,21 +63,11 @@ public class ReqBodyAdvice implements RequestBodyAdvice {
     public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
 
         int printParameterLength = RequestUtil.getModuleFunc().printParameterLength();
-        if (printParameterLength > -1) {
-            // 打印请求参数
-            log.info("请求报文：{}", subString(JSON.toJSONString(body), printParameterLength));
-        }
+        // 打印请求参数
+        log.info("请求报文：{}", ComUtil.subString(JSON.toJSONString(body), printParameterLength));
 
         return body;
     }
 
-    private String subString(String str, int length) {
-        if (StringUtils.isBlank(str)) {
-            return null;
-        } else if (str.length() <= length) {
-            return str;
-        } else {
-            return str.substring(0, length);
-        }
-    }
+
 }

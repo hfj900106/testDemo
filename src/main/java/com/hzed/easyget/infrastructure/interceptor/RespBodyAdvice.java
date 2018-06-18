@@ -45,7 +45,7 @@ public class RespBodyAdvice implements ResponseBodyAdvice<Object> {
                                   ServerHttpResponse response) {
         Object result = body;
         ModuleFunc moduleFunc = RequestUtil.getModuleFunc();
-        if (moduleFunc != null && moduleFunc.isCommonResponse() && !(body instanceof Response)) {
+        if (!(body instanceof Response) && moduleFunc != null && moduleFunc.isCommonResponse()) {
             Response resp = Response.getSuccessResponse(body);
             resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
             result = resp;

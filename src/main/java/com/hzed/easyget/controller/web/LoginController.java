@@ -40,12 +40,19 @@ public class LoginController {
         return Response.getSuccessResponse();
     }
 
+//    @TokenIgnore
+//    @ModuleFunc("手机验证码登录")
+//    @PostMapping("/loginByCode")
+//    public Response<LoginByCodeResponse> loginByCode(@Valid @RequestBody LoginByCodeRequest request) {
+//        LoginByCodeResponse response = loginService.loginByCode(request);
+//        return Response.getSuccessResponse(response);
+//    }
+
     @TokenIgnore
     @ModuleFunc("手机验证码登录")
     @PostMapping("/loginByCode")
-    public Response<LoginByCodeResponse> loginByCode(@Valid @RequestBody LoginByCodeRequest request) {
-        LoginByCodeResponse response = loginService.loginByCode(request);
-        return Response.getSuccessResponse(response);
+    public LoginByCodeResponse loginByCode(@Valid @RequestBody LoginByCodeRequest request) {
+        return loginService.loginByCode(request);
     }
 
     @TokenIgnore

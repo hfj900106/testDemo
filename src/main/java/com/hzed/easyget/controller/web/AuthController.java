@@ -29,7 +29,7 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @ModuleFunc(value = "通讯录认证", isParameterValidate = false)
+    @ModuleFunc("通讯录认证")
     @PostMapping("/contacts")
     public Response contacts(@Valid @RequestBody ContactsRequest request) {
         authService.authContacts(request);

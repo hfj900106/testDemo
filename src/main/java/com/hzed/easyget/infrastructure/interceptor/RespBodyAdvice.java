@@ -1,50 +1,58 @@
 package com.hzed.easyget.infrastructure.interceptor;
 
+import com.alibaba.fastjson.JSON;
+import com.hzed.easyget.application.service.I18nService;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
+import com.hzed.easyget.infrastructure.model.Response;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
-
-import javax.annotation.PostConstruct;
 
 /**
  * 拦截返回并封装成 com.hzed.easyget.infrastructure.model.Response
+ *
  * @author guichang
  * @date 2018/6/18
  */
-@ControllerAdvice
+@Slf4j
+@RestControllerAdvice
 public class RespBodyAdvice implements ResponseBodyAdvice<Object> {
 
-	@PostConstruct
-	public void init() throws Exception {
-	}
+    @Autowired
+    private I18nService i18nService;
 
-	/**
-	 * 判断是否支持转换
-	 */
-	@Override
-	public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> converterType) {
-		ModuleFunc moduleFunc = methodParameter.getMethodAnnotation(ModuleFunc.class);
-		if(moduleFunc != null && moduleFunc.isCommonResponse()) {
-			return true;
-		}
+    /**
+     * 判断是否支持转换
+     */
+    @Override
+    public boolean supports(MethodParameter parameter, Class<? extends HttpMessageConverter<?>> converterType) {
+        ModuleFunc moduleFunc = parameter.getMethodAnnotation(ModuleFunc.class);
+        return moduleFunc.isCommonResponse() ? true : false;
+    }
 
-		return true;
-	}
+    /**
+     * 返回结果转换
+     */
+    @Override
+    public Object beforeBodyWrite(Object body, MethodParameter parameter,
+                                  org.springframework.http.MediaType selectedContentType,
+                                  Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,
+                                  ServerHttpResponse response) {
 
-	/**
-	 * 返回结果转换
-	 */
-	@Override
-	public Object beforeBodyWrite(Object body, MethodParameter returnType,
-			org.springframework.http.MediaType selectedContentType,
-			Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,
-			ServerHttpResponse response) {
-		System.out.println(body);
-		return body;
-	}
+        Response resp = Response.getSuccessResponse(body);
+        resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
+
+        ModuleFunc moduleFunc = parameter.getMethodAnnotation(ModuleFunc.class);
+        if (moduleFunc.isParameterPrint()) {
+            log.info("返回报文：{}", JSON.toJSONString(resp));
+        }
+
+        return resp;
+    }
 
 }

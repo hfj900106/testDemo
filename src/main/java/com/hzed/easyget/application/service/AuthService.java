@@ -88,18 +88,14 @@ public class AuthService {
         String platForm = getGlobalHead().getPlatform();
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
-//        map.put("sign", ""sign" -> "H6cI5VzWvg5YubD0CAVkg/EDuB68tGEsufeO7jFEppPcfSAuD/4rmpmbfkdIdh24nG+tBjjdUTRbgAV179uhQw=="");"timeStamp" -> "1529057135292""userId" -> "105534315668316160"
         map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
         map.put("contacts", request.getContacts());
         map.put("callRecord", request.getCallLogs());
         map.put("source", "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS);
-        //TODO 待验证方式
         RiskResponse response = restService.postJson("http://10.10.20.203:9611/api/risk/Contacts/add", map, RiskResponse.class);
-        System.out.println(response.toString());
-        //TODO
-//        afterResponse(response, "通讯录认证返回数据异常", user.getUserId(), "通讯录认证");
+        afterResponse(response, user.getUserId(), AuthCodeEnum.CONTACTS.getCode().toString(),"通讯录认证");
     }
 
     /**
@@ -108,12 +104,12 @@ public class AuthService {
      * @param userId
      * @param remark
      */
-    public UserAuthStatus buildUserAuthStatus(Long userId, String remark) {
+    public UserAuthStatus buildUserAuthStatus(Long userId,String code, String remark) {
         //保存到数据库短信记录表
         UserAuthStatus userAuthStatus = new UserAuthStatus();
         userAuthStatus.setId(IdentifierGenerator.nextId());
         userAuthStatus.setUserId(userId);
-        userAuthStatus.setAuthCode(AuthCodeEnum.CONTACTS.getCode());
+        userAuthStatus.setAuthCode(code);
         userAuthStatus.setAuthStatus(Integer.valueOf(AuthStatusEnum.HAS_AUTH.getCode()));
         //过期时间，半年
         userAuthStatus.setExpireTime(DateUtil.addMonth(LocalDateTime.now(), 6));
@@ -130,13 +126,12 @@ public class AuthService {
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
         map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("sms", request.getMessage());
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
+        map.put("sms", request.getMessage());
         map.put("source", "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS);
-        //TODO 待验证方式
-        RiskResponse response = restService.postJson("/app/risk/Sms/add", map, RiskResponse.class);
-//        afterResponse(response, "短信认证返回数据异常", user.getUserId(), "短信认证");
+        RiskResponse response = restService.postJson("http://10.10.20.203:9611/api/risk/Sms/add", map, RiskResponse.class);
+        afterResponse(response,  user.getUserId(), AuthCodeEnum.MESSAGE.getCode().toString(),"短信认证");
     }
 
     /**
@@ -168,18 +163,13 @@ public class AuthService {
         map.put("userMobile", userInfo.getMobileAccount());
         //TODO 待验证方式
         RiskResponse response = restService.postJson("http://10.10.20.203:9611/app/riskOperator/createTaskAndlogin", map, RiskResponse.class);
-//        if (StringUtils.isNotBlank(response)) {
-//            JSONObject jsonObject = FaJsonUtil.parseObj(response, JSONObject.class);
-//            if (null == jsonObject) {
-//                throw new ComBizException(BizCodeEnum.ERROR_SMS_RESULT);
-//            }
-//            if (Integer.valueOf(jsonObject.get(ComConsts.RISK_CODE).toString()) == ComConsts.RISK_OK) {
-//                String taskId = jsonObject.get("task_id").toString();
-//                redisService.setCache(RedisConsts.IDENTITY_AUTH_CODE + RedisConsts.SPLIT + userInfo.getId(), taskId, 3600L);
-//            } else {
-//                throw new ComBizException(BizCodeEnum.UN_IDENTITY_AUTH);
-//            }
-//        }
+        if (null == response) {
+            throw new ComBizException(BizCodeEnum.ERROR_RISK__RESULT);
+        }
+        if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
+            throw new ComBizException(BizCodeEnum.FAIL_AUTH);
+        }
+
     }
 
     /**
@@ -198,9 +188,8 @@ public class AuthService {
         map.put("timeStamp", timeStamp);
         map.put("taskId", taskId);
         map.put("smsCode", request.getSmsCode());
-        //TODO 待验证方式
         RiskResponse response = restService.postJson("http://10.10.20.203:9611/app/riskOperator/sendSmsCode", map, RiskResponse.class);
-//        afterResponse(response, "运营商验证码认证返回数据异常", user.getUserId(), "运营商认证");
+        afterResponse(response,  user.getUserId(), AuthCodeEnum.SMS.getCode().toString(),"运营商认证");
     }
 
     /**
@@ -208,7 +197,7 @@ public class AuthService {
      */
     public void authPersonInfo(PersonInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "个人信息认证");
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.PERSON_INFO.getCode().toString(),"个人信息认证");
         Profile profile = new Profile();
         profile.setId(IdentifierGenerator.nextId());
         profile.setUserId(user.getUserId());
@@ -240,6 +229,9 @@ public class AuthService {
         map.put("timeStamp", timeStamp);
         map.put("imageFile", idCardBase64ImgStr);
         RiskResponse riskResponse = restService.postJson(riskProp.getIdCardRecognitionUrl(), map, RiskResponse.class);
+        if (null == riskResponse) {
+            throw new ComBizException(BizCodeEnum.ERROR_RISK__RESULT);
+        }
         log.info("身份证识别-风控返回数据："+riskResponse.toString());
         String bobyStr = riskResponse.getBody().toString();
         String name = JSONObject.parseObject(bobyStr, JSONObject.class).getJSONObject("data").getString("name");
@@ -285,11 +277,14 @@ public class AuthService {
         mapRisk.put("userId", user.getUserId());
         mapRisk.put("timeStamp", timeStamp);
         //TODO 待验证方式
-        RiskResponse response = restService.postJson("/app/riskOperator/getIdentityReport", mapRisk, RiskResponse.class);
-        //TODO
-//        if (!isSuccess) {
-//            throw new ComBizException(BizCodeEnum.FAIL_IDENTITY_AUTH);
-//        }
+        RiskResponse response = restService.postJson("/api/riskOperator/getIdentityReport", mapRisk, RiskResponse.class);
+        if (null == response) {
+            throw new ComBizException(BizCodeEnum.ERROR_RISK__RESULT);
+        }
+        if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
+            throw new ComBizException(BizCodeEnum.FAIL_AUTH);
+        }
+
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         String faceBase64ImgStr = request.getFaceBase64ImgStr();
         String picSuffix = request.getPicSuffix();
@@ -306,7 +301,6 @@ public class AuthService {
 
             //根据拿到json串组装对象
             User userObj = new User();
-            UserPic userPic = new UserPic();
             //组装user对象
             userObj.setId(user.getUserId());
             userObj.setRealName(realName);
@@ -319,7 +313,7 @@ public class AuthService {
             list.add(UserPic.builder().id(IdentifierGenerator.nextId()).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
             list.add(UserPic.builder().id(IdentifierGenerator.nextId()).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
             //获取UserAuthStatus对象
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "身份信息认证");
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.ID_CARD.getCode().toString(),"身份信息认证");
             workRepository.insertIdentityInfo(list, userAuthStatus, userObj);
         } catch (NestedException e) {
             throw new ComBizException(BizCodeEnum.FAIL_IDENTITY_AUTH);
@@ -355,7 +349,7 @@ public class AuthService {
             work.setCreateTime(LocalDateTime.now());
             work.setRemark("专业信息认证");
             //获取UserAuthStatus对象
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), "专业信息认证");
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.PROFESSIONAL.getCode().toString(),"专业信息认证");
             professionalRepository.insertProfessionalAndUserAuthStatus(work, userAuthStatus);
         } catch (Exception ex) {
             throw new ComBizException(BizCodeEnum.FAIL_PROFESSIONAL_AUTH);
@@ -363,20 +357,17 @@ public class AuthService {
 
     }
 
-    private void afterResponse(String response, String ExMsg, Long userId, String remark) {
-        if (StringUtils.isNotBlank(response)) {
-            JSONObject jsonObject = FaJsonUtil.parseObj(response, JSONObject.class);
-            if (null == jsonObject) {
-                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION, ExMsg);
-            }
-            if (Integer.valueOf(jsonObject.get(ComConsts.RISK_CODE).toString()) == ComConsts.RISK_OK) {
-                //修改认证表的状态
-                UserAuthStatus userAuthStatus = buildUserAuthStatus(userId, remark);
-                authStatusRepository.insertSelective(userAuthStatus);
-            } else {
-                log.error(jsonObject.get("msg").toString());
-                throw new ComBizException(BizCodeEnum.FAIL_AUTH);
-            }
+    private void afterResponse(RiskResponse response, Long userId,String code, String remark) {
+        if (null == response) {
+            throw new ComBizException(BizCodeEnum.ERROR_RISK__RESULT);
+        }
+        if (response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
+            //修改认证表的状态
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(userId,code, remark);
+            authStatusRepository.insertSelective(userAuthStatus);
+        } else {
+            log.error("风控"+remark+"失败："+response.getHead().getError_msg());
+            throw new ComBizException(BizCodeEnum.FAIL_AUTH);
         }
     }
 
@@ -384,4 +375,29 @@ public class AuthService {
         UploadImgResponse response = restService.postJson("/hzed/easy-get/upload", map, UploadImgResponse.class);
         return response.getVisitUrl();
     }
+
+    /**
+     * Facebook认证-风控回调
+     * @param request
+     */
+    public void facebookAuth(FacebookRequest request){
+        if(!ComConsts.RISK_OK.equals(request.getResultCode())){
+            throw new ComBizException(BizCodeEnum.FAIL_AUTH);
+        }
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(request.getUserId(),AuthCodeEnum.FACEBOOK.getCode().toString(), "Facebook认证");
+        authStatusRepository.insertSelective(userAuthStatus);
+    }
+
+    /**
+     * ins认证-风控回调
+     * @param request
+     */
+    public void insAuth(InsRequest request){
+        if(!ComConsts.RISK_OK.equals(request.getResultCode())){
+            throw new ComBizException(BizCodeEnum.FAIL_AUTH);
+        }
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(request.getUserId(),AuthCodeEnum.INS.getCode().toString(), "ins认证");
+        authStatusRepository.insertSelective(userAuthStatus);
+    }
+
 }

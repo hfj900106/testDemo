@@ -97,4 +97,17 @@ public class AuthController {
         return Response.getSuccessResponse();
     }
 
+    @ModuleFunc("facebook认证")
+    @PostMapping("/facebook")
+    public Response facebookAuth(@Valid @RequestBody FacebookRequest request) {
+        authService.facebookAuth(request);
+        return Response.getSuccessResponse();
+    }
+    @ModuleFunc("ins认证")
+    @PostMapping("/ins")
+    public Response insAuth(@Valid @RequestBody InsRequest request) {
+        authService.insAuth(request);
+        return Response.getSuccessResponse();
+    }
+
 }

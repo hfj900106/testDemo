@@ -7,8 +7,6 @@
     <result column="mode" jdbcType="VARCHAR" property="mode" />
     <result column="va" jdbcType="VARCHAR" property="va" />
     <result column="va_create_time" jdbcType="TIMESTAMP" property="vaCreateTime" />
-    <result column="status" jdbcType="TINYINT" property="status" />
-    <result column="confirm_time" jdbcType="TIMESTAMP" property="confirmTime" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -70,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, transaction_id, mode, va, va_create_time, status, confirm_time, remark
+    id, transaction_id, mode, va, va_create_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample" resultMap="BaseResultMap">
     select
@@ -136,11 +134,11 @@
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
     insert into t_loan_user_transaction_repay (id, transaction_id, mode, 
-      va, va_create_time, status, 
-      confirm_time, remark)
+      va, va_create_time, remark
+      )
     values (#{id,jdbcType=BIGINT}, #{transactionId,jdbcType=BIGINT}, #{mode,jdbcType=VARCHAR}, 
-      #{va,jdbcType=VARCHAR}, #{vaCreateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=TINYINT}, 
-      #{confirmTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+      #{va,jdbcType=VARCHAR}, #{vaCreateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
     insert into t_loan_user_transaction_repay
@@ -159,12 +157,6 @@
       </if>
       <if test="vaCreateTime != null">
         va_create_time,
-      </if>
-      <if test="status != null">
-        status,
-      </if>
-      <if test="confirmTime != null">
-        confirm_time,
       </if>
       <if test="remark != null">
         remark,
@@ -185,12 +177,6 @@
       </if>
       <if test="vaCreateTime != null">
         #{vaCreateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=TINYINT},
-      </if>
-      <if test="confirmTime != null">
-        #{confirmTime,jdbcType=TIMESTAMP},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
@@ -221,12 +207,6 @@
       <if test="record.vaCreateTime != null">
         va_create_time = #{record.vaCreateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.status != null">
-        status = #{record.status,jdbcType=TINYINT},
-      </if>
-      <if test="record.confirmTime != null">
-        confirm_time = #{record.confirmTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
@@ -242,8 +222,6 @@
       mode = #{record.mode,jdbcType=VARCHAR},
       va = #{record.va,jdbcType=VARCHAR},
       va_create_time = #{record.vaCreateTime,jdbcType=TIMESTAMP},
-      status = #{record.status,jdbcType=TINYINT},
-      confirm_time = #{record.confirmTime,jdbcType=TIMESTAMP},
       remark = #{record.remark,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -264,12 +242,6 @@
       <if test="vaCreateTime != null">
         va_create_time = #{vaCreateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="status != null">
-        status = #{status,jdbcType=TINYINT},
-      </if>
-      <if test="confirmTime != null">
-        confirm_time = #{confirmTime,jdbcType=TIMESTAMP},
-      </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
@@ -282,8 +254,6 @@
       mode = #{mode,jdbcType=VARCHAR},
       va = #{va,jdbcType=VARCHAR},
       va_create_time = #{vaCreateTime,jdbcType=TIMESTAMP},
-      status = #{status,jdbcType=TINYINT},
-      confirm_time = #{confirmTime,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -315,12 +285,12 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_user_transaction_repay
-    (id, transaction_id, mode, va, va_create_time, status, confirm_time, remark)
+    (id, transaction_id, mode, va, va_create_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.transactionId,jdbcType=BIGINT}, #{item.mode,jdbcType=VARCHAR}, 
-        #{item.va,jdbcType=VARCHAR}, #{item.vaCreateTime,jdbcType=TIMESTAMP}, #{item.status,jdbcType=TINYINT}, 
-        #{item.confirmTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
+        #{item.va,jdbcType=VARCHAR}, #{item.vaCreateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -347,12 +317,6 @@
         </if>
         <if test="'va_create_time' == column.value">
           #{item.vaCreateTime,jdbcType=TIMESTAMP}
-        </if>
-        <if test="'status' == column.value">
-          #{item.status,jdbcType=TINYINT}
-        </if>
-        <if test="'confirm_time' == column.value">
-          #{item.confirmTime,jdbcType=TIMESTAMP}
         </if>
         <if test="'remark' == column.value">
           #{item.remark,jdbcType=VARCHAR}

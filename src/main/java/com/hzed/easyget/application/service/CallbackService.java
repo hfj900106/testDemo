@@ -2,25 +2,15 @@ package com.hzed.easyget.application.service;
 
 import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
-import com.hzed.easyget.application.enums.TransactionTypeEnum;
-import com.hzed.easyget.application.service.product.ProductEnum;
-import com.hzed.easyget.application.service.product.ProductFactory;
-import com.hzed.easyget.application.service.product.ProductService;
-import com.hzed.easyget.application.service.product.model.EasyGetProduct;
 import com.hzed.easyget.controller.model.PushBidCallbackRequest;
-import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
-import com.hzed.easyget.infrastructure.repository.UserTransactionRepository;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
-import com.hzed.easyget.persistence.auto.mapper.UserTransactionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * @author hfj

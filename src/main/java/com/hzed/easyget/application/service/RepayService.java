@@ -28,9 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -181,8 +183,6 @@ public class RepayService {
         // 信息流入库
         RepayInfoFlowJob jobInsert = new RepayInfoFlowJob();
         jobInsert.setId(IdentifierGenerator.nextId());
-        // TODO
-//        jobInsert.setTransactionId();
         jobInsert.setBidId(bidId);
         jobInsert.setRepaymentAmount(bidNoRepay);
         jobInsert.setRealRepaymentTime(LocalDateTime.now());
@@ -212,8 +212,6 @@ public class RepayService {
         // 信息流入库
         RepayInfoFlowJob jobInsert = new RepayInfoFlowJob();
         jobInsert.setId(IdentifierGenerator.nextId());
-        // TODO
-//        jobInsert.setTransactionId();
         jobInsert.setBidId(bidId);
         jobInsert.setRepaymentAmount(repayAmount);
         jobInsert.setRealRepaymentTime(LocalDateTime.now());
@@ -244,7 +242,7 @@ public class RepayService {
      * @param job               定时任务标志，不是定时任务传null
      */
     @Transactional(rollbackFor = Exception.class)
-    public void repayInformationFlow(Long bidId, BigDecimal repayAmount, LocalDateTime realRepaymentTime, Long transactionId, RepayInfoFlowJob job) {
+    public void repayInformationFlow(Long bidId, BigDecimal repayAmount, LocalDateTime realRepaymentTime, String requestSeq, RepayInfoFlowJob job) {
         // 判断还款金额是否大于项目待还总额
         BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, realRepaymentTime);
         if (repayAmount.compareTo(bidNoRepay) > 0) {
@@ -270,7 +268,7 @@ public class RepayService {
         // 待还账单
         Bill billBefore = billRepository.findAllBillByBidIdWithExp(bidId).get(0);
         // 还账单操作
-        repayBill(billBefore, repayAmount, transactionId, LocalDateTime.now());
+        repayBill(billBefore, repayAmount, LocalDateTime.now());
 
         // 保存 t_loan_bid 标的表（主要是更新结清操作，部分还款不用更新）
         Bill billAfter = billRepository.findAllBillByBidIdWithExp(bidId).get(0);
@@ -304,14 +302,14 @@ public class RepayService {
      * @param realRepaymentTime 实际还款时间
      * @return 剩余金额
      */
-    private BigDecimal repayBill(Bill bill, BigDecimal repayAmount, Long transactionId, LocalDateTime realRepaymentTime) {
+    private BigDecimal repayBill(Bill bill, BigDecimal repayAmount, LocalDateTime realRepaymentTime) {
         Long billId = bill.getId();
         // 还逾期费
-        BigDecimal restAmount1 = repayBillLedger(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode().intValue(), repayAmount, transactionId, realRepaymentTime);
+        BigDecimal restAmount1 = repayBillLedger(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode().intValue(), repayAmount, realRepaymentTime);
         // 还尾款
-        BigDecimal restAmount2 = repayBillLedger(billId, BillLedgerItemEnum.TAIL_FEE.getCode().intValue(), restAmount1, transactionId, realRepaymentTime);
+        BigDecimal restAmount2 = repayBillLedger(billId, BillLedgerItemEnum.TAIL_FEE.getCode().intValue(), restAmount1, realRepaymentTime);
         // 还本金
-        BigDecimal restAmount3 = repayBillLedger(billId, BillLedgerItemEnum.CORPUS.getCode().intValue(), restAmount2, transactionId, realRepaymentTime);
+        BigDecimal restAmount3 = repayBillLedger(billId, BillLedgerItemEnum.CORPUS.getCode().intValue(), restAmount2, realRepaymentTime);
         // 本次还款金额
         BigDecimal repayAmountNow = restAmount3.compareTo(Arith.ZERO) >= 0 ? repayAmount.subtract(restAmount3) : repayAmount;
         // 更新账单表
@@ -345,7 +343,7 @@ public class RepayService {
      * @param realRepaymentTime 实际还款时间
      * @return 剩余金额
      */
-    private BigDecimal repayBillLedger(Long billId, Integer item, BigDecimal repayAmount, Long transactionId, LocalDateTime realRepaymentTime) {
+    private BigDecimal repayBillLedger(Long billId, Integer item, BigDecimal repayAmount, LocalDateTime realRepaymentTime) {
         // 还款金额为0
         if (repayAmount == null || repayAmount.compareTo(Arith.ZERO) <= 0) {
             return BigDecimal.ZERO;
@@ -364,7 +362,8 @@ public class RepayService {
         // 保存 t_loan_user_repayment 还款记录表
         UserRepayment userRepayment = new UserRepayment();
         userRepayment.setId(IdentifierGenerator.nextId());
-        userRepayment.setTransactionId(transactionId);
+        // 从threadLocal里面拿
+        userRepayment.setTransactionId(ThreadLocalUtil.get(USER_TRANCATIONID));
         userRepayment.setBillId(billId);
         userRepayment.setRepaymentItem(item.byteValue());
         userRepayment.setRepaymentAmount(billItemNoRepay);
@@ -437,14 +436,13 @@ public class RepayService {
 
     /**
      * 还款页面标的详情
-     *
      * @param amount 还款金额
-     * @param bidId  标id
-     * @param flag   是否全部还清
+     * @param bidId 标id
+     * @param flag  是否全部还清
      * @return
      */
-    public LoanManagResponse findloanManagResponse(BigDecimal amount, Long bidId, boolean flag) {
-        return repayRepository.findloanManagResponse(amount, bidId, flag);
+    public LoanManagResponse findloanManagResponse(BigDecimal amount,Long bidId, boolean flag) {
+        return repayRepository.findloanManagResponse(amount,bidId, flag);
     }
 
     /**
@@ -455,12 +453,13 @@ public class RepayService {
      */
     @Transactional(rollbackFor = Exception.class)
     public TransactionVAResponse findVATranc(TransactionVARequest request) {
-        //先查询数据库
+        //先查询数据库 是否存在没过期的还款码
         TransactionVAResponse vaResponse = repayRepository.findVATranc(request);
         //当数据库为空 或者va码失效了
         if (ObjectUtils.isEmpty(vaResponse)) {
             PaymentCodeRequest payment = repayRepository.finduserTransBypaymentId(request.getPayId());
-            payment.setMsisdn(RequestUtil.getGlobalUser().getMobile());
+//            payment.setMsisdn(RequestUtil.getGlobalUser().getMobile());
+            payment.setMsisdn("8613136384502");
             payment.setPayType(request.getMode().toLowerCase());
             log.info("获取还款码，请求bluepay请求参数{}", JSONObject.toJSONString(payment));
             String result = restService.doPostJson(prop.getAbsGetPaymentCodeUrl(), JSONObject.toJSONString(payment));
@@ -478,7 +477,6 @@ public class RepayService {
                         .mode(request.getMode())
                         .transactionId(request.getPayId())
                         .va(paymentCode)
-                        .status(TransactionRepayEnum.TO_BE_TREATED.getCode().byteValue())
                         .vaCreateTime(LocalDateTime.now()).build();
                 //插入va码到数据库
                 repayRepository.insertSelective(repay);
@@ -495,16 +493,6 @@ public class RepayService {
     }
 
     /**
-     * 根据id查询交易信息
-     *
-     * @param payId
-     * @return
-     */
-    public UserTransaction selectByKey(Long payId) {
-        return userTransactionRepository.selectByKey(payId);
-    }
-
-    /**
      * 还款
      *
      * @param request
@@ -513,26 +501,39 @@ public class RepayService {
     @Transactional(rollbackFor = Exception.class)
     public PayResponse repayment(RepaymentRequest request) throws Exception {
         //先查询交易信息比对数据
-        UserTransaction transaction = this.selectByKey(request.getPayId());
-        if (ObjectUtils.isEmpty(transaction)) {
+        UserTransaction transaction=userTransactionRepository.selectByKey(request.getPayId(),TransactionTypeEnum.IN_RANSACTION.getCode().byteValue());
+        if(ObjectUtils.isEmpty(transaction)){
             return PayResponse.getFailResponse();
         }
-        if (0 != transaction.getAmount().compareTo(request.getAmount())) {
+        if(0 != transaction.getAmount().compareTo(request.getAmount())){
             return PayResponse.getFailResponse();
         }
-        //凭证图片与后缀数量必须相等
-        if (request.getBase64Imgs().length != request.getPicSuffixs().length) {
-            return PayResponse.getFailResponse();
-        }
+//        //凭证图片与后缀数量必须相等
+//        if(request.getBase64Imgs().length != request.getPicSuffixs().length){
+//            return PayResponse.getFailResponse();
+//        }
+//        //保存凭证pic
+//        for (int i = 0; i < request.getBase64Imgs().length; i++) {
+//            String picUrl = fileService.uploadBase64Img(request.getBase64Imgs()[i], request.getPicSuffixs()[i]);
+//            //向凭证表添加
+//            UserTransactionPic repayPic = UserTransactionPic.builder()
+//                    .id(IdentifierGenerator.nextId())
+//                    .evidencePicUrl(picUrl)
+//                    .transactionId(transaction.getId())
+//                    .createTime(LocalDateTime.now())
+//                    .build();
+//            repayRepository.picinsertSelective(repayPic);
+//        }
         PayResponse response = null;
         //获取所有的va码记录
         List<UserTransactionRepay> repayList = repayRepository.finaAllVAcodeBypermas(request);
         //组装请求报文
         RepaymentCompleRequest compleRequest = new RepaymentCompleRequest();
-        compleRequest.setMsisdn(RequestUtil.getGlobalUser().getMobile());
+        compleRequest.setMsisdn("8613136384502");
+//        compleRequest.setMsisdn(RequestUtil.getGlobalUser().getMobile());
         compleRequest.setPayType(request.getMode().toLowerCase());
-        if (!request.getMode().equals(ComConsts.OTC)) {
-            compleRequest.setBankType(transaction.getBank());
+        if(!request.getMode().equals(ComConsts.OTC)){
+            compleRequest.setBankType(transaction.getBank().toLowerCase());
         }
         compleRequest.setPrice(transaction.getAmount());
         compleRequest.setTransactionId(transaction.getPaymentId());
@@ -553,46 +554,24 @@ public class RepayService {
             if (!listCode.contains(resu.getString("code"))) {
                 throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, resu.getString("msg"));
             }
-            String paymentCode = JSON.parseObject(resu.getString("data")).getString("paymentCode");
-            //如果返回va码 则不用继续循环调用 TODO 待修改
-            if (StringUtils.isNotBlank(paymentCode) && paymentCode.equals(x.getVa())) {
-                //保存凭证pic
-                for (int i = 0; i < request.getBase64Imgs().length; i++) {
-                    String picUrl = fileService.uploadBase64Img(request.getBase64Imgs()[i], request.getPicSuffixs()[i]);
-                    UserPic userPic = UserPic.builder()
-                            .id(IdentifierGenerator.nextId())
-                            .picUrl(picUrl)
-                            .userId(RequestUtil.getGlobalUser().getUserId())
-                            .type(request.getMode())
-                            .createTime(LocalDateTime.now()).build();
-                    repayRepository.userPicinsertSelective(userPic);
-                    //向凭证表添加
-                    UserTransactionRepayPic repayPic = UserTransactionRepayPic.builder()
-                            .id(IdentifierGenerator.nextId())
-                            .evidencePicUrl(picUrl)
-                            .transactionRepayId(x.getId())
-                            .createTime(LocalDateTime.now())
-                            .build();
-                    repayRepository.picinsertSelective(repayPic);
+            //直接处理成功
+            if (resu.getString("code").equals(BizCodeEnum.SUCCESS.getCode())) {
+                // TODO 走资金流
+                this.afterRepayment(transaction);
+                //走信息流
+                if(0 == transaction.getRepaymentType().compareTo(TransactionTypeEnum.ALL_CLEAR.getCode().byteValue())){
+                    this.repayAll(new RepayAllRequest(transaction.getBidId()));
                 }
-                //修改对用的va码记录 state=处理中
-                repayRepository.updateUserTransacRepayState(x);
-                //直接处理成功
-                if (resu.getString("code").equals(BizCodeEnum.SUCCESS.getCode())) {
-                    // TODO 走资金流
-                    this.afterRepayment(transaction, x);
-                    //走信息流
-                    if (transaction.getRepaymentType().equals(TransactionTypeEnum.ALL_CLEAR.getCode())) {
-                        this.repayAll(new RepayAllRequest(transaction.getBidId()));
-                    }
-                    if (transaction.getRepaymentType().equals(TransactionTypeEnum.PARTIAL_CLEARANCE.getCode())) {
-                        this.repayPart(new RepayPartRequest(transaction.getBidId(), transaction.getAmount()));
-                    }
+                if(0 == transaction.getRepaymentType().compareTo(TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue())){
+                    this.repayPart(new RepayPartRequest(transaction.getBidId(),transaction.getAmount()));
                 }
-                response = JSON.parseObject(result, new TypeReference<PayResponse>() {
-                });
-                return response;
             }
+            response = JSON.parseObject(result, new TypeReference<PayResponse>() {});
+            //修改交易的确认时间
+            Date time=new Date();
+            this.updateConfirmTime(transaction.getId(),time);
+            response.setConfirmTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time));
+            return response;
         }
         return PayResponse.getFailResponse();
     }
@@ -601,29 +580,17 @@ public class RepayService {
      * 还款成功走资金流
      *
      * @param transaction
-     * @param x
      */
-    public void afterRepayment(UserTransaction transaction, UserTransactionRepay x) {
-        repayRepository.afterRepayment(transaction, x);
+    public void afterRepayment(UserTransaction transaction) {
+        repayRepository.afterRepayment(transaction);
     }
 
     /**
-     * 根据交易id获取对应的va码信息
-     *
+     * 修改交易的确认时间
      * @param id
-     * @return
+     * @param now 时间
      */
-    public UserTransactionRepay findRepayTrans(Long id) {
-        return repayRepository.findRepayTrans(id);
-    }
-
-    /**
-     * 修改处理失败
-     *
-     * @param t_id
-     * @param b
-     */
-    public void updateUserepyTranState(String t_id, byte b) {
-        repayRepository.updateUserepyTranState(t_id, b);
+    public void updateConfirmTime(Long id, Date now) {
+        repayRepository.updateConfirmTime(id,now);
     }
 }

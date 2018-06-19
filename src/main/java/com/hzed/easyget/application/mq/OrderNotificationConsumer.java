@@ -1,7 +1,6 @@
 package com.hzed.easyget.application.mq;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hzed.easyget.application.enums.TransactionRepayEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.application.service.TransactionService;
@@ -64,7 +63,6 @@ public class OrderNotificationConsumer implements ChannelAwareMessageListener {
         //过滤失败直接修改交易记录
         if(!bluePayRq.getStatus().equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())){
             transactionService.updateUserTranState(bluePayRq.getT_id(),TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
-            repayService.updateUserepyTranState(bluePayRq.getT_id(), TransactionRepayEnum.PROCESS_FAIL.getCode().byteValue());
             log.info("放款bluepay端返回处理失败{}",BluePayStatusEnum.getPayStatusEnum(bluePayRq.getStatus()));
             return;
         }
@@ -92,8 +90,7 @@ public class OrderNotificationConsumer implements ChannelAwareMessageListener {
                 //判断这个交易是否是 交易中
                 if (userTr.getStatus().intValue() == TransactionTypeEnum.IN_RANSACTION.getCode()) {
                     //TODO 走资金流
-                    UserTransactionRepay repay=repayService.findRepayTrans(userTr.getId());
-                    repayService.afterRepayment(userTr,repay);
+                    repayService.afterRepayment(userTr);
                     //全部结清
                     if(userTr.getRepaymentType().equals(TransactionTypeEnum.ALL_CLEAR.getCode())){
                         repayService.repayAll(new RepayAllRequest(userTr.getBidId()));

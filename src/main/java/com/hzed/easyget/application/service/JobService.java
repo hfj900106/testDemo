@@ -81,7 +81,7 @@ public class JobService {
                 Long bidId = repayjob.getBidId();
                 BigDecimal repaymentAmount = repayjob.getRepaymentAmount();
                 LocalDateTime realRepaymentTime = repayjob.getRealRepaymentTime();
-                repayService.repayInformationFlow(bidId, repaymentAmount, realRepaymentTime, repayjob.getRequestseq(), repayjob);
+                repayService.repayInformationFlow(bidId, repaymentAmount, realRepaymentTime, repayjob.getTransactionId(), repayjob);
             } catch (Exception e) {
                 RepayInfoFlowJob jobUpdate = new RepayInfoFlowJob();
                 jobUpdate.setId(repayjob.getId());
@@ -106,13 +106,13 @@ public class JobService {
             return;
         }
         bidList.forEach(bid -> {
-            log.info("放款任务开始，标的id{}",bid.getBidId());
+            log.info("放款任务开始，标的id{}", bid.getBidId());
             //插入中间表
             Long tempId = IdentifierGenerator.nextId();
             tempTableRepository.insertJob(TempTable.builder().id(tempId).jobName(ComConsts.PUSH_BANK_TASK).relaseId(bid.getBidId()).remark("放款").createTime(LocalDateTime.now()).reRunTimes((byte) 1).build());
             try {
-                LoanTransactionRequest loan=bidRepository.findLoanTransaction(bid.getBidId());
-                if (!ObjectUtils.isEmpty(loan)){
+                LoanTransactionRequest loan = bidRepository.findLoanTransaction(bid.getBidId());
+                if (!ObjectUtils.isEmpty(loan)) {
                     //交易编号
                     loan.setTransactionId(IdentifierGenerator.nextSeqNo());
                     //交易流水
@@ -120,19 +120,19 @@ public class JobService {
                     //收款人所在国
                     loan.setPayeeCountry("ID");
                     //TODO 调放款接口
-                    PayResponse response= transactionService.loanTransaction(loan);
-                    if(response.getCode().equals(BizCodeEnum.SUCCESS.getCode())){
+                    PayResponse response = transactionService.loanTransaction(loan);
+                    if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
                         //TODO 如果交易放款成功 直接继续
-                        transactionService.lendingCallback(bid.getBidId(),tempId,loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(),LocalDateTime.now());
-                    }else {
+                        transactionService.lendingCallback(bid.getBidId(), tempId, loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
+                    } else {
                         //TODO 若状态是放款中 还款中在交易表中插入一条 未完成记录
-                        transactionService.insertUsrTransactionInfo(bid.getBidId(),loan.getTransactionId(),TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(),null);
+                        transactionService.insertUsrTransactionInfo(bid.getBidId(), loan.getTransactionId(), TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(), null);
                     }
                 }
             } catch (Exception ex) {
-                log.info("放款任务失败，标的id{}",bid.getBidId());
+                log.info("放款任务失败，标的id{}", bid.getBidId());
                 ex.printStackTrace();
-                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark("放款失败："+ex.getMessage()).build());
+                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark("放款失败：" + ex.getMessage()).build());
             }
         });
 

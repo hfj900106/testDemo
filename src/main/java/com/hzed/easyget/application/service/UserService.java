@@ -1,6 +1,7 @@
 package com.hzed.easyget.application.service;
 
 import com.hzed.easyget.controller.model.TransactionRecordResponse;
+import com.hzed.easyget.controller.model.TransactionVO;
 import com.hzed.easyget.controller.model.UserResponse;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
@@ -11,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
@@ -50,7 +53,16 @@ public class UserService {
         TransactionRecordResponse response = new TransactionRecordResponse();
         GlobalUser user = getGlobalUser();
         List<UserTransaction> list = queryTransactionRecordForApp(user.getUserId());
-        response.setList(list);
+        List<TransactionVO> listResponse = new ArrayList<>();
+        list.forEach(userTransaction -> {
+            TransactionVO transactionVO = new TransactionVO();
+            transactionVO.setAmount(userTransaction.getAmount());
+            transactionVO.setRemark(userTransaction.getRemark());
+            transactionVO.setStatus(userTransaction.getStatus());
+            transactionVO.setUpdateTime(userTransaction.getUpdateTime().toInstant(ZoneOffset.of("+8")).toEpochMilli());
+            listResponse.add(transactionVO);
+        });
+        response.setList(listResponse);
         return response;
     }
 

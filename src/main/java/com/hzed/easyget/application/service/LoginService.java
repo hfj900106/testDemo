@@ -104,12 +104,14 @@ public class LoginService {
                 userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
             } else {
                 //有用户但是tonken表没数据，正常情况下不存在这种情况
-                log.error("用户："+user.getId()+"在token表中没有数据");
+                log.error("根据用户id"+user.getId()+"和用户imei："+imei+"没有找到该用户的token");
                 throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION);
             }
         }
         //放入redis 3个小时
         redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token,RedisConsts.THREE_HOUR);
+       //验证SmsCode之后删除掉
+        redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
         return LoginByCodeResponse.builder().token(token).build();
     }
 
@@ -241,12 +243,12 @@ public class LoginService {
     }
 
     /**
-     * 验证码验证
+     * 验证码验证，不区分大小写
      */
     public void checkPictureCode(String mobile, String code) {
         //获取缓存数据
         String cacheCode = redisService.getCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile);
-        if (StringUtils.isBlank(cacheCode) || !code.equals(cacheCode)) {
+        if (StringUtils.isBlank(cacheCode) || !code.equalsIgnoreCase(cacheCode)) {
             throw new ComBizException(BizCodeEnum.PIC_CODE_ERROR);
         } else {
             //验证通过则删除10分钟重发标识，等发送之后会重新加上

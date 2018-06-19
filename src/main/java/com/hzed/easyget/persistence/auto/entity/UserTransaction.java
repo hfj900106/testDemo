@@ -3,6 +3,7 @@ package com.hzed.easyget.persistence.auto.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class UserTransaction implements Serializable {
     /**
@@ -54,6 +55,11 @@ public class UserTransaction implements Serializable {
      * 还款方式，入账为空  1-全部结清 2-部分还款
      */
     private Byte repaymentType;
+
+    /**
+     * 确认时间 用户点击确认还款生成
+     */
+    private Date confirmTime;
 
     /**
      */
@@ -160,6 +166,14 @@ public class UserTransaction implements Serializable {
         this.repaymentType = repaymentType;
     }
 
+    public Date getConfirmTime() {
+        return confirmTime;
+    }
+
+    public void setConfirmTime(Date confirmTime) {
+        this.confirmTime = confirmTime;
+    }
+
     public Long getCreateBy() {
         return createBy;
     }
@@ -216,6 +230,7 @@ public class UserTransaction implements Serializable {
         sb.append(", account=").append(account);
         sb.append(", status=").append(status);
         sb.append(", repaymentType=").append(repaymentType);
+        sb.append(", confirmTime=").append(confirmTime);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -287,6 +302,11 @@ public class UserTransaction implements Serializable {
             return this;
         }
 
+        public Builder confirmTime(Date confirmTime) {
+            obj.setConfirmTime(confirmTime);
+            return this;
+        }
+
         public Builder createBy(Long createBy) {
             obj.setCreateBy(createBy);
             return this;
@@ -328,6 +348,7 @@ public class UserTransaction implements Serializable {
         account("account"),
         status("status"),
         repaymentType("repayment_type"),
+        confirmTime("confirm_time"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

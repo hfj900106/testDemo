@@ -1,9 +1,7 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.application.enums.TransactionRepayEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.controller.model.RepaymentRequest;
-import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
@@ -59,12 +57,15 @@ public class UserTransactionRepository {
     }
 
     /**
-     * 主键返回记录
+     * 返回交易记录
      * @param payId
+     * @param status
      * @return
      */
-    public UserTransaction selectByKey(Long payId) {
-        return  userTransactionMapper.selectByPrimaryKey(payId);
+    public UserTransaction selectByKey(Long payId,byte status) {
+        UserTransactionExample userTransactionExample=new UserTransactionExample();
+        userTransactionExample.createCriteria().andIdEqualTo(payId).andStatusEqualTo(status);
+        return  userTransactionMapper.selectOneByExample(userTransactionExample);
     }
 
     /**
@@ -76,17 +77,9 @@ public class UserTransactionRepository {
         UserTransactionRepayExample repayExample=new UserTransactionRepayExample();
         repayExample.createCriteria()
                 .andTransactionIdEqualTo(request.getPayId())
-                .andModeEqualTo(request.getMode())
-                .andStatusEqualTo(TransactionRepayEnum.TO_BE_TREATED.getCode().byteValue());
+                .andModeEqualTo(request.getMode());
         return userTransactionRepayMapper.selectByExample(repayExample);
 
-    }
-    /**
-     * 修改va码状态 处理中
-     * @param x
-     */
-    public void updateUserTransacRepayState(UserTransactionRepay x) {
-        userTransactionRepayMapper.updateByPrimaryKeySelective(x);
     }
 
     /**

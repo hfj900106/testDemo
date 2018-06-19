@@ -29,16 +29,6 @@ public class UserTransactionRepay implements Serializable {
     private LocalDateTime vaCreateTime;
 
     /**
-     * 处理状态 1-待处理 2-处理中 3-处理成功 4-处理失败
-     */
-    private Byte status;
-
-    /**
-     * 确认时间
-     */
-    private LocalDateTime confirmTime;
-
-    /**
      * 备注
      */
     private String remark;
@@ -85,22 +75,6 @@ public class UserTransactionRepay implements Serializable {
         this.vaCreateTime = vaCreateTime;
     }
 
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getConfirmTime() {
-        return confirmTime;
-    }
-
-    public void setConfirmTime(LocalDateTime confirmTime) {
-        this.confirmTime = confirmTime;
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -120,8 +94,6 @@ public class UserTransactionRepay implements Serializable {
         sb.append(", mode=").append(mode);
         sb.append(", va=").append(va);
         sb.append(", vaCreateTime=").append(vaCreateTime);
-        sb.append(", status=").append(status);
-        sb.append(", confirmTime=").append(confirmTime);
         sb.append(", remark=").append(remark);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
@@ -164,16 +136,6 @@ public class UserTransactionRepay implements Serializable {
             return this;
         }
 
-        public Builder status(Byte status) {
-            obj.setStatus(status);
-            return this;
-        }
-
-        public Builder confirmTime(LocalDateTime confirmTime) {
-            obj.setConfirmTime(confirmTime);
-            return this;
-        }
-
         public Builder remark(String remark) {
             obj.setRemark(remark);
             return this;
@@ -190,8 +152,6 @@ public class UserTransactionRepay implements Serializable {
         mode("mode"),
         va("va"),
         vaCreateTime("va_create_time"),
-        status("status"),
-        confirmTime("confirm_time"),
         remark("remark");
 
         private final String column;

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserTransactionRepayPicExample {
+public class UserTransactionPicExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,7 +15,7 @@ public class UserTransactionRepayPicExample {
 
     protected Integer rows;
 
-    public UserTransactionRepayPicExample() {
+    public UserTransactionPicExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -86,29 +86,29 @@ public class UserTransactionRepayPicExample {
         return this.rows;
     }
 
-    public UserTransactionRepayPicExample limit(Integer rows) {
+    public UserTransactionPicExample limit(Integer rows) {
         this.rows = rows;
         return this;
     }
 
-    public UserTransactionRepayPicExample limit(Integer offset, Integer rows) {
+    public UserTransactionPicExample limit(Integer offset, Integer rows) {
         this.offset = offset;
         this.rows = rows;
         return this;
     }
 
-    public UserTransactionRepayPicExample page(Integer page, Integer pageSize) {
+    public UserTransactionPicExample page(Integer page, Integer pageSize) {
         this.offset = page * pageSize;
         this.rows = pageSize;
         return this;
     }
 
-    public UserTransactionRepayPicExample orderBy(String orderByClause) {
+    public UserTransactionPicExample orderBy(String orderByClause) {
         this.setOrderByClause(orderByClause);
         return this;
     }
 
-    public UserTransactionRepayPicExample orderBy(String ... orderByClauses) {
+    public UserTransactionPicExample orderBy(String ... orderByClauses) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < orderByClauses.length; i++) {
             sb.append(orderByClauses[i]);
@@ -221,63 +221,63 @@ public class UserTransactionRepayPicExample {
             return (Criteria) this;
         }
 
-        public Criteria andTransactionRepayIdIsNull() {
-            addCriterion("transaction_repay_id is null");
+        public Criteria andTransactionIdIsNull() {
+            addCriterion("transaction_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionRepayIdIsNotNull() {
-            addCriterion("transaction_repay_id is not null");
+        public Criteria andTransactionIdIsNotNull() {
+            addCriterion("transaction_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionRepayIdEqualTo(Long value) {
-            addCriterion("transaction_repay_id =", value, "transactionRepayId");
+        public Criteria andTransactionIdEqualTo(Long value) {
+            addCriterion("transaction_id =", value, "transactionId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionRepayIdNotEqualTo(Long value) {
-            addCriterion("transaction_repay_id <>", value, "transactionRepayId");
+        public Criteria andTransactionIdNotEqualTo(Long value) {
+            addCriterion("transaction_id <>", value, "transactionId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionRepayIdGreaterThan(Long value) {
-            addCriterion("transaction_repay_id >", value, "transactionRepayId");
+        public Criteria andTransactionIdGreaterThan(Long value) {
+            addCriterion("transaction_id >", value, "transactionId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionRepayIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("transaction_repay_id >=", value, "transactionRepayId");
+        public Criteria andTransactionIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("transaction_id >=", value, "transactionId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionRepayIdLessThan(Long value) {
-            addCriterion("transaction_repay_id <", value, "transactionRepayId");
+        public Criteria andTransactionIdLessThan(Long value) {
+            addCriterion("transaction_id <", value, "transactionId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionRepayIdLessThanOrEqualTo(Long value) {
-            addCriterion("transaction_repay_id <=", value, "transactionRepayId");
+        public Criteria andTransactionIdLessThanOrEqualTo(Long value) {
+            addCriterion("transaction_id <=", value, "transactionId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionRepayIdIn(List<Long> values) {
-            addCriterion("transaction_repay_id in", values, "transactionRepayId");
+        public Criteria andTransactionIdIn(List<Long> values) {
+            addCriterion("transaction_id in", values, "transactionId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionRepayIdNotIn(List<Long> values) {
-            addCriterion("transaction_repay_id not in", values, "transactionRepayId");
+        public Criteria andTransactionIdNotIn(List<Long> values) {
+            addCriterion("transaction_id not in", values, "transactionId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionRepayIdBetween(Long value1, Long value2) {
-            addCriterion("transaction_repay_id between", value1, value2, "transactionRepayId");
+        public Criteria andTransactionIdBetween(Long value1, Long value2) {
+            addCriterion("transaction_id between", value1, value2, "transactionId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionRepayIdNotBetween(Long value1, Long value2) {
-            addCriterion("transaction_repay_id not between", value1, value2, "transactionRepayId");
+        public Criteria andTransactionIdNotBetween(Long value1, Long value2) {
+            addCriterion("transaction_id not between", value1, value2, "transactionId");
             return (Criteria) this;
         }
 
@@ -418,14 +418,14 @@ public class UserTransactionRepayPicExample {
     }
 
     public static class Criteria extends GeneratedCriteria {
-        private UserTransactionRepayPicExample example;
+        private UserTransactionPicExample example;
 
-        protected Criteria(UserTransactionRepayPicExample example) {
+        protected Criteria(UserTransactionPicExample example) {
             super();
             this.example = example;
         }
 
-        public UserTransactionRepayPicExample example() {
+        public UserTransactionPicExample example() {
             return this.example;
         }
 

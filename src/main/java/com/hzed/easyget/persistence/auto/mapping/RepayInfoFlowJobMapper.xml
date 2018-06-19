@@ -3,12 +3,12 @@
 <mapper namespace="com.hzed.easyget.persistence.auto.mapper.RepayInfoFlowJobMapper">
   <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob">
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="transaction_id" jdbcType="BIGINT" property="transactionId" />
     <result column="bid_id" jdbcType="BIGINT" property="bidId" />
     <result column="repayment_amount" jdbcType="DECIMAL" property="repaymentAmount" />
     <result column="real_repayment_time" jdbcType="TIMESTAMP" property="realRepaymentTime" />
     <result column="repayment_mode" jdbcType="TINYINT" property="repaymentMode" />
     <result column="repayment_type" jdbcType="TINYINT" property="repaymentType" />
-    <result column="requestSeq" jdbcType="VARCHAR" property="requestseq" />
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="times" jdbcType="TINYINT" property="times" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -74,8 +74,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, bid_id, repayment_amount, real_repayment_time, repayment_mode, repayment_type, 
-    requestSeq, status, times, create_time, update_time, remark
+    id, transaction_id, bid_id, repayment_amount, real_repayment_time, repayment_mode, 
+    repayment_type, status, times, create_time, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.RepayInfoFlowJobExample" resultMap="BaseResultMap">
     select
@@ -140,14 +140,14 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob">
-    insert into t_loan_repay_info_flow_job (id, bid_id, repayment_amount, 
-      real_repayment_time, repayment_mode, repayment_type, 
-      requestSeq, status, times, 
+    insert into t_loan_repay_info_flow_job (id, transaction_id, bid_id, 
+      repayment_amount, real_repayment_time, repayment_mode, 
+      repayment_type, status, times, 
       create_time, update_time, remark
       )
-    values (#{id,jdbcType=BIGINT}, #{bidId,jdbcType=BIGINT}, #{repaymentAmount,jdbcType=DECIMAL}, 
-      #{realRepaymentTime,jdbcType=TIMESTAMP}, #{repaymentMode,jdbcType=TINYINT}, #{repaymentType,jdbcType=TINYINT}, 
-      #{requestseq,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{times,jdbcType=TINYINT}, 
+    values (#{id,jdbcType=BIGINT}, #{transactionId,jdbcType=BIGINT}, #{bidId,jdbcType=BIGINT}, 
+      #{repaymentAmount,jdbcType=DECIMAL}, #{realRepaymentTime,jdbcType=TIMESTAMP}, #{repaymentMode,jdbcType=TINYINT}, 
+      #{repaymentType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{times,jdbcType=TINYINT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
       )
   </insert>
@@ -156,6 +156,9 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="transactionId != null">
+        transaction_id,
       </if>
       <if test="bidId != null">
         bid_id,
@@ -171,9 +174,6 @@
       </if>
       <if test="repaymentType != null">
         repayment_type,
-      </if>
-      <if test="requestseq != null">
-        requestSeq,
       </if>
       <if test="status != null">
         status,
@@ -195,6 +195,9 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="transactionId != null">
+        #{transactionId,jdbcType=BIGINT},
+      </if>
       <if test="bidId != null">
         #{bidId,jdbcType=BIGINT},
       </if>
@@ -209,9 +212,6 @@
       </if>
       <if test="repaymentType != null">
         #{repaymentType,jdbcType=TINYINT},
-      </if>
-      <if test="requestseq != null">
-        #{requestseq,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         #{status,jdbcType=TINYINT},
@@ -242,6 +242,9 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
+      <if test="record.transactionId != null">
+        transaction_id = #{record.transactionId,jdbcType=BIGINT},
+      </if>
       <if test="record.bidId != null">
         bid_id = #{record.bidId,jdbcType=BIGINT},
       </if>
@@ -256,9 +259,6 @@
       </if>
       <if test="record.repaymentType != null">
         repayment_type = #{record.repaymentType,jdbcType=TINYINT},
-      </if>
-      <if test="record.requestseq != null">
-        requestSeq = #{record.requestseq,jdbcType=VARCHAR},
       </if>
       <if test="record.status != null">
         status = #{record.status,jdbcType=TINYINT},
@@ -283,12 +283,12 @@
   <update id="updateByExample" parameterType="map">
     update t_loan_repay_info_flow_job
     set id = #{record.id,jdbcType=BIGINT},
+      transaction_id = #{record.transactionId,jdbcType=BIGINT},
       bid_id = #{record.bidId,jdbcType=BIGINT},
       repayment_amount = #{record.repaymentAmount,jdbcType=DECIMAL},
       real_repayment_time = #{record.realRepaymentTime,jdbcType=TIMESTAMP},
       repayment_mode = #{record.repaymentMode,jdbcType=TINYINT},
       repayment_type = #{record.repaymentType,jdbcType=TINYINT},
-      requestSeq = #{record.requestseq,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=TINYINT},
       times = #{record.times,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -301,6 +301,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob">
     update t_loan_repay_info_flow_job
     <set>
+      <if test="transactionId != null">
+        transaction_id = #{transactionId,jdbcType=BIGINT},
+      </if>
       <if test="bidId != null">
         bid_id = #{bidId,jdbcType=BIGINT},
       </if>
@@ -315,9 +318,6 @@
       </if>
       <if test="repaymentType != null">
         repayment_type = #{repaymentType,jdbcType=TINYINT},
-      </if>
-      <if test="requestseq != null">
-        requestSeq = #{requestseq,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=TINYINT},
@@ -339,12 +339,12 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob">
     update t_loan_repay_info_flow_job
-    set bid_id = #{bidId,jdbcType=BIGINT},
+    set transaction_id = #{transactionId,jdbcType=BIGINT},
+      bid_id = #{bidId,jdbcType=BIGINT},
       repayment_amount = #{repaymentAmount,jdbcType=DECIMAL},
       real_repayment_time = #{realRepaymentTime,jdbcType=TIMESTAMP},
       repayment_mode = #{repaymentMode,jdbcType=TINYINT},
       repayment_type = #{repaymentType,jdbcType=TINYINT},
-      requestSeq = #{requestseq,jdbcType=VARCHAR},
       status = #{status,jdbcType=TINYINT},
       times = #{times,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -380,15 +380,15 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_repay_info_flow_job
-    (id, bid_id, repayment_amount, real_repayment_time, repayment_mode, repayment_type, 
-      requestSeq, status, times, create_time, update_time, remark)
+    (id, transaction_id, bid_id, repayment_amount, real_repayment_time, repayment_mode, 
+      repayment_type, status, times, create_time, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.bidId,jdbcType=BIGINT}, #{item.repaymentAmount,jdbcType=DECIMAL}, 
-        #{item.realRepaymentTime,jdbcType=TIMESTAMP}, #{item.repaymentMode,jdbcType=TINYINT}, 
-        #{item.repaymentType,jdbcType=TINYINT}, #{item.requestseq,jdbcType=VARCHAR}, #{item.status,jdbcType=TINYINT}, 
-        #{item.times,jdbcType=TINYINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, 
-        #{item.remark,jdbcType=VARCHAR})
+      (#{item.id,jdbcType=BIGINT}, #{item.transactionId,jdbcType=BIGINT}, #{item.bidId,jdbcType=BIGINT}, 
+        #{item.repaymentAmount,jdbcType=DECIMAL}, #{item.realRepaymentTime,jdbcType=TIMESTAMP}, 
+        #{item.repaymentMode,jdbcType=TINYINT}, #{item.repaymentType,jdbcType=TINYINT}, 
+        #{item.status,jdbcType=TINYINT}, #{item.times,jdbcType=TINYINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -404,6 +404,9 @@
         <if test="'id' == column.value">
           #{item.id,jdbcType=BIGINT}
         </if>
+        <if test="'transaction_id' == column.value">
+          #{item.transactionId,jdbcType=BIGINT}
+        </if>
         <if test="'bid_id' == column.value">
           #{item.bidId,jdbcType=BIGINT}
         </if>
@@ -418,9 +421,6 @@
         </if>
         <if test="'repayment_type' == column.value">
           #{item.repaymentType,jdbcType=TINYINT}
-        </if>
-        <if test="'requestSeq' == column.value">
-          #{item.requestseq,jdbcType=VARCHAR}
         </if>
         <if test="'status' == column.value">
           #{item.status,jdbcType=TINYINT}

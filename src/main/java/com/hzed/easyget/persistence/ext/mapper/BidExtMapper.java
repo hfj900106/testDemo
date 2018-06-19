@@ -1,13 +1,11 @@
 package com.hzed.easyget.persistence.ext.mapper;
 
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
-import com.hzed.easyget.persistence.auto.entity.TempTable;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author hfj

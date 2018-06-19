@@ -3,14 +3,14 @@ package com.hzed.easyget.persistence.auto.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class UserTransactionRepayPic implements Serializable {
+public class UserTransactionPic implements Serializable {
     /**
      */
     private Long id;
 
     /**
      */
-    private Long transactionRepayId;
+    private Long transactionId;
 
     /**
      * 凭证地址
@@ -32,12 +32,12 @@ public class UserTransactionRepayPic implements Serializable {
         this.id = id;
     }
 
-    public Long getTransactionRepayId() {
-        return transactionRepayId;
+    public Long getTransactionId() {
+        return transactionId;
     }
 
-    public void setTransactionRepayId(Long transactionRepayId) {
-        this.transactionRepayId = transactionRepayId;
+    public void setTransactionId(Long transactionId) {
+        this.transactionId = transactionId;
     }
 
     public String getEvidencePicUrl() {
@@ -63,7 +63,7 @@ public class UserTransactionRepayPic implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", transactionRepayId=").append(transactionRepayId);
+        sb.append(", transactionId=").append(transactionId);
         sb.append(", evidencePicUrl=").append(evidencePicUrl);
         sb.append(", createTime=").append(createTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
@@ -71,15 +71,15 @@ public class UserTransactionRepayPic implements Serializable {
         return sb.toString();
     }
 
-    public static UserTransactionRepayPic.Builder builder() {
-        return new UserTransactionRepayPic.Builder();
+    public static UserTransactionPic.Builder builder() {
+        return new UserTransactionPic.Builder();
     }
 
     public static class Builder {
-        private UserTransactionRepayPic obj;
+        private UserTransactionPic obj;
 
         public Builder() {
-            this.obj = new UserTransactionRepayPic();
+            this.obj = new UserTransactionPic();
         }
 
         public Builder id(Long id) {
@@ -87,8 +87,8 @@ public class UserTransactionRepayPic implements Serializable {
             return this;
         }
 
-        public Builder transactionRepayId(Long transactionRepayId) {
-            obj.setTransactionRepayId(transactionRepayId);
+        public Builder transactionId(Long transactionId) {
+            obj.setTransactionId(transactionId);
             return this;
         }
 
@@ -102,14 +102,14 @@ public class UserTransactionRepayPic implements Serializable {
             return this;
         }
 
-        public UserTransactionRepayPic build() {
+        public UserTransactionPic build() {
             return this.obj;
         }
     }
 
     public enum Column {
         id("id"),
-        transactionRepayId("transaction_repay_id"),
+        transactionId("transaction_id"),
         evidencePicUrl("evidence_pic_url"),
         createTime("create_time");
 

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 /**
- * 过过滤器，用户替换request
+ * 过滤器，用户替换request
  *
  * @author guichang
  */
@@ -27,7 +27,9 @@ public class RequestFilter implements Filter {
             // local替换成请求头中的
             Locale locale = LocaleEnum.getLocale(RequestUtil.getGlobalHead().getI18n());
             Locale.setDefault(locale);
-            filterChain.doFilter(new RequestWrapper((HttpServletRequest) servletRequest, locale), servletResponse);
+            RequestWrapper request = new RequestWrapper((HttpServletRequest) servletRequest, locale);
+            request.setAttribute("body", request.getBody());
+            filterChain.doFilter(request, servletResponse);
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
         }

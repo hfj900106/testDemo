@@ -28,7 +28,7 @@ public class HomeController {
     @TokenIgnore
     @ModuleFunc("获取产品详情")
     @PostMapping("/getProductInfo")
-    public ProductInfoResponse getProductInfo(@RequestBody Object obj) {
+    public ProductInfoResponse getProductInfo() {
         return homeService.getProductInfo();
     }
 
@@ -50,20 +50,20 @@ public class HomeController {
 
     @ModuleFunc("token更新")
     @PostMapping("/updateToken")
-    public UpdateTokenResponse updateToken(@RequestBody Object obj) {
+    public UpdateTokenResponse updateToken() {
         return homeService.updateToken();
     }
 
     @TokenIgnore
     @ModuleFunc("获取公告列表")
     @PostMapping("/getNewsList")
-    public List<NewsResponse> getNewsList(@RequestBody Object obj) {
+    public List<NewsResponse> getNewsList() {
         return homeService.getNewsList();
     }
 
     @ModuleFunc("发起借款校验")
     @GetMapping("/checkLoan")
-    public void checkLoan(@RequestBody Object obj) {
+    public void checkLoan() {
         homeService.checkLoan();
     }
 

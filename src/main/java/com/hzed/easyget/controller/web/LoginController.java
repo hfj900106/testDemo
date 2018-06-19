@@ -6,6 +6,8 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.ComBizException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +44,7 @@ public class LoginController {
     @ModuleFunc("手机验证码登录")
     @PostMapping("/loginByCode")
     public LoginByCodeResponse loginByCode(@Valid @RequestBody LoginByCodeRequest request) {
+        if(true) throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM);
         return loginService.loginByCode(request);
     }
 

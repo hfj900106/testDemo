@@ -8,7 +8,6 @@ import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,13 +28,13 @@ public class UserController {
 
     @ModuleFunc("我的")
     @PostMapping("/getAccountInfo")
-    public UserResponse getAccountInfo(@RequestBody Object obj) {
+    public UserResponse getAccountInfo() {
         return userService.getAccountInfo();
     }
 
     @ModuleFunc("交易记录")
     @PostMapping("/getTransactionRecord")
-    public TransactionRecordResponse getTransactionRecord(@RequestBody Object obj) {
+    public TransactionRecordResponse getTransactionRecord() {
         return userService.getTransactionRecord();
     }
 

@@ -1,10 +1,14 @@
 package com.hzed.easyget.application.service;
 
-import com.alibaba.fastjson.JSON;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
+import com.hzed.easyget.controller.model.DictRequest;
+import com.hzed.easyget.controller.model.DictResponse;
+import com.hzed.easyget.infrastructure.config.redis.RedisService;
+import com.hzed.easyget.infrastructure.consts.RedisConsts;
+import com.hzed.easyget.infrastructure.repository.AuthItemRepository;
 import com.hzed.easyget.infrastructure.repository.DictRepository;
+import com.hzed.easyget.infrastructure.utils.RequestUtil;
+import com.hzed.easyget.persistence.auto.entity.AuthItem;
 import com.hzed.easyget.persistence.auto.entity.Dict;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -12,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author guichang
@@ -23,59 +25,53 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class DictService {
 
-    private static final Cache<String, Dict> CACHE = CacheBuilder.newBuilder()
-            //设置cache的初始大小为10，要合理设置该值
-            .initialCapacity(20)
-            //设置并发数为5，即同一时间最多只能有5个线程往cache执行写入操作
-            .concurrencyLevel(10)
-            //设置cache中的数据在写入之后的存活时间
-            .expireAfterWrite(3, TimeUnit.HOURS)
-            .expireAfterAccess(3, TimeUnit.HOURS)
-            .maximumSize(500)
-            .removalListener(notification -> log.info("清除字典缓存，key：{}，cause：{}，value：{}",
-                    notification.getKey(), notification.getCause(), JSON.toJSON(notification.getValue())))
-            .build();
-
     @Autowired
     private DictRepository dictRepository;
+    @Autowired
+    private RedisService redisService;
+    @Autowired
+    private AuthItemRepository authItemRepository;
 
-    private static final Map<String, List<Dict>> MODULE_MAP = Maps.newHashMap();
+    public Dict getDictByCode(String moduleCode) {
+        String Dict = redisService.getCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode);
 
-    public Dict getDictByCode(String code) {
-        Dict dict = CACHE.getIfPresent(code);
-        if (dict != null) {
-            return dict;
-        }
-        dict = dictRepository.findByCodeWithExp(code);
-        CACHE.put(dict.getDicCode(), dict);
-        return dict;
+        return null;
     }
 
-    public List<Dict> getDictsByModule(String moduleCode) {
-        List<Dict> dicts = MODULE_MAP.get(moduleCode);
-        if(dicts == null || dicts.isEmpty()) {
-            List<Dict> moduleDicts = dictRepository.findByModuleCodeWithExp(moduleCode);
-            MODULE_MAP.put(moduleCode, moduleDicts);
-            return moduleDicts;
+    public List<DictResponse> getDictByModule(DictRequest request) {
+        List<DictResponse> dictResponseList = Lists.newArrayList();
+        String moduleCode = request.getModuleCode();
+        String i18n = RequestUtil.getGlobalHead().getI18n();
+        //获取缓存数据,缓存没有，才查询数据库
+        String Dict = redisService.getCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode);
+        if (Dict == null) {
+
+            List<Dict> dictList = dictRepository.findByModuleCodeAndLanguageWithExp(moduleCode,i18n);
+            dictList.forEach(dict -> {
+                AuthItem authItem = authItemRepository.findByCode(dict.getDicCode());
+                DictResponse dictResponse = new DictResponse();
+                dictResponse.setDicName(dict.getDicName());
+                dictResponse.setIsUse(authItem.getIsUse());
+                dictResponseList.add(dictResponse);
+            });
+
         }
-        return dicts;
+
+        //放入缓存5小时
+     //   redisService.setCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode , dictResponseList,5* 3600L);
+
+        return dictResponseList;
     }
 
-    @Deprecated
     public void clearCache(String key) {
         if (StringUtils.isBlank(key)) {
             return;
         }
 
         if ("all".equals(key)) {
-            CACHE.invalidateAll();
-            // 清除moduleMap
-            MODULE_MAP.clear();
-            log.info("成功清理所有缓存");
+
         } else {
-            CACHE.invalidate(key);
-            MODULE_MAP.remove(key);
-            log.info("成功清理dic_code或module_code为{}的缓存", key);
+
         }
     }
 }

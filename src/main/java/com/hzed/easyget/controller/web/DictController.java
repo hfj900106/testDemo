@@ -1,15 +1,17 @@
 package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.DictService;
+import com.hzed.easyget.controller.model.DictRequest;
+import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-import com.hzed.easyget.infrastructure.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 
 /**
@@ -27,10 +29,23 @@ public class DictController {
     private DictService dictService;
 
     @HeaderIgnore
-    @ModuleFunc("清除字典缓存")
-    @PostMapping("/clearCache")
-    public Response discardsCache(String key) {
-        return Response.getSuccessResponse();
+    @ModuleFunc("清除字典缓存-module")
+    @GetMapping("/clearModuleCache/{module}")
+    public void clearModuleCache(@PathVariable String module) {
+        System.out.println("========module:" + module + "=========");
+    }
+
+    @HeaderIgnore
+    @ModuleFunc("清除字典缓存-key")
+    @GetMapping("/clearKeyCache/{key}")
+    public void clearKeyCache(@PathVariable String key) {
+        System.out.println("========module:" + key + "=========");
+    }
+
+    @ModuleFunc("通过moduleCode获取子弹列表")
+    @PostMapping("/getDictList")
+    public List<DictResponse> getDictList(@Valid @RequestBody DictRequest request){
+        return dictService.getDictByModule(request);
     }
 
 

@@ -28,7 +28,7 @@ public class LoanManagResponse {
      */
     private String vaCodel;
     /**
-     * va码过期时间
+     * va码创建时间
      */
     private String  createTime;
     /**

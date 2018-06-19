@@ -1,9 +1,3 @@
-/**
- * MyRequestWrapper.java
- *
- * @screen
- * @author havery
- */
 package com.hzed.easyget.infrastructure.interceptor.filter;
 
 import lombok.Data;
@@ -16,9 +10,12 @@ import java.io.*;
 import java.util.Locale;
 
 /**
- * MyRequestWrapper.
+ * 自定义request实现
+ * 1、读到request中的json并写出
+ * 2、重写getLocale()方法
  *
- * @author havery
+ * @author guichang
+ * @date 2018/6/19
  */
 @Data
 public class RequestWrapper extends HttpServletRequestWrapper {
@@ -30,30 +27,15 @@ public class RequestWrapper extends HttpServletRequestWrapper {
         this.locale = locale;
 
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = null;
-        try {
-            InputStream inputStream = request.getInputStream();
-            if (inputStream != null) {
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                char[] charBuffer = new char[128];
-                int bytesRead = -1;
-                while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
-                    stringBuilder.append(charBuffer, 0, bytesRead);
-                }
-            } else {
-                stringBuilder.append("");
-            }
-        } catch (IOException ex) {
-            throw ex;
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException ex) {
-                    throw ex;
-                }
-            }
+        InputStream inputStream = request.getInputStream();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        char[] charBuffer = new char[128];
+        int bytesRead;
+        while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
+            stringBuilder.append(charBuffer, 0, bytesRead);
         }
+        bufferedReader.close();
+        // 替换换行符和回车符
         body = stringBuilder.toString().replaceAll("\n|\t", "");
     }
 
@@ -92,10 +74,6 @@ public class RequestWrapper extends HttpServletRequestWrapper {
     @Override
     public Locale getLocale() {
         return locale;
-    }
-
-    public String getBody() {
-        return this.body;
     }
 
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class RepayRepository {
      * @return
      */
     @Transactional(rollbackFor=Exception.class)
-    public LoanManagResponse findloanManagResponse(Long bidId,boolean flag) {
+    public LoanManagResponse findloanManagResponse(BigDecimal amount, Long bidId, boolean flag) {
         LoanManagResponse managResponse=repayExtMapper.findloanManagResponse(bidId);
         //查询标的信息
         Bid bid=bidRepository.findById(bidId);
@@ -61,13 +62,20 @@ public class RepayRepository {
                     .userId(bid.getUserId())
                     .paymentId(IdentifierGenerator.nextSeqNo())
                     .bank(bid.getInBank())
+                    .account(bid.getInAccount())
                     .type(TransactionTypeEnum.OUT.getCode().byteValue())
-                    .amount(managResponse.getAmount())
+                    .amount(amount)
+                    .bidId(bidId)
                     .status(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
                     .repaymentType(flag?TransactionTypeEnum.ALL_CLEAR.getCode().byteValue():TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue())
                     .createTime(LocalDateTime.now())
                     .remark(flag?"全部还款":"部分还款").build();
             userTransactionRepository.insertSelective(trance);
+        }else {
+            trance.setAmount(amount);
+            trance.setCreateTime(LocalDateTime.now());
+            trance.setRemark(flag?"全部还款":"部分还款");
+            userTransactionRepository.transactionUpdateByKey(trance);
         }
         //查询va码
         LoanManagResponse vaCode=repayExtMapper.getVACode(trance.getId());

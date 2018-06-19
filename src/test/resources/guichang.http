@@ -28,5 +28,10 @@ version: 1.1.0
 token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIxNDQ1MTI1MzYzNVwiLFwidXNlcklkXCI6MTA3NjU5NDQxNzA4ODY3NTg0fSIsImV4cCI6MTUyOTkyMDgxMH0.S1H-8OrUVAoeV_ZmqSYz3tcSMquqzioFx23_4IUgi7E
 
 ###
+GET http://localhost:8150/hzed/easy-get/api/dict/clearCache/tesetModule/testKey
 
+### 获取广告产品列表
+POST http://localhost:8150/hzed/easy-get/api/ads/getAdsProductList
+
+###
 

@@ -43,7 +43,7 @@ thirdParty:
   pay:
     domain: http://10.10.30.114:8081 # 请求架构组bulepay域名地址
     loanTransactionUrl: /bluepay/transferBalance  # 放款接口链接
-    receiverTransactionUrl: # 收款接口链接
+    receiverTransactionUrl: /bluepay/gatherDr # 收款接口链接
     getPaymentCodeUrl: /bluepay/getPaymentCode #获取还款码接口
   risk:
     domain: http://10.10.20.202:9611 # 请求风控域名地址

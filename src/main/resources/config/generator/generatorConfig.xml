@@ -90,10 +90,12 @@
             <!--<columnOverride column="real_repayment_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
 
-        <!--<table tableName="t_loan_dict" domainObjectName="Dict" >-->
-            <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
-            <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
-        <!--</table>-->
+        <table tableName="t_loan_dict" domainObjectName="Dict" >
+            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+            <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        </table>
+        <table tableName="t_loan_id_area" domainObjectName="IDArea" >
+        </table>
 
         <!--<table tableName="t_loan_news" domainObjectName="News" >-->
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
@@ -122,17 +124,17 @@
             <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
 
-        <table tableName="t_loan_user_transaction" domainObjectName="UserTransaction" >
-            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-            <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-        </table>
-        <table tableName="t_loan_user_transaction_repay" domainObjectName="UserTransactionRepay" >
-            <columnOverride column="va_create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-            <columnOverride column="confirm_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-        </table>
-        <table tableName="t_loan_user_transaction_repay_pic" domainObjectName="UserTransactionRepayPic" >
-            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-        </table>
+        <!--<table tableName="t_loan_user_transaction" domainObjectName="UserTransaction" >-->
+            <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+        <!--<table tableName="t_loan_user_transaction_repay" domainObjectName="UserTransactionRepay" >-->
+            <!--<columnOverride column="va_create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="confirm_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+        <!--<table tableName="t_loan_user_transaction_repay_pic" domainObjectName="UserTransactionRepayPic" >-->
+            <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
 
         <!--<table tableName="t_loan_user" domainObjectName="User" >-->
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
@@ -163,10 +165,10 @@
             <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
 
-        <table tableName="t_loan_user_pic" domainObjectName="UserPic" >
-            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-            <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-        </table>
+        <!--<table tableName="t_loan_user_pic" domainObjectName="UserPic" >-->
+            <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
 
         <!--<table tableName="t_loan_user_token" domainObjectName="UserToken" >-->
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->

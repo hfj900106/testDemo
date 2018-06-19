@@ -55,7 +55,7 @@ public class UserTransactionRepository {
                 .andTypeEqualTo(type)
                 .andStatusEqualTo(state)
                 .andRepaymentTypeEqualTo(flag?TransactionTypeEnum.ALL_CLEAR.getCode().byteValue():TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
-        return  userTransactionMapper.selectByExample(userTransactionExample).get(0);
+        return  userTransactionMapper.selectOneByExample(userTransactionExample);
     }
 
     /**

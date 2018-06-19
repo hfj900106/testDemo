@@ -1,6 +1,7 @@
 package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.BillLedgerItemEnum;
 import com.hzed.easyget.application.enums.BillStatusEnum;
@@ -28,12 +29,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 一些公用的方法
@@ -218,11 +218,11 @@ public class ComService {
 
     public RiskResponse checkRiskEnableBorrow(String mobile,String imei){
 
-        log.info("查询风控是否有贷款规则请求报文：{}",mobile,imei);
-        MultiValueMap<String, String> paramMap= new LinkedMultiValueMap();
-        paramMap.add("mobile",mobile);
-        paramMap.add("imei",imei);
-        RiskResponse response = restService.postForm(riskProp.getAbsCheckRiskEnableBorrowUrl(), paramMap, RiskResponse.class);
+        Map<String, String> paramMap= Maps.newHashMap();
+        paramMap.put("mobile",mobile);
+        paramMap.put("imei",imei);
+        log.info("查询风控是否有贷款规则请求报文：{}", paramMap);
+        RiskResponse response = restService.postJson(riskProp.getAbsCheckRiskEnableBorrowUrl(), paramMap, RiskResponse.class);
         log.info("查询风控是否有贷款规则返回报文：{}",response);
         return response;
 

@@ -33,7 +33,7 @@ public class RepayController {
     private ComService comService;
 
     @ModuleFunc("还款列表")
-    @GetMapping("/repaidList")
+    @PostMapping("/repaidList")
     public RepayListResponse repaidList() {
         return repayService.repaidList();
     }
@@ -54,7 +54,7 @@ public class RepayController {
     }
 
     @ModuleFunc("还款详情")
-    @GetMapping("/repayDetail")
+    @PostMapping("/repayDetail")
     public Response<RepayDetailResponse> repayDetail(@Valid @RequestBody RepayDetailRequest request){
         return Response.getSuccessResponse(repayService.repayDetail(request));
     }

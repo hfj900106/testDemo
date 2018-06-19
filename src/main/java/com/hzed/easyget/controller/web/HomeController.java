@@ -63,13 +63,13 @@ public class HomeController {
     }
 
     @ModuleFunc("发起借款校验")
-    @GetMapping("/checkLoan")
+    @PostMapping("/checkLoan")
     public void checkLoan() {
         homeService.checkLoan();
     }
 
     @ModuleFunc("检测首页是否跳转")
-    @GetMapping("/checkJump")
+    @PostMapping("/checkJump")
     public void checkJump() {
         homeService.checkJump();
     }

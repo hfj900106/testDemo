@@ -1,6 +1,5 @@
 package com.hzed.easyget.application.service;
 
-import com.google.common.collect.Lists;
 import com.hzed.easyget.controller.model.DictRequest;
 import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
@@ -33,20 +32,26 @@ public class DictService {
     private AuthItemRepository authItemRepository;
 
     public Dict getDictByCode(String moduleCode) {
-        String Dict = redisService.getCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode);
 
-        return null;
+        Dict dict = redisService.getObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode);
+        if (dict == null) {
+            dict = dictRepository.findByCodeWithExp(moduleCode);
+        }
+
+        redisService.setObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode, dict, 5 * 3600L);
+
+        return dict;
     }
 
     public List<DictResponse> getDictByModule(DictRequest request) {
-        List<DictResponse> dictResponseList = Lists.newArrayList();
+        List<DictResponse> dictResponseList ;
         String moduleCode = request.getModuleCode();
         String i18n = RequestUtil.getGlobalHead().getI18n();
         //获取缓存数据,缓存没有，才查询数据库
-        String Dict = redisService.getCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode);
-        if (Dict == null) {
+        dictResponseList = redisService.getObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode + RedisConsts.SPLIT + i18n);
+        if (dictResponseList == null) {
 
-            List<Dict> dictList = dictRepository.findByModuleCodeAndLanguageWithExp(moduleCode,i18n);
+            List<Dict> dictList = dictRepository.findByModuleCodeAndLanguageWithExp(moduleCode, i18n);
             dictList.forEach(dict -> {
                 AuthItem authItem = authItemRepository.findByCode(dict.getDicCode());
                 DictResponse dictResponse = new DictResponse();
@@ -58,7 +63,7 @@ public class DictService {
         }
 
         //放入缓存5小时
-     //   redisService.setCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode , dictResponseList,5* 3600L);
+        redisService.setObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode +RedisConsts.SPLIT + i18n, dictResponseList, 5 * 3600L);
 
         return dictResponseList;
     }

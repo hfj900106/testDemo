@@ -181,12 +181,13 @@ public class RepayService {
         // 信息流入库
         RepayInfoFlowJob jobInsert = new RepayInfoFlowJob();
         jobInsert.setId(IdentifierGenerator.nextId());
+        // TODO
+//        jobInsert.setTransactionId();
         jobInsert.setBidId(bidId);
         jobInsert.setRepaymentAmount(bidNoRepay);
         jobInsert.setRealRepaymentTime(LocalDateTime.now());
         jobInsert.setRepaymentMode(RepayModeEnum.ONLINE.getCode().byteValue());
         jobInsert.setRepaymentType(RepayTypeEnum.CLEAR.getCode().byteValue());
-        jobInsert.setRequestseq(requestSeq);
         jobInsert.setCreateTime(LocalDateTime.now());
         repayInfoFlowJobRepository.insert(jobInsert);
 
@@ -211,12 +212,13 @@ public class RepayService {
         // 信息流入库
         RepayInfoFlowJob jobInsert = new RepayInfoFlowJob();
         jobInsert.setId(IdentifierGenerator.nextId());
+        // TODO
+//        jobInsert.setTransactionId();
         jobInsert.setBidId(bidId);
         jobInsert.setRepaymentAmount(repayAmount);
         jobInsert.setRealRepaymentTime(LocalDateTime.now());
         jobInsert.setRepaymentMode(RepayModeEnum.ONLINE.getCode().byteValue());
         jobInsert.setRepaymentType(RepayTypeEnum.PART.getCode().byteValue());
-        jobInsert.setRequestseq(requestSeq);
         jobInsert.setCreateTime(LocalDateTime.now());
         repayInfoFlowJobRepository.insert(jobInsert);
 
@@ -242,7 +244,7 @@ public class RepayService {
      * @param job               定时任务标志，不是定时任务传null
      */
     @Transactional(rollbackFor = Exception.class)
-    public void repayInformationFlow(Long bidId, BigDecimal repayAmount, LocalDateTime realRepaymentTime, String requestSeq, RepayInfoFlowJob job) {
+    public void repayInformationFlow(Long bidId, BigDecimal repayAmount, LocalDateTime realRepaymentTime, Long transactionId, RepayInfoFlowJob job) {
         // 判断还款金额是否大于项目待还总额
         BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, realRepaymentTime);
         if (repayAmount.compareTo(bidNoRepay) > 0) {
@@ -268,7 +270,7 @@ public class RepayService {
         // 待还账单
         Bill billBefore = billRepository.findAllBillByBidIdWithExp(bidId).get(0);
         // 还账单操作
-        repayBill(billBefore, repayAmount, LocalDateTime.now());
+        repayBill(billBefore, repayAmount, transactionId, LocalDateTime.now());
 
         // 保存 t_loan_bid 标的表（主要是更新结清操作，部分还款不用更新）
         Bill billAfter = billRepository.findAllBillByBidIdWithExp(bidId).get(0);
@@ -302,14 +304,14 @@ public class RepayService {
      * @param realRepaymentTime 实际还款时间
      * @return 剩余金额
      */
-    private BigDecimal repayBill(Bill bill, BigDecimal repayAmount, LocalDateTime realRepaymentTime) {
+    private BigDecimal repayBill(Bill bill, BigDecimal repayAmount, Long transactionId, LocalDateTime realRepaymentTime) {
         Long billId = bill.getId();
         // 还逾期费
-        BigDecimal restAmount1 = repayBillLedger(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode().intValue(), repayAmount, realRepaymentTime);
+        BigDecimal restAmount1 = repayBillLedger(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode().intValue(), repayAmount, transactionId, realRepaymentTime);
         // 还尾款
-        BigDecimal restAmount2 = repayBillLedger(billId, BillLedgerItemEnum.TAIL_FEE.getCode().intValue(), restAmount1, realRepaymentTime);
+        BigDecimal restAmount2 = repayBillLedger(billId, BillLedgerItemEnum.TAIL_FEE.getCode().intValue(), restAmount1, transactionId, realRepaymentTime);
         // 还本金
-        BigDecimal restAmount3 = repayBillLedger(billId, BillLedgerItemEnum.CORPUS.getCode().intValue(), restAmount2, realRepaymentTime);
+        BigDecimal restAmount3 = repayBillLedger(billId, BillLedgerItemEnum.CORPUS.getCode().intValue(), restAmount2, transactionId, realRepaymentTime);
         // 本次还款金额
         BigDecimal repayAmountNow = restAmount3.compareTo(Arith.ZERO) >= 0 ? repayAmount.subtract(restAmount3) : repayAmount;
         // 更新账单表
@@ -343,7 +345,7 @@ public class RepayService {
      * @param realRepaymentTime 实际还款时间
      * @return 剩余金额
      */
-    private BigDecimal repayBillLedger(Long billId, Integer item, BigDecimal repayAmount, LocalDateTime realRepaymentTime) {
+    private BigDecimal repayBillLedger(Long billId, Integer item, BigDecimal repayAmount, Long transactionId, LocalDateTime realRepaymentTime) {
         // 还款金额为0
         if (repayAmount == null || repayAmount.compareTo(Arith.ZERO) <= 0) {
             return BigDecimal.ZERO;
@@ -362,8 +364,7 @@ public class RepayService {
         // 保存 t_loan_user_repayment 还款记录表
         UserRepayment userRepayment = new UserRepayment();
         userRepayment.setId(IdentifierGenerator.nextId());
-        // 从threadLocal里面拿
-        userRepayment.setTransactionId(ThreadLocalUtil.get(USER_TRANCATIONID));
+        userRepayment.setTransactionId(transactionId);
         userRepayment.setBillId(billId);
         userRepayment.setRepaymentItem(item.byteValue());
         userRepayment.setRepaymentAmount(billItemNoRepay);
@@ -436,13 +437,14 @@ public class RepayService {
 
     /**
      * 还款页面标的详情
+     *
      * @param amount 还款金额
-     * @param bidId 标id
-     * @param flag  是否全部还清
+     * @param bidId  标id
+     * @param flag   是否全部还清
      * @return
      */
-    public LoanManagResponse findloanManagResponse(BigDecimal amount,Long bidId, boolean flag) {
-        return repayRepository.findloanManagResponse(amount,bidId, flag);
+    public LoanManagResponse findloanManagResponse(BigDecimal amount, Long bidId, boolean flag) {
+        return repayRepository.findloanManagResponse(amount, bidId, flag);
     }
 
     /**
@@ -511,15 +513,15 @@ public class RepayService {
     @Transactional(rollbackFor = Exception.class)
     public PayResponse repayment(RepaymentRequest request) throws Exception {
         //先查询交易信息比对数据
-        UserTransaction transaction=this.selectByKey(request.getPayId());
-        if(ObjectUtils.isEmpty(transaction)){
+        UserTransaction transaction = this.selectByKey(request.getPayId());
+        if (ObjectUtils.isEmpty(transaction)) {
             return PayResponse.getFailResponse();
         }
-        if(0 != transaction.getAmount().compareTo(request.getAmount())){
+        if (0 != transaction.getAmount().compareTo(request.getAmount())) {
             return PayResponse.getFailResponse();
         }
         //凭证图片与后缀数量必须相等
-        if(request.getBase64Imgs().length != request.getPicSuffixs().length){
+        if (request.getBase64Imgs().length != request.getPicSuffixs().length) {
             return PayResponse.getFailResponse();
         }
         PayResponse response = null;
@@ -529,7 +531,7 @@ public class RepayService {
         RepaymentCompleRequest compleRequest = new RepaymentCompleRequest();
         compleRequest.setMsisdn(RequestUtil.getGlobalUser().getMobile());
         compleRequest.setPayType(request.getMode().toLowerCase());
-        if(!request.getMode().equals(ComConsts.OTC)){
+        if (!request.getMode().equals(ComConsts.OTC)) {
             compleRequest.setBankType(transaction.getBank());
         }
         compleRequest.setPrice(transaction.getAmount());
@@ -580,14 +582,15 @@ public class RepayService {
                     // TODO 走资金流
                     this.afterRepayment(transaction, x);
                     //走信息流
-                    if(transaction.getRepaymentType().equals(TransactionTypeEnum.ALL_CLEAR.getCode())){
+                    if (transaction.getRepaymentType().equals(TransactionTypeEnum.ALL_CLEAR.getCode())) {
                         this.repayAll(new RepayAllRequest(transaction.getBidId()));
                     }
-                    if(transaction.getRepaymentType().equals(TransactionTypeEnum.PARTIAL_CLEARANCE.getCode())){
-                        this.repayPart(new RepayPartRequest(transaction.getBidId(),transaction.getAmount()));
+                    if (transaction.getRepaymentType().equals(TransactionTypeEnum.PARTIAL_CLEARANCE.getCode())) {
+                        this.repayPart(new RepayPartRequest(transaction.getBidId(), transaction.getAmount()));
                     }
                 }
-                response = JSON.parseObject(result, new TypeReference<PayResponse>() {});
+                response = JSON.parseObject(result, new TypeReference<PayResponse>() {
+                });
                 return response;
             }
         }

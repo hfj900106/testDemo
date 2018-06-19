@@ -10,6 +10,11 @@ public class RepayInfoFlowJob implements Serializable {
     private Long id;
 
     /**
+     * 交易表id
+     */
+    private Long transactionId;
+
+    /**
      * 标id
      */
     private Long bidId;
@@ -33,11 +38,6 @@ public class RepayInfoFlowJob implements Serializable {
      * 还款方式 1-全部结清 2-部分还款
      */
     private Byte repaymentType;
-
-    /**
-     * 还款流水号
-     */
-    private String requestseq;
 
     /**
      * 状态 1-待处理 2-处理失败 3-处理成功
@@ -72,6 +72,14 @@ public class RepayInfoFlowJob implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(Long transactionId) {
+        this.transactionId = transactionId;
     }
 
     public Long getBidId() {
@@ -112,14 +120,6 @@ public class RepayInfoFlowJob implements Serializable {
 
     public void setRepaymentType(Byte repaymentType) {
         this.repaymentType = repaymentType;
-    }
-
-    public String getRequestseq() {
-        return requestseq;
-    }
-
-    public void setRequestseq(String requestseq) {
-        this.requestseq = requestseq == null ? null : requestseq.trim();
     }
 
     public Byte getStatus() {
@@ -169,12 +169,12 @@ public class RepayInfoFlowJob implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
+        sb.append(", transactionId=").append(transactionId);
         sb.append(", bidId=").append(bidId);
         sb.append(", repaymentAmount=").append(repaymentAmount);
         sb.append(", realRepaymentTime=").append(realRepaymentTime);
         sb.append(", repaymentMode=").append(repaymentMode);
         sb.append(", repaymentType=").append(repaymentType);
-        sb.append(", requestseq=").append(requestseq);
         sb.append(", status=").append(status);
         sb.append(", times=").append(times);
         sb.append(", createTime=").append(createTime);
@@ -201,6 +201,11 @@ public class RepayInfoFlowJob implements Serializable {
             return this;
         }
 
+        public Builder transactionId(Long transactionId) {
+            obj.setTransactionId(transactionId);
+            return this;
+        }
+
         public Builder bidId(Long bidId) {
             obj.setBidId(bidId);
             return this;
@@ -223,11 +228,6 @@ public class RepayInfoFlowJob implements Serializable {
 
         public Builder repaymentType(Byte repaymentType) {
             obj.setRepaymentType(repaymentType);
-            return this;
-        }
-
-        public Builder requestseq(String requestseq) {
-            obj.setRequestseq(requestseq);
             return this;
         }
 
@@ -263,12 +263,12 @@ public class RepayInfoFlowJob implements Serializable {
 
     public enum Column {
         id("id"),
+        transactionId("transaction_id"),
         bidId("bid_id"),
         repaymentAmount("repayment_amount"),
         realRepaymentTime("real_repayment_time"),
         repaymentMode("repayment_mode"),
         repaymentType("repayment_type"),
-        requestseq("requestSeq"),
         status("status"),
         times("times"),
         createTime("create_time"),

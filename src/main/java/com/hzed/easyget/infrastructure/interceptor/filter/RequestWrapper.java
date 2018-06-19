@@ -1,9 +1,3 @@
-/**
- * MyRequestWrapper.java
- *
- * @screen
- * @author havery
- */
 package com.hzed.easyget.infrastructure.interceptor.filter;
 
 import lombok.Data;
@@ -41,6 +35,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
             stringBuilder.append(charBuffer, 0, bytesRead);
         }
         bufferedReader.close();
+        // 替换换行符和回车符
         body = stringBuilder.toString().replaceAll("\n|\t", "");
     }
 

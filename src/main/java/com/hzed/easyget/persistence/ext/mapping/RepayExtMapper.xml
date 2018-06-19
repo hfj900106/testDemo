@@ -23,10 +23,11 @@
     </select>
     <!--获取交易记录 根据交易id-->
     <select id="finduserTransBypaymentId" resultType="com.hzed.easyget.controller.model.PaymentCodeRequest">
-        SELECT
+           SELECT
         t.payment_id AS transactionId,
+        t.account AS  cardNo,
         t.amount AS price,
-        t.bank AS bankType
+        LOWER(t.bank) AS bankType
         from t_loan_user_transaction t where t.id=#{id}
     </select>
     <!--修改va码状态-->

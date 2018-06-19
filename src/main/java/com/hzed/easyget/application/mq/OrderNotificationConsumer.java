@@ -77,7 +77,7 @@ public class OrderNotificationConsumer implements ChannelAwareMessageListener {
                 UserTransaction userTr = transactionList.get(0);
                 //判断这个交易是否是 交易中
                 if (userTr.getStatus().intValue() == TransactionTypeEnum.IN_RANSACTION.getCode()) {
-                    //查询相应的推送任务信息
+                    //查询相应的推送任务信息s
                     tempId = tempTableRepository.findTempTableByBidNoAndName(userTr.getBidId(), ComConsts.PUSH_BANK_TASK);
                     //修改交易信息
                     transactionService.callBackupdateUserTrance(userTr, tempId);

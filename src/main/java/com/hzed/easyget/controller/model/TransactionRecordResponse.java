@@ -6,11 +6,11 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 返回教育记录
+ * 返回交易记录
  * @author hfj
  * @date 2018/6/4
  */
 @Data
 public class TransactionRecordResponse {
-    private List<UserTransaction> list ;
+    private List<TransactionVO> list ;
 }

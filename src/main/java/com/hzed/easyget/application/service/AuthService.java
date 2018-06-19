@@ -229,7 +229,7 @@ public class AuthService {
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
         map.put("imageFile", idCardBase64ImgStr);
-        RiskResponse riskResponse = restService.postJson(riskProp.getIdCardRecognitionUrl(), map, RiskResponse.class);
+        RiskResponse riskResponse = restService.postJson("http://10.10.20.202:9611/api/risk/core/ocr", map, RiskResponse.class);
         if (null == riskResponse) {
             throw new ComBizException(BizCodeEnum.ERROR_RISK__RESULT);
         }
@@ -256,7 +256,7 @@ public class AuthService {
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
         map.put("imageFile", faceBase64ImgStr);
-        RiskResponse riskResponse = restService.postJson(riskProp.getFaceRecognitionUrl(),map,RiskResponse.class);
+        RiskResponse riskResponse = restService.postJson("http://10.10.20.202:9611/api/risk/core/faceComparison",map,RiskResponse.class);
         if(((Boolean) riskResponse.getBody()).booleanValue()==false){
             log.error("人脸认证返回数据："+riskResponse.toString());
             throw new ComBizException(BizCodeEnum.FAIL_FACE_RECOGNITION);
@@ -320,7 +320,6 @@ public class AuthService {
             //照片上传
             String employeeCardPhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(),request.getPicSuffix());
             String workplacePhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(),request.getPicSuffix());
-
             GlobalUser user = getGlobalUser();
             Work work = new Work();
             work.setId(IdentifierGenerator.nextId());

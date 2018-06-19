@@ -57,6 +57,7 @@ thirdParty:
 
 #======================================= 系统参数 开始 =======================================#
 system:
+  imgUploadPath: c:/imgUpload # 上传图片文件目录
   tokenExpire: 7 # token失效时间 7 天
   expected_audit_time_interval: 1440 #预计审核时间间隔 单位分
   expected_lending_time_interval: 60 #预计放款时间间隔 单位分
@@ -64,8 +65,8 @@ system:
   job:
     pushBid: false # 推送资产
     pushBidCron: 0/5 * * * * ?
-    bankLoan: true # 放款
+    bankLoan: false # 放款
     bankLoanCron: 0/5 * * * * ?
-  imgUploadPath: c:/imgUpload # 上传图片文件目录
+
 
 #======================================= 系统参数 结束 =======================================#

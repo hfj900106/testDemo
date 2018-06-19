@@ -54,7 +54,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
                 }
             }
         }
-        body = stringBuilder.toString();
+        body = stringBuilder.toString().replaceAll("\n|\t", "");
     }
 
     @Override

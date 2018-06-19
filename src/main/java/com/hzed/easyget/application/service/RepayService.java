@@ -12,7 +12,6 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.PayResponse;
-import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.Arith;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -20,8 +19,6 @@ import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.ThreadLocalUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
-import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
-import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -255,19 +252,6 @@ public class RepayService {
         long userTrancationId = IdentifierGenerator.nextId();
         // 放入threadLocal后面要用
         ThreadLocalUtil.set(USER_TRANCATIONID, userTrancationId);
-        // TODO
-//        UserTransaction userTransaction = new UserTransaction();
-//        userTransaction.setId(userTrancationId);
-//        userTransaction.setUserId(RequestUtil.getGlobalUser().getUserId());
-//        userTransaction.setBidId(bidId);
-//        userTransaction.setType(TransactionTypeEnum.OUT.getCode().byteValue());
-//        userTransaction.setAmount(repayAmount);
-//        userTransaction.setRequestSeq(requestSeq);
-//        userTransaction.setBank(bid.getInBank());
-//        userTransaction.setAccount(bid.getInAccount());
-//        userTransaction.setMode((byte) 1);
-//        userTransaction.setIsDisplay(true);
-//        userTransactionRepository.insert(userTransaction);
 
         // 保存 t_loan_bid_progress 标的进度表
         BidProgress progressInsert = new BidProgress();

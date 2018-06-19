@@ -30,6 +30,8 @@ token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIx
 ###
 GET http://localhost:8150/hzed/easy-get/api/dict/clearCache/tesetModule/testKey
 
-###
+### 获取广告产品列表
+POST http://localhost:8150/hzed/easy-get/api/ads/getAdsProductList
 
+###
 

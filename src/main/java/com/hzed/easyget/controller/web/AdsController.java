@@ -27,7 +27,7 @@ public class AdsController {
 
     @ModuleFunc("获取广告产品列表")
     @PostMapping("/getAdsProductList")
-    public List<AdsProductResponse> getAdsProductList(){
+    public List<AdsProductResponse> getAdsProductList() {
         return adsService.getAdsProductList();
     }
 }

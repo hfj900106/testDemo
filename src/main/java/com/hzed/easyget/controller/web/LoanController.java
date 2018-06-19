@@ -8,6 +8,7 @@ import com.hzed.easyget.controller.model.SubmitLoanResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,14 +30,14 @@ public class LoanController {
     private LoanService loanService;
 
     @ModuleFunc("借款详情")
-    @RequestMapping("/loanDetail")
+    @PostMapping("/loanDetail")
     public LoanDetailResponse loanDetail(@Valid @RequestBody LoanDetailRequest request) {
 
         return loanService.loanDetail(request);
     }
 
     @ModuleFunc("申请借款")
-    @RequestMapping("/submitLoan")
+    @PostMapping("/submitLoan")
     public SubmitLoanResponse submitLoan(@Valid @RequestBody SubmitLoanRequest request) {
         return loanService.submitLoan(request);
     }

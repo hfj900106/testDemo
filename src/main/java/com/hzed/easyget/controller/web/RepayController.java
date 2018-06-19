@@ -33,7 +33,7 @@ public class RepayController {
     private ComService comService;
 
     @ModuleFunc("还款列表")
-    @GetMapping("/repaidList")
+    @PostMapping("/repaidList")
     public RepayListResponse repaidList() {
         return repayService.repaidList();
     }
@@ -54,13 +54,13 @@ public class RepayController {
     }
 
     @ModuleFunc("还款详情")
-    @GetMapping("/repayDetail")
+    @PostMapping("/repayDetail")
     public Response<RepayDetailResponse> repayDetail(@Valid @RequestBody RepayDetailRequest request){
         return Response.getSuccessResponse(repayService.repayDetail(request));
     }
 
     @ModuleFunc("部分还款详情")
-    @RequestMapping("/repayPartDetail")
+    @PostMapping("/repayPartDetail")
     public Response<RepayPartDetailResponse> repayPartDetail(@Valid @RequestBody RepayPartDetailRequest request){
         return Response.getSuccessResponse(repayService.repayPartDetail(request));
     }
@@ -89,13 +89,13 @@ public class RepayController {
     }
 
     @ModuleFunc("获取VA码")
-    @RequestMapping("/vaInfoDetail")
+    @PostMapping("/vaInfoDetail")
     public TransactionVAResponse vaInfoDetail(@Valid @RequestBody TransactionVARequest request){
         TransactionVAResponse vaResponse=repayService.findVATranc(request);
         return vaResponse;
     }
     @ModuleFunc("还款接口")
-    @RequestMapping("/repayment")
+    @PostMapping("/repayment")
     public Response repayment(@Valid @RequestBody RepaymentRequest request) throws Exception {
         PayResponse response= repayService.repayment(request);
         return Response.getSuccessResponse(response);

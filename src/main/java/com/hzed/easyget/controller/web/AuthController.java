@@ -90,16 +90,16 @@ public class AuthController {
         authService.professionalAuth(request);
     }
 
+    @HeaderIgnore
     @ModuleFunc("facebook认证")
     @PostMapping("/facebook")
-    @HeaderIgnore
     public void facebookAuth(@Valid @RequestBody FacebookRequest request) {
         authService.facebookAuth(request);
     }
 
+    @HeaderIgnore
     @ModuleFunc("ins认证")
     @PostMapping("/ins")
-    @HeaderIgnore
     public void insAuth(@Valid @RequestBody InsRequest request) {
         authService.insAuth(request);
     }

@@ -9,6 +9,7 @@ import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.utils.ComUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,7 +50,8 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         if (moduleFunc != null) {
             // 设置模块名
             MDC.put(LogConsts.MODULE_NAME, moduleFunc.value());
-            log.info("请求报文：{}", ComUtil.subString(request.getAttribute("body").toString(), moduleFunc.printParameterLength()));
+            String body = ComUtil.subString(request.getAttribute("body").toString(), moduleFunc.printParameterLength());
+            log.info("请求报文：{}", StringUtils.isBlank(body));
         }
 
         // 请求头忽略标志

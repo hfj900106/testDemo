@@ -12,6 +12,7 @@
     <result column="account" jdbcType="VARCHAR" property="account" />
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="repayment_type" jdbcType="TINYINT" property="repaymentType" />
+    <result column="confirm_time" jdbcType="TIMESTAMP" property="confirmTime" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -78,7 +79,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, payment_id, user_id, bid_id, type, amount, bank, account, status, repayment_type, 
-    create_by, create_time, update_by, update_time, remark
+    confirm_time, create_by, create_time, update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample" resultMap="BaseResultMap">
     select
@@ -146,15 +147,15 @@
     insert into t_loan_user_transaction (id, payment_id, user_id, 
       bid_id, type, amount, 
       bank, account, status, 
-      repayment_type, create_by, create_time, 
-      update_by, update_time, remark
-      )
+      repayment_type, confirm_time, create_by, 
+      create_time, update_by, update_time, 
+      remark)
     values (#{id,jdbcType=BIGINT}, #{paymentId,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
       #{bidId,jdbcType=BIGINT}, #{type,jdbcType=TINYINT}, #{amount,jdbcType=DECIMAL}, 
       #{bank,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
-      #{repaymentType,jdbcType=TINYINT}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
-      )
+      #{repaymentType,jdbcType=TINYINT}, #{confirmTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransaction">
     insert into t_loan_user_transaction
@@ -188,6 +189,9 @@
       </if>
       <if test="repaymentType != null">
         repayment_type,
+      </if>
+      <if test="confirmTime != null">
+        confirm_time,
       </if>
       <if test="createBy != null">
         create_by,
@@ -235,6 +239,9 @@
       </if>
       <if test="repaymentType != null">
         #{repaymentType,jdbcType=TINYINT},
+      </if>
+      <if test="confirmTime != null">
+        #{confirmTime,jdbcType=TIMESTAMP},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -292,6 +299,9 @@
       <if test="record.repaymentType != null">
         repayment_type = #{record.repaymentType,jdbcType=TINYINT},
       </if>
+      <if test="record.confirmTime != null">
+        confirm_time = #{record.confirmTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
       </if>
@@ -324,6 +334,7 @@
       account = #{record.account,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=TINYINT},
       repayment_type = #{record.repaymentType,jdbcType=TINYINT},
+      confirm_time = #{record.confirmTime,jdbcType=TIMESTAMP},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -363,6 +374,9 @@
       <if test="repaymentType != null">
         repayment_type = #{repaymentType,jdbcType=TINYINT},
       </if>
+      <if test="confirmTime != null">
+        confirm_time = #{confirmTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
       </if>
@@ -392,6 +406,7 @@
       account = #{account,jdbcType=VARCHAR},
       status = #{status,jdbcType=TINYINT},
       repayment_type = #{repaymentType,jdbcType=TINYINT},
+      confirm_time = #{confirmTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
@@ -428,15 +443,15 @@
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_user_transaction
     (id, payment_id, user_id, bid_id, type, amount, bank, account, status, repayment_type, 
-      create_by, create_time, update_by, update_time, remark)
+      confirm_time, create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.paymentId,jdbcType=VARCHAR}, #{item.userId,jdbcType=BIGINT}, 
         #{item.bidId,jdbcType=BIGINT}, #{item.type,jdbcType=TINYINT}, #{item.amount,jdbcType=DECIMAL}, 
         #{item.bank,jdbcType=VARCHAR}, #{item.account,jdbcType=VARCHAR}, #{item.status,jdbcType=TINYINT}, 
-        #{item.repaymentType,jdbcType=TINYINT}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
-        )
+        #{item.repaymentType,jdbcType=TINYINT}, #{item.confirmTime,jdbcType=TIMESTAMP}, 
+        #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -478,6 +493,9 @@
         </if>
         <if test="'repayment_type' == column.value">
           #{item.repaymentType,jdbcType=TINYINT}
+        </if>
+        <if test="'confirm_time' == column.value">
+          #{item.confirmTime,jdbcType=TIMESTAMP}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

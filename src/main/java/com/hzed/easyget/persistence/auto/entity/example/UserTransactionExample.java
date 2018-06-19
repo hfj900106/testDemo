@@ -3,6 +3,7 @@ package com.hzed.easyget.persistence.auto.entity.example;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class UserTransactionExample {
@@ -789,6 +790,66 @@ public class UserTransactionExample {
 
         public Criteria andRepaymentTypeNotBetween(Byte value1, Byte value2) {
             addCriterion("repayment_type not between", value1, value2, "repaymentType");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfirmTimeIsNull() {
+            addCriterion("confirm_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfirmTimeIsNotNull() {
+            addCriterion("confirm_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfirmTimeEqualTo(Date value) {
+            addCriterion("confirm_time =", value, "confirmTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfirmTimeNotEqualTo(Date value) {
+            addCriterion("confirm_time <>", value, "confirmTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfirmTimeGreaterThan(Date value) {
+            addCriterion("confirm_time >", value, "confirmTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfirmTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("confirm_time >=", value, "confirmTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfirmTimeLessThan(Date value) {
+            addCriterion("confirm_time <", value, "confirmTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfirmTimeLessThanOrEqualTo(Date value) {
+            addCriterion("confirm_time <=", value, "confirmTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfirmTimeIn(List<Date> values) {
+            addCriterion("confirm_time in", values, "confirmTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfirmTimeNotIn(List<Date> values) {
+            addCriterion("confirm_time not in", values, "confirmTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfirmTimeBetween(Date value1, Date value2) {
+            addCriterion("confirm_time between", value1, value2, "confirmTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfirmTimeNotBetween(Date value1, Date value2) {
+            addCriterion("confirm_time not between", value1, value2, "confirmTime");
             return (Criteria) this;
         }
 

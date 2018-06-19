@@ -1,16 +1,13 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.application.enums.TransactionRepayEnum;
+import com.hzed.easyget.application.enums.RepayFlowJobEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
-import com.hzed.easyget.persistence.auto.mapper.UserPicMapper;
-import com.hzed.easyget.persistence.auto.mapper.UserTransactionMapper;
-import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper;
-import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayPicMapper;
+import com.hzed.easyget.persistence.auto.mapper.*;
 import com.hzed.easyget.persistence.ext.mapper.RepayExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,6 +16,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**还款 仓储类
@@ -33,15 +31,13 @@ public class RepayRepository {
     @Autowired
     private UserTransactionRepository userTransactionRepository;
     @Autowired
-    private UserTransactionMapper userTransactionMapper;
-    @Autowired
     private BidRepository bidRepository;
     @Autowired
     private UserTransactionRepayMapper repayMapper;
     @Autowired
-    private UserPicMapper userPicMapper;
+    private UserTransactionPicMapper picMapper;
     @Autowired
-    private UserTransactionRepayPicMapper transactionRepayPicMapper;
+    private RepayInfoFlowJobMapper repayInfoFlowJobMapper;
     /**
      * 还款详情
      * @param bidId
@@ -73,7 +69,6 @@ public class RepayRepository {
             userTransactionRepository.insertSelective(trance);
         }else {
             trance.setAmount(amount);
-            trance.setCreateTime(LocalDateTime.now());
             trance.setRemark(flag?"全部还款":"部分还款");
             userTransactionRepository.transactionUpdateByKey(trance);
         }
@@ -113,13 +108,6 @@ public class RepayRepository {
         repayMapper.insertSelective(repay);
     }
 
-    /**
-     * 生成凭证pic记录
-     * @param userPic
-     */
-    public void userPicinsertSelective(UserPic userPic) {
-        userPicMapper.insertSelective(userPic);
-    }
 
     /**
      * 获取所有的va码记录
@@ -131,58 +119,43 @@ public class RepayRepository {
     }
 
     /**
-     * va码应的凭证
-     */
-    public void picinsertSelective(UserTransactionRepayPic repayPic) {
-        transactionRepayPicMapper.insertSelective(repayPic);
-    }
-
-    /**
-     * 修改va码状态 处理中
-     * @param x
-     */
-    public void updateUserTransacRepayState(UserTransactionRepay x) {
-        x.setStatus(TransactionRepayEnum.PROCESS_PROCESSING.getCode().byteValue());
-        userTransactionRepository.updateUserTransacRepayState(x);
-    }
-
-    /**
      * 还款完成走资金流
      */
     @Transactional(rollbackFor = Exception.class)
-    public void afterRepayment(UserTransaction transaction, UserTransactionRepay x) {
+    public void afterRepayment(UserTransaction transaction) {
+        //修改交易记录
         transaction.setStatus(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue());
         transaction.setUpdateTime(LocalDateTime.now());
         userTransactionRepository.transactionUpdateByKey(transaction);
-        x.setStatus(TransactionRepayEnum.PROCESS_SUCCESS.getCode().byteValue());
-        x.setConfirmTime(LocalDateTime.now());
-        repayMapper.updateByPrimaryKey(x);
+        //插入还款定时任务
+        RepayInfoFlowJob repayInfoFlowJob=RepayInfoFlowJob.builder()
+                .id(IdentifierGenerator.nextId())
+                .createTime(LocalDateTime.now())
+                .transactionId(transaction.getId())
+                .bidId(transaction.getBidId())
+                .repaymentAmount(transaction.getAmount())
+                .realRepaymentTime(LocalDateTime.now())
+                .repaymentMode(RepayFlowJobEnum.UNDER_LINE.getCode().byteValue())
+                .repaymentType(transaction.getRepaymentType()).build();
+        repayInfoFlowJobMapper.insertSelective(repayInfoFlowJob);
+
     }
 
     /**
-     * 根据交易id获取对应的va码信息
+     * 保存交易凭证
+     * @param repayPic
+     */
+    public void picinsertSelective(UserTransactionPic repayPic) {
+        picMapper.insertSelective(repayPic);
+    }
+
+    /**
+     * 修改交
      * @param id
-     * @return
+     * @param now
      */
-    public UserTransactionRepay findRepayTrans(Long id) {
-        UserTransactionRepayExample repayExample=new UserTransactionRepayExample();
-        repayExample.createCriteria()
-                .andTransactionIdEqualTo(id)
-                .andStatusEqualTo(TransactionRepayEnum.PROCESS_PROCESSING.getCode().byteValue());
-        return repayMapper.selectByExample(repayExample).get(0);
-    }
-
-    /**
-     * 修改对应va码记录状态
-     * @param t_id
-     * @param b
-     */
-    public void updateUserepyTranState(String t_id, byte b) {
-        UserTransactionExample transactionExample=new UserTransactionExample();
-        transactionExample.createCriteria()
-                .andPaymentIdEqualTo(t_id)
-                .andTypeEqualTo(TransactionTypeEnum.OUT.getCode().byteValue());
-        UserTransaction transaction=userTransactionMapper.selectOneByExample(transactionExample);
-        repayExtMapper.updateByPaymenid(transaction.getId(),b);
+    public void updateConfirmTime(Long id, Date now) {
+        UserTransaction userTransaction=UserTransaction.builder().id(id).confirmTime(now).build();
+        userTransactionRepository.transactionUpdateByKey(userTransaction);
     }
 }

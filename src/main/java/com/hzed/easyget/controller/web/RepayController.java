@@ -94,7 +94,7 @@ public class RepayController {
         TransactionVAResponse vaResponse=repayService.findVATranc(request);
         return vaResponse;
     }
-    @ModuleFunc("还款接口")
+    @ModuleFunc("还款接口(测试环境专用)")
     @RequestMapping("/repayment")
     public Response repayment(@Valid @RequestBody RepaymentRequest request) throws Exception {
         PayResponse response= repayService.repayment(request);

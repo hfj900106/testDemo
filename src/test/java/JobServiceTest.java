@@ -1,9 +1,7 @@
 import com.hzed.BootApplication;
-import com.hzed.easyget.application.enums.TransactionRepayEnum;
 import com.hzed.easyget.application.service.ComService;
 import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.controller.model.*;
-import com.hzed.easyget.infrastructure.config.PayProp;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
@@ -68,6 +66,19 @@ public class JobServiceTest {
     }
 
     /**
+     * 全部/部分借款返回页面详情
+     */
+    @Test
+    public void test09(){
+        RepayPartRequest request=new RepayPartRequest();
+        request.setBidId(104106546290114050L);
+        request.setRepayAmount(BigDecimal.valueOf(10000));
+        //BigDecimal amount=comService.getBidNoRepay(104106546290114050L, LocalDateTime.now());
+        LoanManagResponse managResponse=repayService.findloanManagResponse(BigDecimal.valueOf(20000),request.getBidId(),false);
+        System.out.println(managResponse);
+    }
+
+    /**
      *查询va码
      */
     @Test
@@ -84,7 +95,7 @@ public class JobServiceTest {
     @Test
     public  void test06(){
         TransactionVARequest request=new TransactionVARequest();
-        request.setPayId(108029825633361920L);
+        request.setPayId(108083038684323840L);
         request.setMode(ComConsts.ATM);
         TransactionVAResponse vaTranc = repayService.findVATranc(request);
         System.out.println(vaTranc);
@@ -96,30 +107,10 @@ public class JobServiceTest {
     @Test
     public  void test08() throws Exception{
         RepaymentRequest request=new RepaymentRequest();
-        request.setPayId(108029825633361920L);
+        request.setPayId(108083038684323840L);
         request.setMode(ComConsts.ATM);
         request.setAmount(BigDecimal.valueOf(20000.00));
         PayResponse vaTranc = repayService.repayment(request);
         System.out.println(vaTranc);
-    }
-
-    /**
-     * 还款失败修改va码记录
-     */
-    @Test
-    public  void test07(){
-        repayRepository.updateUserepyTranState("106630497559781377hzed",TransactionRepayEnum.PROCESS_FAIL.getCode().byteValue());
-    }
-    /**
-     * 全部/部分借款返回页面详情
-     */
-    @Test
-    public void test09(){
-        RepayPartRequest request=new RepayPartRequest();
-        request.setBidId(104106546290114050L);
-        request.setRepayAmount(BigDecimal.valueOf(10000));
-        BigDecimal amount=comService.getBidNoRepay(104106546290114050L, LocalDateTime.now());
-        LoanManagResponse managResponse=repayService.findloanManagResponse(amount,request.getBidId(),false);
-        System.out.println(managResponse);
     }
 }

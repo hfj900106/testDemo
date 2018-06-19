@@ -49,5 +49,9 @@ public class RepaymentCompleRequest {
      */
     @NotBlank(message = "请求流水号不能为空")
     private String requestNo;
-
+    /**
+     * 付款账号
+     */
+    @NotBlank(message = "付款账号不能为空")
+    private String cardNo;
 }

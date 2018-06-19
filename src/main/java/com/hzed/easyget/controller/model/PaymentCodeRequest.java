@@ -36,4 +36,9 @@ public class PaymentCodeRequest {
      * 银行类型
      */
     private String bankType;
+    /**
+     * 付款账号
+     */
+    @NotBlank(message = "付款账号不能为空")
+    private String cardNo;
 }

@@ -1,5 +1,6 @@
 package com.hzed.easyget.controller.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
  */
 
 @Data
+@AllArgsConstructor
 public class RepayAllRequest {
     @NotNull(message = "{param.repay.bidId.isNotEmpty}")
     private Long bidId;

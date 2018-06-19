@@ -1,7 +1,14 @@
 import com.hzed.BootApplication;
+import com.hzed.easyget.application.enums.TransactionRepayEnum;
+import com.hzed.easyget.application.service.RepayService;
+import com.hzed.easyget.controller.model.LoanManagResponse;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
+import com.hzed.easyget.controller.model.TransactionVARequest;
+import com.hzed.easyget.controller.model.TransactionVAResponse;
 import com.hzed.easyget.infrastructure.config.PayProp;
+import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
+import com.hzed.easyget.infrastructure.repository.RepayRepository;
 import com.hzed.easyget.infrastructure.repository.UserTransactionRepository;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.ext.mapper.BidExtMapper;
@@ -28,7 +35,9 @@ public class JobServiceTest {
     @Autowired
     private BidExtMapper bidExtMapper;
     @Autowired
-    private PayProp payProp;
+    private RepayService repayService;
+    @Autowired
+    private RepayRepository repayRepository;
 
     @Test
     public void test(){
@@ -55,8 +64,43 @@ public class JobServiceTest {
         userTransaction.setPaymentId("103710541138501632");
         bidExtMapper.updateUserTranceOverstate(userTransaction);
     }
+
+    /**
+     * 全部借款返回
+     */
     @Test
     public  void test04(){
-        System.out.println(payProp.toString());
+        LoanManagResponse response=repayService.findloanManagResponse(104101327290114048L,true);
+        System.out.println(response);
+    }
+    /**
+     *查询va码
+     */
+    @Test
+    public  void test05(){
+        TransactionVARequest vaRequest=new TransactionVARequest();
+        vaRequest.setPayId(1L);
+        vaRequest.setMode(ComConsts.OTC);
+        TransactionVAResponse response=repayRepository.findVATranc(vaRequest);
+        System.out.println(response);
+    }
+    /**
+     *获取va码接口
+     */
+    @Test
+    public  void test06(){
+        TransactionVARequest request=new TransactionVARequest();
+        request.setPayId(106630497559781376L);
+        request.setMode(ComConsts.OTC);
+        TransactionVAResponse vaTranc = repayService.findVATranc(request);
+        System.out.println(vaTranc);
+    }
+
+    /**
+     * 还款失败修改va码记录
+     */
+    @Test
+    public  void test07(){
+        repayRepository.updateUserepyTranState("106630497559781377hzed",TransactionRepayEnum.PROCESS_FAIL.getCode().byteValue());
     }
 }

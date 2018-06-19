@@ -28,7 +28,13 @@ public class ComConsts {
      * 推送放款定时任务名
      */
     public static final String PUSH_BANK_TASK = "bankLoan";
-
-
+    /**
+     * 交易方式ATM
+     */
+    public static final String ATM="ATM";
+    /**
+     * 交易方式OTC
+     */
+    public static final String OTC="OTC";
 
 }

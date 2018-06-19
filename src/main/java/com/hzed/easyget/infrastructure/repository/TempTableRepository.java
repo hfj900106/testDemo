@@ -58,7 +58,7 @@ public class TempTableRepository {
         bidProgressMapper.insertSelective(bidProgress);
         billMapper.insertSelective(bill);
         //TODO
-        billLedgerMapper.batchInsertSelective(billLedgers);
+        billLedgerMapper.batchInsert(billLedgers);
         tempMapper.deleteByPrimaryKey(tempId);
         if(flag){
             transactionMapper.insertSelective(transaction);

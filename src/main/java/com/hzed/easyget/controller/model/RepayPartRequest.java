@@ -1,5 +1,6 @@
 package com.hzed.easyget.controller.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.DecimalMin;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
  */
 
 @Data
+@AllArgsConstructor
 public class RepayPartRequest {
     @NotNull(message = "{param.repay.bidId.isNotEmpty}")
     private Long bidId;

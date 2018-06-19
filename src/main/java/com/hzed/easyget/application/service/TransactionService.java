@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -58,7 +59,7 @@ public class TransactionService {
      * 放款
      */
     public PayResponse loanTransaction(LoanTransactionRequest request) {
-
+        List<String> listCode= Arrays.asList(BizCodeEnum.PROCESS_LENDING.getCode(),BizCodeEnum.SUCCESS.getCode(),BizCodeEnum.REPAYMENTS.getCode());
         log.info("支付放款接口请求报文：{}", JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
         if(result.equals(BizCodeEnum.TIMEOUT.getCode())){
@@ -67,8 +68,7 @@ public class TransactionService {
         log.info("支付放款接口返回报文：{}", result);
         PayResponse response=JSON.parseObject(result,new TypeReference<PayResponse>() {});
         //判断返回状态 0000 0001 0002
-        if (!BizCodeEnum.SUCCESS.equals(response.getCode()) || !BizCodeEnum.PROCESS_LENDING.equals(response.getCode()) || !BizCodeEnum.REPAYMENTS.equals(response.getCode())) {
-
+        if (!listCode.contains(response.getCode())) {
             throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, response.getMsg());
         }
         return response;
@@ -79,7 +79,6 @@ public class TransactionService {
      * 收款
      */
     public Response receiverTransaction(ReceiverTransactionRequest request) {
-
         log.info("支付收款接口请求报文：{}", FaJsonUtil.objToString(request));
         Response response = restService.postJson(prop.getReceiverTransactionUrl(), request, Response.class);
         log.info("支付收款接口返回报文：{}", FaJsonUtil.objToString(response));
@@ -102,11 +101,11 @@ public class TransactionService {
         //工厂类获取bill和billLedgers
         ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
         List<Bill> bills = product.createBills(bidInfo);
-        List<BillLedger> billLedgers = product.createBillLedger(bidInfo);
+        List<BillLedger> billLedgers = product.createBillLedger(bills.get(0),bidInfo);
         UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId,bidInfo.getInBank() ,bidInfo.getInAccount(),states,overTime );
         tempTableRepository.afterBankLoan(
                 Bid.builder().id(bidNo).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetProduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
-                BidProgress.builder().bidId(bidNo).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").build(),
+                BidProgress.builder().bidId(bidNo).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
                 bills.get(0),
                 billLedgers,
                 tempId,
@@ -180,11 +179,11 @@ public class TransactionService {
         //工厂类获取bill和billLedgers
         ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
         List<Bill> bills = product.createBills(bidInfo);
-        List<BillLedger> billLedgers = product.createBillLedger(bidInfo);
+        List<BillLedger> billLedgers = product.createBillLedger(bills.get(0),bidInfo);
         UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId,bidInfo.getInBank() ,bidInfo.getInAccount(),TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now() );
         tempTableRepository.afterBankLoan(
                 Bid.builder().id(bidNo).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetProduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
-                BidProgress.builder().bidId(bidNo).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").build(),
+                BidProgress.builder().bidId(bidNo).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
                 bills.get(0),
                 billLedgers,
                 tempId,

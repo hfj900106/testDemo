@@ -1,18 +1,24 @@
 package com.hzed.easyget.application.mq;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hzed.easyget.application.enums.TransactionRepayEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
+import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.application.service.TransactionService;
 import com.hzed.easyget.controller.model.BlueNotificationRequest;
+import com.hzed.easyget.controller.model.RepayAllRequest;
+import com.hzed.easyget.controller.model.RepayPartRequest;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BluePayStatusEnum;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
+import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
@@ -25,7 +31,7 @@ import java.util.List;
  * @date 2018年6月13日 下午6:10:40
  */
 @Slf4j
-//@Component
+@Component
 public class OrderNotificationConsumer implements ChannelAwareMessageListener {
 
     private FastJsonMessageConverter messageConverter;
@@ -33,6 +39,8 @@ public class OrderNotificationConsumer implements ChannelAwareMessageListener {
     private TempTableRepository tempTableRepository;
     @Autowired
     private TransactionService transactionService;
+    @Autowired
+    private RepayService repayService;
     /**
      * 放款标识
      */
@@ -45,17 +53,25 @@ public class OrderNotificationConsumer implements ChannelAwareMessageListener {
     @Override
     public void onMessage(Message message, Channel channel) throws Exception {
         BlueNotificationRequest bluePayRq = messageConverter.fromMessage(message, BlueNotificationRequest.class);
-        log.info("放款回调，bluepay端返回信息{}", JSONObject.toJSONString(bluePayRq));
+        log.info("放款/还款回调，bluepay端返回信息{}", JSONObject.toJSONString(bluePayRq));
         //判断是否交易完成
         Long tempId = 0L;
+        //过滤处理中
+        if(bluePayRq.getStatus().equals(BluePayStatusEnum.OK.getKey())){
+            log.info("放款/还款bluepay端正在处理中！");
+            return;
+        }
+        //过滤失败直接修改交易记录
+        if(!bluePayRq.getStatus().equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())){
+            transactionService.updateUserTranState(bluePayRq.getT_id(),TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
+            repayService.updateUserepyTranState(bluePayRq.getT_id(), TransactionRepayEnum.PROCESS_FAIL.getCode().byteValue());
+            log.info("放款bluepay端返回处理失败{}",BluePayStatusEnum.getPayStatusEnum(bluePayRq.getStatus()));
+            return;
+        }
+        //放款
+        //获取交易id 判断是否合法
+        List<UserTransaction> transactionList = transactionService.findUserTranBypayMenid(bluePayRq.getT_id());
         if (bluePayRq.getInterfacetype().equals(CASHOUT)) {
-            //交易失败直接修改交易记录
-            if(!bluePayRq.getStatus().equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())){
-                transactionService.updateUserTranState(bluePayRq.getT_id(),TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
-                return;
-            }
-            //获取交易id 判断是否合法
-            List<UserTransaction> transactionList = transactionService.findUserTranBypayMenid(bluePayRq.getT_id());
             if (!ObjectUtils.isEmpty(transactionList)) {
                 //判断是否交易成功 防止重复交易
                 UserTransaction userTr = transactionList.get(0);
@@ -65,13 +81,29 @@ public class OrderNotificationConsumer implements ChannelAwareMessageListener {
                     tempId = tempTableRepository.findTempTableByBidNoAndName(userTr.getBidId(), ComConsts.PUSH_BANK_TASK);
                     //修改交易信息
                     transactionService.callBackupdateUserTrance(userTr, tempId);
+                    log.info("放款bluepay端返回处理成功，本地处理成功");
                 }
             }
+        //还款
         } else if ( bluePayRq.getInterfacetype().equals(BANK)) {
-            //还款失败
-            if(!bluePayRq.getStatus().equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())){
-                transactionService.updateUserTranState(bluePayRq.getT_id(),TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
-                return;
+            if (!ObjectUtils.isEmpty(transactionList)) {
+                //判断是否交易成功 防止重复交易
+                UserTransaction userTr = transactionList.get(0);
+                //判断这个交易是否是 交易中
+                if (userTr.getStatus().intValue() == TransactionTypeEnum.IN_RANSACTION.getCode()) {
+                    //TODO 走资金流
+                    UserTransactionRepay repay=repayService.findRepayTrans(userTr.getId());
+                    repayService.afterRepayment(userTr,repay);
+                    //全部结清
+                    if(userTr.getRepaymentType().equals(TransactionTypeEnum.ALL_CLEAR.getCode())){
+                        repayService.repayAll(new RepayAllRequest(userTr.getBidId()));
+                    }
+                    //部分结清
+                    if(userTr.getRepaymentType().equals(TransactionTypeEnum.PARTIAL_CLEARANCE.getCode())){
+                        repayService.repayPart(new RepayPartRequest(userTr.getBidId(),userTr.getAmount()));
+                    }
+                    log.info("还款bluepay端返回处理成功，本地处理成功");
+                }
             }
         }
     }

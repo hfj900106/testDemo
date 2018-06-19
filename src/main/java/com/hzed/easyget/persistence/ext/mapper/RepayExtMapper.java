@@ -38,4 +38,11 @@ public interface RepayExtMapper {
      * @return
      */
     PaymentCodeRequest finduserTransBypaymentId(@Param("id") Long id);
+
+    /**
+     * 修改va码状态
+     * @param id
+     * @param b
+     */
+    void updateByPaymenid(@Param("id") Long id,@Param("b") byte b);
 }

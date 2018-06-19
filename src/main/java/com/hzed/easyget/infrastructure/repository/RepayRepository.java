@@ -5,8 +5,10 @@ import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
 import com.hzed.easyget.persistence.auto.mapper.UserPicMapper;
+import com.hzed.easyget.persistence.auto.mapper.UserTransactionMapper;
 import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper;
 import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayPicMapper;
 import com.hzed.easyget.persistence.ext.mapper.RepayExtMapper;
@@ -29,6 +31,8 @@ public class RepayRepository {
     private RepayExtMapper repayExtMapper;
     @Autowired
     private UserTransactionRepository userTransactionRepository;
+    @Autowired
+    private UserTransactionMapper userTransactionMapper;
     @Autowired
     private BidRepository bidRepository;
     @Autowired
@@ -158,5 +162,19 @@ public class RepayRepository {
                 .andTransactionIdEqualTo(id)
                 .andStatusEqualTo(TransactionRepayEnum.PROCESS_PROCESSING.getCode().byteValue());
         return repayMapper.selectByExample(repayExample).get(0);
+    }
+
+    /**
+     * 修改对应va码记录状态
+     * @param t_id
+     * @param b
+     */
+    public void updateUserepyTranState(String t_id, byte b) {
+        UserTransactionExample transactionExample=new UserTransactionExample();
+        transactionExample.createCriteria()
+                .andPaymentIdEqualTo(t_id)
+                .andTypeEqualTo(TransactionTypeEnum.OUT.getCode().byteValue());
+        UserTransaction transaction=userTransactionMapper.selectOneByExample(transactionExample);
+        repayExtMapper.updateByPaymenid(transaction.getId(),b);
     }
 }

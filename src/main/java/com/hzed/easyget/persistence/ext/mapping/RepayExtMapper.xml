@@ -29,4 +29,8 @@
         t.bank AS bankType
         from t_loan_user_transaction t where t.id=#{id}
     </select>
+    <!--修改va码状态-->
+    <update id="updateByPaymenid">
+        UPDATE t_loan_user_transaction_repay set status=#{b} where transaction_id=#{id}
+    </update>
 </mapper>

@@ -95,4 +95,12 @@ public class JobServiceTest {
         TransactionVAResponse vaTranc = repayService.findVATranc(request);
         System.out.println(vaTranc);
     }
+
+    /**
+     * 还款失败修改va码记录
+     */
+    @Test
+    public  void test07(){
+        repayRepository.updateUserepyTranState("106630497559781377hzed",TransactionRepayEnum.PROCESS_FAIL.getCode().byteValue());
+    }
 }

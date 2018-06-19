@@ -612,4 +612,13 @@ public class RepayService {
     public UserTransactionRepay findRepayTrans(Long id) {
        return repayRepository.findRepayTrans(id);
     }
+
+    /**
+     * 修改处理失败
+     * @param t_id
+     * @param b
+     */
+    public void updateUserepyTranState(String t_id, byte b) {
+        repayRepository.updateUserepyTranState(t_id,b);
+    }
 }

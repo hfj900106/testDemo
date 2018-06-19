@@ -44,6 +44,11 @@ public class Dict implements Serializable {
     private Integer orderby;
 
     /**
+     * 语言 zh-CH-中文 id-ID-印尼文
+     */
+    private String language;
+
+    /**
      */
     private Long createBy;
 
@@ -129,6 +134,14 @@ public class Dict implements Serializable {
         this.orderby = orderby;
     }
 
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language == null ? null : language.trim();
+    }
+
     public Long getCreateBy() {
         return createBy;
     }
@@ -183,6 +196,7 @@ public class Dict implements Serializable {
         sb.append(", moduleName=").append(moduleName);
         sb.append(", moduleCode=").append(moduleCode);
         sb.append(", orderby=").append(orderby);
+        sb.append(", language=").append(language);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -244,6 +258,11 @@ public class Dict implements Serializable {
             return this;
         }
 
+        public Builder language(String language) {
+            obj.setLanguage(language);
+            return this;
+        }
+
         public Builder createBy(Long createBy) {
             obj.setCreateBy(createBy);
             return this;
@@ -283,6 +302,7 @@ public class Dict implements Serializable {
         moduleName("module_name"),
         moduleCode("module_code"),
         orderby("orderby"),
+        language("language"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

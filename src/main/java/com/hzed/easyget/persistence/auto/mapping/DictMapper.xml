@@ -10,6 +10,7 @@
     <result column="module_name" jdbcType="VARCHAR" property="moduleName" />
     <result column="module_code" jdbcType="VARCHAR" property="moduleCode" />
     <result column="orderby" jdbcType="INTEGER" property="orderby" />
+    <result column="language" jdbcType="VARCHAR" property="language" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -76,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, dic_name, dic_code, dic_value, dic_label, module_name, module_code, orderby, 
-    create_by, create_time, update_by, update_time, remark
+    language, create_by, create_time, update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.DictExample" resultMap="BaseResultMap">
     select
@@ -143,14 +144,14 @@
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.Dict">
     insert into t_loan_dict (id, dic_name, dic_code, 
       dic_value, dic_label, module_name, 
-      module_code, orderby, create_by, 
-      create_time, update_by, update_time, 
-      remark)
+      module_code, orderby, language, 
+      create_by, create_time, update_by, 
+      update_time, remark)
     values (#{id,jdbcType=BIGINT}, #{dicName,jdbcType=VARCHAR}, #{dicCode,jdbcType=VARCHAR}, 
       #{dicValue,jdbcType=VARCHAR}, #{dicLabel,jdbcType=VARCHAR}, #{moduleName,jdbcType=VARCHAR}, 
-      #{moduleCode,jdbcType=VARCHAR}, #{orderby,jdbcType=INTEGER}, #{createBy,jdbcType=BIGINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{remark,jdbcType=VARCHAR})
+      #{moduleCode,jdbcType=VARCHAR}, #{orderby,jdbcType=INTEGER}, #{language,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.Dict">
     insert into t_loan_dict
@@ -178,6 +179,9 @@
       </if>
       <if test="orderby != null">
         orderby,
+      </if>
+      <if test="language != null">
+        language,
       </if>
       <if test="createBy != null">
         create_by,
@@ -219,6 +223,9 @@
       </if>
       <if test="orderby != null">
         #{orderby,jdbcType=INTEGER},
+      </if>
+      <if test="language != null">
+        #{language,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -270,6 +277,9 @@
       <if test="record.orderby != null">
         orderby = #{record.orderby,jdbcType=INTEGER},
       </if>
+      <if test="record.language != null">
+        language = #{record.language,jdbcType=VARCHAR},
+      </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
       </if>
@@ -300,6 +310,7 @@
       module_name = #{record.moduleName,jdbcType=VARCHAR},
       module_code = #{record.moduleCode,jdbcType=VARCHAR},
       orderby = #{record.orderby,jdbcType=INTEGER},
+      language = #{record.language,jdbcType=VARCHAR},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -333,6 +344,9 @@
       <if test="orderby != null">
         orderby = #{orderby,jdbcType=INTEGER},
       </if>
+      <if test="language != null">
+        language = #{language,jdbcType=VARCHAR},
+      </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
       </if>
@@ -360,6 +374,7 @@
       module_name = #{moduleName,jdbcType=VARCHAR},
       module_code = #{moduleCode,jdbcType=VARCHAR},
       orderby = #{orderby,jdbcType=INTEGER},
+      language = #{language,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
@@ -396,14 +411,14 @@
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_dict
     (id, dic_name, dic_code, dic_value, dic_label, module_name, module_code, orderby, 
-      create_by, create_time, update_by, update_time, remark)
+      language, create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.dicName,jdbcType=VARCHAR}, #{item.dicCode,jdbcType=VARCHAR}, 
         #{item.dicValue,jdbcType=VARCHAR}, #{item.dicLabel,jdbcType=VARCHAR}, #{item.moduleName,jdbcType=VARCHAR}, 
-        #{item.moduleCode,jdbcType=VARCHAR}, #{item.orderby,jdbcType=INTEGER}, #{item.createBy,jdbcType=BIGINT}, 
-        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
-        #{item.remark,jdbcType=VARCHAR})
+        #{item.moduleCode,jdbcType=VARCHAR}, #{item.orderby,jdbcType=INTEGER}, #{item.language,jdbcType=VARCHAR}, 
+        #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -439,6 +454,9 @@
         </if>
         <if test="'orderby' == column.value">
           #{item.orderby,jdbcType=INTEGER}
+        </if>
+        <if test="'language' == column.value">
+          #{item.language,jdbcType=VARCHAR}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

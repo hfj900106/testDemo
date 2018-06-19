@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzed.easyget.persistence.ext.mapper.UserExtMapper">
+
+    <!--查询用户的逾期天数-->
+    <select id="queryOverdueDayByUId" resultType="com.hzed.easyget.persistence.ext.entity.UserExt">
+        SELECT CURDATE() - date(bill.repayment_time) AS overdueDay,bid.id bidId
+        FROM t_loan_bid bid
+        LEFT JOIN t_loan_bill bill ON bid.id = bill.bid_id
+        WHERE bid.`status` = 5 AND bid.user_id = #{id}
+    </select>
+
+    <!--查询用户的还款凭证-->
+    <select id="queryEvidences" resultType="string">
+        SELECT evidence_pic_url
+        FROM t_loan_user_transaction_repay_pic pic
+        LEFT JOIN t_loan_user_transaction_repay repay ON repay.id = pic.transaction_repay_id
+        LEFT JOIN t_loan_user_transaction trans ON trans.user_id = #{id}
+        WHERE trans.`status` = 1 AND trans.type = 2
+    </select>
+
+    <!--获取用户还款的VA码-->
+    <select id="queryVa" resultType="string">
+        SELECT repay.va from t_loan_user_transaction trans
+        LEFT JOIN t_loan_user_transaction_repay repay ON repay.transaction_id = trans.id
+		WHERE trans.`status` = 1 AND trans.type = 2 AND ( repay.`status` = 1 OR repay.`status` = 2 ) AND user_id = #{id}
+    </select>
+
+    <!--查询用户的还款交易流水id-->
+    <select id="queryTransactionId" resultType="long">
+        SELECT id
+        FROM t_loan_user_transaction
+        WHERE type = 2 AND status = 1
+        AND user_id = #{id}
+    </select>
+
+</mapper>
+

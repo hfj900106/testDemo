@@ -5,6 +5,7 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
+import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,6 +72,13 @@ public class HomeController {
     @GetMapping("/checkJump")
     public void checkJump() {
         homeService.checkJump();
+    }
+
+    @ModuleFunc("检测首页弹框提醒")
+    @PostMapping("/homeAlert")
+    public Response<HomePageResponse> homeAlert(){
+        HomePageResponse response = homeService.homeAlert();
+        return Response.getSuccessResponse(response);
     }
 
 }

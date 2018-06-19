@@ -92,32 +92,34 @@ public class RestService {
         T result = restTemplate.getForObject(url, clazz);
         return result;
     }
+
     /**
      * httpPost请求
-     * @param url 请求地址
+     *
+     * @param url  请求地址
      * @param json 请求参数
      * @return
      */
-    public  String doPostJson(String url,String json){
+    public String doPostJson(String url, String json) {
         CloseableHttpClient http = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
-        String result=null;
+        String result = null;
         try {
             httpPost.setHeader("Content-Type", "appplication/json");
             if (StringUtils.isNotBlank(json)) {
                 httpPost.setEntity(new StringEntity(json, "utf-8"));
             }
             CloseableHttpResponse response = http.execute(httpPost);
-            if(response != null){
+            if (response != null) {
                 org.apache.http.HttpEntity resEntity = response.getEntity();
-                if(resEntity != null){
-                    result = EntityUtils.toString(resEntity,"utf-8");
+                if (resEntity != null) {
+                    result = EntityUtils.toString(resEntity, "utf-8");
                 }
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             result = BizCodeEnum.TIMEOUT.getCode();
-        }finally{
+        } finally {
             httpPost.releaseConnection();
         }
         return result;

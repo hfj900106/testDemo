@@ -4,6 +4,8 @@ import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.auto.entity.example.UserExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.mapper.*;
+import com.hzed.easyget.persistence.ext.entity.UserExt;
+import com.hzed.easyget.persistence.ext.mapper.UserExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,8 @@ public class UserRepository {
     private UserLoginMapper loginMapper;
     @Autowired
     private UserStatusMapper statusMapper;
+    @Autowired
+    private UserExtMapper userExtMapper;
 
     public User findByMobile(String mobile) {
         UserExample example = new UserExample();
@@ -85,5 +89,21 @@ public class UserRepository {
     public void insertUserAndStatus(User user, UserStatus status) {
         userMapper.insertSelective(user);
         statusMapper.insertSelective(status);
+    }
+
+    public UserExt queryOverdueDay(Long userId) {
+        return userExtMapper.queryOverdueDayByUId(userId);
+    }
+
+    public List<String> queryEvidences(Long userId) {
+        return userExtMapper.queryEvidences(userId);
+    }
+
+    public String queryVa(Long userId) {
+        return userExtMapper.queryVa(userId);
+    }
+
+    public Long queryTransactionId(Long userId) {
+        return userExtMapper.queryTransactionId(userId);
     }
 }

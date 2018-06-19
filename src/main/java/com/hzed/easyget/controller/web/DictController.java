@@ -4,10 +4,10 @@ import com.hzed.easyget.application.service.DictService;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-import com.hzed.easyget.infrastructure.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,11 +28,10 @@ public class DictController {
 
     @HeaderIgnore
     @ModuleFunc("清除字典缓存")
-    @PostMapping("/clearCache")
-    public Response discardsCache(String key) {
-        return Response.getSuccessResponse();
+    @GetMapping("/clearCache/{module}/{key}")
+    public void discardsCache(@PathVariable String module, @PathVariable String key) {
+        System.out.println("========module:" + module + "=========" + key + "=========");
     }
-
 
 
 }

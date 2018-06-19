@@ -52,4 +52,18 @@ public class DictRepository {
 
     }
 
+    public List<Dict> findByModuleCodeAndLanguageWithExp(String moduleCode,String language) {
+        DictExample example = new DictExample();
+        example.setOrderByClause("orderby asc");
+        example.createCriteria().andModuleCodeEqualTo(moduleCode).andLanguageEqualTo(language);
+
+        List<Dict> dicts = dictMapper.selectByExample(example);
+
+        if (dicts == null || dicts.isEmpty()) {
+            throw new ComBizException(BizCodeEnum.DICT_NOTEXISTS);
+        }
+        return dicts;
+
+    }
+
 }

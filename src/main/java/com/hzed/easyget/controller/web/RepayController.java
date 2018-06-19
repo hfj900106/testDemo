@@ -6,7 +6,6 @@ import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
@@ -37,7 +36,7 @@ public class RepayController {
     private ComService comService;
 
     @ModuleFunc("还款列表")
-    @PostMapping("/repaidList")
+    @GetMapping("/repaidList")
     public RepayListResponse repaidList() {
         return repayService.repaidList();
     }

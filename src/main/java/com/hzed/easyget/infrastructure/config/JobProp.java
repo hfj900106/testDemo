@@ -16,4 +16,6 @@ public class JobProp {
     private String pushBidCron;
     private boolean bankLoan;
     private String bankLoanCron;
+    private boolean repayInfoFlow;
+    private String repayInfoFlowCron;
 }

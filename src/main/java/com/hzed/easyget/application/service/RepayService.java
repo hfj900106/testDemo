@@ -19,6 +19,7 @@ import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -420,103 +421,147 @@ public class RepayService {
 
     /**
      * 还款页面标的详情
+     *
      * @param amount 还款金额
-     * @param bidId 标id
-     * @param flag  是否全部还清
+     * @param bidId  标id
+     * @param flag   是否全部还清
      * @return
      */
-    public LoanManagResponse findloanManagResponse(BigDecimal amount,Long bidId, boolean flag) {
-        return repayRepository.findloanManagResponse(amount,bidId, flag);
+    public LoanManagResponse findloanManagResponse(BigDecimal amount, Long bidId, boolean flag) {
+        LoanManagResponse managResponse = repayRepository.findloanManagResponse(bidId);
+        //查询标的信息
+        Bid bid = bidRepository.findById(bidId);
+        //先查询是否有交易记录
+        UserTransaction trance;
+        UserTransactionExample userTransactionExample = new UserTransactionExample();
+        userTransactionExample.createCriteria()
+                .andBidIdEqualTo(bidId)
+                .andTypeEqualTo(TransactionTypeEnum.OUT.getCode().byteValue())
+                .andStatusEqualTo(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
+                .andRepaymentTypeEqualTo(flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
+        trance = userTransactionRepository.findoldTrance(userTransactionExample);
+        if (ObjectUtils.isEmpty(trance)) {
+            //生成交易记录
+            trance = UserTransaction.builder()
+                    .id(IdentifierGenerator.nextId())
+                    .userId(bid.getUserId())
+                    .paymentId(IdentifierGenerator.nextSeqNo())
+                    .bank(bid.getInBank())
+                    .account(bid.getInAccount())
+                    .type(TransactionTypeEnum.OUT.getCode().byteValue())
+                    .amount(amount)
+                    .bidId(bidId)
+                    .status(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
+                    .repaymentType(flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue())
+                    .createTime(LocalDateTime.now())
+                    .remark(flag ? "全部还款" : "部分还款").build();
+            userTransactionRepository.insertSelective(trance);
+        } else {
+            trance.setAmount(amount);
+            trance.setRemark(flag ? "全部还款" : "部分还款");
+            userTransactionRepository.transactionUpdateByKey(trance);
+        }
+        //查询va码
+        LoanManagResponse vaCode = repayRepository.getVACode(trance.getId());
+        if (!ObjectUtils.isEmpty(vaCode)) {
+            managResponse.setVaCodel(vaCode.getVaCodel());
+            managResponse.setCreateTime(vaCode.getCreateTime());
+        }
+        managResponse.setPayId(trance.getId());
+        return managResponse;
     }
 
     /**
      * 获取va码
      *
-     * @param request
-     * @return
+     * @param request va码请求实体
+     * @return va码构建对象
      */
     @Transactional(rollbackFor = Exception.class)
     public TransactionVAResponse findVATranc(TransactionVARequest request) {
         //先查询数据库 是否存在没过期的还款码
-        TransactionVAResponse vaResponse = repayRepository.findVATranc(request);
-        //当数据库为空 或者va码失效了
-        if (ObjectUtils.isEmpty(vaResponse)) {
-            PaymentCodeRequest payment = repayRepository.finduserTransBypaymentId(request.getPayId());
-//            payment.setMsisdn(RequestUtil.getGlobalUser().getMobile());
-            payment.setMsisdn("8613136384502");
-            payment.setPayType(request.getMode().toLowerCase());
-            log.info("获取还款码，请求bluepay请求参数{}", JSONObject.toJSONString(payment));
-            String result = restService.doPostJson(prop.getAbsGetPaymentCodeUrl(), JSONObject.toJSONString(payment));
-            log.info("获取还款码，bluepay返回数据{}", result);
-            if (result.equals(BizCodeEnum.TIMEOUT.getCode())) {
-                throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, BizCodeEnum.TIMEOUT.getMessage());
-            }
-            JSONObject resu = JSON.parseObject(result);
-            //解析返回信息
-            if (resu.get("code").equals(BizCodeEnum.SUCCESS.getCode())) {
-                String paymentCode = JSON.parseObject(resu.getString("data")).getString("paymentCode");
-                log.info("还款码{}", paymentCode);
-                UserTransactionRepay repay = UserTransactionRepay.builder()
-                        .id(IdentifierGenerator.nextId())
-                        .mode(request.getMode())
-                        .transactionId(request.getPayId())
-                        .va(paymentCode)
-                        .vaCreateTime(LocalDateTime.now()).build();
-                //插入va码到数据库
-                repayRepository.insertSelective(repay);
-                //组装返回信息
-                vaResponse = new TransactionVAResponse();
-                vaResponse.setCreateTime(repay.getVaCreateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                vaResponse.setMode(request.getMode());
-                vaResponse.setVaCodel(paymentCode);
-            } else {
-                throw new ComBizException(resu.getString("code"), resu.getString("msg"));
-            }
+        TransactionVAResponse vaResponse = repayRepository.findVATranc(request.getPayId(), request.getMode());
+        if (!ObjectUtils.isEmpty(vaResponse)) {
+            return  vaResponse;
         }
+        //当数据库为空 或者va码失效了
+        PaymentCodeRequest payment = repayRepository.finduserTransBypaymentId(request.getPayId());
+        payment.setMsisdn(RequestUtil.getGlobalUser().getMobile());
+        payment.setPayType(request.getMode().toLowerCase());
+        if(request.getMode().equals(ComConsts.OTC)){
+            payment.setBankType(null);
+        }
+        log.info("获取还款码，请求bluepay请求参数{}", JSONObject.toJSONString(payment));
+
+        String result = restService.doPostJson(prop.getAbsGetPaymentCodeUrl(), JSONObject.toJSONString(payment));
+        log.info("获取还款码，bluepay返回数据{}", result);
+
+        if (result.equals(BizCodeEnum.TIMEOUT.getCode())) {
+            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR);
+        }
+        PayResponse response = JSON.parseObject(result, PayResponse.class);
+        //解析返回信息
+        if (!response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
+            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR);
+        }
+        String paymentCode = JSON.parseObject(response.getData()).getString("paymentCode");
+        log.info("还款码{}", paymentCode);
+        UserTransactionRepay repay = UserTransactionRepay.builder()
+                .id(IdentifierGenerator.nextId())
+                .mode(request.getMode())
+                .transactionId(request.getPayId())
+                .va(paymentCode)
+                .vaCreateTime(LocalDateTime.now()).build();
+        //插入va码到数据库
+        repayRepository.insertSelective(repay);
+        //组装返回信息
+        vaResponse = new TransactionVAResponse();
+        vaResponse.setCreateTime(repay.getVaCreateTime().format(DateUtil.FORMAT1));
+        vaResponse.setMode(request.getMode());
+        vaResponse.setVaCodel(paymentCode);
         return vaResponse;
     }
 
     /**
-     * 还款
+     * 还款接口
      *
-     * @param request
-     * @return
+     * @param request app请求后台实体
+     * @return 返回状态
      */
     @Transactional(rollbackFor = Exception.class)
-    public PayResponse repayment(RepaymentRequest request) throws Exception {
+    public PayResponse testRepayment(RepaymentRequest request) throws Exception {
         //先查询交易信息比对数据
-        UserTransaction transaction=userTransactionRepository.selectByKey(request.getPayId(),TransactionTypeEnum.IN_RANSACTION.getCode().byteValue());
-        if(ObjectUtils.isEmpty(transaction)){
+        UserTransaction transaction = userTransactionRepository.selectByKey(request.getPayId(), TransactionTypeEnum.IN_RANSACTION.getCode().byteValue());
+        if (ObjectUtils.isEmpty(transaction)) {
             return PayResponse.getFailResponse();
         }
-        if(0 != transaction.getAmount().compareTo(request.getAmount())){
+        if (0 != transaction.getAmount().compareTo(request.getAmount())) {
             return PayResponse.getFailResponse();
         }
-//        //凭证图片与后缀数量必须相等
-//        if(request.getBase64Imgs().length != request.getPicSuffixs().length){
-//            return PayResponse.getFailResponse();
-//        }
-//        //保存凭证pic
-//        for (int i = 0; i < request.getBase64Imgs().length; i++) {
-//            String picUrl = fileService.uploadBase64Img(request.getBase64Imgs()[i], request.getPicSuffixs()[i]);
-//            //向凭证表添加
-//            UserTransactionPic repayPic = UserTransactionPic.builder()
-//                    .id(IdentifierGenerator.nextId())
-//                    .evidencePicUrl(picUrl)
-//                    .transactionId(transaction.getId())
-//                    .createTime(LocalDateTime.now())
-//                    .build();
-//            repayRepository.picinsertSelective(repayPic);
-//        }
+        //凭证图片与后缀数量必须相等
+        if(request.getBase64Imgs().length != request.getPicSuffixs().length){
+            return PayResponse.getFailResponse();
+        }
+        //保存凭证pic
+        for (int i = 0; i < request.getBase64Imgs().length; i++) {
+            String picUrl = fileService.uploadBase64Img(request.getBase64Imgs()[i], request.getPicSuffixs()[i]);
+            //向凭证表添加
+            UserTransactionPic repayPic = UserTransactionPic.builder()
+                    .id(IdentifierGenerator.nextId())
+                    .evidencePicUrl(picUrl)
+                    .transactionId(transaction.getId())
+                    .createTime(LocalDateTime.now())
+                    .build();
+            repayRepository.picinsertSelective(repayPic);
+        }
         PayResponse response = null;
         //获取所有的va码记录
         List<UserTransactionRepay> repayList = repayRepository.finaAllVAcodeBypermas(request);
         //组装请求报文
         RepaymentCompleRequest compleRequest = new RepaymentCompleRequest();
-        compleRequest.setMsisdn("8613136384502");
-//        compleRequest.setMsisdn(RequestUtil.getGlobalUser().getMobile());
+        compleRequest.setMsisdn(RequestUtil.getGlobalUser().getMobile());
         compleRequest.setPayType(request.getMode().toLowerCase());
-        if(!request.getMode().equals(ComConsts.OTC)){
+        if (!request.getMode().equals(ComConsts.OTC)) {
             compleRequest.setBankType(transaction.getBank().toLowerCase());
         }
         compleRequest.setPrice(transaction.getAmount());
@@ -530,51 +575,133 @@ public class RepayService {
             log.info("完成还款接口请求报文：{}", JSON.toJSONString(compleRequest));
             String result = restService.doPostJson(prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(compleRequest));
             if (result.equals(BizCodeEnum.TIMEOUT.getCode())) {
-                throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, BizCodeEnum.TIMEOUT.getMessage());
+                throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR);
             }
             log.info("完成还款接口返回报文：{}", result);
-            JSONObject resu = JSON.parseObject(result);
+            response = JSON.parseObject(result, PayResponse.class);
             //判断返回状态 0000 0001 0002
-            if (!listCode.contains(resu.getString("code"))) {
-                throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, resu.getString("msg"));
+            if (!listCode.contains(response.getCode())) {
+                throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR);
             }
             //直接处理成功
-            if (resu.getString("code").equals(BizCodeEnum.SUCCESS.getCode())) {
-                // TODO 走资金流
+            if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
+                // TODO 走资金流 然后信息流
                 this.afterRepayment(transaction);
-                //走信息流
-                if(0 == transaction.getRepaymentType().compareTo(TransactionTypeEnum.ALL_CLEAR.getCode().byteValue())){
-                    this.repayAll(new RepayAllRequest(transaction.getBidId()));
-                }
-                if(0 == transaction.getRepaymentType().compareTo(TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue())){
-                    this.repayPart(new RepayPartRequest(transaction.getBidId(),transaction.getAmount()));
-                }
             }
-            response = JSON.parseObject(result, new TypeReference<PayResponse>() {});
             //修改交易的确认时间
-            Date time=new Date();
-            this.updateConfirmTime(transaction.getId(),time);
-            response.setConfirmTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time));
+            LocalDateTime time = LocalDateTime.now();
+            this.updateConfirmTime(transaction.getId(), time);
+            response.setConfirmTime(DateUtil.FORMAT1.format(time));
+            response.setCode(BizCodeEnum.SUCCESS.getCode());
+            response.setPayId(transaction.getId());
             return response;
         }
         return PayResponse.getFailResponse();
     }
 
     /**
-     * 还款成功走资金流
+     * 还款成功走资金流 信息流
      *
-     * @param transaction
+     * @param transaction 交易对象
      */
+    @Transactional(rollbackFor = Exception.class)
     public void afterRepayment(UserTransaction transaction) {
-        repayRepository.afterRepayment(transaction);
+        //修改交易记录
+        transaction.setStatus(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue());
+        transaction.setUpdateTime(LocalDateTime.now());
+        //插入还款定时任务
+        RepayInfoFlowJob repayInfoFlowJob = RepayInfoFlowJob.builder()
+                .id(IdentifierGenerator.nextId())
+                .createTime(LocalDateTime.now())
+                .transactionId(transaction.getId())
+                .bidId(transaction.getBidId())
+                .repaymentAmount(transaction.getAmount())
+                .realRepaymentTime(LocalDateTime.now())
+                .repaymentMode(RepayFlowJobEnum.UNDER_LINE.getCode().byteValue())
+                .repaymentType(transaction.getRepaymentType()).build();
+        repayRepository.afterRepayment(transaction, repayInfoFlowJob);
+        if (0 == transaction.getRepaymentType().compareTo(TransactionTypeEnum.ALL_CLEAR.getCode().byteValue())) {
+            this.repayAll(new RepayAllRequest(transaction.getBidId()));
+        }
+        if (0 == transaction.getRepaymentType().compareTo(TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue())) {
+            this.repayPart(new RepayPartRequest(transaction.getBidId(), transaction.getAmount()));
+        }
     }
 
     /**
      * 修改交易的确认时间
-     * @param id
+     *
+     * @param id  交易流水id
      * @param now 时间
      */
-    public void updateConfirmTime(Long id, Date now) {
-        repayRepository.updateConfirmTime(id,now);
+    public void updateConfirmTime(Long id, LocalDateTime now) {
+        UserTransaction userTransaction = UserTransaction.builder().id(id).confirmTime(now).build();
+        repayRepository.updateConfirmTime(userTransaction);
+    }
+
+    /**
+     * 确认转账 修改确认时间 上传凭证
+     * @param request 请求对象
+     * @return 响应对象
+     */
+    public PayResponse repayment(RepaymentRequest request) throws Exception {
+        //先查询交易信息比对数据
+        UserTransaction transaction = userTransactionRepository.findUserTranById(request.getPayId());
+        if(ObjectUtils.isEmpty(transaction)){
+            return PayResponse.getFailResponse();
+        }
+        if (0 != transaction.getAmount().compareTo(request.getAmount())) {
+            return PayResponse.getFailResponse();
+        }
+        //凭证图片与后缀数量必须相等
+        if(request.getBase64Imgs().length != request.getPicSuffixs().length){
+            return PayResponse.getFailResponse();
+        }
+        //保存凭证pic
+        for (int i = 0; i < request.getBase64Imgs().length; i++) {
+            String picUrl = fileService.uploadBase64Img(request.getBase64Imgs()[i], request.getPicSuffixs()[i]);
+            //向凭证表添加
+            UserTransactionPic repayPic = UserTransactionPic.builder()
+                .id(IdentifierGenerator.nextId())
+                .evidencePicUrl(picUrl)
+                .transactionId(transaction.getId())
+                .createTime(LocalDateTime.now())
+                .build();
+            repayRepository.picinsertSelective(repayPic);
+        }
+        //修改交易的确认时间
+        PayResponse response=new PayResponse();
+        LocalDateTime time = LocalDateTime.now();
+        this.updateConfirmTime(transaction.getId(), time);
+        response.setConfirmTime(DateUtil.FORMAT1.format(time));
+        response.setCode(BizCodeEnum.SUCCESS.getCode());
+        response.setPayId(transaction.getId());
+        return response;
+    }
+
+    /**
+     * 刷新还款结果
+     * @param request 请求对象
+     * @return 响应对象
+     */
+    public PayMentResponse refreshResult(RefreshPayMentRequest request) {
+        //先查询交易信息比对数据
+        UserTransaction transaction = userTransactionRepository.findUserTranById(request.getPayId());
+        if(ObjectUtils.isEmpty(transaction)){
+            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR);
+        }
+        //如果倒计时到期 直接处理失败
+        PayMentResponse response=new PayMentResponse();
+        response.setPayId(request.getPayId());
+        if(request.isExpire()){
+            UserTransaction transactionUpdate=UserTransaction.builder()
+                    .id(request.getPayId())
+                    .status(TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue()).build();
+            userTransactionRepository.transactionUpdateByKey(transactionUpdate);
+            response.setStatus(TransactionTypeEnum.FAIL_RANSACTION.getCode().toString());
+            return response;
+        }
+        response.setStatus(transaction.getStatus().toString());
+        return response;
     }
 }

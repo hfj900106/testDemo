@@ -65,25 +65,19 @@ public class RepayController {
         return Response.getSuccessResponse(repayService.repayPartDetail(request));
     }
 
-    /**
-     * ---------------------------------------------------------------------
-     * @param request
-     * @return
-     */
+   /**-------------------------------------------还款部分-----------------------------------------------------**/
     @ModuleFunc("部分还款查询")
     @PostMapping("/Fullrepayment")
     public LoanManagResponse fullRepayment(@Valid @RequestBody RepayPartRequest request){
         LoanManagResponse managResponse=repayService.findloanManagResponse(request.getRepayAmount(),request.getBidId(),false);
-        //部分还款金额
         managResponse.setAmount(request.getRepayAmount());
         return managResponse;
     }
     @ModuleFunc("全部还款查询")
     @PostMapping("/Partialrepayment")
     public LoanManagResponse partialRepayment(@Valid @RequestBody RepayAllRequest request){
-        //获取全部代还总额
         BigDecimal amount=comService.getBidNoRepay(request.getBidId(), LocalDateTime.now());
-        LoanManagResponse managResponse=repayService.findloanManagResponse(amount,request.getBidId(),false);
+        LoanManagResponse managResponse=repayService.findloanManagResponse(amount,request.getBidId(),true);
         managResponse.setAmount(amount);
         return managResponse;
     }
@@ -91,14 +85,21 @@ public class RepayController {
     @ModuleFunc("获取VA码")
     @PostMapping("/vaInfoDetail")
     public TransactionVAResponse vaInfoDetail(@Valid @RequestBody TransactionVARequest request){
-        TransactionVAResponse vaResponse=repayService.findVATranc(request);
-        return vaResponse;
+        return repayService.findVATranc(request);
     }
     @ModuleFunc("还款接口(测试环境专用)")
-    @PostMapping("/repayment")
-    public Response repayment(@Valid @RequestBody RepaymentRequest request) throws Exception {
-        PayResponse response= repayService.repayment(request);
-        return Response.getSuccessResponse(response);
+    @PostMapping("/testRepayment")
+    public PayResponse testRepayment(@Valid @RequestBody RepaymentRequest request) throws Exception {
+        return repayService.testRepayment(request);
     }
-
+    @ModuleFunc("还款接口(正式环境专用)")
+    @RequestMapping("/repayment")
+    public PayResponse repayment(@Valid @RequestBody RepaymentRequest request) throws Exception {
+        return repayService.repayment(request);
+    }
+    @ModuleFunc("刷新还款结果)")
+    @RequestMapping("/refreshResult")
+    public PayMentResponse refreshResult(@Valid @RequestBody RefreshPayMentRequest request) throws Exception {
+        return repayService.refreshResult(request);
+    }
 }

@@ -11,7 +11,6 @@ import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BluePayStatusEnum;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
-import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -69,38 +68,27 @@ public class OrderNotificationConsumer implements ChannelAwareMessageListener {
         //放款
         //获取交易id 判断是否合法
         List<UserTransaction> transactionList = transactionService.findUserTranBypayMenid(bluePayRq.getT_id());
+        if(ObjectUtils.isEmpty(transactionList)){
+            return;
+        }
+        UserTransaction userTr = transactionList.get(0);
         if (bluePayRq.getInterfacetype().equals(CASHOUT)) {
-            if (!ObjectUtils.isEmpty(transactionList)) {
-                //判断是否交易成功 防止重复交易
-                UserTransaction userTr = transactionList.get(0);
-                //判断这个交易是否是 交易中
-                if (userTr.getStatus().intValue() == TransactionTypeEnum.IN_RANSACTION.getCode()) {
-                    //查询相应的推送任务信息s
-                    tempId = tempTableRepository.findTempTableByBidNoAndName(userTr.getBidId(), ComConsts.PUSH_BANK_TASK);
-                    //修改交易信息
-                    transactionService.callBackupdateUserTrance(userTr, tempId);
-                    log.info("放款bluepay端返回处理成功，本地处理成功");
-                }
+            //判断这个交易是否是 交易中
+            if (userTr.getStatus().intValue() == TransactionTypeEnum.IN_RANSACTION.getCode()) {
+                //查询相应的推送任务信息s
+                tempId = tempTableRepository.findTempTableByBidNoAndName(userTr.getBidId(), ComConsts.PUSH_BANK_TASK);
+                //修改交易信息
+                transactionService.callBackupdateUserTrance(userTr, tempId);
+                log.info("放款bluepay端返回处理成功，本地处理成功");
             }
+        }
         //还款
-        } else if ( bluePayRq.getInterfacetype().equals(BANK)) {
-            if (!ObjectUtils.isEmpty(transactionList)) {
-                //判断是否交易成功 防止重复交易
-                UserTransaction userTr = transactionList.get(0);
-                //判断这个交易是否是 交易中
-                if (userTr.getStatus().intValue() == TransactionTypeEnum.IN_RANSACTION.getCode()) {
-                    //TODO 走资金流
-                    repayService.afterRepayment(userTr);
-                    //全部结清
-                    if(userTr.getRepaymentType().equals(TransactionTypeEnum.ALL_CLEAR.getCode())){
-                        repayService.repayAll(new RepayAllRequest(userTr.getBidId()));
-                    }
-                    //部分结清
-                    if(userTr.getRepaymentType().equals(TransactionTypeEnum.PARTIAL_CLEARANCE.getCode())){
-                        repayService.repayPart(new RepayPartRequest(userTr.getBidId(),userTr.getAmount()));
-                    }
-                    log.info("还款bluepay端返回处理成功，本地处理成功");
-                }
+        if ( bluePayRq.getInterfacetype().equals(BANK)) {
+            //判断这个交易是否是 交易中
+            if (userTr.getStatus().intValue() == TransactionTypeEnum.IN_RANSACTION.getCode()) {
+                //TODO 走资金流
+                repayService.afterRepayment(userTr);
+                log.info("还款bluepay端返回处理成功，本地处理成功");
             }
         }
     }

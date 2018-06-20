@@ -3,7 +3,6 @@ package com.hzed.easyget.persistence.auto.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class UserTransaction implements Serializable {
     /**
@@ -59,7 +58,7 @@ public class UserTransaction implements Serializable {
     /**
      * 确认时间 用户点击确认还款生成
      */
-    private Date confirmTime;
+    private LocalDateTime confirmTime;
 
     /**
      */
@@ -166,11 +165,11 @@ public class UserTransaction implements Serializable {
         this.repaymentType = repaymentType;
     }
 
-    public Date getConfirmTime() {
+    public LocalDateTime getConfirmTime() {
         return confirmTime;
     }
 
-    public void setConfirmTime(Date confirmTime) {
+    public void setConfirmTime(LocalDateTime confirmTime) {
         this.confirmTime = confirmTime;
     }
 
@@ -302,7 +301,7 @@ public class UserTransaction implements Serializable {
             return this;
         }
 
-        public Builder confirmTime(Date confirmTime) {
+        public Builder confirmTime(LocalDateTime confirmTime) {
             obj.setConfirmTime(confirmTime);
             return this;
         }

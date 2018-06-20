@@ -1,6 +1,5 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.controller.model.RepaymentRequest;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
@@ -34,47 +33,32 @@ public class UserTransactionRepository {
     }
 
     public List<UserTransaction> findUserTranBypayMenid(String paymnetId) {
-        UserTransactionExample userTransactionExample=new UserTransactionExample();
+        UserTransactionExample userTransactionExample = new UserTransactionExample();
         userTransactionExample.createCriteria().andPaymentIdEqualTo(paymnetId);
-        return  userTransactionMapper.selectByExample(userTransactionExample);
+        return userTransactionMapper.selectByExample(userTransactionExample);
     }
 
     /**
      * 查询匹配的交易记录
-     * @param bidId 标
-     * @param flag 是否全部结清 true 是
-     * @param type 交易类型
-     * @param state 状态
-     * @return
      */
-    public UserTransaction findoldTrance(Long bidId, boolean flag, Byte type, Byte state) {
-        UserTransactionExample userTransactionExample=new UserTransactionExample();
-        userTransactionExample.createCriteria().andBidIdEqualTo(bidId)
-                .andTypeEqualTo(type)
-                .andStatusEqualTo(state)
-                .andRepaymentTypeEqualTo(flag?TransactionTypeEnum.ALL_CLEAR.getCode().byteValue():TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
-        return  userTransactionMapper.selectOneByExample(userTransactionExample);
+    public UserTransaction findoldTrance(UserTransactionExample userTransactionExample) {
+        return userTransactionMapper.selectOneByExample(userTransactionExample);
     }
 
     /**
      * 返回交易记录
-     * @param payId
-     * @param status
-     * @return
      */
-    public UserTransaction selectByKey(Long payId,byte status) {
-        UserTransactionExample userTransactionExample=new UserTransactionExample();
+    public UserTransaction selectByKey(Long payId, byte status) {
+        UserTransactionExample userTransactionExample = new UserTransactionExample();
         userTransactionExample.createCriteria().andIdEqualTo(payId).andStatusEqualTo(status);
-        return  userTransactionMapper.selectOneByExample(userTransactionExample);
+        return userTransactionMapper.selectOneByExample(userTransactionExample);
     }
 
     /**
      * 获取所有的va码记录
-     * @param request
-     * @return
      */
     public List<UserTransactionRepay> finaAllVAcodeBypermas(RepaymentRequest request) {
-        UserTransactionRepayExample repayExample=new UserTransactionRepayExample();
+        UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
         repayExample.createCriteria()
                 .andTransactionIdEqualTo(request.getPayId())
                 .andModeEqualTo(request.getMode());
@@ -84,9 +68,15 @@ public class UserTransactionRepository {
 
     /**
      * 修改交易表信息
-     * @param transaction
      */
     public void transactionUpdateByKey(UserTransaction transaction) {
         userTransactionMapper.updateByPrimaryKeySelective(transaction);
+    }
+
+    /**
+     * 根据主键返回查询对象
+     */
+    public UserTransaction findUserTranById(Long payId) {
+        return userTransactionMapper.selectByPrimaryKey(payId);
     }
 }

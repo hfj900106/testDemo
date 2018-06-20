@@ -69,6 +69,7 @@ public class TransactionService {
         PayResponse response=JSON.parseObject(result,new TypeReference<PayResponse>() {});
         //判断返回状态 0000 0001 0002
         if (!listCode.contains(response.getCode())) {
+            tempTableRepository.upDateTemp(TempTable.builder().id(Long.valueOf(request.getRequestNo())).createTime(LocalDateTime.now()).remark("放款失败：" + response.getMsg()).build());
             throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, response.getMsg());
         }
         return response;
@@ -194,10 +195,9 @@ public class TransactionService {
 
     /**
      * 修改交易记录状态
-     * @param t_id
-     * @param b
      */
-    public void updateUserTranState(String t_id, byte b) {
-        bidRepository.updateUserTranState(t_id,b);
+    public void updateUserTranState(String payMentId, byte b) {
+        UserTransaction userTransaction=UserTransaction.builder().paymentId(payMentId).status(b).updateTime(LocalDateTime.now()).build();
+        bidRepository.updateUserTranState(userTransaction);
     }
 }

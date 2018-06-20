@@ -71,9 +71,7 @@ public class JobServiceTest {
     @Test
     public void test09(){
         RepayPartRequest request=new RepayPartRequest();
-        request.setBidId(104106546290114050L);
-        request.setRepayAmount(BigDecimal.valueOf(10000));
-        //BigDecimal amount=comService.getBidNoRepay(104106546290114050L, LocalDateTime.now());
+        request.setBidId(104094428696027136L);
         LoanManagResponse managResponse=repayService.findloanManagResponse(BigDecimal.valueOf(20000),request.getBidId(),false);
         System.out.println(managResponse);
     }
@@ -83,10 +81,7 @@ public class JobServiceTest {
      */
     @Test
     public  void test05(){
-        TransactionVARequest vaRequest=new TransactionVARequest();
-        vaRequest.setPayId(1L);
-        vaRequest.setMode(ComConsts.OTC);
-        TransactionVAResponse response=repayRepository.findVATranc(vaRequest);
+        TransactionVAResponse response=repayRepository.findVATranc(1L,ComConsts.ATM);
         System.out.println(response);
     }
     /**
@@ -95,7 +90,7 @@ public class JobServiceTest {
     @Test
     public  void test06(){
         TransactionVARequest request=new TransactionVARequest();
-        request.setPayId(108083038684323840L);
+        request.setPayId(108428379602427904L);
         request.setMode(ComConsts.ATM);
         TransactionVAResponse vaTranc = repayService.findVATranc(request);
         System.out.println(vaTranc);
@@ -107,10 +102,10 @@ public class JobServiceTest {
     @Test
     public  void test08() throws Exception{
         RepaymentRequest request=new RepaymentRequest();
-        request.setPayId(108083038684323840L);
+        request.setPayId(108428379602427904L);
         request.setMode(ComConsts.ATM);
         request.setAmount(BigDecimal.valueOf(20000.00));
-        PayResponse vaTranc = repayService.repayment(request);
+        PayResponse vaTranc = repayService.testRepayment(request);
         System.out.println(vaTranc);
     }
 }

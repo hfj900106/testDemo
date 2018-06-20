@@ -51,7 +51,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
             // 设置模块名
             MDC.put(LogConsts.MODULE_NAME, moduleFunc.value());
             String body = ComUtil.subString(request.getAttribute("body").toString(), moduleFunc.printParameterLength());
-            log.info("请求报文：{}", StringUtils.isBlank(body));
+            log.info("请求报文：{}", StringUtils.isBlank(body) ? "无请求参数" : body);
         }
 
         // 请求头忽略标志

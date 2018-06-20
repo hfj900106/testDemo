@@ -1,9 +1,12 @@
 package com.hzed.easyget.persistence.ext.mapper;
 
+import com.hzed.easyget.persistence.ext.entity.TransactionExt;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
+import com.hzed.easyget.persistence.ext.entity.VaData;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface UserExtMapper {
@@ -22,18 +25,20 @@ public interface UserExtMapper {
     List<String> queryEvidences(@Param("id")Long id);
 
     /**
-     * 获取用户还款的VA码
+     * 获取用户最近的VA码数据
      * @param id
      * @return
      */
-    String queryVa(@Param("id")Long id);
+    VaData queryLastVa(@Param("id")Long id);
+
+
 
     /**
-     * 查询用户的还款交易流水id
+     * 查询用户的交易流水transactionId和确认时间confirmTime
      * @param id
      * @return
      */
-    Long queryTransactionId(@Param("id")Long id);
+    TransactionExt queryTransaction(@Param("id")Long id);
 }
 
 

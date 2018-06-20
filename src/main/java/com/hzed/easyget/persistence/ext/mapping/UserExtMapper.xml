@@ -13,25 +13,35 @@
     <!--查询用户的还款凭证-->
     <select id="queryEvidences" resultType="string">
         SELECT evidence_pic_url
-        FROM t_loan_user_transaction_repay_pic pic
-        LEFT JOIN t_loan_user_transaction_repay repay ON repay.id = pic.transaction_repay_id
-        LEFT JOIN t_loan_user_transaction trans ON trans.user_id = #{id}
-        WHERE trans.`status` = 1 AND trans.type = 2
+        FROM t_loan_user_transaction_pic pic
+        LEFT JOIN t_loan_user_transaction trans ON trans.id = pic.transaction_id
+        WHERE trans.`status` = 1 AND trans.type = 2 AND trans.user_id = #{id}
     </select>
 
-    <!--获取用户还款的VA码-->
-    <select id="queryVa" resultType="string">
-        SELECT repay.va from t_loan_user_transaction trans
+    <!--获取用户最近的VA码数据-->
+    <select id="queryLastVa" resultType="com.hzed.easyget.persistence.ext.entity.VaData">
+        SELECT repay.va vaCode,repay.va_create_time AS createTime,repay.`mode` AS  mode,trans.id AS transactionId,
+                trans.amount AS amount, bill.repayment_time AS repaymentTime
+        FROM t_loan_user_transaction trans
         LEFT JOIN t_loan_user_transaction_repay repay ON repay.transaction_id = trans.id
-		WHERE trans.`status` = 1 AND trans.type = 2 AND ( repay.`status` = 1 OR repay.`status` = 2 ) AND user_id = #{id}
+        LEFT JOIN t_loan_bill bill ON bill.bid_id = trans.bid_id
+        WHERE trans.`status` = 1 AND trans.type = 2  AND repay.va_create_time =
+        (
+            SELECT MAX(r.va_create_time)
+            FROM t_loan_user_transaction t
+            LEFT JOIN t_loan_user_transaction_repay r ON r.transaction_id = t.id
+            WHERE t.`status` = 1 AND t.type = 2  AND t.user_id = #{id}
+        )
+        AND trans.user_id = #{id}
     </select>
 
-    <!--查询用户的还款交易流水id-->
-    <select id="queryTransactionId" resultType="long">
-        SELECT id
+
+
+    <!--查询用户的交易流水transactionId和确认时间confirmTime-->
+    <select id="queryTransaction" resultType="com.hzed.easyget.persistence.ext.entity.TransactionExt">
+        SELECT id AS transactionId, confirm_time AS confirmTime
         FROM t_loan_user_transaction
-        WHERE type = 2 AND status = 1
-        AND user_id = #{id}
+        WHERE `status` = 1 AND type = 2 AND user_id = #{id}
     </select>
 
 </mapper>

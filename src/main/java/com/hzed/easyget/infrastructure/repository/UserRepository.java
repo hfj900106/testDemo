@@ -4,7 +4,9 @@ import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.auto.entity.example.UserExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.mapper.*;
+import com.hzed.easyget.persistence.ext.entity.TransactionExt;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
+import com.hzed.easyget.persistence.ext.entity.VaData;
 import com.hzed.easyget.persistence.ext.mapper.UserExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -99,11 +101,11 @@ public class UserRepository {
         return userExtMapper.queryEvidences(userId);
     }
 
-    public String queryVa(Long userId) {
-        return userExtMapper.queryVa(userId);
+    public VaData queryLastVa(Long userId) {
+        return userExtMapper.queryLastVa(userId);
     }
 
-    public Long queryTransactionId(Long userId) {
-        return userExtMapper.queryTransactionId(userId);
+    public TransactionExt queryTransaction(Long userId) {
+        return userExtMapper.queryTransaction(userId);
     }
 }

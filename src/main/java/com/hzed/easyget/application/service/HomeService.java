@@ -18,13 +18,18 @@ import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.ext.entity.TransactionExt;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
+import com.hzed.easyget.persistence.ext.entity.VaData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -63,7 +68,7 @@ public class HomeService {
 
         ProductInfoResponse productInfoResponse = new ProductInfoResponse();
         Product product = productRepository.getProductInfo();
-        if(Objects.isNull(product)){
+        if (Objects.isNull(product)) {
             throw new ComBizException(BizCodeEnum.NO_USEFUL_PRODUCT);
         }
         productInfoResponse.setLoanAmount(product.getLoanAmountArr());
@@ -98,9 +103,9 @@ public class HomeService {
     }
 
     private String checkIsUpdate(String oldVersion, String newVersion) {
-        if(oldVersion.equals(newVersion)){
+        if (oldVersion.equals(newVersion)) {
             return AppVersionEnum.NOT_UPDATE.getCode();
-        }else {
+        } else {
             return AppVersionEnum.HAS_UPDATE.getCode();
         }
     }
@@ -209,21 +214,48 @@ public class HomeService {
 
         //先判断是否已经提交凭证
         List<String> evidences = userRepository.queryEvidences(userId);
+        //当前时间
+        Date now = new Date();
         //当前用户未结清的标有提交过凭证
-        if(evidences != null && evidences.size() > 1){
+        if (!ObjectUtils.isEmpty(evidences)) {
             result.setType("1");
-            result.setMsg(i18nService.getMessage("msg.repay.apply",null));
+            //查询当前未完成还款的交易记录id，并检查交易是否已过期
+            TransactionExt transactionExt = userRepository.queryTransaction(userId);
+            result.setId(transactionExt.getTransactionId());
+            Date confirmTime = transactionExt.getConfirmTime();
+            //当前时间和确认时间相差的毫秒数
+            int timeDiff = now.compareTo(confirmTime);
+            //2个小时毫秒数
+            int threeHour = 60 * 60 * 1000 * 2;
+            //如果已经大于2个小时,设置已过期，否则设置未过期
+            if (timeDiff >= threeHour) {
+                result.setExpire(true);
+            } else {
+                result.setExpire(false);
+            }
+            result.setMsg(i18nService.getMessage("msg.repay.apply", null));
             return result;
         }
 
+
         //判断是否已经生成va码,并且未提交还款凭证
-        String va = userRepository.queryVa(userId);
-        if(va != null){
-            //找出transactionId
-            Long transactionId = userRepository.queryTransactionId(userId);
-            result.setTransactionId(transactionId);
+        //找出最新的va码数据
+        VaData va = userRepository.queryLastVa(userId);
+        if (va != null) {
+            //判断va是否有效
+            Date createTime = va.getCreateTime();
+            int sixHours = 60 * 60 * 1000 * 6;
+            if(now.compareTo(createTime) >= sixHours){
+                //va码已经过期
+                va.setVaExpire(true);
+            }else {
+                //va码尚未过期
+                va.setVaExpire(false);
+            }
+            result.setVaData(va);
+            result.setId(va.getTransactionId());
             result.setType("2");
-            result.setMsg(i18nService.getMessage("msg.repay.unsuccess",null));
+            result.setMsg(i18nService.getMessage("msg.repay.unsuccess", null));
             return result;
         }
 
@@ -231,18 +263,18 @@ public class HomeService {
         UserExt userExt = userRepository.queryOverdueDay(userId);
         Integer overdueDay = userExt.getOverdueDay();
         //有未结清的标,且离逾期天数小于等于两天
-        if(overdueDay != null && overdueDay <= 2){
+        if (overdueDay != null && overdueDay <= 2) {
             result.setType("3");
-            result.setBid(userExt.getBidId());
-            if(overdueDay==0){
-                result.setMsg(i18nService.getMessage("msg.bid.overdue.today",null));
+            result.setId(userExt.getBidId());
+            if (overdueDay == 0) {
+                result.setMsg(i18nService.getMessage("msg.bid.overdue.today", null));
                 return result;
             }
-            if(overdueDay > 0){
-                result.setMsg(String.format(i18nService.getMessage("msg.bid.overdue.before",null),overdueDay));
+            if (overdueDay > 0) {
+                result.setMsg(String.format(i18nService.getMessage("msg.bid.overdue.before", null), overdueDay));
                 return result;
             }
-            result.setMsg(String.format(i18nService.getMessage("msg.bid.overdue.after",null),Math.abs(overdueDay)));
+            result.setMsg(String.format(i18nService.getMessage("msg.bid.overdue.after", null), Math.abs(overdueDay)));
             return result;
         }
 

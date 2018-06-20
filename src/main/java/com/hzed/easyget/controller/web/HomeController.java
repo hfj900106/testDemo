@@ -73,7 +73,7 @@ public class HomeController {
     }
 
     @ModuleFunc("检测首页弹框提醒")
-    @PostMapping("/homeAlert")
+    @PostMapping("/alert")
     public Response<HomePageResponse> homeAlert() {
         HomePageResponse response = homeService.homeAlert();
         return Response.getSuccessResponse(response);

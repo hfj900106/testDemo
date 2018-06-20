@@ -15,7 +15,6 @@ import com.hzed.easyget.persistence.auto.entity.AuthItem;
 import com.hzed.easyget.persistence.auto.entity.Dict;
 import com.hzed.easyget.persistence.auto.entity.IDArea;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,14 +37,16 @@ public class DictService {
     @Autowired
     private IDAreaRepository idAreaRepository;
 
+    private final String dictKey = RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT;
+
     public Dict getDictByCode(String moduleCode) {
 
-        Dict dict = redisService.getObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode);
+        Dict dict = redisService.getObjCache(dictKey + moduleCode);
         if (dict == null) {
             dict = dictRepository.findByCode(moduleCode);
         }
 
-        redisService.setObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode, dict, 5 * 3600L);
+        redisService.setObjCache(dictKey + moduleCode, dict, 5 * 3600L);
 
         return dict;
     }
@@ -55,7 +56,7 @@ public class DictService {
         String moduleCode = request.getModuleCode();
         String i18n = RequestUtil.getGlobalHead().getI18n();
         // 获取缓存数据,缓存没有，才查询数据库
-        List<DictResponse> dictResponseListCache = redisService.getObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode + RedisConsts.SPLIT + i18n);
+        List<DictResponse> dictResponseListCache = redisService.getObjCache(dictKey + moduleCode + RedisConsts.SPLIT + i18n);
         if (dictResponseListCache !=null) {
             return dictResponseListCache;
         }
@@ -73,28 +74,17 @@ public class DictService {
         });
 
         //放入缓存5小时
-        redisService.setObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode + RedisConsts.SPLIT + i18n, dictResponseList, 5 * 3600L);
+        redisService.setObjCache(dictKey+ moduleCode + RedisConsts.SPLIT + i18n, dictResponseList, 5 * 3600L);
 
         return dictResponseList;
     }
 
-    public void clearCache(String key) {
-        if (StringUtils.isBlank(key)) {
-            return;
-        }
-
-        if ("all".equals(key)) {
-
-        } else {
-
-        }
-    }
 
     public List<IDAreaResponse> getIDAreaList(IDAreaRequest request) {
         List<IDAreaResponse> idAreaResponseList = Lists.newArrayList();
         String parent = request.getParent();
 
-        List<IDAreaResponse> idAreaResponseCache = redisService.getObjCache(RedisConsts.ID_PARENT_NAME + RedisConsts.SPLIT + parent);
+        List<IDAreaResponse> idAreaResponseCache = redisService.getObjCache(dictKey + parent);
         if (idAreaResponseCache != null) {
             return idAreaResponseCache;
         }
@@ -105,8 +95,18 @@ public class DictService {
             idAreaResponse.setName(idArea.getName());
             idAreaResponseList.add(idAreaResponse);
         });
-        redisService.setObjCache(RedisConsts.ID_PARENT_NAME + RedisConsts.SPLIT + parent, idAreaResponseList, 5 * 3600L);
+        redisService.setObjCache(dictKey + parent, idAreaResponseList, 5 * 3600L);
         return idAreaResponseList;
 
+    }
+
+    public void clearModuleCache(String module) {
+
+        redisService.clearCache(dictKey + module);
+    }
+
+    public void clearModuleAndI18nCache(String module, String i18n) {
+
+        redisService.clearCache(dictKey + module + i18n);
     }
 }

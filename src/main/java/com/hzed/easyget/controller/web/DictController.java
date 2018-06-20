@@ -31,18 +31,21 @@ public class DictController {
     private DictService dictService;
 
     @HeaderIgnore
-    @ModuleFunc("清除字典缓存-module")
-    @GetMapping("/clearModuleCache/{module}")
+    @ModuleFunc("根据module清除字典缓存")
+    @GetMapping("/clearCache/{module}")
     public void clearModuleCache(@PathVariable String module) {
-        System.out.println("========module:" + module + "=========");
+        dictService.clearModuleCache(module);
+        System.out.println("========module:" + module );
     }
 
     @HeaderIgnore
-    @ModuleFunc("清除字典缓存-key")
-    @GetMapping("/clearKeyCache/{key}")
-    public void clearKeyCache(@PathVariable String key) {
-        System.out.println("========module:" + key + "=========");
+    @ModuleFunc("根据moduleAndI18n清除字典缓存")
+    @GetMapping("/clearModuleCache/{module}/{i18n}")
+    public void clearModuleAndI18nCache(@PathVariable String module, @PathVariable String i18n) {
+        dictService.clearModuleAndI18nCache(module, i18n);
+        System.out.println("========module:" + module + "========i18n:" + i18n);
     }
+
 
     @ModuleFunc("通过module获取字典列表")
     @PostMapping("/getDictList")

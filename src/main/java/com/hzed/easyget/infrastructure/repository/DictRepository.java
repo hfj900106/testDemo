@@ -7,6 +7,7 @@ import com.hzed.easyget.persistence.auto.entity.example.DictExample;
 import com.hzed.easyget.persistence.auto.mapper.DictMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class DictRepository {
 
     }
 
-    public List<Dict> findByModuleCodeAndLanguageWithExp(String moduleCode, String language) {
+    public List<Dict> findByModuleCodeAndLanguage(String moduleCode, String language) {
         DictExample example = new DictExample();
         example.setOrderByClause("orderby asc");
         example.createCriteria().andModuleCodeEqualTo(moduleCode).andLanguageEqualTo(language);

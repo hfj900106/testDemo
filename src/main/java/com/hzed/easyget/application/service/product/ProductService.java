@@ -14,8 +14,6 @@ public interface ProductService {
     BillInfo createBillInfo(Bid bid);
 
     List<Bill> createBills(Bid bid);
-    List<BillLedger> createBillLedger(Bill bill,Bid bid);
     List<BillLedger> createBillLedger(Bid bid);
-
     void checkBid(Bid bid);
 }

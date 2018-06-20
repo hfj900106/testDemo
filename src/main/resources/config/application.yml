@@ -61,13 +61,17 @@ system:
   tokenExpire: 7 # token失效时间 7 天
   expected_audit_time_interval: 1440 #预计审核时间间隔 单位分
   expected_lending_time_interval: 60 #预计放款时间间隔 单位分
+
   #定时任务
   job:
-    pushBid: false # 推送资产
+    # 推送资产
+    pushBid: true
     pushBidCron: 0/5 * * * * ?
-    bankLoan: false # 放款
+    # 放款
+    bankLoan: false
     bankLoanCron: 0/5 * * * * ?
-    repayInfoFlow: false # 还款信息流
+    # 处理还款信息流
+    repayInfoFlow: false
     repayInfoFlowCron: 0/5 * * * * ?
 
 

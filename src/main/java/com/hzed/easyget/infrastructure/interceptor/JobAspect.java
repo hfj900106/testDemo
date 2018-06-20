@@ -32,25 +32,20 @@ public class JobAspect {
      * 拦截定时任务主要处理类
      */
     @Around("@annotation(jobAnnotation)")
-    public Object aroundTest(ProceedingJoinPoint pPoint, JobAnnotation jobAnnotation) {
-        Object result = null;
+    public Object aroundTest(ProceedingJoinPoint pPoint, JobAnnotation jobAnnotation) throws Throwable {
         String methodName = ((MethodSignature) pPoint.getSignature()).getMethod().getName();
+        // 定时任务名放入日志中
+        MDCUtil.put("jobName", jobAnnotation.value());
         // 如果配置不执行或定时任务正在进行直接返回
         if (!getRunFlag(methodName)) {
             return null;
         }
-
         // 设置运行标志-false
         setRunFlag(methodName, false);
-//        ComUtil.putTrace();// 放入日志追踪标志
-        // 定时任务名
-        MDCUtil.put("jobName", jobAnnotation.value());
+
         log.info("=====定时任务 开始 =====");
-        try {
-            result = pPoint.proceed();
-        } catch (Throwable ex) {
-            ComUtil.expHandler(ex);
-        }
+        // 每个任务自己处理异常
+        Object result = pPoint.proceed();
         log.info("=====定时任务 结束 =====");
         // 设置运行标志-true
         setRunFlag(methodName, true);

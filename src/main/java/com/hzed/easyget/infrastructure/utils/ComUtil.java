@@ -1,8 +1,6 @@
 package com.hzed.easyget.infrastructure.utils;
 
 
-import com.hzed.easyget.infrastructure.exception.ComBizException;
-import com.hzed.easyget.infrastructure.exception.NestedException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -71,23 +69,4 @@ public class ComUtil {
         //打印结果
         return sixString;
     }
-
-    /**
-     * 通用处理异常方式
-     *
-     * @param ex 异常
-     */
-    public static void expHandler(Throwable ex) {
-        // 统一异常拦截处理
-        if (ex instanceof ComBizException) {
-            ComBizException cbEx = (ComBizException) ex;
-            log.error("异常，{}", cbEx.getSerializeMsg());
-        } else if (ex instanceof NestedException) {
-            NestedException nsEx = (NestedException) ex;
-            log.error("异常，{}", nsEx.getSerializeMsg(), nsEx);
-        } else {
-            log.error("异常", ex);
-        }
-    }
-
 }

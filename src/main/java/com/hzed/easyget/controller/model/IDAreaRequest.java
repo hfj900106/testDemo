@@ -1,6 +1,7 @@
 package com.hzed.easyget.controller.model;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 地区字典表请求参数
@@ -11,5 +12,6 @@ import lombok.Data;
 @Data
 public class IDAreaRequest {
 
+    @NotBlank(message = "{param.dict.parent.isNotEmpty}")
     private String parent;
 }

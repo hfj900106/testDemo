@@ -42,7 +42,7 @@ public class DictService {
 
         Dict dict = redisService.getObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode);
         if (dict == null) {
-            dict = dictRepository.findByCodeWithExp(moduleCode);
+            dict = dictRepository.findByCode(moduleCode);
         }
 
         redisService.setObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode, dict, 5 * 3600L);
@@ -60,12 +60,15 @@ public class DictService {
             return dictResponseListCache;
         }
 
-        List<Dict> dictList = dictRepository.findByModuleCodeAndLanguageWithExp(moduleCode, i18n);
+        List<Dict> dictList = dictRepository.findByModuleCodeAndLanguage(moduleCode, i18n);
         dictList.forEach(dict -> {
             AuthItem authItem = authItemRepository.findByCode(dict.getDicCode());
             DictResponse dictResponse = new DictResponse();
-            dictResponse.setDicName(dict.getDicName());
-            dictResponse.setIsUse(authItem.getIsUse());
+            if (authItem != null) {
+                dictResponse.setDictCode(dict.getDicCode());
+                dictResponse.setDictValue(dict.getDicValue());
+
+            }
             dictResponseList.add(dictResponse);
         });
 

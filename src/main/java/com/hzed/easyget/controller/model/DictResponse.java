@@ -12,6 +12,6 @@ import java.io.Serializable;
  */
 @Data
 public class DictResponse implements Serializable {
-    private String dicName;
-    private Boolean isUse;
+    private String dictCode;
+    private String dictValue;
 }

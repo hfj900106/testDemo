@@ -19,7 +19,7 @@ public class AuthItemRepository {
 
     public AuthItem findByCode(String dicCode) {
         AuthItemExample example = new AuthItemExample();
-        example.createCriteria().andCodeEqualTo(dicCode);
+        example.createCriteria().andCodeEqualTo(dicCode).andIsUseEqualTo(true);
         return authItemMapper.selectOneByExample(example);
     }
 }

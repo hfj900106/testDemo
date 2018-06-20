@@ -10,6 +10,7 @@ import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayInfoFlowJobRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
+import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
 import com.hzed.easyget.persistence.auto.entity.TempTable;
@@ -54,7 +55,7 @@ public class JobService {
         for (BidExt bidExt : bids) {
             Long tempId = IdentifierGenerator.nextId();
             //推送bid写入中间表
-            tempTableRepository.insertJob(TempTable.builder().id(tempId).relaseId(bidExt.getBidId()).jobName(ComConsts.PUSH_RISK_TASK).remark("推送资产").createTime(LocalDateTime.now()).reRunTimes((byte) 1).build());
+            tempTableRepository.insertJob(TempTable.builder().id(tempId).relaseId(bidExt.getBidId()).jobName(ComConsts.PUSH_RISK_TASK).remark("推送资产").reRunTimes((byte) 1).build());
             try {
                 // TODO 推送-调风控接口
 
@@ -76,6 +77,7 @@ public class JobService {
         }
 
         jobList.forEach(repayjob -> {
+            MdcUtil.putTrace();
             try {
                 // 走信息流
                 Long bidId = repayjob.getBidId();

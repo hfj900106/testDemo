@@ -7,6 +7,7 @@ import com.hzed.easyget.persistence.auto.entity.example.DictExample;
 import com.hzed.easyget.persistence.auto.mapper.DictMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -44,22 +45,20 @@ public class DictRepository {
         example.createCriteria().andModuleCodeEqualTo(moduleCode);
 
         List<Dict> dicts = dictMapper.selectByExample(example);
-
-        if (dicts == null || dicts.isEmpty()) {
+        if (ObjectUtils.isEmpty(dicts)) {
             throw new ComBizException(BizCodeEnum.DICT_NOTEXISTS);
         }
         return dicts;
 
     }
 
-    public List<Dict> findByModuleCodeAndLanguageWithExp(String moduleCode,String language) {
+    public List<Dict> findByModuleCodeAndLanguageWithExp(String moduleCode, String language) {
         DictExample example = new DictExample();
         example.setOrderByClause("orderby asc");
         example.createCriteria().andModuleCodeEqualTo(moduleCode).andLanguageEqualTo(language);
 
         List<Dict> dicts = dictMapper.selectByExample(example);
-
-        if (dicts == null || dicts.isEmpty()) {
+        if (ObjectUtils.isEmpty(dicts)) {
             throw new ComBizException(BizCodeEnum.DICT_NOTEXISTS);
         }
         return dicts;

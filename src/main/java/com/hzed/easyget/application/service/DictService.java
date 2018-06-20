@@ -54,7 +54,7 @@ public class DictService {
         List<DictResponse> dictResponseList = Lists.newArrayList();
         String moduleCode = request.getModuleCode();
         String i18n = RequestUtil.getGlobalHead().getI18n();
-        //获取缓存数据,缓存没有，才查询数据库
+        // 获取缓存数据,缓存没有，才查询数据库
         List<DictResponse> dictResponseListCache = redisService.getObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode + RedisConsts.SPLIT + i18n);
         if (dictResponseListCache !=null) {
             return dictResponseListCache;

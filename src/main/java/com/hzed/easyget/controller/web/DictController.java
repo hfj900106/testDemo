@@ -44,16 +44,15 @@ public class DictController {
         System.out.println("========module:" + key + "=========");
     }
 
-    @ModuleFunc("通过moduleCode获取字典列表")
+    @ModuleFunc("通过module获取字典列表")
     @PostMapping("/getDictList")
     public List<DictResponse> getDictList(@Valid @RequestBody DictRequest request){
         return dictService.getDictByModule(request);
     }
 
-    @ModuleFunc("获取地区字典")
+    @ModuleFunc("获取印尼地区")
     @PostMapping("/getIDAreaList")
     public List<IDAreaResponse> getIDAreaList(@RequestBody IDAreaRequest request){
-
         return dictService.getIDAreaList(request);
     }
 

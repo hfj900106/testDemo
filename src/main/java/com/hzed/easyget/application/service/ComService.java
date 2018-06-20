@@ -11,7 +11,7 @@ import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
-import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
@@ -64,19 +64,19 @@ public class ComService {
      */
     public void validateHeader(GlobalHead globalHeadr) {
         if (StringUtils.isBlank(globalHeadr.getAppKey())) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_APPKEY);
+            throw new WarnException(BizCodeEnum.ILLEGAL_APPKEY);
         }
         if (StringUtils.isBlank(globalHeadr.getPlatform())) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PLATFORM);
+            throw new WarnException(BizCodeEnum.ILLEGAL_PLATFORM);
         }
         if (StringUtils.isBlank(globalHeadr.getVersion())) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_VERSION);
+            throw new WarnException(BizCodeEnum.ILLEGAL_VERSION);
         }
         if (StringUtils.isBlank(globalHeadr.getI18n())) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_I18N);
+            throw new WarnException(BizCodeEnum.ILLEGAL_I18N);
         }
         if (StringUtils.isBlank(globalHeadr.getImei())) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_IMEI);
+            throw new WarnException(BizCodeEnum.ILLEGAL_IMEI);
         }
     }
 
@@ -87,12 +87,12 @@ public class ComService {
         String imei = globalHeadr.getImei();
         String token = globalHeadr.getToken();
         if (StringUtils.isBlank(token)) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_TOKEN);
+            throw new WarnException(BizCodeEnum.ILLEGAL_TOKEN);
         }
 
         GlobalUser globalUser = JwtUtil.verify(token, GlobalUser.class);
         if (globalUser == null) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_TOKEN);
+            throw new WarnException(BizCodeEnum.ILLEGAL_TOKEN);
         }
         Long userId = globalUser.getUserId();
 
@@ -103,18 +103,18 @@ public class ComService {
             // 检查库中token是否失效，未失效则放入token
             UserToken userToken = userTokenRepository.findByUserIdAndImei(userId, imei);
             if (userToken == null) {
-                throw new ComBizException(BizCodeEnum.ILLEGAL_TOKEN);
+                throw new WarnException(BizCodeEnum.ILLEGAL_TOKEN);
             } else if (!token.equals(userToken.getToken())) {
-                throw new ComBizException(BizCodeEnum.ILLEGAL_TOKEN);
+                throw new WarnException(BizCodeEnum.ILLEGAL_TOKEN);
             } else if (LocalDateTime.now().compareTo(userToken.getExpireTime()) > 0) {
-                throw new ComBizException(BizCodeEnum.TOKEN_EXPIRE);
+                throw new WarnException(BizCodeEnum.TOKEN_EXPIRE);
             } else {
                 //刷新Redis缓存
                 redisService.setCache(tokenCacheKey, userToken.getToken(), RedisConsts.THREE_HOUR);
             }
         } else if (!token.equals(tokenCache)) {
             // 检查redis token是否与传过来的一致
-            throw new ComBizException(BizCodeEnum.ILLEGAL_TOKEN);
+            throw new WarnException(BizCodeEnum.ILLEGAL_TOKEN);
         }
     }
 
@@ -203,7 +203,7 @@ public class ComService {
      * 根据bid状态判断用户是否有贷款资格
      */
     @Deprecated
-    public boolean isLoan(Long userId){
+    public boolean isLoan(Long userId) {
         List<Bid> bidList = bidRepository.findByUserIdAndStatus(userId, Lists.newArrayList(BidStatusEnum.RISK_ING.getCode().byteValue(), BidStatusEnum.MANMADE_ING.getCode().byteValue(),
                 BidStatusEnum.AUDIT_PASS.getCode().byteValue(), BidStatusEnum.REPAYMENT.getCode().byteValue()));
         if (bidList == null || bidList.isEmpty()) {
@@ -216,18 +216,17 @@ public class ComService {
      * 根据用户手机号，imei通过用户查询风控是否有贷款规则
      */
 
-    public RiskResponse checkRiskEnableBorrow(String mobile,String imei){
+    public RiskResponse checkRiskEnableBorrow(String mobile, String imei) {
 
-        Map<String, String> paramMap= Maps.newHashMap();
-        paramMap.put("mobile",mobile);
-        paramMap.put("imei",imei);
+        Map<String, String> paramMap = Maps.newHashMap();
+        paramMap.put("mobile", mobile);
+        paramMap.put("imei", imei);
         log.info("查询风控是否有贷款规则请求报文：{}", paramMap);
         RiskResponse response = restService.postJson(riskProp.getAbsCheckRiskEnableBorrowUrl(), paramMap, RiskResponse.class);
-        log.info("查询风控是否有贷款规则返回报文：{}",response);
+        log.info("查询风控是否有贷款规则返回报文：{}", response);
         return response;
 
     }
-
 
 
 }

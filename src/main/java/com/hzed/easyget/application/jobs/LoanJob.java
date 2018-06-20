@@ -24,21 +24,21 @@ public class LoanJob {
     @Autowired
     private JobService jobService;
 
-    @JobAnnotation("走风控")
-    @Scheduled(cron = "0/5 * * * * ?")
-    public void pushBid() throws Exception {
+    @JobAnnotation("风控审核")
+    @Scheduled(cron = "${system.job.pushBidCron}")
+    public void pushBid() {
         jobService.pushBid();
     }
 
-    @JobAnnotation("银行放款")
-    @Scheduled(cron = "0/5 * * * * ?")
-    public void bankLoan() throws Exception {
+    @JobAnnotation("放款")
+    @Scheduled(cron = "${system.job.bankLoanCron}")
+    public void bankLoan() {
         jobService.bankLoan();
     }
 
-    @JobAnnotation("还款信息流")
-    @Scheduled(cron = "0/5 * * * * ?")
-    public void repayInfoFlow() throws Exception {
+    @JobAnnotation("处理还款信息流")
+    @Scheduled(cron = "${system.job.repayInfoFlowCron}")
+    public void repayInfoFlow() {
         jobService.repayInfoFlow();
     }
 

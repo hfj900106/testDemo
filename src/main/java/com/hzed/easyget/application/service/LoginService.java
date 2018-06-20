@@ -49,6 +49,7 @@ public class LoginService {
 
     /**
      * 用户登录注册
+     *
      * @param request
      * @return
      */
@@ -71,12 +72,7 @@ public class LoginService {
         if (user == null) {
             userId = IdentifierGenerator.nextId();
             //build User
-            user = new User();
-            user.setId(userId);
-            user.setMobileAccount(mobile);
-            user.setPlatform(platform);
-            user.setClient("Rupiah Get");
-            user.setImei(RequestUtil.getGlobalHead().getImei());
+            user = User.builder().id(userId).mobileAccount(mobile).platform(platform).client("Rupiah Get").imei(imei).build();
             // 生成token
             GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
             token = JwtUtil.createToken(newUserToken);
@@ -95,37 +91,39 @@ public class LoginService {
             token = JwtUtil.createToken(newUserToken);
             //token统一校验时已经校验了过期时间（7天），所以这里不考虑过期
             UserToken userToken = userTokenRepository.findByUserIdAndImei(userId, imei);
-            if (userToken != null) {
-                // UserToken 老用户登录都要刷新token表，刷新过期时间
-                UserToken userTokenUpdate = buildUserToken(userToken.getId(), userId, token, imei);
-                userTokenUpdate.setUpdateTime(LocalDateTime.now());
-                // UserLogin
-                UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
-                userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
-            } else {
+
+            if (userToken == null) {
                 //有用户但是tonken表没数据，正常情况下不存在这种情况
-                log.error("根据用户id"+user.getId()+"和用户imei："+imei+"没有找到该用户的token");
+                log.error("根据用户id" + user.getId() + "和用户imei：" + imei + "没有找到该用户的token");
                 throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION);
             }
+
+            // UserToken 老用户登录都要刷新token表，刷新过期时间
+            UserToken userTokenUpdate = buildUserToken(userToken.getId(), userId, token, imei);
+            userTokenUpdate.setUpdateTime(LocalDateTime.now());
+            // UserLogin
+            UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
+            userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
         }
         //放入redis 3个小时
-        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token,RedisConsts.THREE_HOUR);
-       //验证SmsCode之后删除掉
+        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, RedisConsts.THREE_HOUR);
+        //验证SmsCode之后删除掉
         redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
         return LoginByCodeResponse.builder().token(token).build();
     }
 
     /**
      * H5页面注册
+     *
      * @param request
      */
-    public void registerH5(RegisterH5Request request){
+    public void registerH5(RegisterH5Request request) {
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String mobile = request.getMobile();
         String smsCode = request.getSmsCode();
         String platform = globalHead.getPlatform();
         User user = userRepository.findByMobile(mobile);
-        if(user!=null){
+        if (user != null) {
             throw new ComBizException(BizCodeEnum.EXIST_USER);
         }
         //校验验证码
@@ -141,7 +139,7 @@ public class LoginService {
         user.setImei(RequestUtil.getGlobalHead().getImei());
         //UserStatus
         UserStatus userStatus = buildUserStatus(userId);
-        userRepository.insertUserAndStatus(user,  userStatus);
+        userRepository.insertUserAndStatus(user, userStatus);
     }
 
     private UserLogin buildUserLogin(Long userId, String platform, String ip, String device) {
@@ -154,7 +152,6 @@ public class LoginService {
         userLogin.setLoginDevice(device);
         userLogin.setLoginTime(LocalDateTime.now());
         userLogin.setCreateBy(userId);
-        userLogin.setCreateTime(LocalDateTime.now());
         return userLogin;
     }
 
@@ -174,7 +171,6 @@ public class LoginService {
         userStatus.setUserId(userId);
         userStatus.setIsBlacklist(false);
         userStatus.setIsLock(false);
-        userStatus.setCreateTime(LocalDateTime.now());
         userStatus.setRemark("注册");
         return userStatus;
     }
@@ -250,10 +246,10 @@ public class LoginService {
         String cacheCode = redisService.getCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile);
         if (StringUtils.isBlank(cacheCode) || !code.equalsIgnoreCase(cacheCode)) {
             throw new ComBizException(BizCodeEnum.PIC_CODE_ERROR);
-        } else {
-            //验证通过则删除10分钟重发标识，等发送之后会重新加上
-            redisService.clearCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile);
         }
+
+        //验证通过则删除10分钟重发标识，等发送之后会重新加上
+        redisService.clearCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile);
     }
 
 

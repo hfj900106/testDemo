@@ -101,7 +101,7 @@ public class TransactionService {
         //工厂类获取bill和billLedgers
         ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
         List<Bill> bills = product.createBills(bidInfo);
-        List<BillLedger> billLedgers = product.createBillLedger(bills.get(0),bidInfo);
+        List<BillLedger> billLedgers = product.createBillLedger(bidInfo);
         UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId,bidInfo.getInBank() ,bidInfo.getInAccount(),states,overTime );
         tempTableRepository.afterBankLoan(
                 Bid.builder().id(bidNo).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetProduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
@@ -179,7 +179,7 @@ public class TransactionService {
         //工厂类获取bill和billLedgers
         ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
         List<Bill> bills = product.createBills(bidInfo);
-        List<BillLedger> billLedgers = product.createBillLedger(bills.get(0),bidInfo);
+        List<BillLedger> billLedgers = product.createBillLedger(bidInfo);
         UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId,bidInfo.getInBank() ,bidInfo.getInAccount(),TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now() );
         tempTableRepository.afterBankLoan(
                 Bid.builder().id(bidNo).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetProduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),

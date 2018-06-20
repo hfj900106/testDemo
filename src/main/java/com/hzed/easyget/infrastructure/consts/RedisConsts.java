@@ -26,7 +26,7 @@ public class RedisConsts {
     public static final String TOKEN = "token";
 
     /**
-     * token失效时间
+     * token失效时间 单位秒
      */
     public static final Long THREE_HOUR = 10800L;
 

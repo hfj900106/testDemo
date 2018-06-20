@@ -2,7 +2,6 @@ package com.hzed;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hzed.easyget.infrastructure.annotation.EnableAliyun;
 import com.hzed.easyget.infrastructure.annotation.EnableRedis;
 import com.hzed.easyget.infrastructure.annotation.EnableRest;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +40,6 @@ import javax.validation.Validator;
 @ServletComponentScan
 @EnableRedis
 @EnableRest
-@EnableAliyun
 //@EnableRabbitMQ
 public class BootApplication {
 
@@ -90,8 +88,6 @@ public class BootApplication {
         validator.setValidationMessageSource(rbms);
         return validator;
     }
-
-
 
     public static void main(String[] args) {
         SpringApplication.run(BootApplication.class, args);

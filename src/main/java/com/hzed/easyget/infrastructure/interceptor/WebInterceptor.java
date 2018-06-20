@@ -1,16 +1,16 @@
 package com.hzed.easyget.infrastructure.interceptor;
 
+import com.alibaba.fastjson.JSON;
 import com.hzed.easyget.application.service.ComService;
 import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
-import com.hzed.easyget.infrastructure.consts.LogConsts;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.utils.ComUtil;
+import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -18,7 +18,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.UUID;
 
 /**
  * 统一请求拦截
@@ -35,7 +34,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         // 日志加入trace
-        MDC.put(LogConsts.TRACE, UUID.randomUUID().toString().replaceAll("-", "").substring(3, 20));
+        MdcUtil.putTrace();
 
         // 不为方法拦截直接放过
         if (!(handler instanceof HandlerMethod)) {
@@ -49,7 +48,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         RequestUtil.setModuleFunc(moduleFunc);
         if (moduleFunc != null) {
             // 设置模块名
-            MDC.put(LogConsts.MODULE_NAME, moduleFunc.value());
+            MdcUtil.putModuleName(moduleFunc.value());
             String body = ComUtil.subString(request.getAttribute("body").toString(), moduleFunc.printParameterLength());
             log.info("请求报文：{}", StringUtils.isBlank(body) ? "无请求参数" : body);
         }
@@ -61,14 +60,20 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         }
 
         GlobalHead globalHeadr = RequestUtil.getGlobalHead();
+        log.info("请求头信息：{}", JSON.toJSONString(globalHeadr));
         // header中一些必要参数校验
         comService.validateHeader(globalHeadr);
 
         // token验证
         TokenIgnore tokenIgnore = mHandler.getMethodAnnotation(TokenIgnore.class);
-        if (tokenIgnore == null) {
-            comService.validateToken(globalHeadr);
+        if (tokenIgnore != null) {
+            return true;
         }
+
+        // 校验token
+        comService.validateToken(globalHeadr);
+        log.info("用户信息：{}", JSON.toJSONString(RequestUtil.getGlobalUser()));
+
         return true;
     }
 

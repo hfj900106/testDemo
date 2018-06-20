@@ -42,7 +42,7 @@ public class DictController {
         System.out.println("========module:" + key + "=========");
     }
 
-    @ModuleFunc("通过moduleCode获取子弹列表")
+    @ModuleFunc("通过moduleCode获取字典列表")
     @PostMapping("/getDictList")
     public List<DictResponse> getDictList(@Valid @RequestBody DictRequest request){
         return dictService.getDictByModule(request);

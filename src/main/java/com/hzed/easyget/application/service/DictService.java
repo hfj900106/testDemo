@@ -33,9 +33,15 @@ public class DictService {
     private AuthItemRepository authItemRepository;
 
     public Dict getDictByCode(String moduleCode) {
-        String Dict = redisService.getCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode);
 
-        return null;
+        Dict dict = redisService.getObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode);
+        if (dict == null) {
+            dict = dictRepository.findByCodeWithExp(moduleCode);
+        }
+
+        redisService.setObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode, dict, 5 * 3600L);
+
+        return dict;
     }
 
     public List<DictResponse> getDictByModule(DictRequest request) {
@@ -43,22 +49,22 @@ public class DictService {
         String moduleCode = request.getModuleCode();
         String i18n = RequestUtil.getGlobalHead().getI18n();
         //获取缓存数据,缓存没有，才查询数据库
-        String Dict = redisService.getCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode);
-        if (Dict == null) {
-
-            List<Dict> dictList = dictRepository.findByModuleCodeAndLanguageWithExp(moduleCode,i18n);
-            dictList.forEach(dict -> {
-                AuthItem authItem = authItemRepository.findByCode(dict.getDicCode());
-                DictResponse dictResponse = new DictResponse();
-                dictResponse.setDicName(dict.getDicName());
-                dictResponse.setIsUse(authItem.getIsUse());
-                dictResponseList.add(dictResponse);
-            });
-
+        List<DictResponse> dictResponseListCache = redisService.getObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode + RedisConsts.SPLIT + i18n);
+        if (dictResponseListCache != null) {
+            return dictResponseListCache;
         }
 
+        List<Dict> dictList = dictRepository.findByModuleCodeAndLanguageWithExp(moduleCode, i18n);
+        dictList.forEach(dict -> {
+            AuthItem authItem = authItemRepository.findByCode(dict.getDicCode());
+            DictResponse dictResponse = new DictResponse();
+            dictResponse.setDicName(dict.getDicName());
+            dictResponse.setIsUse(authItem.getIsUse());
+            dictResponseList.add(dictResponse);
+        });
+
         //放入缓存5小时
-     //   redisService.setCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode , dictResponseList,5* 3600L);
+        redisService.setObjCache(RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT + moduleCode + RedisConsts.SPLIT + i18n, dictResponseList, 5 * 3600L);
 
         return dictResponseList;
     }

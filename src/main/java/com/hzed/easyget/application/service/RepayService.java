@@ -347,7 +347,6 @@ public class RepayService {
         // 保存 t_loan_user_repayment 还款记录表
         UserRepayment userRepayment = new UserRepayment();
         userRepayment.setId(IdentifierGenerator.nextId());
-        // 从threadLocal里面拿
         userRepayment.setTransactionId(transactionId);
         userRepayment.setBillId(billId);
         userRepayment.setRepaymentItem(item.byteValue());

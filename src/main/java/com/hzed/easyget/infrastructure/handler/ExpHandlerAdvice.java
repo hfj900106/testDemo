@@ -52,8 +52,14 @@ public class ExpHandlerAdvice {
 
     @ExceptionHandler(WarnException.class)
     public Response handlerWarnException(WarnException ex) {
-        log.warn("业务警告：{}", ex.getSerializeMsg(), ex);
-        return new Response(ex.getErrorCode(), i18nService.getBizCodeMessage(ex.getErrorCode()));
+
+        String errorCode = ex.getErrorCode();
+        String message = i18nService.getBizCodeMessage(errorCode);
+        // 中文描述 用于打印日志
+        String messageCN = i18nService.getBizCodeMessage(errorCode, null, Locale.CHINA);
+
+        log.warn("业务警告：{}", messageCN);
+        return new Response(ex.getErrorCode(), message);
     }
 
     @ExceptionHandler(NestedException.class)

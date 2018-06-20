@@ -2,7 +2,6 @@ package com.hzed.easyget.infrastructure.utils;
 
 
 import com.google.common.collect.Maps;
-import com.hzed.easyget.controller.model.PictureCodeResponse;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.BaseBizException;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
@@ -12,7 +11,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-
 import java.util.Map;
 import java.util.Random;
 
@@ -94,6 +92,7 @@ public class PicUtil {
      * 随机字符串，去掉易混淆的字符
      */
     private static String codeStr = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+
     /**
      * 绘制字符串
      */
@@ -115,13 +114,14 @@ public class PicUtil {
     public static String getRandomString(int num) {
         return String.valueOf(codeStr.charAt(num));
     }
+
     /**
      * 生成随机图片
      */
-    public static Map<String,String> getPictureCode() {
+    public static Map<String, String> getPictureCode() {
         int width = 80;
         int height = 26;
-        int strNum =4;
+        int strNum = 4;
         // BufferedImage类是具有缓冲区的Image类,Image类是用于描述图像信息的类
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_BGR);
         // 产生Image对象的Graphics对象,改对象可以在图像上进行各种绘制操作
@@ -151,9 +151,9 @@ public class PicUtil {
                 }
             }
         }
-        Map<String,String> map = Maps.newHashMap();
+        Map<String, String> map = Maps.newHashMap();
         map.put("picStr", java.util.Base64.getEncoder().encodeToString(bos.toByteArray()));
-        map.put("code",randomString);
+        map.put("code", randomString);
         return map;
     }
 

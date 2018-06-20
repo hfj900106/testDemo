@@ -28,8 +28,8 @@ import java.util.List;
  * @date 2018/6/7
  */
 
-@Service
 @Slf4j
+@Service
 public class JobService {
     @Autowired
     private BidRepository bidRepository;
@@ -83,7 +83,8 @@ public class JobService {
                 LocalDateTime realRepaymentTime = repayjob.getRealRepaymentTime();
                 repayService.repayInformationFlow(bidId, repaymentAmount, realRepaymentTime, repayjob.getTransactionId(), repayjob);
             } catch (Exception e) {
-                log.error("标的"+repayjob.getBidId()+"走还款信息流失败");
+                log.error("标的{}走还款信息流失败", repayjob.getBidId());
+
                 RepayInfoFlowJob jobUpdate = new RepayInfoFlowJob();
                 jobUpdate.setId(repayjob.getId());
                 jobUpdate.setStatus(JobStatusEnum.FALI.getCode().byteValue());
@@ -93,8 +94,6 @@ public class JobService {
                 repayInfoFlowJobRepository.update(jobUpdate);
             }
         });
-
-
     }
 
     /**

@@ -41,19 +41,19 @@ aliyun:
 # 第三方
 thirdParty:
   pay:
-    domain: http://10.10.30.114:8081 # 请求架构组bulepay域名地址
-    loanTransactionUrl: /bluepay/transferBalance  # 放款接口链接
-    receiverTransactionUrl: /bluepay/gatherDr # 收款接口链接
-    getPaymentCodeUrl: /bluepay/getPaymentCode #获取还款码接口
+    domain:                   http://10.10.30.114:8081 # 请求架构组bulepay域名地址
+    loanTransactionUrl:       /bluepay/transferBalance  # 放款接口链接
+    receiverTransactionUrl:   /bluepay/gatherDr # 收款接口链接
+    getPaymentCodeUrl:        /bluepay/getPaymentCode #获取还款码接口
   risk:
-    domain: http://10.10.20.202:9611 # 请求风控域名地址
+    domain:                   http://10.10.20.202:9611 # 请求风控域名地址
     checkRiskEnableBorrowUrl: /api/risk/checkRiskEnableBorrow #请求风控查询用户贷款资格
-    idCardRecognitionUrl: /api/risk/core/ocr #身份证识别
-    faceRecognitionUrl: /api/risk/core/faceComparison #人脸识别
-    contactsUrl: /api/risk/Contacts/add #通讯录授权
-    messagesUrl: /api/risk/Sms/add #短信授权
-    operatorSendSmsCodeUrl: /api/riskOperator/createTaskAndlogin  #运营商-发送验证码
-    operatorAuthUrl: /app/riskOperator/sendSmsCode  #运营商-输入验证码认证
+    idCardRecognitionUrl:     /api/risk/core/ocr #身份证识别
+    faceRecognitionUrl:       /api/risk/core/faceComparison #人脸识别
+    contactsUrl:              /api/risk/Contacts/add #通讯录授权
+    messagesUrl:              /api/risk/Sms/add #短信授权
+    operatorSendSmsCodeUrl:   /api/riskOperator/createTaskAndlogin  #运营商-发送验证码
+    operatorAuthUrl:          /app/riskOperator/sendSmsCode  #运营商-输入验证码认证
 
 #======================================= 系统参数 开始 =======================================#
 system:

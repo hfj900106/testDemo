@@ -3,7 +3,7 @@ package com.hzed.easyget.infrastructure.interceptor;
 import com.hzed.easyget.infrastructure.annotation.JobAnnotation;
 import com.hzed.easyget.infrastructure.config.JobProp;
 import com.hzed.easyget.infrastructure.utils.ComUtil;
-import com.hzed.easyget.infrastructure.utils.MDCUtil;
+import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -35,7 +35,7 @@ public class JobAspect {
     public Object aroundTest(ProceedingJoinPoint pPoint, JobAnnotation jobAnnotation) throws Throwable {
         String methodName = ((MethodSignature) pPoint.getSignature()).getMethod().getName();
         // 定时任务名放入日志中
-        MDCUtil.put("moduleName", jobAnnotation.value());
+        MdcUtil.putModuleName(jobAnnotation.value());
         // 如果配置不执行或定时任务正在进行直接返回
         if (!getRunFlag(methodName)) {
             return null;

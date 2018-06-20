@@ -3,7 +3,7 @@
 <mapper namespace="com.hzed.easyget.persistence.ext.mapper.BidExtMapper">
 
     <select id="selectBidsToPush" parameterType="java.util.Map" resultType="com.hzed.easyget.persistence.ext.entity.BidExt">
-      select bd.id as bidId
+      select bd.id as bidId,bd.user_id as userId
       from t_loan_bid bd
       where bd.status=1 and bd.id not in
         (select bd.id

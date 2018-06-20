@@ -68,7 +68,9 @@ public enum BizCodeEnum {
     INSUFFICIENT_QUOTA("1032","名额不足"),
     UN_LOAN_QUALIFICATION("1033","无贷款资格"),
     NEED_JUMP("1034","需要跳转"),
-    EXIST_USER("1035","用户已经存在")
+    EXIST_USER("1035","用户已经存在"),
+    FAIL_PUSH_RISK("1036","推送风控失败"),
+    FAIL_CALLBACK_RISK("1037","风控回调失败")
 
     ;
 

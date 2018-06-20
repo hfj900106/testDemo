@@ -9,4 +9,5 @@ import lombok.Data;
 @Data
 public class BidExt {
     Long bidId;
+    Long userId;
 }

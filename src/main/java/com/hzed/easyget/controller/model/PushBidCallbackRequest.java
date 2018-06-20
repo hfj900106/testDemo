@@ -21,5 +21,5 @@ public class PushBidCallbackRequest {
     @NotBlank(message = "{param.callback.resultCode.isNotEmpty}")
     private String resultCode;
     @NotBlank(message = "{param.callback.handleTime.isNotEmpty}")
-    private LocalDateTime handleTime;
+    private String handleTime;
 }

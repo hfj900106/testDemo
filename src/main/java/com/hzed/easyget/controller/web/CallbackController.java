@@ -2,6 +2,7 @@ package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.CallbackService;
 import com.hzed.easyget.controller.model.PushBidCallbackRequest;
+import com.hzed.easyget.controller.model.PushBidCallbackResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 /**
  * 风控回调
  * @author hfj
@@ -19,17 +22,17 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @ExceptionAnno
 @RestController
-@RequestMapping("/easy-get")
+@RequestMapping("/callback")
 @Slf4j
 public class CallbackController {
     @Autowired
     private CallbackService callbackService;
 
-    @ModuleFunc("推送资产-审核回调")
+    @ModuleFunc(value = "推送资产-审核回调",isCommonResponse = false)
     @PostMapping("/riskCallback/pushBidCallback")
     @HeaderIgnore
-    public void pushBidCallback(@RequestBody PushBidCallbackRequest request) {
-        callbackService.pushBidCallback(request);
+    public PushBidCallbackResponse pushBidCallback(@Valid @RequestBody PushBidCallbackRequest request) {
+        return callbackService.pushBidCallback(request);
     }
 
 }

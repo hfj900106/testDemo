@@ -14,7 +14,7 @@ import java.util.Locale;
  *
  * @author guichang
  */
-@WebFilter(filterName = "requestFilter", urlPatterns = {"/api/*"})
+@WebFilter(filterName = "requestFilter", urlPatterns = {"/api/*", "/callback/*"})
 public class RequestFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {

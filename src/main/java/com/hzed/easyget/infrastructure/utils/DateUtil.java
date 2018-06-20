@@ -3,7 +3,9 @@ package com.hzed.easyget.infrastructure.utils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
@@ -29,6 +31,18 @@ public final class DateUtil {
     public static final DateTimeFormatter FORMAT5 = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     private DateUtil() {
+    }
+
+
+    /**
+     * date 转LocalDateTime
+     */
+    public static LocalDateTime dateToLocalDateTime(String dateStr) {
+        Date date = new Date(dateStr);
+        Instant instant = date.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+        LocalDateTime localDateTime = instant.atZone(zoneId).toLocalDateTime();
+        return localDateTime;
     }
 
     /**

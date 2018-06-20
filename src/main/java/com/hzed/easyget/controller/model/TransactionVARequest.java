@@ -20,6 +20,6 @@ public class TransactionVARequest {
     /**
      * 交易方式 ATM OTC
      */
-    @Pattern(regexp = "^ATM|OTC$", message = "${The value can only 'becashout' or 'bank'}")
+    @Pattern(regexp = "^ATM|OTC$", message = "{param.repay.mode.must}")
     private String mode;
 }

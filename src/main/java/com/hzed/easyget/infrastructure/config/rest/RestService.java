@@ -2,6 +2,7 @@ package com.hzed.easyget.infrastructure.config.rest;
 
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -109,6 +110,9 @@ public class RestService {
             if (StringUtils.isNotBlank(json)) {
                 httpPost.setEntity(new StringEntity(json, "utf-8"));
             }
+            //设置请求和传输超时时间
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(8000).build();
+            httpPost.setConfig(requestConfig);
             CloseableHttpResponse response = http.execute(httpPost);
             if (response != null) {
                 org.apache.http.HttpEntity resEntity = response.getEntity();

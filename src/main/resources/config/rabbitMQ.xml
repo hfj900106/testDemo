@@ -12,8 +12,8 @@
 
 	<!-- 连接服务配置 -->
 	<rabbit:connection-factory id="rabbitConnectionFactory"
-		host="10.10.30.112" port="32771" username="user"
-		password="password" virtual-host="/" />
+	   host="10.10.30.114" port="32771" username="user"
+	   password="password" virtual-host="/" />
 
 	<rabbit:admin connection-factory="rabbitConnectionFactory"/>
 	

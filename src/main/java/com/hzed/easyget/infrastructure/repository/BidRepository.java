@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -83,8 +82,7 @@ public class BidRepository {
         return bidExtMapper.findLoanTransaction(bidId);
     }
 
-    public void updateUserTranState(String t_id, byte b) {
-        UserTransaction userTransaction=UserTransaction.builder().paymentId(t_id).status(b).updateTime(LocalDateTime.now()).build();
+    public void updateUserTranState(UserTransaction userTransaction) {
         bidExtMapper.updateUserTranceOverstate(userTransaction);
     }
 }

@@ -67,6 +67,8 @@ system:
     pushBidCron: 0/5 * * * * ?
     bankLoan: false # 放款
     bankLoanCron: 0/5 * * * * ?
+    repayInfoFlow: false # 还款信息流
+    repayInfoFlowCron: 0/5 * * * * ?
 
 
 #======================================= 系统参数 结束 =======================================#

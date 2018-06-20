@@ -36,6 +36,10 @@ public class LoanJob {
         jobService.bankLoan();
     }
 
-
+    @JobAnnotation("还款信息流")
+    @Scheduled(cron = "0/5 * * * * ?")
+    public void repayInfoFlow() throws Exception {
+        jobService.repayInfoFlow();
+    }
 
 }

@@ -3,6 +3,8 @@ package com.hzed.easyget.controller.web;
 import com.hzed.easyget.application.service.DictService;
 import com.hzed.easyget.controller.model.DictRequest;
 import com.hzed.easyget.controller.model.DictResponse;
+import com.hzed.easyget.controller.model.IDAreaRequest;
+import com.hzed.easyget.controller.model.IDAreaResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
@@ -48,6 +50,12 @@ public class DictController {
         return dictService.getDictByModule(request);
     }
 
+    @ModuleFunc("获取地区字典")
+    @PostMapping("/getIDAreaList")
+    public List<IDAreaResponse> getIDAreaList(@RequestBody IDAreaRequest request){
+
+        return dictService.getIDAreaList(request);
+    }
 
 
 }

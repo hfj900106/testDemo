@@ -3,6 +3,7 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -13,9 +14,9 @@ import java.math.BigDecimal;
  */
 @Data
 public class SubmitLoanRequest {
-    @NotBlank(message = "{param.loan.applyAmount.isNotEmpty}")
+    @NotNull(message = "{param.loan.applyAmount.isNotEmpty}")
     private BigDecimal applyAmount;
-    @NotBlank(message = "{param.loan.period.isNotEmpty}")
+    @NotNull(message = "{param.loan.period.isNotEmpty}")
     private Integer period;
     @NotBlank(message = "{param.loan.inBank.isNotEmpty}")
     private String inBank;

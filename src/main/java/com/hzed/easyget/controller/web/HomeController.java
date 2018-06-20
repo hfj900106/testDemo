@@ -38,7 +38,6 @@ public class HomeController {
     @PostMapping("/getAppVersion")
     public AppVersionResponse getAppVersion(@Valid @RequestBody AppVersionRequest request) {
         return homeService.getAppVersion(request);
-
     }
 
     @TokenIgnore
@@ -47,7 +46,6 @@ public class HomeController {
     public LoanCalculateResponse loanCalculate(@Valid @RequestBody LoanCalculateRequest request) {
         return homeService.loanCalculate(request);
     }
-
 
     @ModuleFunc("token更新")
     @PostMapping("/updateToken")
@@ -76,7 +74,7 @@ public class HomeController {
 
     @ModuleFunc("检测首页弹框提醒")
     @PostMapping("/homeAlert")
-    public Response<HomePageResponse> homeAlert(){
+    public Response<HomePageResponse> homeAlert() {
         HomePageResponse response = homeService.homeAlert();
         return Response.getSuccessResponse(response);
     }

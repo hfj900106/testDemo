@@ -41,4 +41,6 @@ public class PaymentCodeRequest {
      */
     @NotBlank(message = "付款账号不能为空")
     private String cardNo;
+
+
 }

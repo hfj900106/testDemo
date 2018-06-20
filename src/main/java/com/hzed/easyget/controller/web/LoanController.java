@@ -32,7 +32,6 @@ public class LoanController {
     @ModuleFunc("借款详情")
     @PostMapping("/loanDetail")
     public LoanDetailResponse loanDetail(@Valid @RequestBody LoanDetailRequest request) {
-
         return loanService.loanDetail(request);
     }
 

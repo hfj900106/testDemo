@@ -20,8 +20,7 @@ public class RepayInfoFlowJobRepository {
 
     public List<RepayInfoFlowJob> findJobList(List<Byte> status, Integer times) {
         RepayInfoFlowJobExample example = new RepayInfoFlowJobExample();
-        example.createCriteria().andStatusIn(status).andTimesEqualTo(times.byteValue());
-
+        example.createCriteria().andStatusIn(status).andTimesLessThanOrEqualTo(times.byteValue());
         return repayInfoFlowJobMapper.selectByExample(example);
     }
 

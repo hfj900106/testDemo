@@ -67,11 +67,11 @@ public class JobService {
 
     /**
      * 还款走信息流
-     * TODO 日志打印
      */
     public void repayInfoFlow() {
         List<RepayInfoFlowJob> jobList = repayInfoFlowJobRepository.findJobList(Lists.newArrayList((byte) 1, (byte) 2), 2);
-        if (jobList == null || jobList.isEmpty()) {
+        if (ObjectUtils.isEmpty(jobList)) {
+            log.info("没有需要走还款信息流的数据");
             return;
         }
 
@@ -83,6 +83,7 @@ public class JobService {
                 LocalDateTime realRepaymentTime = repayjob.getRealRepaymentTime();
                 repayService.repayInformationFlow(bidId, repaymentAmount, realRepaymentTime, repayjob.getTransactionId(), repayjob);
             } catch (Exception e) {
+                log.error("标的"+repayjob.getBidId()+"走还款信息流失败");
                 RepayInfoFlowJob jobUpdate = new RepayInfoFlowJob();
                 jobUpdate.setId(repayjob.getId());
                 jobUpdate.setStatus(JobStatusEnum.FALI.getCode().byteValue());

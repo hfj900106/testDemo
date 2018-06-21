@@ -67,7 +67,7 @@ public class EasyGetService implements ProductService {
     @Override
     public void checkBid(Bid bid) {
         if (!bid.getProductCode().equals(ProductCodeEnum.INDONESIA.getCode())) {
-            throw new ComBizException(BizCodeEnum.NOT_INDONESIA_PRODUCT, bid.getId());
+            throw new ComBizException(BizCodeEnum.NOT_INDONESIA_PRODUCT, new Object[]{bid.getId()});
         }
     }
 

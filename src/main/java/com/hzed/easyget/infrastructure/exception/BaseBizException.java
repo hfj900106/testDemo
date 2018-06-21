@@ -5,26 +5,34 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * 异常基本类
+ *
  * @author guichang
  */
 
 @Data
 public class BaseBizException extends RuntimeException {
 
-    String errorCode;
-
-    String errorMsg;
+    /**
+     * 错误码
+     */
+    private String errorCode;
+    /**
+     * 错误信息
+     */
+    private String errorMsg;
+    /**
+     * 错误信息占位
+     */
+    private Object[] objs;
+    /**
+     * 返回response附加数据
+     */
+    private Object data;
 
     /**
      * 除了错误码本身描述的提示信息外，额外补充的信息
      */
     private String extraMsg;
-
-    /**
-     * 错误信息模板
-     */
-    private final static String MSG_TEMPLATE = "错误码:{0}, 描述:{1}, 异常信息:{2}";
-
 
     /**
      * 构造器
@@ -33,59 +41,35 @@ public class BaseBizException extends RuntimeException {
         super();
     }
 
-    /**
-     * 构造器，含错误明细码枚举
-     *
-     */
-    public BaseBizException(String code,String msg) {
+    public BaseBizException(Throwable cause) {
+        super(cause);
+    }
+
+    public BaseBizException(String code, String msg) {
         super(msg);
         this.errorCode = code;
         this.errorMsg = msg;
     }
 
-    /**
-     * 构造器，含错误明细码枚举、异常
-     *
-     * @param cause    异常
-     */
-    public BaseBizException(String code,String msg, Throwable cause) {
+    public BaseBizException(String code, String msg, Throwable cause) {
         super(msg, cause);
         this.errorCode = code;
         this.errorMsg = msg;
     }
 
-    public BaseBizException(String code,String msg, Throwable cause, String extraMsg) {
-        super(msg + "-" + extraMsg, cause);
-        this.errorCode = code;
-        this.errorMsg = msg;
+    public BaseBizException(String code, String msg, String extraMsg) {
+        this(code, msg + "-" + extraMsg);
         this.extraMsg = extraMsg;
     }
 
-    public BaseBizException(String code,String msg,  String extraMsg) {
-        super(msg + "-" + extraMsg);
-        this.errorCode = code;
-        this.errorMsg = msg;
-        this.extraMsg = extraMsg;
+    public BaseBizException(String code, String msg, Object data, Object[] objs) {
+        this(code, msg);
+        this.data = data;
+        this.objs = objs;
     }
 
-    public BaseBizException(Throwable cause) {
-        super(cause);
-    }
-
-    /**
-     * 组装错误信息
-     *
-     * @return 错误信息详细描述
-     */
     @Override
     public String getMessage() {
-        return this.extraMsg == null ? this.errorMsg : this.errorMsg + "-" + this.extraMsg;
-    }
-
-    public String getSerializeMsg() {
-        if (StringUtils.isNotEmpty(getExtraMsg())) {
-            return getErrorMsg() + "-" + getExtraMsg();
-        }
-        return getErrorMsg();
+        return StringUtils.isBlank(this.extraMsg) ? this.errorMsg : this.errorMsg + "-" + this.extraMsg;
     }
 }

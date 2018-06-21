@@ -112,11 +112,19 @@ public final class DateUtil {
     }
 
     /**
+     * 添加小时
+     */
+    public static LocalDateTime addHour(LocalDateTime date, int hour) {
+        return date.plusHours(hour);
+    }
+
+    /**
      * 添加分
      */
     public static LocalDateTime addMins(LocalDateTime date, int mins) {
         return date.plusMinutes(mins);
     }
+
 
     /**
      * 获取当前日期所在月的最后一天

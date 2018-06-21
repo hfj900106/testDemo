@@ -49,7 +49,7 @@ public class BootTest {
 
     @Test
     public void uploadImg() throws Exception {
-        String imgPath = "C:\\Users\\Administrator\\Desktop\\jifei.png";
+        String imgPath = "C:\\Users\\Administrator\\Desktop\\3.png";
         String base64String = PicUtil.picToBase64(imgPath);
         String path = fileService.uploadBase64Img(base64String, "png");
         System.out.println(path);

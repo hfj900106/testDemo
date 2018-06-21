@@ -47,25 +47,25 @@ public class ExpHandlerAdvice {
         String messageCN = i18nService.getBizCodeMessage(errorCode, ex.getObjs(), Locale.CHINA);
 
         log.error("业务异常：{}", messageCN, ex);
-        return new Response(errorCode, message);
+        return new Response(errorCode, message, ex.getData());
     }
 
     @ExceptionHandler(WarnException.class)
     public Response handlerWarnException(WarnException ex) {
 
         String errorCode = ex.getErrorCode();
-        String message = i18nService.getBizCodeMessage(errorCode);
+        String message = i18nService.getBizCodeMessage(errorCode, ex.getObjs());
         // 中文描述 用于打印日志
-        String messageCN = i18nService.getBizCodeMessage(errorCode, null, Locale.CHINA);
+        String messageCN = i18nService.getBizCodeMessage(errorCode, ex.getObjs(), Locale.CHINA);
 
         log.warn("业务警告：{}", messageCN);
-        return new Response(ex.getErrorCode(), message);
+        return new Response(ex.getErrorCode(), message, ex.getData());
     }
 
     @ExceptionHandler(NestedException.class)
     public Response handlerNestedException(NestedException ex) {
-        log.warn("内部异常：{}", ex.getSerializeMsg());
-        return new Response(ex.getErrorCode(), i18nService.getBizCodeMessage(ex.getErrorCode()));
+        log.warn("内部异常：{}", ex.getMessage());
+        return new Response(ex.getErrorCode(), i18nService.getBizCodeMessage(ex.getErrorCode()), ex.getData());
     }
 
     @ExceptionHandler(Exception.class)

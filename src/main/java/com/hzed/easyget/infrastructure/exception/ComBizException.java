@@ -13,44 +13,26 @@ import lombok.Getter;
 @Getter
 public class ComBizException extends BaseBizException {
 
-    private Object[] objs;
-
-    /**
-     * 构造器 含错误码
-     *
-     * @param codeEnum 错误码
-     */
     public ComBizException(BizCodeEnum codeEnum) {
         super(codeEnum.getCode(), codeEnum.getMessage());
     }
 
-    public ComBizException(BizCodeEnum codeEnum, Object... objs) {
-        super(codeEnum.getCode(), codeEnum.getMessage());
-        this.objs = objs;
-    }
-
-    /**
-     * 构造器 含错误码、错误描述
-     *
-     * @param codeEnum 错误码
-     * @param extraMsg 错误描述
-     */
     public ComBizException(BizCodeEnum codeEnum, String extraMsg) {
         super(codeEnum.getCode(), codeEnum.getMessage(), extraMsg);
     }
 
-    /**
-     * 构造器 含错误码、异常
-     *
-     * @param codeEnum 错误码
-     * @param cause    异常
-     */
-    public ComBizException(String codeEnum, String cause) {
-        super(codeEnum, cause);
+    public ComBizException(BizCodeEnum codeEnum, Object data) {
+        super(codeEnum.getCode(), codeEnum.getMessage(), data, null);
     }
 
-    public ComBizException(String cause) {
-        super(BizCodeEnum.SERVICE_EXCEPTION.getCode(), cause);
+    public ComBizException(BizCodeEnum codeEnum, Object[] objs) {
+        super(codeEnum.getCode(), codeEnum.getMessage(), null, objs);
     }
+
+    public ComBizException(BizCodeEnum codeEnum, Object data, Object[] objs) {
+        super(codeEnum.getCode(), codeEnum.getMessage(), data, objs);
+    }
+
+
 
 }

@@ -45,7 +45,7 @@ public class BidRepository {
     public Bid findByIdWithExp(Long id) {
         Bid bid = findById(id);
         if (bid == null) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_BIDID,id);
+            throw new ComBizException(BizCodeEnum.ILLEGAL_BIDID, new Object[]{id});
         }
         return bid;
     }
@@ -60,9 +60,10 @@ public class BidRepository {
         userBankMapper.insertSelective(userBank);
     }
 
-    public List<BidExt> gitBidsToPush(){
+    public List<BidExt> gitBidsToPush() {
         return bidExtMapper.selectBidsToPush();
     }
+
     public List<BidExt> findBankLoanBids() {
         return bidExtMapper.findBankLoanBids();
     }
@@ -75,6 +76,7 @@ public class BidRepository {
 
     /**
      * 放款信息查询
+     *
      * @param bidId
      * @return
      */

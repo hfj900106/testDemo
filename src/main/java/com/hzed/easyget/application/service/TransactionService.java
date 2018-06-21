@@ -59,14 +59,15 @@ public class TransactionService {
      * 放款
      */
     public PayResponse loanTransaction(LoanTransactionRequest request) {
-        List<String> listCode= Arrays.asList(BizCodeEnum.PROCESS_LENDING.getCode(),BizCodeEnum.SUCCESS.getCode(),BizCodeEnum.REPAYMENTS.getCode());
+        List<String> listCode = Arrays.asList(BizCodeEnum.PROCESS_LENDING.getCode(), BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.REPAYMENTS.getCode());
         log.info("支付放款接口请求报文：{}", JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
-        if(result.equals(BizCodeEnum.TIMEOUT.getCode())){
-            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR,BizCodeEnum.TIMEOUT.getMessage());
+        if (result.equals(BizCodeEnum.TIMEOUT.getCode())) {
+            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, BizCodeEnum.TIMEOUT.getMessage());
         }
         log.info("支付放款接口返回报文：{}", result);
-        PayResponse response=JSON.parseObject(result,new TypeReference<PayResponse>() {});
+        PayResponse response = JSON.parseObject(result, new TypeReference<PayResponse>() {
+        });
         //判断返回状态 0000 0001 0002
         if (!listCode.contains(response.getCode())) {
             tempTableRepository.upDateTemp(TempTable.builder().id(Long.valueOf(request.getRequestNo())).createTime(LocalDateTime.now()).remark("放款失败：" + response.getMsg()).build());
@@ -89,13 +90,15 @@ public class TransactionService {
         }
         return Response.getSuccessResponse();
     }
+
     /**
      * 放款直接成功 改标的状态,砍头息、插入账单、台账、标进度、交易记录表，删除中间表数据
-     * @param bidNo 标的编号
-     * @param tempId 推送放款记录的中间表id
+     *
+     * @param bidNo     标的编号
+     * @param tempId    推送放款记录的中间表id
      * @param paymentId 交易id
      */
-    public void lendingCallback(Long bidNo,Long tempId, String paymentId,Byte states,LocalDateTime overTime){
+    public void lendingCallback(Long bidNo, Long tempId, String paymentId, Byte states, LocalDateTime overTime) {
         // 回调操作
         Bid bidInfo = bidRepository.findById(bidNo);
         //改标的状态,砍头息、插入账单、台账、标进度、交易记录表，删除中间表数据
@@ -103,7 +106,7 @@ public class TransactionService {
         ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
         List<Bill> bills = product.createBills(bidInfo);
         List<BillLedger> billLedgers = product.createBillLedger(bidInfo);
-        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId,bidInfo.getInBank() ,bidInfo.getInAccount(),states,overTime );
+        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId, bidInfo.getInBank(), bidInfo.getInAccount(), states, overTime);
         tempTableRepository.afterBankLoan(
                 Bid.builder().id(bidNo).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetProduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
                 BidProgress.builder().bidId(bidNo).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
@@ -117,15 +120,16 @@ public class TransactionService {
 
     /**
      * 构建交易对象
-     * @param userId 用户
-     * @param bidId 标的
-     * @param type 类型'交易类型 1-入账 2-出账 3-其他',
-     * @param amount 金额
+     *
+     * @param userId    用户
+     * @param bidId     标的
+     * @param type      类型'交易类型 1-入账 2-出账 3-其他',
+     * @param amount    金额
      * @param paymentId 交易id
-     * @param bank 银行
-     * @param account 账号
-     * @param states 交易状态
-     * @param overTime 交易完成时间
+     * @param bank      银行
+     * @param account   账号
+     * @param states    交易状态
+     * @param overTime  交易完成时间
      * @return
      */
     private UserTransaction buildUserTransaction(Long userId, Long bidId, Byte type, BigDecimal amount, String paymentId, String bank, String account, Byte states, LocalDateTime overTime) {
@@ -147,33 +151,37 @@ public class TransactionService {
 
     /**
      * 放款进行中 插入交易记录
+     *
      * @param bidNo
      * @param transactionId
-     * @param overTime 交易完成时间
-     * @param states 交易状态
+     * @param overTime      交易完成时间
+     * @param states        交易状态
      */
-    public void insertUsrTransactionInfo(Long bidNo, String transactionId,Byte states,LocalDateTime overTime) {
+    public void insertUsrTransactionInfo(Long bidNo, String transactionId, Byte states, LocalDateTime overTime) {
         Bid bidInfo = bidRepository.findById(bidNo);
-        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), transactionId,bidInfo.getInBank() ,bidInfo.getInAccount(),states,overTime );
+        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), transactionId, bidInfo.getInBank(), bidInfo.getInAccount(), states, overTime);
         userTransactionRepository.insertSelective(transaction);
     }
 
     /**
      * 根据交易id 查询交易记录
+     *
      * @param paymnetId
-     * @return
+     * @return 交易记录
      */
     public List<UserTransaction> findUserTranBypayMenid(String paymnetId) {
         return userTransactionRepository.findUserTranBypayMenid(paymnetId);
     }
 
     /**
-     *放款回调成功  改标的状态,砍头息、插入账单、台账、标进度、交易记录表，删除中间表数据
-     * @param userTransaction
+     * 放款回调成功  改标的状态,砍头息、插入账单、台账、标进度、交易记录表，删除中间表数据
+     *
+     * @param userTransaction 交易记录
+     * @param tempId          中间表id
      */
-    public void callBackupdateUserTrance(UserTransaction userTransaction,Long tempId) {
-        Long bidNo=userTransaction.getBidId();
-        String paymentId=userTransaction.getPaymentId();
+    public void callBackupdateUserTrance(UserTransaction userTransaction, Long tempId) {
+        Long bidNo = userTransaction.getBidId();
+        String paymentId = userTransaction.getPaymentId();
         // 回调操作
         Bid bidInfo = bidRepository.findById(bidNo);
         //改标的状态,砍头息、插入账单、台账、标进度、交易记录表，删除中间表数据
@@ -181,7 +189,7 @@ public class TransactionService {
         ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
         List<Bill> bills = product.createBills(bidInfo);
         List<BillLedger> billLedgers = product.createBillLedger(bidInfo);
-        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId,bidInfo.getInBank() ,bidInfo.getInAccount(),TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now() );
+        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId, bidInfo.getInBank(), bidInfo.getInAccount(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
         tempTableRepository.afterBankLoan(
                 Bid.builder().id(bidNo).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetProduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
                 BidProgress.builder().bidId(bidNo).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
@@ -197,7 +205,7 @@ public class TransactionService {
      * 修改交易记录状态
      */
     public void updateUserTranState(String payMentId, byte b) {
-        UserTransaction userTransaction=UserTransaction.builder().paymentId(payMentId).status(b).updateTime(LocalDateTime.now()).build();
+        UserTransaction userTransaction = UserTransaction.builder().paymentId(payMentId).status(b).updateTime(LocalDateTime.now()).build();
         bidRepository.updateUserTranState(userTransaction);
     }
 }

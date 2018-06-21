@@ -173,17 +173,13 @@ public class RepayService {
         RepayInfoFlowJob jobInsert = new RepayInfoFlowJob();
         jobInsert.setId(IdentifierGenerator.nextId());
         jobInsert.setBidId(bidId);
+//        jobInsert.setTransactionId();// TODO
         jobInsert.setRepaymentAmount(bidNoRepay);
         jobInsert.setRealRepaymentTime(LocalDateTime.now());
         jobInsert.setRepaymentMode(RepayModeEnum.ONLINE.getCode().byteValue());
         jobInsert.setRepaymentType(RepayTypeEnum.CLEAR.getCode().byteValue());
         jobInsert.setCreateTime(LocalDateTime.now());
         repayInfoFlowJobRepository.insert(jobInsert);
-
-        // 走信息流
-//        repayInformationFlow(request.getBidId(), bidNoRepay, LocalDateTime.now(), requestSeq, null);
-
-
     }
 
     /**
@@ -193,26 +189,18 @@ public class RepayService {
     public void repayPart(RepayPartRequest request) {
         Long bidId = request.getBidId();
         BigDecimal repayAmount = request.getRepayAmount();
-        // 提前生成转账交易后的流水号放入threadLocal中
-        String requestSeq = String.valueOf(IdentifierGenerator.nextId());
-
-        // TODO 走资金流
 
         // 信息流入库
         RepayInfoFlowJob jobInsert = new RepayInfoFlowJob();
         jobInsert.setId(IdentifierGenerator.nextId());
         jobInsert.setBidId(bidId);
+//        jobInsert.setTransactionId();// TODO
         jobInsert.setRepaymentAmount(repayAmount);
         jobInsert.setRealRepaymentTime(LocalDateTime.now());
         jobInsert.setRepaymentMode(RepayModeEnum.ONLINE.getCode().byteValue());
         jobInsert.setRepaymentType(RepayTypeEnum.PART.getCode().byteValue());
         jobInsert.setCreateTime(LocalDateTime.now());
         repayInfoFlowJobRepository.insert(jobInsert);
-
-
-        // 走信息流
-//        repayInformationFlow(request.getBidId(), repayAmount, LocalDateTime.now(), requestSeq, null);
-
     }
 
 

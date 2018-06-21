@@ -57,6 +57,7 @@ public class RedisService {
 
     public void clearCache(String key) {
         sTemplate.delete(getKey(key));
+        redisTemplate.delete(getKey(key));
     }
 
     private String getKey(String key) {

@@ -68,6 +68,7 @@ public class DictService {
             if (authItem != null) {
                 dictResponse.setDictCode(dict.getDicCode());
                 dictResponse.setDictValue(dict.getDicValue());
+                dictResponse.setDictName(dict.getDicName());
 
             }
             dictResponseList.add(dictResponse);

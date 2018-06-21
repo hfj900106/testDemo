@@ -33,6 +33,7 @@ public class CallbackService {
         PushBidCallbackResponse response = new PushBidCallbackResponse();
         Long bidId = request.getBidId();
         try{
+            log.info("风控审核回调，标的：{}",bidId);
             BigDecimal loanAmount = request.getLoanAmount();
             String resultCode = request.getResultCode();
             LocalDateTime dateTime = DateUtil.dateToLocalDateTime(new Date(Long.parseLong(request.getHandleTime())).toString());
@@ -45,7 +46,7 @@ public class CallbackService {
             response.setCode("0");
             response.setMessage("风控结果我已经收到了");
         }catch (Exception ex){
-            log.error("风控审核回调失败，标的："+bidId);
+            log.error("风控审核回调失败，标的：{}",bidId);
             throw new ComBizException(BizCodeEnum.FAIL_CALLBACK_RISK);
         }
         return response;

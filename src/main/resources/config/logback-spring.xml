@@ -80,7 +80,6 @@
     <springProfile name="dev">
         <root level="info">
             <appender-ref ref="STDOUT"/>
-            <appender-ref ref="FILE"/>
         </root>
     </springProfile>
 

@@ -95,7 +95,7 @@ public class LoginService {
 
             if (userToken == null) {
                 //有用户但是tonken表没数据，正常情况下不存在这种情况
-                log.error("根据用户id" + user.getId() + "和用户imei：" + imei + "没有找到该用户的token");
+                log.error("根据用户id：{}和用户imei：{}没有找到该用户的token", user.getId(), imei);
                 throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION);
             }
 
@@ -196,7 +196,7 @@ public class LoginService {
 
     public void sendSmsCode(SmsCodeRequest request) {
         String mobile = request.getMobile();
-        log.info("发送验证码手机号："+mobile);
+        log.info("发送验证码手机号：{}", mobile);
         String hasBeenSend = redisService.getCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile);
         if (StringUtils.isNotBlank(hasBeenSend)) {
             //发送过于频繁

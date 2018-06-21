@@ -14,4 +14,5 @@ import java.io.Serializable;
 public class DictResponse implements Serializable {
     private String dictCode;
     private String dictValue;
+    private String dictName;
 }

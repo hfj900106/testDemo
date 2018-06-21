@@ -28,7 +28,6 @@ import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -113,9 +112,14 @@ public class HomeService {
     public LoanCalculateResponse loanCalculate(LoanCalculateRequest request) {
         LoanCalculateResponse loanCalculateResponse = new LoanCalculateResponse();
 
-        EasyGetProduct product = new EasyGetProduct(new BigDecimal(request.getLoanAmount()));
+        EasyGetProduct product = new EasyGetProduct(request.getLoanAmount());
 
         loanCalculateResponse.setTotalAmount(product.getRepaymentAmount());
+        BigDecimal headFee = product.getHeadFee();
+        loanCalculateResponse.setCost(headFee);
+        loanCalculateResponse.setReceiveAmount(request.getLoanAmount().subtract(headFee));
+        loanCalculateResponse.setPeriod(request.getPeriod());
+        loanCalculateResponse.setLoanAmount(request.getLoanAmount());
         return loanCalculateResponse;
     }
 

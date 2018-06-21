@@ -13,4 +13,8 @@ import java.math.BigDecimal;
 @Data
 public class LoanCalculateResponse {
     private BigDecimal totalAmount;
+    private BigDecimal loanAmount;
+    private Integer period;
+    private BigDecimal cost;
+    private BigDecimal receiveAmount;
 }

@@ -2,9 +2,9 @@ package com.hzed;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hzed.easyget.infrastructure.annotation.EnableRabbitMQ;
 import com.hzed.easyget.infrastructure.annotation.EnableRedis;
 import com.hzed.easyget.infrastructure.annotation.EnableRest;
+import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -23,12 +23,21 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.context.request.async.DeferredResult;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
 /**
  * 启动类
+ *
  * @author guichang
  */
 
@@ -41,8 +50,14 @@ import javax.validation.Validator;
 @ServletComponentScan
 @EnableRedis
 @EnableRest
-@EnableRabbitMQ
+//@EnableRabbitMQ
+@EnableSwagger2
 public class BootApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(BootApplication.class, args);
+        log.info("==========恭喜大佬，贺喜大佬，项目启动成功！==========");
+    }
 
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
@@ -76,6 +91,9 @@ public class BootApplication {
         return objectMapper;
     }
 
+    /**
+     * valid校验工具
+     */
     @Bean
     public Validator setValidator() {
         ResourceBundleMessageSource rbms = new ResourceBundleMessageSource();
@@ -90,8 +108,33 @@ public class BootApplication {
         return validator;
     }
 
-    public static void main(String[] args) {
-        SpringApplication.run(BootApplication.class, args);
-        log.info("==========恭喜大佬，贺喜大佬，项目启动成功！==========");
+    /**
+     * swagger2 初始化类
+     */
+    @Bean
+    public Docket setDocket() {
+
+        ApiInfo apiInfo = new ApiInfoBuilder()
+                .title("api文档")
+                .description("restfun 风格接口")
+                // 服务条款网址
+                //.termsOfServiceUrl("http://blog.csdn.net/forezp")
+                .version("1.0")
+                //.contact(new Contact("帅呆了", "url", "email"))
+                .build();
+
+        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+                .genericModelSubstitutes(DeferredResult.class)
+                .useDefaultResponseMessages(false)
+                .forCodeGeneration(false)
+                .apiInfo(apiInfo)
+                .select()
+                // 加入扫描
+                .apis(RequestHandlerSelectors.withMethodAnnotation(ModuleFunc.class))
+                .paths(PathSelectors.any())
+                .build();
+
+        return docket;
     }
+
 }

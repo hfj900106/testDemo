@@ -70,8 +70,14 @@ public enum BizCodeEnum {
     NEED_JUMP("1034","需要跳转"),
     EXIST_USER("1035","用户已经存在"),
     FAIL_PUSH_RISK("1036","推送风控失败"),
-    FAIL_CALLBACK_RISK("1037","风控回调失败")
+    FAIL_CALLBACK_RISK("1037","风控回调失败"),
 
+    // 首页还款检测
+    MSG_BID_OVERDUE_TODAY("2001","您的借款于今天到期，请尽快还款，以免逾期"),
+    MSG_BID_OVERDUE_AFTER("2002","您的借款已经逾期{0}天，请尽快还款"),
+    MSG_BID_OVERDUE_BEFORE("2003","您的借款于{0}天后到期，请尽快还款，以免逾期"),
+    MSG_REPAY_APPLY("2004","您已经提交还款申请，立即查看还款结果？"),
+    MSG_REPAY_UNSUCCESS("2005","您上次还款未完成，是否继续?"),
     ;
 
 

@@ -2,6 +2,7 @@ package com.hzed.easyget.persistence.ext.entity;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -18,5 +19,5 @@ public class TransactionExt {
     /**
      * 确认时间
      */
-    private Date confirmTime;
+    private LocalDateTime confirmTime;
 }

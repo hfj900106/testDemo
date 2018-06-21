@@ -24,6 +24,7 @@ import com.hzed.easyget.persistence.ext.entity.VaData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.NumberUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
@@ -208,77 +209,59 @@ public class HomeService {
         });
     }
 
-    public HomePageResponse homeAlert() {
+    public HomePageResponse checkRepayment() {
         Long userId = RequestUtil.getGlobalUser().getUserId();
         HomePageResponse result = new HomePageResponse();
 
-        //先判断是否已经提交凭证
+        // 场景4、已经提交还款凭证，但未能等到最后结果情况
+        // 当前用户未结清的标是否有提交过凭证
         List<String> evidences = userRepository.queryEvidences(userId);
-        //当前时间
-        Date now = new Date();
-        //当前用户未结清的标有提交过凭证
+        LocalDateTime now = LocalDateTime.now();
         if (!ObjectUtils.isEmpty(evidences)) {
-            result.setType("1");
-            //查询当前未完成还款的交易记录id，并检查交易是否已过期
+            // 查询当前未完成还款的交易记录id，并检查交易是否已过期
             TransactionExt transactionExt = userRepository.queryTransaction(userId);
             result.setId(transactionExt.getTransactionId());
-            Date confirmTime = transactionExt.getConfirmTime();
-            //当前时间和确认时间相差的毫秒数
-            int timeDiff = now.compareTo(confirmTime);
-            //2个小时毫秒数
-            int threeHour = 60 * 60 * 1000 * 2;
-            //如果已经大于2个小时,设置已过期，否则设置未过期
-            if (timeDiff >= threeHour) {
-                result.setExpire(true);
-            } else {
-                result.setExpire(false);
-            }
-            result.setMsg(i18nService.getMessage("msg.repay.apply", null));
-            return result;
+            // 超过两个小时即失效
+            LocalDateTime confirmTime = transactionExt.getConfirmTime();
+            LocalDateTime expireTime = DateUtil.addHour(confirmTime, 2);
+            boolean expire = DateUtil.compare(now, expireTime);
+            result.setExpire(expire);
+            throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
         }
 
-
-        //判断是否已经生成va码,并且未提交还款凭证
-        //找出最新的va码数据
+        // 场景3、判断是否已经生成va码,并且未提交还款凭证
+        // 找出最新的va码数据
         VaData va = userRepository.queryLastVa(userId);
         if (va != null) {
-            //判断va是否有效
-            Date createTime = va.getCreateTime();
-            int sixHours = 60 * 60 * 1000 * 6;
-            if(now.compareTo(createTime) >= sixHours){
-                //va码已经过期
-                va.setVaExpire(true);
-            }else {
-                //va码尚未过期
-                va.setVaExpire(false);
-            }
+            // 判断va是否过期
+            LocalDateTime createTime = va.getCreateTime();
+            LocalDateTime vaExpireTime = DateUtil.addHour(createTime, 6);
+            boolean vaExpire = DateUtil.compare(now, vaExpireTime);
+            va.setVaExpire(vaExpire);
             result.setVaData(va);
             result.setId(va.getTransactionId());
-            result.setType("2");
-            result.setMsg(i18nService.getMessage("msg.repay.unsuccess", null));
-            return result;
+            throw new ComBizException(BizCodeEnum.MSG_REPAY_UNSUCCESS, result);
         }
 
-        //是否借款即将到期
+        // 场景1、2，是否借款即将到期、逾期
         UserExt userExt = userRepository.queryOverdueDay(userId);
-        Integer overdueDay = userExt.getOverdueDay();
-        //有未结清的标,且离逾期天数小于等于两天
-        if (overdueDay != null && overdueDay <= 2) {
-            result.setType("3");
-            result.setId(userExt.getBidId());
-            if (overdueDay == 0) {
-                result.setMsg(i18nService.getMessage("msg.bid.overdue.today", null));
-                return result;
+        if (userExt != null) {
+            Integer overdueDay = userExt.getOverdueDay();
+            // 有未结清的标,且离逾期天数小于等于两天。overdueDay = 今天日期 - 应还日期
+            if (overdueDay != null) {
+                if (overdueDay < -2) {
+                    return result;
+                }
+                result.setId(userExt.getBidId());
+                if (overdueDay > 0) {
+                    throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_AFTER, result, new Object[]{overdueDay});
+                } else if (overdueDay == 0) {
+                    throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_TODAY, result);
+                } else {
+                    throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_BEFORE, result, new Object[]{Math.abs(overdueDay)});
+                }
             }
-            if (overdueDay > 0) {
-                result.setMsg(String.format(i18nService.getMessage("msg.bid.overdue.before", null), overdueDay));
-                return result;
-            }
-            result.setMsg(String.format(i18nService.getMessage("msg.bid.overdue.after", null), Math.abs(overdueDay)));
-            return result;
         }
-
-        result.setType("0");
         return result;
     }
 }

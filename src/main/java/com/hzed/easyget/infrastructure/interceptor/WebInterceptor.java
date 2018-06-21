@@ -33,9 +33,6 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        // 日志加入trace
-        MdcUtil.putTrace();
-
         // 不为方法拦截直接放过
         if (!(handler instanceof HandlerMethod)) {
             return true;

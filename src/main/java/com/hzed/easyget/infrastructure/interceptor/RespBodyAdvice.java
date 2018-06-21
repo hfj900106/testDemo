@@ -33,7 +33,9 @@ public class RespBodyAdvice implements ResponseBodyAdvice<Object> {
      */
     @Override
     public boolean supports(MethodParameter parameter, Class<? extends HttpMessageConverter<?>> converterType) {
-        return true;
+        // 拦截swagger的请求
+        String requestURI = RequestUtil.getHttpServletRequest().getRequestURI();
+        return requestURI.indexOf("swagger") == -1 && requestURI.indexOf("api-docs") == -1;
     }
 
     /**

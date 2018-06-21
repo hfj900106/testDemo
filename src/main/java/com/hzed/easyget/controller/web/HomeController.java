@@ -72,10 +72,10 @@ public class HomeController {
         homeService.checkJump();
     }
 
-    @ModuleFunc("检测首页弹框提醒")
+    @ModuleFunc("首页检测还款状态")
     @PostMapping("/alert")
-    public Response<HomePageResponse> homeAlert() {
-        HomePageResponse response = homeService.homeAlert();
+    public Response<HomePageResponse> checkRepayment() {
+        HomePageResponse response = homeService.checkRepayment();
         return Response.getSuccessResponse(response);
     }
 

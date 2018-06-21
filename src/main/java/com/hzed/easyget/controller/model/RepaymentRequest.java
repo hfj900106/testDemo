@@ -35,11 +35,11 @@ public class RepaymentRequest {
     /**
      * base64Img 图片数组
      */
-//    @NotBlank(message = "{param.repay.base64Imgs.isNotEmpty}")
+    @NotBlank(message = "{param.repay.base64Imgs.isNotEmpty}")
     private String[] base64Imgs;
     /**
      * 对应的图片后缀
      */
-//    @NotBlank(message = "{param.repay.picSuffixs.isNotEmpty}")
+    @NotBlank(message = "{param.repay.picSuffixs.isNotEmpty}")
     private String[] picSuffixs;
 }

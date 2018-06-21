@@ -1,7 +1,9 @@
 package com.hzed.easyget.controller.model;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 /**
  * 试算接口请求参数
@@ -11,6 +13,8 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class LoanCalculateRequest {
-    @NotBlank(message = "{param.home.loanAmount.isNotEmpty}")
-    private String loanAmount;
+    @NotNull(message = "{param.home.loanAmount.isNotEmpty}")
+    private BigDecimal loanAmount;
+    @NotNull(message = "{param.home.period.isNotEmpty}")
+    private Integer period;
 }

@@ -7,6 +7,7 @@ import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
@@ -124,7 +125,7 @@ public class LoginService {
         String platform = globalHead.getPlatform();
         User user = userRepository.findByMobile(mobile);
         if (user != null) {
-            throw new ComBizException(BizCodeEnum.EXIST_USER);
+            throw new WarnException(BizCodeEnum.EXIST_USER);
         }
         //校验验证码
         checkSmsCode(mobile, smsCode);
@@ -188,21 +189,22 @@ public class LoginService {
         String cacheSmsCode = redisService.getCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
 
         if (StringUtils.isBlank(cacheSmsCode) || !cacheSmsCode.equals(smsCode)) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_SMSCODE);
+            throw new WarnException(BizCodeEnum.ILLEGAL_SMSCODE);
         }
 
     }
 
     public void sendSmsCode(SmsCodeRequest request) {
         String mobile = request.getMobile();
+        log.info("发送验证码手机号："+mobile);
         String hasBeenSend = redisService.getCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile);
         if (StringUtils.isNotBlank(hasBeenSend)) {
             //发送过于频繁
-            throw new ComBizException(BizCodeEnum.FREQUENTLY_SMS_SEND);
+            throw new WarnException(BizCodeEnum.FREQUENTLY_SMS_SEND);
         }
         if (StringUtils.isNotBlank(redisService.getCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile))) {
             //10分钟内重发需要验证码
-            throw new ComBizException(BizCodeEnum.PIC_CODE_TO_CHECK);
+            throw new WarnException(BizCodeEnum.PIC_CODE_TO_CHECK);
         }
         String code = SmsUtils.getCode();
         String content = "您的注册验证码是：" + code + " ，两分钟内有效，欢迎使用本平台";

@@ -18,6 +18,11 @@ public class ComConsts {
     public static final int APP_PAGESIZE = 18;
     public static final String RISK_OK = "ok";
     public static final String RISK_CODE = "code";
+    public static final String RISK_OPERATOR_HAVE_SEND = "2";
+    public static final String  RISK_OPERATOR_FREQ = "2.1";
+    public static final String RISK_OPERATOR_ERROR = "3";
+    public static final String RISK_OPERATOR_HAVE_AUTH = "0000";
+
     public static final int IS_ANDROID = 1;
     public static final int IS_IOS = 2;
     /**

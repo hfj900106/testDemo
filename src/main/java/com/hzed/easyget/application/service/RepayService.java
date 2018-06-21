@@ -473,7 +473,6 @@ public class RepayService {
      * @param request va码请求实体
      * @return va码构建对象
      */
-    @Transactional(rollbackFor = Exception.class)
     public TransactionVAResponse findVATranc(TransactionVARequest request) {
         //先查询数据库 是否存在没过期的还款码
         TransactionVAResponse vaResponse = repayRepository.findVATranc(request.getPayId(), request.getMode());
@@ -524,7 +523,6 @@ public class RepayService {
      * @param request app请求后台实体
      * @return 返回状态
      */
-    @Transactional(rollbackFor = Exception.class)
     public PayResponse testRepayment(RepaymentRequest request) throws Exception {
         //先查询交易信息比对数据
         UserTransaction transaction = userTransactionRepository.selectByKey(request.getPayId(), TransactionTypeEnum.IN_RANSACTION.getCode().byteValue());
@@ -600,7 +598,6 @@ public class RepayService {
      *
      * @param transaction 交易对象
      */
-    @Transactional(rollbackFor = Exception.class)
     public void afterRepayment(UserTransaction transaction) {
         //修改交易记录
         transaction.setStatus(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue());

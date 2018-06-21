@@ -10,13 +10,13 @@ import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
-import com.hzed.easyget.infrastructure.repository.UserVisitRecordRepository;
+import com.hzed.easyget.infrastructure.repository.UserLoanVisitRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.UserBank;
-import com.hzed.easyget.persistence.auto.entity.UserVisitRecord;
+import com.hzed.easyget.persistence.auto.entity.UserLoanVisit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class LoanService {
     @Autowired
     private ComService comService;
     @Autowired
-    private UserVisitRecordRepository userVisitRecordRepository;
+    private UserLoanVisitRepository userVisitRecordRepository;
 
     public LoanDetailResponse loanDetail(LoanDetailRequest request) {
         LoanDetailResponse loanDetailResponse = new LoanDetailResponse();
@@ -54,12 +54,12 @@ public class LoanService {
         loanDetailResponse.setLoanTime(DateUtil.localDateTimeToStr2(DateUtil.addMins(auditTime,systemProp.getExpectedLendingTimeInterval().intValue())));
 
         if (BidStatusEnum.AUDIT_FAIL.equals(status) || BidStatusEnum.AUDIT_PASS.equals(status) || BidStatusEnum.REPAYMENT.equals(status)) {
-            UserVisitRecord userVisitRecord = new UserVisitRecord();
-            userVisitRecord.setId(IdentifierGenerator.nextId());
-            userVisitRecord.setUserId(RequestUtil.getGlobalUser().getUserId());
-            userVisitRecord.setBidId(bid.getId());
-            userVisitRecord.setBidStatus(status);
-            userVisitRecordRepository.insert(userVisitRecord);
+            UserLoanVisit userLoanVisit = new UserLoanVisit();
+            userLoanVisit.setId(IdentifierGenerator.nextId());
+            userLoanVisit.setUserId(RequestUtil.getGlobalUser().getUserId());
+            userLoanVisit.setBidId(bid.getId());
+            userLoanVisit.setBidStatus(status);
+            userVisitRecordRepository.insert(userLoanVisit);
 
         }
         return loanDetailResponse;

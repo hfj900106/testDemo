@@ -24,13 +24,10 @@ import com.hzed.easyget.persistence.ext.entity.VaData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.NumberUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -58,9 +55,7 @@ public class HomeService {
     @Autowired
     private BidRepository bidRepository;
     @Autowired
-    private UserVisitRecordRepository userVisitRecordRepository;
-    @Autowired
-    private I18nService i18nService;
+    private UserLoanVisitRepository userLoanVisitRepository;
 
     private static final String ANDROID_BOMB = "android_bomb";
     private static final String IOS_BOMB = "ios_bomb";
@@ -202,7 +197,7 @@ public class HomeService {
         List<Bid> bidList = bidRepository.findByUserId(userId);
         bidList.forEach(bid -> {
             //首页检测跳转，访问记录表为空需跳转，不为空无需跳转
-            UserVisitRecord userVisitRecord = userVisitRecordRepository.findByUserIdAndBidId(userId, bid.getId());
+            UserLoanVisit userVisitRecord = userLoanVisitRepository.findByUserIdAndBidId(userId, bid.getId());
             if (userVisitRecord == null) {
                 throw new ComBizException(BizCodeEnum.NEED_JUMP);
             }

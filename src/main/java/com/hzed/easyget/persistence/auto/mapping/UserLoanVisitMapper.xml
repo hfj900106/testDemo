@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hzed.easyget.persistence.auto.mapper.UserVisitRecordMapper">
-  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.UserVisitRecord">
+<mapper namespace="com.hzed.easyget.persistence.auto.mapper.UserLoanVisitMapper">
+  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.UserLoanVisit">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="bid_id" jdbcType="BIGINT" property="bidId" />
@@ -74,13 +74,13 @@
     id, user_id, bid_id, bid_status, create_by, create_time, update_by, update_time, 
     remark
   </sql>
-  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserVisitRecordExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserLoanVisitExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_loan_user_visit_record
+    from t_loan_user_loan_visit
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -104,7 +104,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_user_visit_record
+    from t_loan_user_loan_visit
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -115,7 +115,7 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from t_loan_user_visit_record
+    from t_loan_user_loan_visit
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -123,21 +123,21 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_user_visit_record
+    from t_loan_user_loan_visit
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_loan_user_visit_record
+    delete from t_loan_user_loan_visit
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserVisitRecordExample">
-    delete from t_loan_user_visit_record
+  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserLoanVisitExample">
+    delete from t_loan_user_loan_visit
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserVisitRecord">
-    insert into t_loan_user_visit_record (id, user_id, bid_id, 
+  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserLoanVisit">
+    insert into t_loan_user_loan_visit (id, user_id, bid_id, 
       bid_status, create_by, create_time, 
       update_by, update_time, remark
       )
@@ -146,8 +146,8 @@
       #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserVisitRecord">
-    insert into t_loan_user_visit_record
+  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserLoanVisit">
+    insert into t_loan_user_loan_visit
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -207,14 +207,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserVisitRecordExample" resultType="java.lang.Long">
-    select count(*) from t_loan_user_visit_record
+  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserLoanVisitExample" resultType="java.lang.Long">
+    select count(*) from t_loan_user_loan_visit
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_loan_user_visit_record
+    update t_loan_user_loan_visit
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
@@ -249,7 +249,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update t_loan_user_visit_record
+    update t_loan_user_loan_visit
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
       bid_id = #{record.bidId,jdbcType=BIGINT},
@@ -263,8 +263,8 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserVisitRecord">
-    update t_loan_user_visit_record
+  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserLoanVisit">
+    update t_loan_user_loan_visit
     <set>
       <if test="userId != null">
         user_id = #{userId,jdbcType=BIGINT},
@@ -293,8 +293,8 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserVisitRecord">
-    update t_loan_user_visit_record
+  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserLoanVisit">
+    update t_loan_user_loan_visit
     set user_id = #{userId,jdbcType=BIGINT},
       bid_id = #{bidId,jdbcType=BIGINT},
       bid_status = #{bidStatus,jdbcType=TINYINT},
@@ -305,10 +305,10 @@
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserVisitRecordExample" resultMap="BaseResultMap">
+  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserLoanVisitExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_loan_user_visit_record
+    from t_loan_user_loan_visit
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -322,7 +322,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_user_visit_record
+    from t_loan_user_loan_visit
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -332,7 +332,7 @@
     limit 1
   </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_loan_user_visit_record
+    insert into t_loan_user_loan_visit
     (id, user_id, bid_id, bid_status, create_by, create_time, update_by, update_time, 
       remark)
     values
@@ -344,7 +344,7 @@
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_loan_user_visit_record (
+    insert into t_loan_user_loan_visit (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>

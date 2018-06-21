@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserVisitRecordExample {
+public class UserLoanVisitExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,7 +15,7 @@ public class UserVisitRecordExample {
 
     protected Integer rows;
 
-    public UserVisitRecordExample() {
+    public UserLoanVisitExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -86,29 +86,29 @@ public class UserVisitRecordExample {
         return this.rows;
     }
 
-    public UserVisitRecordExample limit(Integer rows) {
+    public UserLoanVisitExample limit(Integer rows) {
         this.rows = rows;
         return this;
     }
 
-    public UserVisitRecordExample limit(Integer offset, Integer rows) {
+    public UserLoanVisitExample limit(Integer offset, Integer rows) {
         this.offset = offset;
         this.rows = rows;
         return this;
     }
 
-    public UserVisitRecordExample page(Integer page, Integer pageSize) {
+    public UserLoanVisitExample page(Integer page, Integer pageSize) {
         this.offset = page * pageSize;
         this.rows = pageSize;
         return this;
     }
 
-    public UserVisitRecordExample orderBy(String orderByClause) {
+    public UserLoanVisitExample orderBy(String orderByClause) {
         this.setOrderByClause(orderByClause);
         return this;
     }
 
-    public UserVisitRecordExample orderBy(String ... orderByClauses) {
+    public UserLoanVisitExample orderBy(String ... orderByClauses) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < orderByClauses.length; i++) {
             sb.append(orderByClauses[i]);
@@ -718,14 +718,14 @@ public class UserVisitRecordExample {
     }
 
     public static class Criteria extends GeneratedCriteria {
-        private UserVisitRecordExample example;
+        private UserLoanVisitExample example;
 
-        protected Criteria(UserVisitRecordExample example) {
+        protected Criteria(UserLoanVisitExample example) {
             super();
             this.example = example;
         }
 
-        public UserVisitRecordExample example() {
+        public UserLoanVisitExample example() {
             return this.example;
         }
 

@@ -24,4 +24,6 @@ public class AdsProductRepository {
         example.createCriteria().andIsUseEqualTo(true);
         return adsProductMapper.selectByExample(example);
     }
+
+
 }

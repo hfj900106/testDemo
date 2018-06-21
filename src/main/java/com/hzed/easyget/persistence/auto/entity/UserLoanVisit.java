@@ -3,7 +3,7 @@ package com.hzed.easyget.persistence.auto.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class UserVisitRecord implements Serializable {
+public class UserLoanVisit implements Serializable {
     /**
      */
     private Long id;
@@ -137,15 +137,15 @@ public class UserVisitRecord implements Serializable {
         return sb.toString();
     }
 
-    public static UserVisitRecord.Builder builder() {
-        return new UserVisitRecord.Builder();
+    public static UserLoanVisit.Builder builder() {
+        return new UserLoanVisit.Builder();
     }
 
     public static class Builder {
-        private UserVisitRecord obj;
+        private UserLoanVisit obj;
 
         public Builder() {
-            this.obj = new UserVisitRecord();
+            this.obj = new UserLoanVisit();
         }
 
         public Builder id(Long id) {
@@ -193,7 +193,7 @@ public class UserVisitRecord implements Serializable {
             return this;
         }
 
-        public UserVisitRecord build() {
+        public UserLoanVisit build() {
             return this.obj;
         }
     }

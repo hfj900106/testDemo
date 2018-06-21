@@ -124,10 +124,10 @@
             <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
 
-        <table tableName="t_loan_user_transaction" domainObjectName="UserTransaction" >
-            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-            <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-        </table>
+        <!--<table tableName="t_loan_user_transaction" domainObjectName="UserTransaction" >-->
+            <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
         <!--<table tableName="t_loan_user_transaction_repay" domainObjectName="UserTransactionRepay" >-->
             <!--<columnOverride column="va_create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
             <!--<columnOverride column="confirm_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
@@ -177,6 +177,11 @@
         <!--</table>-->
 
         <!--<table tableName="t_loan_work" domainObjectName="Work" >-->
+            <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
+
+        <!--<table tableName="t_loan_user_loan_visit" domainObjectName="UserLoanVisit" >-->
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
             <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->

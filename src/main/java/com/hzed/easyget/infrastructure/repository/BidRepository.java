@@ -7,8 +7,10 @@ import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.UserBank;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.example.BidExample;
+import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.mapper.BidMapper;
 import com.hzed.easyget.persistence.auto.mapper.UserBankMapper;
+import com.hzed.easyget.persistence.auto.mapper.UserTransactionMapper;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
 import com.hzed.easyget.persistence.ext.mapper.BidExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ public class BidRepository {
     private BidExtMapper bidExtMapper;
     @Autowired
     private UserBankMapper userBankMapper;
+    @Autowired
+    private UserTransactionMapper userTransactionMapper;
 
     public List<Bid> findByUserIdAndStatus(Long userId, List<Byte> statuses) {
         BidExample example = new BidExample();
@@ -85,6 +89,8 @@ public class BidRepository {
     }
 
     public void updateUserTranState(UserTransaction userTransaction) {
-        bidExtMapper.updateUserTranceOverstate(userTransaction);
+        UserTransactionExample transaction=new UserTransactionExample();
+        transaction.createCriteria().andPaymentIdEqualTo(userTransaction.getPaymentId());
+        userTransactionMapper.updateByExampleSelective(userTransaction,transaction);
     }
 }

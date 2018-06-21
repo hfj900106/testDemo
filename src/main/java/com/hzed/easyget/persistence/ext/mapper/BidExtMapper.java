@@ -28,19 +28,6 @@ public interface BidExtMapper {
      */
     LoanTransactionRequest findLoanTransaction(@Param("bidId") Long bidId);
 
-    /**
-     * 修改交易表状态
-     * @param transaction
-     */
-    void updateUserTranceOverstate(UserTransaction transaction);
-
-    /**
-     * 查询放款推送任务
-     * @param bidId
-     * @param pushBankTask
-     * @return
-     */
-    Long findTempTableByBidNoAndName(@Param("bidNo") Long bidId,@Param("taskName") String pushBankTask);
 }
 
 

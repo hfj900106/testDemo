@@ -22,6 +22,6 @@ public class RepayPartRequest {
     @NotNull(message = "{param.repay.bidId.isNotEmpty}")
     private Long bidId;
     @NotNull(message = "{param.repay.repayAmount.isNotEmpty}")
-    @DecimalMin(value="100")
+    @DecimalMin(value="10000")
     private BigDecimal repayAmount;
 }

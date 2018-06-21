@@ -3,6 +3,7 @@ package com.hzed.easyget.infrastructure.repository;
 
 import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.auto.entity.example.TempTableExample;
+import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.mapper.*;
 import com.hzed.easyget.persistence.ext.mapper.BidExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class TempTableRepository {
     @Autowired
     private UserTransactionMapper transactionMapper;
     @Autowired
-    private BidExtMapper bidExtMapper;
+    private TempTableMapper tempTableMapper;
 
     public void insertJob(TempTable tempTable) {
         tempMapper.insert(tempTable);
@@ -63,11 +64,17 @@ public class TempTableRepository {
         if(flag){
             transactionMapper.insertSelective(transaction);
         }else{
-            bidExtMapper.updateUserTranceOverstate(transaction);
+            UserTransactionExample userTransaction=new UserTransactionExample();
+            userTransaction.createCriteria().andPaymentIdEqualTo(transaction.getPaymentId());
+            transactionMapper.updateByExampleSelective(transaction,userTransaction);
         }
     }
 
     public Long findTempTableByBidNoAndName(Long bidId, String pushBankTask) {
-        return  bidExtMapper.findTempTableByBidNoAndName(bidId,pushBankTask);
+        TempTableExample tempTableExample=new TempTableExample();
+        tempTableExample.createCriteria()
+                .andRelaseIdEqualTo(bidId)
+                .andJobNameEqualTo(pushBankTask);
+        return  tempTableMapper.selectOneByExample(tempTableExample).getId();
     }
 }

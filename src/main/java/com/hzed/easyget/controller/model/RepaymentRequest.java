@@ -3,6 +3,8 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
@@ -27,16 +29,17 @@ public class RepaymentRequest {
     /**
      * 还款金额
      */
-    @NotBlank(message = "{param.repay.amount.isNotEmpty}")
+    @NotNull(message = "{param.repay.amount.isNotEmpty}")
+    @DecimalMin(value="10000")
     private BigDecimal amount;
     /**
      * base64Img 图片数组
      */
-    @NotBlank(message = "{param.repay.base64Imgs.isNotEmpty}")
+//    @NotBlank(message = "{param.repay.base64Imgs.isNotEmpty}")
     private String[] base64Imgs;
     /**
      * 对应的图片后缀
      */
-    @NotBlank(message = "{param.repay.picSuffixs.isNotEmpty}")
+//    @NotBlank(message = "{param.repay.picSuffixs.isNotEmpty}")
     private String[] picSuffixs;
 }

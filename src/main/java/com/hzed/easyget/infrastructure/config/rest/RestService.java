@@ -111,7 +111,7 @@ public class RestService {
                 httpPost.setEntity(new StringEntity(json, "utf-8"));
             }
             //设置请求和传输超时时间
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(8000).build();
+            RequestConfig requestConfig =  RequestConfig.custom().setConnectionRequestTimeout(8000).setSocketTimeout(8000).setConnectTimeout(8000).build();
             httpPost.setConfig(requestConfig);
             CloseableHttpResponse response = http.execute(httpPost);
             if (response != null) {

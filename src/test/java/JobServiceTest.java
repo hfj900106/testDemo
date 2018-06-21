@@ -8,6 +8,7 @@ import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayRepository;
 import com.hzed.easyget.infrastructure.repository.UserTransactionRepository;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
+import com.hzed.easyget.persistence.auto.mapper.UserTransactionMapper;
 import com.hzed.easyget.persistence.ext.mapper.BidExtMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,13 +32,9 @@ public class JobServiceTest {
     @Autowired
     private UserTransactionRepository userTransactionRepository;
     @Autowired
-    private BidExtMapper bidExtMapper;
-    @Autowired
     private RepayService repayService;
     @Autowired
     private RepayRepository repayRepository;
-    @Autowired
-    private ComService comService;
 
     @Test
     public void test(){
@@ -56,15 +53,6 @@ public class JobServiceTest {
         List<UserTransaction> userTranBypayMenid = userTransactionRepository.findUserTranBypayMenid("103710541138501632");
         userTranBypayMenid.stream().forEach(System.out::println);
     }
-    @Test
-    public  void test03(){
-        UserTransaction userTransaction=new UserTransaction();
-//        userTransaction.setStatus();
-        userTransaction.setUpdateTime(LocalDateTime.now());
-        userTransaction.setPaymentId("103710541138501632");
-        bidExtMapper.updateUserTranceOverstate(userTransaction);
-    }
-
     /**
      * 全部/部分借款返回页面详情
      */

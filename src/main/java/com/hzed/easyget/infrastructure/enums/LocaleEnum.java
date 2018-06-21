@@ -42,6 +42,6 @@ public enum LocaleEnum {
             }
         }
         // 默认中文
-        return zh_CN.getLocale();
+        return Locale.getDefault();
     }
 }

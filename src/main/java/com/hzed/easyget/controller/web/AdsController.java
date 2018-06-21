@@ -4,6 +4,7 @@ import com.hzed.easyget.application.service.AdsService;
 import com.hzed.easyget.controller.model.AdsProductResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import java.util.List;
  * @author wuchengwu
  * @date 2018/6/15
  */
+@Api(value="value" ,tags = "tags",description = "description")
 @ExceptionAnno
 @RestController
 @RequestMapping("/api/ads")

@@ -5,7 +5,7 @@ server.context-path: /hzed/easy-get
 
 # TODO 密码加密 https://blog.csdn.net/linhongwangok/article/details/79076178;https://github.com/ulisesbocchio/jasypt-spring-boot
 spring:
-  resources.static-locations: file:${system.imgUploadPath} # 静态资源文件路径，多个用逗号隔开 classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${web.upload-path}
+  resources.static-locations: file:${system.imgUploadPath},classpath:/META-INF/resources/,classpath:/swagger/ # 静态资源文件路径，多个用逗号隔开 ,classpath:/public/,file:${web.upload-path}
   profiles.active: dev # 环境
   application.name: easy-get
   datasource:

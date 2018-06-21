@@ -4,12 +4,16 @@ import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.JobStatusEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
+import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.PayResponse;
+import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayInfoFlowJobRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
+import com.hzed.easyget.infrastructure.utils.AesUtil;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
@@ -22,7 +26,9 @@ import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author hfj
@@ -42,6 +48,8 @@ public class JobService {
     private RepayService repayService;
     @Autowired
     private TransactionService transactionService;
+    @Autowired
+    private RestService restService;
 
     /**
      * 推风控
@@ -52,18 +60,33 @@ public class JobService {
         if (bids.size() <= 0 || bids.isEmpty()) {
             return;
         }
-        for (BidExt bidExt : bids) {
+        bids.forEach(bidExt -> {
+            MdcUtil.putTrace();
             Long tempId = IdentifierGenerator.nextId();
-            //推送bid写入中间表
-            tempTableRepository.insertJob(TempTable.builder().id(tempId).relaseId(bidExt.getBidId()).jobName(ComConsts.PUSH_RISK_TASK).remark("推送资产").reRunTimes((byte) 1).build());
             try {
-                // TODO 推送-调风控接口
-
+                //推送bid写入中间表
+                tempTableRepository.insertJob(TempTable.builder().id(tempId).relaseId(bidExt.getBidId()).jobName(ComConsts.PUSH_RISK_TASK).remark("推送资产").reRunTimes((byte) 1).build());
+                //  推送-调风控接口
+                Long timeStamp = System.currentTimeMillis();
+                Map<String, Object> map = new HashMap<>(16);
+                map.put("sign", AesUtil.aesEncode(bidExt.getUserId(), timeStamp));
+                map.put("userId", bidExt.getUserId());
+                map.put("timeStamp", timeStamp);
+                map.put("bid", bidExt.getBidId());
+                RiskResponse riskResponse = restService.postJson("http://10.10.20.203:9611/api/risk/auto/antifraud", map, RiskResponse.class);
+                log.info("推送风控，标的：{}，风控返回数据：{}" , bidExt.getBidId() , riskResponse.toString());
+                if (null == riskResponse) {
+                    throw new ComBizException(BizCodeEnum.ERROR_RISK__RESULT);
+                }
+                if (!riskResponse.getHead().getStatus().equals(ComConsts.RISK_OK)) {
+                    log.error("标的：{}推送风控失败：" ,bidExt.getBidId());
+                    throw new ComBizException(BizCodeEnum.FAIL_PUSH_RISK);
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
                 tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark("推送失败：" + ex.getMessage()).build());
             }
-        }
+        });
     }
 
     /**
@@ -108,6 +131,7 @@ public class JobService {
             return;
         }
         bidList.forEach(bid -> {
+            MdcUtil.putTrace();
             log.info("放款任务开始，标的id{}", bid.getBidId());
             //插入中间表
             Long tempId = IdentifierGenerator.nextId();

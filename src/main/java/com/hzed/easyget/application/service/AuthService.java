@@ -161,7 +161,7 @@ public class AuthService {
         map.put("identityCode", userInfo.getIdCardNo());
         map.put("userMobile", userInfo.getMobileAccount());
         RiskResponse response = restService.postJson("http://10.10.20.203:9611/api/riskOperator/createTaskAndlogin", map, RiskResponse.class);
-        log.info("运营商认证-发送验证码接口-风控返回数据：" + response.toString());
+        log.info("运营商认证-发送验证码接口-风控返回数据：{}" + response);
         if (null == response) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
@@ -174,6 +174,8 @@ public class AuthService {
         if(((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_ERROR)){
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
+        //将task_id放入Redis
+        //TODO
         //redis存一个发送标识，60秒后可重发，避免频繁发送
         redisService.setCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + userInfo.getId(), "operatorAuth", 60L);
 
@@ -184,7 +186,6 @@ public class AuthService {
      */
     public void operatorAuth(PeratorAuthRequest request) {
         GlobalUser user = getGlobalUser();
-        //TODO
         String taskId = redisService.getCache(RedisConsts.IDENTITY_AUTH_CODE + RedisConsts.SPLIT + user.getUserId());
         if (StringUtils.isBlank(taskId)) {
             throw new WarnException(BizCodeEnum.OVER_TIME_SMS_CODE);
@@ -197,6 +198,7 @@ public class AuthService {
         map.put("taskId", taskId);
         map.put("smsCode", request.getSmsCode());
         RiskResponse response = restService.postJson("http://10.10.20.203:9611/api/riskOperator/sendSmsCode", map, RiskResponse.class);
+        log.info("运营商认证 - 输入验证码认证接口-风控返回数据：{}" + response);
         if(((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_FREQ)){
             throw new WarnException(BizCodeEnum.FREQUENTLY_AUTH_RISK);
         }
@@ -247,7 +249,7 @@ public class AuthService {
         map.put("timeStamp", timeStamp);
         map.put("imageFile", idCardBase64ImgStr);
         RiskResponse riskResponse = restService.postJson("http://10.10.20.202:9611/api/risk/core/ocr", map, RiskResponse.class);
-        log.info("身份证识别-风控返回数据：" + riskResponse.toString());
+        log.info("身份证识别-风控返回数据：{}" ,riskResponse);
         if (null == riskResponse) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
@@ -277,7 +279,7 @@ public class AuthService {
         map.put("timeStamp", timeStamp);
         map.put("imageFile", faceBase64ImgStr);
         RiskResponse riskResponse = restService.postJson("http://10.10.20.202:9611/api/risk/core/faceComparison", map, RiskResponse.class);
-        log.info("人脸识别-风控返回数据：" + riskResponse.toString());
+        log.info("人脸识别-风控返回数据：{}" , riskResponse);
         if (null == riskResponse) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
@@ -301,7 +303,7 @@ public class AuthService {
         mapRisk.put("userId", user.getUserId());
         mapRisk.put("timeStamp", timeStamp);
         RiskResponse response = restService.postJson("http://10.10.20.202:9611/api/risk/core/identity", mapRisk, RiskResponse.class);
-        log.info("身份信息认证-风控返回数据：" + response.toString());
+        log.info("身份信息认证-风控返回数据：{}" , response);
         if (null == response) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
@@ -365,12 +367,12 @@ public class AuthService {
     }
 
     private void afterResponse(RiskResponse response, Long userId, String code, String remark) {
-        log.info(remark+"-风控返回数据：" + response.toString());
+        log.info("{}-风控返回数据：{}" ,remark, response);
         if (null == response) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
-            log.error("风控" + remark + "失败：" + response.getHead().getError_msg());
+            log.error("风控{}失败：{}" ,remark,response);
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
         //修改认证表的状态
@@ -398,7 +400,7 @@ public class AuthService {
      * @param request
      */
     public void facebookAuth(FacebookRequest request) {
-        log.info("facebook认证-风控回调数据：" + request.toString());
+        log.info("facebook认证-风控回调数据：{}" ,request);
         if (!ComConsts.RISK_OK.equals(request.getResultCode())) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
@@ -412,7 +414,7 @@ public class AuthService {
      * @param request
      */
     public void insAuth(InsRequest request) {
-        log.info("ins认证-风控回调数据：" + request.toString());
+        log.info("ins认证-风控回调数据：{}" ,request);
         if (!ComConsts.RISK_OK.equals(request.getResultCode())) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }

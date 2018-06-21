@@ -78,14 +78,13 @@
 
     <!-- 环境输出日志类型 关联 spring.profiles.active-->
     <springProfile name="dev">
-        <root level="debug">
+        <root level="info">
             <appender-ref ref="STDOUT"/>
-            <appender-ref ref="FILE"/>
         </root>
     </springProfile>
 
     <springProfile name="test">
-        <root level="debug">
+        <root level="info">
             <appender-ref ref="FILE"/>
             <appender-ref ref="EMAIL"/>
         </root>

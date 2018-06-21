@@ -71,6 +71,8 @@ public enum BizCodeEnum {
     EXIST_USER("1035","用户已经存在"),
     FAIL_PUSH_RISK("1036","推送风控失败"),
     FAIL_CALLBACK_RISK("1037","风控回调失败"),
+    HAVE_AUTH_RISK("1038","已经认证过"),
+    FREQUENTLY_AUTH_RISK("1039","认证频繁"),
 
     // 首页还款检测
     MSG_BID_OVERDUE_TODAY("2001","您的借款于今天到期，请尽快还款，以免逾期"),

@@ -1,5 +1,6 @@
 package com.hzed.easyget.infrastructure.utils;
 
+import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.indonesia.sms.constants.SmsCodeEnum;
@@ -8,6 +9,7 @@ import com.hzed.indonesia.sms.model.response.NxSmsDownResponse;
 import com.hzed.indonesia.sms.utils.NxSmsUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Random;
 
@@ -18,6 +20,9 @@ import java.util.Random;
  */
 @Slf4j
 public class SmsUtils {
+
+    @Value("${spring.profiles.active}")
+    private static String env;
 
     public static void sendSms(String mobile,String content){
         NxSmsDownRequest smsDownRequest = new NxSmsDownRequest();
@@ -34,6 +39,10 @@ public class SmsUtils {
     }
 
     public static String getCode(){
+        if (EnvEnum.isTestEnv(env) ) {
+            return "0000";
+        }
+        //TODO 开发调试用
 //        return StringUtils.leftPad(String.valueOf(new Random().nextInt(9999)), 4, "0");
         return "0000";
     }

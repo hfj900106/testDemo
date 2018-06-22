@@ -163,7 +163,6 @@ public class HomeService {
             Dict dictBomb = dictService.getDictByCode(IOS_BOMB);
             String dicValue = dictBomb.getDicValue();
             if (StringUtils.isBlank(dicValue) || version.equals(dicValue)) {
-
                 return bombResponseList;
             }
         }
@@ -180,9 +179,7 @@ public class HomeService {
     }
 
     public void checkLoan() {
-
         final String MK_02 = "MK02";
-
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String imei = RequestUtil.getGlobalHead().getImei();
         User user = userRepository.findById(userId);
@@ -202,7 +199,6 @@ public class HomeService {
     }
 
     public void checkLoanJump() {
-
         Long userId = RequestUtil.getGlobalUser().getUserId();
         //bid为空或访问记录表不为空无需跳转，0000为无需跳转，其他需跳转
         List<Bid> bidList = bidRepository.findByUserId(userId);

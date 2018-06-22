@@ -480,12 +480,12 @@ public class RepayService {
         log.info("获取还款码，bluepay返回数据{}", result);
 
         if (result.equals(BizCodeEnum.TIMEOUT.getCode())) {
-            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR);
+            throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR,new Object[]{request.getPayId()});
         }
         PayResponse response = JSON.parseObject(result, PayResponse.class);
         //解析返回信息
         if (!response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
-            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR);
+            throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR,new Object[]{request.getPayId()});
         }
         String paymentCode = JSON.parseObject(response.getData()).getString("paymentCode");
         log.info("还款码{}", paymentCode);
@@ -557,13 +557,13 @@ public class RepayService {
             log.info("完成还款接口请求报文：{}", JSON.toJSONString(compleRequest));
             String result = restService.doPostJson(prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(compleRequest));
             if (result.equals(BizCodeEnum.TIMEOUT.getCode())) {
-                throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR);
+                throw new ComBizException(BizCodeEnum.RECEIVER_TRANSACTION_ERROR,new Object[]{request.getPayId()});
             }
             log.info("完成还款接口返回报文：{}", result);
             response = JSON.parseObject(result, PayResponse.class);
             //判断返回状态 0000 0001 0002
             if (!listCode.contains(response.getCode())) {
-                throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR);
+                throw new ComBizException(BizCodeEnum.RECEIVER_TRANSACTION_ERROR,new Object[]{request.getPayId()});
             }
             //直接处理成功
             if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {

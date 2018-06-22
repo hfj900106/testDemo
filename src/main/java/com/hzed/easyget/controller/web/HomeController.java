@@ -5,7 +5,6 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
-import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,9 +73,9 @@ public class HomeController {
 
     @ModuleFunc("首页检测还款状态")
     @PostMapping("/checkRepayment")
-    public Response<HomePageResponse> checkRepayment() {
-        HomePageResponse response = homeService.checkRepayment();
-        return Response.getSuccessResponse(response);
+    public CheckRepaymentResponse checkRepayment() {
+        CheckRepaymentResponse response = homeService.checkRepayment();
+        return response;
     }
 
 }

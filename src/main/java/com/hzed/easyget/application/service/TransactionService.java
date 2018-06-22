@@ -63,7 +63,7 @@ public class TransactionService {
         log.info("支付放款接口请求报文：{}", JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
         if (result.equals(BizCodeEnum.TIMEOUT.getCode())) {
-            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, BizCodeEnum.TIMEOUT.getMessage());
+            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR,new Object[]{request.getTransactionId()});
         }
         log.info("支付放款接口返回报文：{}", result);
         PayResponse response = JSON.parseObject(result, new TypeReference<PayResponse>() {
@@ -71,7 +71,7 @@ public class TransactionService {
         //判断返回状态 0000 0001 0002
         if (!listCode.contains(response.getCode())) {
             tempTableRepository.upDateTemp(TempTable.builder().id(Long.valueOf(request.getRequestNo())).createTime(LocalDateTime.now()).remark("放款失败：" + response.getMsg()).build());
-            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, response.getMsg());
+            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, new Object[]{request.getTransactionId()});
         }
         return response;
     }

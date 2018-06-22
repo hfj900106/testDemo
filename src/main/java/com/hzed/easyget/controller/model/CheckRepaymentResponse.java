@@ -8,16 +8,16 @@ import lombok.Data;
  * @since 2018/6/15 16:19
  */
 @Data
-public class HomePageResponse {
+public class CheckRepaymentResponse {
 
 
     private Long id;
 
 
     /**
-     * code=2004 时还款申请是否过期
+     * code=2004 时还款状态
      */
-    private Boolean expire;
+    private Byte status;
 
     /**
      * code=2005 时va数据

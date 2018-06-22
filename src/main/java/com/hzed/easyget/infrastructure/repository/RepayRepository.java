@@ -2,6 +2,7 @@ package com.hzed.easyget.infrastructure.repository;
 
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.auto.entity.example.BillExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
 import com.hzed.easyget.persistence.auto.mapper.*;
 import com.hzed.easyget.persistence.ext.mapper.RepayExtMapper;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**还款 仓储类
@@ -28,12 +30,15 @@ public class RepayRepository {
     private RepayInfoFlowJobMapper repayInfoFlowJobMapper;
     @Autowired
     private UserTransactionMapper userTransactionMapper;
+    @Autowired
+    private BillMapper billMapper;
     /**
-     * 还款详情
+     * 标的应还时间
      */
-    @Transactional(rollbackFor=Exception.class)
-    public LoanManagResponse findloanManagResponse(Long bidId) {
-        return repayExtMapper.findloanManagResponse(bidId);
+    public LocalDateTime findRepaymentTime(Long bidId) {
+        BillExample billExample=new BillExample();
+        billExample.createCriteria().andBidIdEqualTo(bidId);
+        return billMapper.selectOneByExample(billExample).getRepaymentTime();
     }
 
     /**

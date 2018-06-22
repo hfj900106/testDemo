@@ -19,7 +19,9 @@ import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -364,10 +366,12 @@ public class RepayService {
      * @param flag   是否全部还清
      * @return
      */
-    public LoanManagResponse findloanManagResponse(BigDecimal amount, Long bidId, boolean flag) {
-        LoanManagResponse managResponse = repayRepository.findloanManagResponse(bidId);
+    public Long findloanManagResponse(BigDecimal amount, Long bidId, boolean flag) {
         //查询标的信息
         Bid bid = bidRepository.findById(bidId);
+        if (ObjectUtils.isEmpty(bid)) {
+            throw new ComBizException(BizCodeEnum.NOT_INDONESIA_PRODUCT, new Object[]{bidId});
+        }
         //先查询是否有交易记录
         UserTransaction trance;
         UserTransactionExample userTransactionExample = new UserTransactionExample();
@@ -394,18 +398,12 @@ public class RepayService {
                     .remark(flag ? "全部还款" : "部分还款").build();
             userTransactionRepository.insertSelective(trance);
         } else {
+            trance.setRepaymentType(flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
             trance.setAmount(amount);
             trance.setRemark(flag ? "全部还款" : "部分还款");
             userTransactionRepository.transactionUpdateByKey(trance);
         }
-        //查询va码
-        LoanManagResponse vaCode = repayRepository.getVACode(trance.getId());
-        if (!ObjectUtils.isEmpty(vaCode)) {
-            managResponse.setVaCodel(vaCode.getVaCodel());
-            managResponse.setCreateTime(vaCode.getCreateTime());
-        }
-        managResponse.setPayId(trance.getId());
-        return managResponse;
+        return trance.getId();
     }
 
     /**
@@ -633,5 +631,35 @@ public class RepayService {
         }
         response.setStatus(transaction.getStatus().toString());
         return response;
+    }
+
+    /**
+     * 查看还款信息
+     *
+     * @param payId 交易流水id
+     * @return 还款信息
+     */
+    public LoanManagResponse LoanManagInfo(Long payId) {
+        //先查询是否有交易记录
+        UserTransactionExample userTransactionExample = new UserTransactionExample();
+        userTransactionExample.createCriteria()
+                .andIdEqualTo(payId)
+                .andTypeEqualTo(TransactionTypeEnum.OUT.getCode().byteValue());
+        UserTransaction trance = userTransactionRepository.findoldTrance(userTransactionExample);
+        if (ObjectUtils.isEmpty(trance)) {
+            throw new ComBizException(BizCodeEnum.USERTRANSACTION_ERROR, new Object[]{payId});
+        }
+        LocalDateTime repaymentTime = repayRepository.findRepaymentTime(trance.getBidId());
+        LoanManagResponse managResponse = new LoanManagResponse();
+        LoanManagResponse vaCode = repayRepository.getVACode(trance.getId());
+        if (!ObjectUtils.isEmpty(vaCode)) {
+            managResponse.setVaCodel(vaCode.getVaCodel());
+            managResponse.setCreateTime(vaCode.getCreateTime());
+            managResponse.setMode(vaCode.getMode());
+        }
+        managResponse.setAmount(trance.getAmount());
+        managResponse.setPayId(trance.getId());
+        managResponse.setRepaymentTime(repaymentTime.format(DateUtil.FORMAT1));
+        return managResponse;
     }
 }

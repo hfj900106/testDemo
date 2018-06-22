@@ -6,7 +6,6 @@ import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.mapper.*;
 import com.hzed.easyget.persistence.ext.entity.TransactionExt;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
-import com.hzed.easyget.persistence.ext.entity.VaData;
 import com.hzed.easyget.persistence.ext.mapper.UserExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -92,11 +91,6 @@ public class UserRepository {
     public void insertUserAndStatus(User user, UserStatus status) {
         userMapper.insertSelective(user);
         statusMapper.insertSelective(status);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void insertUserRepaymentVisit(Long userId, Long id) {
-        userExtMapper.insertUserRepaymentVisit(userId, id);
     }
 
     public TransactionExt queryTransactionVisit(Long userId) {

@@ -4,10 +4,9 @@ import lombok.Getter;
 
 /**
  * bluepay status/transferStatus枚举
- * <p>Title: BluePayStatusEnum</p>
  *
  * @author madaijun
- * @date 2018年5月21日 下午17:08:12
+ * @date 2018/5/21
  */
 @Getter
 public enum BluePayStatusEnum {

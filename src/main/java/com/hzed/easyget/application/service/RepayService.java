@@ -19,9 +19,7 @@ import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -519,7 +517,7 @@ public class RepayService {
             //直接处理成功
             if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
                 // TODO 走资金流 然后信息流
-                this.afterRepayment(transaction);
+                this.repaymentSuccess(transaction);
             }
             //修改交易的确认时间
             LocalDateTime time = LocalDateTime.now();
@@ -533,25 +531,27 @@ public class RepayService {
     }
 
     /**
-     * 还款成功走资金流 信息流
-     *
-     * @param transaction 交易对象
+     * 还款成功信息流
      */
-    public void afterRepayment(UserTransaction transaction) {
-        //修改交易记录
-        transaction.setStatus(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue());
-        transaction.setUpdateTime(LocalDateTime.now());
-        //插入还款定时任务
+    public void repaymentSuccess(UserTransaction userTransaction) {
+        // 修改交易记录
+        UserTransaction userTransactionUpdate = new UserTransaction();
+        userTransactionUpdate.setId(userTransaction.getId());
+        userTransactionUpdate.setStatus(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue());
+        userTransactionUpdate.setUpdateTime(LocalDateTime.now());
+
+        // 插入还款定时任务
         RepayInfoFlowJob repayInfoFlowJob = RepayInfoFlowJob.builder()
                 .id(IdentifierGenerator.nextId())
                 .createTime(LocalDateTime.now())
-                .transactionId(transaction.getId())
-                .bidId(transaction.getBidId())
-                .repaymentAmount(transaction.getAmount())
+                .transactionId(userTransaction.getId())
+                .bidId(userTransaction.getBidId())
+                .repaymentAmount(userTransaction.getAmount())
                 .realRepaymentTime(LocalDateTime.now())
                 .repaymentMode(RepayFlowJobEnum.UNDER_LINE.getCode().byteValue())
-                .repaymentType(transaction.getRepaymentType()).build();
-        repayRepository.afterRepayment(transaction, repayInfoFlowJob);
+                .repaymentType(userTransaction.getRepaymentType())
+                .build();
+        repayRepository.afterRepayment(userTransactionUpdate, repayInfoFlowJob);
     }
 
     /**

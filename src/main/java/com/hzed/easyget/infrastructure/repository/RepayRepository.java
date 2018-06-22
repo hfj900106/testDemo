@@ -75,7 +75,7 @@ public class RepayRepository {
     }
 
     /**
-     * 还款完成走资金流
+     * 还款完成走信息流
      */
     @Transactional(rollbackFor = Exception.class)
     public void afterRepayment(UserTransaction transaction ,RepayInfoFlowJob repayInfoFlowJob) {

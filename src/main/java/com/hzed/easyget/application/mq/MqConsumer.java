@@ -50,55 +50,69 @@ public class MqConsumer implements ChannelAwareMessageListener {
         // 记录trace，方便日志追踪
         MdcUtil.putTrace();
         try {
+            log.info("============================= MQ交易回调开始 =============================");
             String message = new String(messageByte.getBody(), "UTF-8");
-            log.info("放款/还款回调，bluepay端返回信息{}", message);
+            log.info("MQ交易 放款/还款 回调，详细返回信息{}", message);
 
             BluePayRequest bluePayRequest = JSONObject.parseObject(message, BluePayRequest.class);
 
             // 参数校验
             ValidatorUtil.validateWithNull(bluePayRequest);
 
+            // 返回的状态
+            String status = bluePayRequest.getStatus();
+            // 交易ID
+            String paymentId = bluePayRequest.getT_id();
+            // 放还款类型
+            String interfacetype = bluePayRequest.getInterfacetype();
+            log.info("当前交易类型：{}", CASHOUT.equals(interfacetype) ? "放款" : (BANK.equals(interfacetype) ? "还款" : "其他"));
+
             // 过滤处理中
-            if (bluePayRequest.getStatus().equals(BluePayStatusEnum.OK.getKey())) {
-                log.info("放款/还款bluepay端正在处理中");
+            if (status.equals(BluePayStatusEnum.OK.getKey())) {
+                log.info("MQ交易正在处理中，处理终止");
                 return;
             }
 
             // 过滤失败直接修改交易记录
-            if (!bluePayRequest.getStatus().equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())) {
-                transactionService.updateUserTranState(bluePayRequest.getT_id(), TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
-                log.info("放款/还款bluepay端返回处理失败{}", BluePayStatusEnum.getValueDesc(bluePayRequest.getStatus()));
+            if (!status.equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())) {
+                transactionService.updateUserTranState(paymentId, TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
+                log.info("MQ交易处理失败：{}，处理终止", BluePayStatusEnum.getValueDesc(status));
                 return;
             }
 
+            log.info("MQ交易处理成功，下面进行本地交易处理");
             // 获取交易id 判断是否合法
-            UserTransaction userTr = transactionService.findUserTranByPaymentId(bluePayRequest.getT_id());
-            if (ObjectUtils.isEmpty(userTr)) {
+            UserTransaction userTransaction = transactionService.findUserTranByPaymentId(paymentId);
+            if (ObjectUtils.isEmpty(userTransaction)) {
+                log.info("本地无此交易信息，paymentId：{}，处理终止", paymentId);
                 return;
             }
 
             // 判断这个交易是否是 交易中
-            if (userTr.getStatus().intValue() != TransactionTypeEnum.IN_RANSACTION.getCode()) {
+            if (userTransaction.getStatus().intValue() != TransactionTypeEnum.IN_RANSACTION.getCode().intValue()) {
+                log.info("本地当前交易状态：{}，不是交易中状态，处理终止", userTransaction.getStatus());
                 return;
             }
 
             // 放款
-            if (CASHOUT.equals(bluePayRequest.getInterfacetype())) {
+            if (CASHOUT.equals(interfacetype)) {
                 // 查询相应的推送任务信息
-                Long tempId = tempTableRepository.findTempTableByBidNoAndName(userTr.getBidId(), ComConsts.PUSH_BANK_TASK);
+                Long tempId = tempTableRepository.findTempTableByBidNoAndName(userTransaction.getBidId(), ComConsts.PUSH_BANK_TASK);
                 // 修改交易信息
-                transactionService.callBackupdateUserTrance(userTr, tempId);
-                log.info("放款bluepay端返回处理成功，本地处理成功");
+                transactionService.loanSuccess(userTransaction, tempId);
+                log.info("本地交易处理成功");
             }
 
             // 还款
-            if (BANK.equals(bluePayRequest.getInterfacetype())) {
-                // 走资金流
-                repayService.afterRepayment(userTr);
-                log.info("还款bluepay端返回处理成功，本地处理成功");
+            if (BANK.equals(interfacetype)) {
+                // 走信息流
+                repayService.repaymentSuccess(userTransaction);
+                log.info("本地交易处理成功");
             }
         } catch (Exception ex) {
-            // TODO
+            log.error("处理MQ回调交易信息过程出现异常，请及时人工处理", ex);
+        } finally {
+            log.info("============================= MQ交易回调结束 =============================");
         }
     }
 }

@@ -55,6 +55,8 @@ public class HomeService {
     private BidRepository bidRepository;
     @Autowired
     private UserLoanVisitRepository userLoanVisitRepository;
+    @Autowired
+    private UserRepaymentVisitRepository userRepaymentVisitRepository;
 
     private static final String ANDROID_BOMB = "android_bomb";
     private static final String IOS_BOMB = "ios_bomb";
@@ -227,7 +229,8 @@ public class HomeService {
                     throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
                 } else {
                     // 交易成功失败都添加访问记录
-                    userRepository.insertUserRepaymentVisit(userId, transaction.getId());
+                    UserRepaymentVisit repaymentVisit = UserRepaymentVisit.builder().userId(userId).transactionId(transaction.getId()).build();
+                    userRepaymentVisitRepository.insertUserRepaymentVisit(repaymentVisit);
                     result.setStatus(status);
                     throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
                 }
@@ -243,7 +246,7 @@ public class HomeService {
         if (userExt != null && userExt.getRepaymentTime() != null) {
             LocalDateTime repaymentTime = userExt.getRepaymentTime();
             LocalDateTime now = LocalDateTime.now();
-            long days = Duration.between(now, repaymentTime).toDays();
+            int days = DateUtil.getBetweenDays(now, repaymentTime);
             // 有未结清的标,且离逾期天数小于等于两天。days = 今天日期 - 应还日期
             if (days < -2) {
                 return result;

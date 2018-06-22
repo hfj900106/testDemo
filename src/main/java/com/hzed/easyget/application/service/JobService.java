@@ -61,7 +61,7 @@ public class JobService {
      * 推风控
      */
     public void pushBid() {
-        //关联中间表，拿到所有推送资产的ids
+        // 关联中间表，拿到所有推送资产的ids
         List<BidExt> bids = bidRepository.gitBidsToPush();
         if (bids.size() <= 0 || bids.isEmpty()) {
             return;
@@ -70,9 +70,9 @@ public class JobService {
             MdcUtil.putTrace();
             Long tempId = IdentifierGenerator.nextId();
             try {
-                //推送bid写入中间表
+                // 推送bid写入中间表
                 tempTableRepository.insertJob(TempTable.builder().id(tempId).relaseId(bidExt.getBidId()).jobName(ComConsts.PUSH_RISK_TASK).remark("推送资产").reRunTimes((byte) 1).build());
-                //  推送-调风控接口
+                // 推送-调风控接口
                 Long timeStamp = System.currentTimeMillis();
                 Map<String, Object> map = new HashMap<>(16);
                 map.put("sign", AesUtil.aesEncode(bidExt.getUserId(), timeStamp));
@@ -150,13 +150,10 @@ public class JobService {
                 loan.setRequestNo(tempId.toString());
                 //收款人所在国
                 loan.setPayeeCountry("ID");
-                //TODO 调放款接口
                 PayResponse response = transactionService.loanTransaction(loan);
                 if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
-                    //TODO 如果交易放款成功 直接继续
                     transactionService.lendingCallback(bid.getBidId(), tempId, loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
                 } else {
-                    //TODO 若状态是放款中 还款中在交易表中插入一条 未完成记录
                     transactionService.insertUsrTransactionInfo(bid.getBidId(), loan.getTransactionId(), TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(), null);
                 }
             }

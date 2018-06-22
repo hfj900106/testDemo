@@ -1,7 +1,13 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.controller.model.*;
-import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.controller.model.LoanManagResponse;
+import com.hzed.easyget.controller.model.PaymentCodeRequest;
+import com.hzed.easyget.controller.model.RepaymentRequest;
+import com.hzed.easyget.controller.model.TransactionVAResponse;
+import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
+import com.hzed.easyget.persistence.auto.entity.UserTransaction;
+import com.hzed.easyget.persistence.auto.entity.UserTransactionPic;
+import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import com.hzed.easyget.persistence.auto.entity.example.BillExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
 import com.hzed.easyget.persistence.auto.mapper.*;
@@ -13,11 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**还款 仓储类
-*@description：
-*@author：[zhangruilin]
-*@time：2018/6/15-15:49
-**/
+/**
+ * 还款 仓储类
+ *
+ * @description：
+ * @author：[zhangruilin]
+ * @time：2018/6/15-15:49
+ **/
 @Repository
 public class RepayRepository {
     @Autowired
@@ -36,7 +44,7 @@ public class RepayRepository {
      * 标的应还时间
      */
     public LocalDateTime findRepaymentTime(Long bidId) {
-        BillExample billExample=new BillExample();
+        BillExample billExample = new BillExample();
         billExample.createCriteria().andBidIdEqualTo(bidId);
         return billMapper.selectOneByExample(billExample).getRepaymentTime();
     }
@@ -44,8 +52,8 @@ public class RepayRepository {
     /**
      * 获取va码
      */
-    public TransactionVAResponse findVaTranc(Long payId,String mode) {
-        return repayExtMapper.findVaTranc(payId,mode);
+    public TransactionVAResponse findVaTranc(Long payId, String mode) {
+        return repayExtMapper.findVaTranc(payId, mode);
     }
 
     /**
@@ -67,7 +75,7 @@ public class RepayRepository {
      * 获取所有的va码记录
      */
     public List<UserTransactionRepay> finaAllVAcodeBypermas(RepaymentRequest request) {
-        UserTransactionRepayExample repayExample=new UserTransactionRepayExample();
+        UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
         repayExample.createCriteria()
                 .andTransactionIdEqualTo(request.getPayId())
                 .andModeEqualTo(request.getMode());
@@ -78,7 +86,7 @@ public class RepayRepository {
      * 还款完成走信息流
      */
     @Transactional(rollbackFor = Exception.class)
-    public void afterRepayment(UserTransaction transaction ,RepayInfoFlowJob repayInfoFlowJob) {
+    public void afterRepayment(UserTransaction transaction, RepayInfoFlowJob repayInfoFlowJob) {
         //修改交易记录
         userTransactionMapper.updateByPrimaryKeySelective(transaction);
         //插入还款定时任务

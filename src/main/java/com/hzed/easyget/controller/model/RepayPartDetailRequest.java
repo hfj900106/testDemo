@@ -3,6 +3,8 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 展示部分还款请求参数
  *
@@ -11,6 +13,6 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class RepayPartDetailRequest {
-    @NotBlank(message = "{param.repay.bidId.isNotEmpty}")
+    @NotNull(message = "{param.repay.bidId.isNotEmpty}")
     private String bidId;
 }

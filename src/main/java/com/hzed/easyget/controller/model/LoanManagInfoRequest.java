@@ -3,6 +3,8 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 查看还款信息请求实体
  *
@@ -14,6 +16,6 @@ public class LoanManagInfoRequest {
     /**
      * 交易流水id
      */
-    @NotBlank(message = "{param.loan.payId.isNotEmpty}")
+    @NotNull(message = "{param.loan.payId.isNotEmpty}")
     private Long payId;
 }

@@ -1,6 +1,7 @@
 package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
+import com.hzed.easyget.controller.model.AdsProductListRequest;
 import com.hzed.easyget.controller.model.AdsProductResponse;
 import com.hzed.easyget.infrastructure.repository.AdsProductRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -23,10 +24,18 @@ public class AdsService {
     @Autowired
     private AdsProductRepository adsProductRepository;
 
-    public List<AdsProductResponse> getAdsProductList() {
-
+    public List<AdsProductResponse> getAdsProductList(AdsProductListRequest request) {
         ArrayList<AdsProductResponse> AdsProductResponseList = Lists.newArrayList();
-        List<AdsProduct> adsProductList = adsProductRepository.getAdsProductList();
+
+        Integer pageNo = request.getPageNo();
+        Integer pageSize = request.getPageSize();
+        if (pageNo != null) {
+            pageNo = request.getPageNo()-1;
+        }
+        if (pageSize != null) {
+            pageSize = request.getPageSize();
+        }
+        List<AdsProduct> adsProductList = adsProductRepository.getAdsProductList(pageNo,pageSize);
 
         adsProductList.forEach(adsProduct -> {
             AdsProductResponse AdsProductResponse = new AdsProductResponse();

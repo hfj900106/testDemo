@@ -18,13 +18,11 @@ import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.*;
-import com.hzed.easyget.persistence.ext.entity.TransactionExt;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
 import com.hzed.easyget.persistence.ext.entity.VaData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -139,12 +137,12 @@ public class HomeService {
 
     public List<NewsResponse> getNewsList(NewsListRequest request) {
         List<NewsResponse> bombResponseList = Lists.newArrayList();
-        Integer pageNo = 0;
-        Integer pageSize = 5;
-        if (request.getPageNo() != null) {
-            pageNo = request.getPageNo()-1;
+        Integer pageNo = request.getPageNo();
+        Integer pageSize = request.getPageSize();
+        if (pageNo != null) {
+           pageNo = request.getPageNo()-1;
         }
-        if (request.getPageSize() != null) {
+        if (pageSize != null) {
             pageSize = request.getPageSize();
         }
         GlobalHead globalHead = RequestUtil.getGlobalHead();

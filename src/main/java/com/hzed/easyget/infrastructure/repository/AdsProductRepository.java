@@ -18,10 +18,11 @@ public class AdsProductRepository {
     @Autowired
     private AdsProductMapper adsProductMapper;
 
-    public List<AdsProduct> getAdsProductList() {
+    public List<AdsProduct> getAdsProductList(Integer pageNo,Integer pageSize) {
         AdsProductExample example = new AdsProductExample();
         example.setOrderByClause(AdsProduct.Column.weights.desc());
         example.createCriteria().andIsUseEqualTo(true);
+        example.page(pageNo,pageSize);
         return adsProductMapper.selectByExample(example);
     }
 

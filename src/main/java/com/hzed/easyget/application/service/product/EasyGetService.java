@@ -39,13 +39,14 @@ public class EasyGetService implements ProductService {
     public List<Bill> createBills(Bid bid) {
         checkBid(bid);
         List<Bill> lists = Lists.newArrayList();
-//        lists.add(buildBill(bid.getId(), new EasyGetProduct(bid.getLoanAmount()).getRepaymentAmount(), bid.getPeriod()));
         lists.add(buildBill(bid.getId(), createProduct(bid.getLoanAmount(), bid.getPeriod()).getTotalRepaymentAmount(), bid.getPeriod()));
         return lists;
     }
 
     @Override
     public List<BillLedger> createBillLedger(Bid bid) {
+        AbstractProduct product = createProduct(bid.getLoanAmount(), bid.getPeriod());
+
         List<BillLedger> lists = Lists.newArrayList();
         List<Bill> bills = createBills(bid);
         bills.forEach(bill -> {
@@ -57,11 +58,11 @@ public class EasyGetService implements ProductService {
             billLedger.setCreateTime(LocalDateTime.now());
 
             // 本金台账
-            billLedger.setRepaymentAmount(new EasyGetProduct(bid.getLoanAmount()).getAmount());
+            billLedger.setRepaymentAmount(bid.getLoanAmount());
             billLedger.setRepaymentItem(BillLedgerItemEnum.CORPUS.getCode().byteValue());
             lists.add(billLedger);
             // 尾款台账
-            billLedger.setRepaymentAmount(new EasyGetProduct(bid.getLoanAmount()).getTailFee());
+            billLedger.setRepaymentAmount(product.getTailFee());
             billLedger.setRepaymentItem(BillLedgerItemEnum.TAIL_FEE.getCode().byteValue());
             lists.add(billLedger);
         });

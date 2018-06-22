@@ -29,12 +29,7 @@ public class AdsService {
 
         Integer pageNo = request.getPageNo();
         Integer pageSize = request.getPageSize();
-        if (pageNo != null) {
-            pageNo = request.getPageNo()-1;
-        }
-        if (pageSize != null) {
-            pageSize = request.getPageSize();
-        }
+
         List<AdsProduct> adsProductList = adsProductRepository.getAdsProductList(pageNo,pageSize);
 
         adsProductList.forEach(adsProduct -> {

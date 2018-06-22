@@ -2,6 +2,9 @@ package com.hzed.easyget.controller.model;
 
 import lombok.Data;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 /**
  * 广告列表请求参数
  *
@@ -10,6 +13,8 @@ import lombok.Data;
  */
 @Data
 public class AdsProductListRequest {
-    private Integer pageNo = 0;
-    private Integer pageSize = 5;
+    @Min(0L) @NotNull(message = "{param.ads.pageNo.isNotEmpty}")
+    private Integer pageNo;
+    @Min(1L) @NotNull(message = "{param.ads.pageNo.isNotEmpty}")
+    private Integer pageSize;
 }

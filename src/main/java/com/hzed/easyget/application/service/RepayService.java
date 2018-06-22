@@ -69,7 +69,7 @@ public class RepayService {
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
         List<Bid> bidList = bidRepository.findByUserIdAndStatus(userId, Lists.newArrayList(BidStatusEnum.REPAYMENT.getCode().byteValue(), BidStatusEnum.CLEARED.getCode().byteValue()));
-        //没有借款记录
+        // 没有借款记录
         if (bidList == null || bidList.isEmpty()) {
             return repayListResponse;
         }

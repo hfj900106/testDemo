@@ -137,18 +137,14 @@ public class HomeService {
 
     public List<NewsResponse> getNewsList(NewsListRequest request) {
         List<NewsResponse> bombResponseList = Lists.newArrayList();
+
         Integer pageNo = request.getPageNo();
         Integer pageSize = request.getPageSize();
-        if (pageNo != null) {
-           pageNo = request.getPageNo()-1;
-        }
-        if (pageSize != null) {
-            pageSize = request.getPageSize();
-        }
+
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String platform = globalHead.getPlatform();
         String version = globalHead.getVersion();
-        //安卓是否要弹窗
+        // 安卓是否要弹窗
         if (AppVersionEnum.ANDROID.getCode().equals(platform)) {
             Dict dictBomb = dictService.getDictByCode(ANDROID_BOMB);
             String dicValue = dictBomb.getDicValue();
@@ -157,7 +153,7 @@ public class HomeService {
                 return bombResponseList;
             }
         }
-        //苹果是否要弹窗
+        // 苹果是否要弹窗
         if (AppVersionEnum.IOS_VERSION.getCode().equals(platform)) {
             Dict dictBomb = dictService.getDictByCode(IOS_BOMB);
             String dicValue = dictBomb.getDicValue();

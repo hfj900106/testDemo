@@ -1,6 +1,7 @@
 package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
+import com.hzed.easyget.application.enums.DictEnum;
 import com.hzed.easyget.controller.model.DictRequest;
 import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.controller.model.IDAreaRequest;
@@ -17,6 +18,7 @@ import com.hzed.easyget.persistence.auto.entity.IDArea;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -83,7 +85,7 @@ public class DictService {
         });
 
         // 放入缓存5小时
-        redisService.setObjCache(dictKey+ moduleCode + RedisConsts.SPLIT + i18n, dictResponseList, 5 * 3600L);
+        redisService.setObjCache(dictKey + moduleCode + RedisConsts.SPLIT + i18n, dictResponseList, 5 * 3600L);
 
         return dictResponseList;
     }

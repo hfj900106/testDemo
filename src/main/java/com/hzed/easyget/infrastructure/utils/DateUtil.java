@@ -89,11 +89,8 @@ public final class DateUtil {
      * 获取两个日期的天数差,去掉时分秒
      */
     public static int getBetweenDays(LocalDateTime startTime, LocalDateTime endTime) {
-
         LocalDateTime start = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), 0, 0);
         LocalDateTime end = LocalDateTime.of(endTime.getYear(), endTime.getMonth(), endTime.getDayOfMonth(), 0, 0);
-
-
         return (int)Duration.between(start, end).toDays();
     }
 

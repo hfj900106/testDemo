@@ -27,6 +27,7 @@ public enum BizCodeEnum {
     OVER_REPAYMENT_MONEY("8004", "还款金额大于项目待还总额"),
     REPAYMENTS("0001","还款处理中"),
     PROCESS_LENDING("0002","放款处理中"),
+    PAYMENTCODE_ERROR("8005","获取还款码接口异常"),
 
 
 

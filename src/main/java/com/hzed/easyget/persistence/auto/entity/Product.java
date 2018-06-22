@@ -61,19 +61,19 @@ public class Product implements Serializable {
     private Boolean isUse;
 
     /**
-     * 快速信审费
+     * 快速信审费率
      */
-    private BigDecimal auditFree;
+    private BigDecimal headFeeRate;
 
     /**
-     * 尾款
+     * 尾款费率
      */
-    private BigDecimal paymentFree;
+    private BigDecimal tailFeeRate;
 
     /**
-     * 逾期费
+     * 逾期费率
      */
-    private BigDecimal overdueFree;
+    private BigDecimal overdueFeeRate;
 
     /**
      */
@@ -185,28 +185,28 @@ public class Product implements Serializable {
         this.isUse = isUse;
     }
 
-    public BigDecimal getAuditFree() {
-        return auditFree;
+    public BigDecimal getHeadFeeRate() {
+        return headFeeRate;
     }
 
-    public void setAuditFree(BigDecimal auditFree) {
-        this.auditFree = auditFree;
+    public void setHeadFeeRate(BigDecimal headFeeRate) {
+        this.headFeeRate = headFeeRate;
     }
 
-    public BigDecimal getPaymentFree() {
-        return paymentFree;
+    public BigDecimal getTailFeeRate() {
+        return tailFeeRate;
     }
 
-    public void setPaymentFree(BigDecimal paymentFree) {
-        this.paymentFree = paymentFree;
+    public void setTailFeeRate(BigDecimal tailFeeRate) {
+        this.tailFeeRate = tailFeeRate;
     }
 
-    public BigDecimal getOverdueFree() {
-        return overdueFree;
+    public BigDecimal getOverdueFeeRate() {
+        return overdueFeeRate;
     }
 
-    public void setOverdueFree(BigDecimal overdueFree) {
-        this.overdueFree = overdueFree;
+    public void setOverdueFeeRate(BigDecimal overdueFeeRate) {
+        this.overdueFeeRate = overdueFeeRate;
     }
 
     public Long getCreateBy() {
@@ -266,9 +266,9 @@ public class Product implements Serializable {
         sb.append(", description=").append(description);
         sb.append(", picture=").append(picture);
         sb.append(", isUse=").append(isUse);
-        sb.append(", auditFree=").append(auditFree);
-        sb.append(", paymentFree=").append(paymentFree);
-        sb.append(", overdueFree=").append(overdueFree);
+        sb.append(", headFeeRate=").append(headFeeRate);
+        sb.append(", tailFeeRate=").append(tailFeeRate);
+        sb.append(", overdueFeeRate=").append(overdueFeeRate);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -345,18 +345,18 @@ public class Product implements Serializable {
             return this;
         }
 
-        public Builder auditFree(BigDecimal auditFree) {
-            obj.setAuditFree(auditFree);
+        public Builder headFeeRate(BigDecimal headFeeRate) {
+            obj.setHeadFeeRate(headFeeRate);
             return this;
         }
 
-        public Builder paymentFree(BigDecimal paymentFree) {
-            obj.setPaymentFree(paymentFree);
+        public Builder tailFeeRate(BigDecimal tailFeeRate) {
+            obj.setTailFeeRate(tailFeeRate);
             return this;
         }
 
-        public Builder overdueFree(BigDecimal overdueFree) {
-            obj.setOverdueFree(overdueFree);
+        public Builder overdueFeeRate(BigDecimal overdueFeeRate) {
+            obj.setOverdueFeeRate(overdueFeeRate);
             return this;
         }
 
@@ -402,9 +402,9 @@ public class Product implements Serializable {
         description("description"),
         picture("picture"),
         isUse("is_use"),
-        auditFree("audit_free"),
-        paymentFree("payment_free"),
-        overdueFree("overdue_free"),
+        headFeeRate("head_fee_rate"),
+        tailFeeRate("tail_fee_rate"),
+        overdueFeeRate("overdue_fee_rate"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

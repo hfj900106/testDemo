@@ -902,183 +902,183 @@ public class ProductExample {
             return (Criteria) this;
         }
 
-        public Criteria andAuditFreeIsNull() {
-            addCriterion("audit_free is null");
+        public Criteria andAuditFreeRateIsNull() {
+            addCriterion("audit_free_rate is null");
             return (Criteria) this;
         }
 
-        public Criteria andAuditFreeIsNotNull() {
-            addCriterion("audit_free is not null");
+        public Criteria andAuditFreeRateIsNotNull() {
+            addCriterion("audit_free_rate is not null");
             return (Criteria) this;
         }
 
-        public Criteria andAuditFreeEqualTo(BigDecimal value) {
-            addCriterion("audit_free =", value, "auditFree");
+        public Criteria andAuditFreeRateEqualTo(BigDecimal value) {
+            addCriterion("audit_free_rate =", value, "auditFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andAuditFreeNotEqualTo(BigDecimal value) {
-            addCriterion("audit_free <>", value, "auditFree");
+        public Criteria andAuditFreeRateNotEqualTo(BigDecimal value) {
+            addCriterion("audit_free_rate <>", value, "auditFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andAuditFreeGreaterThan(BigDecimal value) {
-            addCriterion("audit_free >", value, "auditFree");
+        public Criteria andAuditFreeRateGreaterThan(BigDecimal value) {
+            addCriterion("audit_free_rate >", value, "auditFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andAuditFreeGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("audit_free >=", value, "auditFree");
+        public Criteria andAuditFreeRateGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("audit_free_rate >=", value, "auditFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andAuditFreeLessThan(BigDecimal value) {
-            addCriterion("audit_free <", value, "auditFree");
+        public Criteria andAuditFreeRateLessThan(BigDecimal value) {
+            addCriterion("audit_free_rate <", value, "auditFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andAuditFreeLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("audit_free <=", value, "auditFree");
+        public Criteria andAuditFreeRateLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("audit_free_rate <=", value, "auditFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andAuditFreeIn(List<BigDecimal> values) {
-            addCriterion("audit_free in", values, "auditFree");
+        public Criteria andAuditFreeRateIn(List<BigDecimal> values) {
+            addCriterion("audit_free_rate in", values, "auditFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andAuditFreeNotIn(List<BigDecimal> values) {
-            addCriterion("audit_free not in", values, "auditFree");
+        public Criteria andAuditFreeRateNotIn(List<BigDecimal> values) {
+            addCriterion("audit_free_rate not in", values, "auditFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andAuditFreeBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("audit_free between", value1, value2, "auditFree");
+        public Criteria andAuditFreeRateBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("audit_free_rate between", value1, value2, "auditFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andAuditFreeNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("audit_free not between", value1, value2, "auditFree");
+        public Criteria andAuditFreeRateNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("audit_free_rate not between", value1, value2, "auditFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentFreeIsNull() {
-            addCriterion("payment_free is null");
+        public Criteria andPaymentFreeRateIsNull() {
+            addCriterion("payment_free_rate is null");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentFreeIsNotNull() {
-            addCriterion("payment_free is not null");
+        public Criteria andPaymentFreeRateIsNotNull() {
+            addCriterion("payment_free_rate is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentFreeEqualTo(BigDecimal value) {
-            addCriterion("payment_free =", value, "paymentFree");
+        public Criteria andPaymentFreeRateEqualTo(BigDecimal value) {
+            addCriterion("payment_free_rate =", value, "paymentFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentFreeNotEqualTo(BigDecimal value) {
-            addCriterion("payment_free <>", value, "paymentFree");
+        public Criteria andPaymentFreeRateNotEqualTo(BigDecimal value) {
+            addCriterion("payment_free_rate <>", value, "paymentFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentFreeGreaterThan(BigDecimal value) {
-            addCriterion("payment_free >", value, "paymentFree");
+        public Criteria andPaymentFreeRateGreaterThan(BigDecimal value) {
+            addCriterion("payment_free_rate >", value, "paymentFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentFreeGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("payment_free >=", value, "paymentFree");
+        public Criteria andPaymentFreeRateGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("payment_free_rate >=", value, "paymentFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentFreeLessThan(BigDecimal value) {
-            addCriterion("payment_free <", value, "paymentFree");
+        public Criteria andPaymentFreeRateLessThan(BigDecimal value) {
+            addCriterion("payment_free_rate <", value, "paymentFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentFreeLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("payment_free <=", value, "paymentFree");
+        public Criteria andPaymentFreeRateLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("payment_free_rate <=", value, "paymentFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentFreeIn(List<BigDecimal> values) {
-            addCriterion("payment_free in", values, "paymentFree");
+        public Criteria andPaymentFreeRateIn(List<BigDecimal> values) {
+            addCriterion("payment_free_rate in", values, "paymentFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentFreeNotIn(List<BigDecimal> values) {
-            addCriterion("payment_free not in", values, "paymentFree");
+        public Criteria andPaymentFreeRateNotIn(List<BigDecimal> values) {
+            addCriterion("payment_free_rate not in", values, "paymentFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentFreeBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("payment_free between", value1, value2, "paymentFree");
+        public Criteria andPaymentFreeRateBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("payment_free_rate between", value1, value2, "paymentFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andPaymentFreeNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("payment_free not between", value1, value2, "paymentFree");
+        public Criteria andPaymentFreeRateNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("payment_free_rate not between", value1, value2, "paymentFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andOverdueFreeIsNull() {
-            addCriterion("overdue_free is null");
+        public Criteria andOverdueFreeRateIsNull() {
+            addCriterion("overdue_free_rate is null");
             return (Criteria) this;
         }
 
-        public Criteria andOverdueFreeIsNotNull() {
-            addCriterion("overdue_free is not null");
+        public Criteria andOverdueFreeRateIsNotNull() {
+            addCriterion("overdue_free_rate is not null");
             return (Criteria) this;
         }
 
-        public Criteria andOverdueFreeEqualTo(BigDecimal value) {
-            addCriterion("overdue_free =", value, "overdueFree");
+        public Criteria andOverdueFreeRateEqualTo(BigDecimal value) {
+            addCriterion("overdue_free_rate =", value, "overdueFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andOverdueFreeNotEqualTo(BigDecimal value) {
-            addCriterion("overdue_free <>", value, "overdueFree");
+        public Criteria andOverdueFreeRateNotEqualTo(BigDecimal value) {
+            addCriterion("overdue_free_rate <>", value, "overdueFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andOverdueFreeGreaterThan(BigDecimal value) {
-            addCriterion("overdue_free >", value, "overdueFree");
+        public Criteria andOverdueFreeRateGreaterThan(BigDecimal value) {
+            addCriterion("overdue_free_rate >", value, "overdueFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andOverdueFreeGreaterThanOrEqualTo(BigDecimal value) {
-            addCriterion("overdue_free >=", value, "overdueFree");
+        public Criteria andOverdueFreeRateGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("overdue_free_rate >=", value, "overdueFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andOverdueFreeLessThan(BigDecimal value) {
-            addCriterion("overdue_free <", value, "overdueFree");
+        public Criteria andOverdueFreeRateLessThan(BigDecimal value) {
+            addCriterion("overdue_free_rate <", value, "overdueFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andOverdueFreeLessThanOrEqualTo(BigDecimal value) {
-            addCriterion("overdue_free <=", value, "overdueFree");
+        public Criteria andOverdueFreeRateLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("overdue_free_rate <=", value, "overdueFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andOverdueFreeIn(List<BigDecimal> values) {
-            addCriterion("overdue_free in", values, "overdueFree");
+        public Criteria andOverdueFreeRateIn(List<BigDecimal> values) {
+            addCriterion("overdue_free_rate in", values, "overdueFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andOverdueFreeNotIn(List<BigDecimal> values) {
-            addCriterion("overdue_free not in", values, "overdueFree");
+        public Criteria andOverdueFreeRateNotIn(List<BigDecimal> values) {
+            addCriterion("overdue_free_rate not in", values, "overdueFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andOverdueFreeBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("overdue_free between", value1, value2, "overdueFree");
+        public Criteria andOverdueFreeRateBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("overdue_free_rate between", value1, value2, "overdueFreeRate");
             return (Criteria) this;
         }
 
-        public Criteria andOverdueFreeNotBetween(BigDecimal value1, BigDecimal value2) {
-            addCriterion("overdue_free not between", value1, value2, "overdueFree");
+        public Criteria andOverdueFreeRateNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("overdue_free_rate not between", value1, value2, "overdueFreeRate");
             return (Criteria) this;
         }
 

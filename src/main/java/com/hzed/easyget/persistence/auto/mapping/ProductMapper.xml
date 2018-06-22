@@ -13,9 +13,9 @@
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="picture" jdbcType="VARCHAR" property="picture" />
     <result column="is_use" jdbcType="BIT" property="isUse" />
-    <result column="audit_free" jdbcType="DECIMAL" property="auditFree" />
-    <result column="payment_free" jdbcType="DECIMAL" property="paymentFree" />
-    <result column="overdue_free" jdbcType="DECIMAL" property="overdueFree" />
+    <result column="head_fee_rate" jdbcType="DECIMAL" property="headFeeRate" />
+    <result column="tail_fee_rate" jdbcType="DECIMAL" property="tailFeeRate" />
+    <result column="overdue_fee_rate" jdbcType="DECIMAL" property="overdueFeeRate" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -82,7 +82,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, code, name, loan_amount_arr, currency, loan_time_arr, loan_time_dmy, apr, description, 
-    picture, is_use, audit_free, payment_free, overdue_free, create_by, create_time, 
+    picture, is_use, head_fee_rate, tail_fee_rate, overdue_fee_rate, create_by, create_time, 
     update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProductExample" resultMap="BaseResultMap">
@@ -151,15 +151,15 @@
     insert into t_loan_product (id, code, name, loan_amount_arr, 
       currency, loan_time_arr, loan_time_dmy, 
       apr, description, picture, 
-      is_use, audit_free, payment_free, 
-      overdue_free, create_by, create_time, 
+      is_use, head_fee_rate, tail_fee_rate, 
+      overdue_fee_rate, create_by, create_time, 
       update_by, update_time, remark
       )
     values (#{id,jdbcType=BIGINT}, #{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{loanAmountArr,jdbcType=VARCHAR}, 
       #{currency,jdbcType=CHAR}, #{loanTimeArr,jdbcType=VARCHAR}, #{loanTimeDmy,jdbcType=CHAR}, 
       #{apr,jdbcType=DECIMAL}, #{description,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR}, 
-      #{isUse,jdbcType=BIT}, #{auditFree,jdbcType=DECIMAL}, #{paymentFree,jdbcType=DECIMAL}, 
-      #{overdueFree,jdbcType=DECIMAL}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{isUse,jdbcType=BIT}, #{headFeeRate,jdbcType=DECIMAL}, #{tailFeeRate,jdbcType=DECIMAL}, 
+      #{overdueFeeRate,jdbcType=DECIMAL}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
       )
   </insert>
@@ -199,14 +199,14 @@
       <if test="isUse != null">
         is_use,
       </if>
-      <if test="auditFree != null">
-        audit_free,
+      <if test="headFeeRate != null">
+        head_fee_rate,
       </if>
-      <if test="paymentFree != null">
-        payment_free,
+      <if test="tailFeeRate != null">
+        tail_fee_rate,
       </if>
-      <if test="overdueFree != null">
-        overdue_free,
+      <if test="overdueFeeRate != null">
+        overdue_fee_rate,
       </if>
       <if test="createBy != null">
         create_by,
@@ -258,14 +258,14 @@
       <if test="isUse != null">
         #{isUse,jdbcType=BIT},
       </if>
-      <if test="auditFree != null">
-        #{auditFree,jdbcType=DECIMAL},
+      <if test="headFeeRate != null">
+        #{headFeeRate,jdbcType=DECIMAL},
       </if>
-      <if test="paymentFree != null">
-        #{paymentFree,jdbcType=DECIMAL},
+      <if test="tailFeeRate != null">
+        #{tailFeeRate,jdbcType=DECIMAL},
       </if>
-      <if test="overdueFree != null">
-        #{overdueFree,jdbcType=DECIMAL},
+      <if test="overdueFeeRate != null">
+        #{overdueFeeRate,jdbcType=DECIMAL},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -326,14 +326,14 @@
       <if test="record.isUse != null">
         is_use = #{record.isUse,jdbcType=BIT},
       </if>
-      <if test="record.auditFree != null">
-        audit_free = #{record.auditFree,jdbcType=DECIMAL},
+      <if test="record.headFeeRate != null">
+        head_fee_rate = #{record.headFeeRate,jdbcType=DECIMAL},
       </if>
-      <if test="record.paymentFree != null">
-        payment_free = #{record.paymentFree,jdbcType=DECIMAL},
+      <if test="record.tailFeeRate != null">
+        tail_fee_rate = #{record.tailFeeRate,jdbcType=DECIMAL},
       </if>
-      <if test="record.overdueFree != null">
-        overdue_free = #{record.overdueFree,jdbcType=DECIMAL},
+      <if test="record.overdueFeeRate != null">
+        overdue_fee_rate = #{record.overdueFeeRate,jdbcType=DECIMAL},
       </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
@@ -368,9 +368,9 @@
       description = #{record.description,jdbcType=VARCHAR},
       picture = #{record.picture,jdbcType=VARCHAR},
       is_use = #{record.isUse,jdbcType=BIT},
-      audit_free = #{record.auditFree,jdbcType=DECIMAL},
-      payment_free = #{record.paymentFree,jdbcType=DECIMAL},
-      overdue_free = #{record.overdueFree,jdbcType=DECIMAL},
+      head_fee_rate = #{record.headFeeRate,jdbcType=DECIMAL},
+      tail_fee_rate = #{record.tailFeeRate,jdbcType=DECIMAL},
+      overdue_fee_rate = #{record.overdueFeeRate,jdbcType=DECIMAL},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -413,14 +413,14 @@
       <if test="isUse != null">
         is_use = #{isUse,jdbcType=BIT},
       </if>
-      <if test="auditFree != null">
-        audit_free = #{auditFree,jdbcType=DECIMAL},
+      <if test="headFeeRate != null">
+        head_fee_rate = #{headFeeRate,jdbcType=DECIMAL},
       </if>
-      <if test="paymentFree != null">
-        payment_free = #{paymentFree,jdbcType=DECIMAL},
+      <if test="tailFeeRate != null">
+        tail_fee_rate = #{tailFeeRate,jdbcType=DECIMAL},
       </if>
-      <if test="overdueFree != null">
-        overdue_free = #{overdueFree,jdbcType=DECIMAL},
+      <if test="overdueFeeRate != null">
+        overdue_fee_rate = #{overdueFeeRate,jdbcType=DECIMAL},
       </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
@@ -452,9 +452,9 @@
       description = #{description,jdbcType=VARCHAR},
       picture = #{picture,jdbcType=VARCHAR},
       is_use = #{isUse,jdbcType=BIT},
-      audit_free = #{auditFree,jdbcType=DECIMAL},
-      payment_free = #{paymentFree,jdbcType=DECIMAL},
-      overdue_free = #{overdueFree,jdbcType=DECIMAL},
+      head_fee_rate = #{headFeeRate,jdbcType=DECIMAL},
+      tail_fee_rate = #{tailFeeRate,jdbcType=DECIMAL},
+      overdue_fee_rate = #{overdueFeeRate,jdbcType=DECIMAL},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
@@ -491,17 +491,17 @@
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_product
     (id, code, name, loan_amount_arr, currency, loan_time_arr, loan_time_dmy, apr, description, 
-      picture, is_use, audit_free, payment_free, overdue_free, create_by, create_time, 
+      picture, is_use, head_fee_rate, tail_fee_rate, overdue_fee_rate, create_by, create_time, 
       update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.code,jdbcType=CHAR}, #{item.name,jdbcType=VARCHAR}, 
         #{item.loanAmountArr,jdbcType=VARCHAR}, #{item.currency,jdbcType=CHAR}, #{item.loanTimeArr,jdbcType=VARCHAR}, 
         #{item.loanTimeDmy,jdbcType=CHAR}, #{item.apr,jdbcType=DECIMAL}, #{item.description,jdbcType=VARCHAR}, 
-        #{item.picture,jdbcType=VARCHAR}, #{item.isUse,jdbcType=BIT}, #{item.auditFree,jdbcType=DECIMAL}, 
-        #{item.paymentFree,jdbcType=DECIMAL}, #{item.overdueFree,jdbcType=DECIMAL}, #{item.createBy,jdbcType=BIGINT}, 
-        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
-        #{item.remark,jdbcType=VARCHAR})
+        #{item.picture,jdbcType=VARCHAR}, #{item.isUse,jdbcType=BIT}, #{item.headFeeRate,jdbcType=DECIMAL}, 
+        #{item.tailFeeRate,jdbcType=DECIMAL}, #{item.overdueFeeRate,jdbcType=DECIMAL}, 
+        #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -547,14 +547,14 @@
         <if test="'is_use' == column.value">
           #{item.isUse,jdbcType=BIT}
         </if>
-        <if test="'audit_free' == column.value">
-          #{item.auditFree,jdbcType=DECIMAL}
+        <if test="'head_fee_rate' == column.value">
+          #{item.headFeeRate,jdbcType=DECIMAL}
         </if>
-        <if test="'payment_free' == column.value">
-          #{item.paymentFree,jdbcType=DECIMAL}
+        <if test="'tail_fee_rate' == column.value">
+          #{item.tailFeeRate,jdbcType=DECIMAL}
         </if>
-        <if test="'overdue_free' == column.value">
-          #{item.overdueFree,jdbcType=DECIMAL}
+        <if test="'overdue_fee_rate' == column.value">
+          #{item.overdueFeeRate,jdbcType=DECIMAL}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

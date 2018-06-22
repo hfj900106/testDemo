@@ -1,6 +1,7 @@
 package com.hzed.easyget.application.service.product;
 
 import com.google.common.collect.Maps;
+import com.hzed.easyget.infrastructure.utils.SpringContextUtil;
 
 import java.util.Map;
 
@@ -16,7 +17,7 @@ public class ProductFactory {
     public static final Map<ProductEnum, ProductService> SERVICE_MAP = Maps.newHashMap();
 
     static {
-        SERVICE_MAP.put(ProductEnum.EasyGet, new EasyGetService());
+        SERVICE_MAP.put(ProductEnum.EasyGet, SpringContextUtil.getBean(EasyGetService.class));
     }
 
     public static ProductService getProduct(ProductEnum pEnum) {

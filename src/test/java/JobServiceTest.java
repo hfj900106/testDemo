@@ -64,8 +64,8 @@ public class JobServiceTest {
     public void test09(){
         RepayPartRequest request=new RepayPartRequest();
         request.setBidId(104094428696027136L);
-        long payid=repayService.findloanManagResponse(BigDecimal.valueOf(20000),request.getBidId(),false);
-        System.out.println(payid);
+        PayMentIdResponse idResponse=repayService.findloanManagResponse(BigDecimal.valueOf(20000),request.getBidId(),false);
+        System.out.println(idResponse);
     }
 
     /**
@@ -114,5 +114,10 @@ public class JobServiceTest {
     public void test11(){
        int repay=LocalDateTime.now().compareTo(LocalDateTime.now().minusHours(4));
         System.out.println("----------------------->"+LocalDateTime.now().minusHours(4));
+    }
+    @Test
+    public void test12(){
+        LoanManagResponse response=repayService.loanManagInfo(108476457604751361L);
+        System.out.println("----------------------->"+response);
     }
 }

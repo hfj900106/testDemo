@@ -1,8 +1,10 @@
 import com.hzed.BootApplication;
 import com.hzed.easyget.application.service.FileService;
 import com.hzed.easyget.application.service.LoginService;
+import com.hzed.easyget.application.service.product.ProductEnum;
+import com.hzed.easyget.application.service.product.ProductFactory;
+import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.PictureCodeResponse;
-import com.hzed.easyget.infrastructure.config.aliyun.AliyunService;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.utils.PicUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
@@ -17,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BootApplication.class)
@@ -25,8 +28,6 @@ public class BootTest {
 
     @Autowired
     private RedisService redisService;
-    @Autowired
-    private AliyunService aliyunService;
     @Autowired
     private FileService fileService;
     @Autowired
@@ -62,6 +63,14 @@ public class BootTest {
         out.write(Base64.decodeBase64(codeResponse.getPicture()));
         out.flush();
         out.close();
+    }
+
+    @Test
+    public void factoryTest() {
+        AbstractProduct product = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(new BigDecimal(60000), 14);
+        System.out.println(product.getHeadFee());
+        System.out.println(product.getInerest());
+
     }
 
 }

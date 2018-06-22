@@ -367,7 +367,7 @@ public class RepayService {
      * @param flag   是否全部还清
      * @return
      */
-    public Long findloanManagResponse(BigDecimal amount, Long bidId, boolean flag) {
+    public PayMentIdResponse findloanManagResponse(BigDecimal amount, Long bidId, boolean flag) {
         //查询标的信息
         Bid bid = bidRepository.findById(bidId);
         if (ObjectUtils.isEmpty(bid)) {
@@ -404,7 +404,7 @@ public class RepayService {
             trance.setRemark(flag ? "全部还款" : "部分还款");
             userTransactionRepository.transactionUpdateByKey(trance);
         }
-        return trance.getId();
+        return new PayMentIdResponse(trance.getId());
     }
 
     /**
@@ -505,7 +505,6 @@ public class RepayService {
         for (UserTransactionRepay x : repayList) {
             compleRequest.setPaymentCode(x.getVa());
             compleRequest.setRequestNo(IdentifierGenerator.nextSeqNo());
-            //TODO 调用完成还款接口
             log.info("完成还款接口请求报文：{}", JSON.toJSONString(compleRequest));
             String result = restService.doPostJson(prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(compleRequest));
             if (result.equals(BizCodeEnum.TIMEOUT.getCode())) {
@@ -519,7 +518,6 @@ public class RepayService {
             }
             //直接处理成功
             if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
-                // TODO 走资金流 然后信息流
                 this.repaymentSuccess(transaction);
             }
             //修改交易的确认时间
@@ -642,7 +640,7 @@ public class RepayService {
      * @param payId 交易流水id
      * @return 还款信息
      */
-    public LoanManagResponse LoanManagInfo(Long payId) {
+    public LoanManagResponse loanManagInfo(Long payId) {
         //先查询是否有交易记录
         UserTransactionExample userTransactionExample = new UserTransactionExample();
         userTransactionExample.createCriteria()

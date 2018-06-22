@@ -9,6 +9,9 @@ import lombok.Getter;
 
 @Getter
 public enum ProductEnum {
+    /**
+     * 过规则
+     */
     PRODUCT_CODE("101", "印尼APP");
 
     private String code;

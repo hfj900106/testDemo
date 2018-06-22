@@ -16,9 +16,9 @@ public class ProductRepository {
     @Autowired
     private ProductMapper productMapper;
 
-    public Product getProductInfo() {
+    public Product findByCode(String code) {
         ProductExample example = new ProductExample();
-        example.createCriteria().andIsUseEqualTo(true);
+        example.createCriteria().andCodeEqualTo(code).andIsUseEqualTo(true);
         return productMapper.selectOneByExample(example);
     }
 }

@@ -1,12 +1,11 @@
 package com.hzed.easyget.controller.model;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 /**
@@ -35,11 +34,13 @@ public class RepaymentRequest {
     /**
      * base64Img 图片数组
      */
-    @NotBlank(message = "{param.repay.base64Imgs.isNotEmpty}")
+    @NotNull(message = "{param.repay.base64Imgs.isNotEmpty}")
+    @Size(min = 1)
     private String[] base64Imgs;
     /**
      * 对应的图片后缀
      */
-    @NotBlank(message = "{param.repay.picSuffixs.isNotEmpty}")
+    @NotNull(message = "{param.repay.picSuffixs.isNotEmpty}")
+    @Size(min = 1)
     private String[] picSuffixs;
 }

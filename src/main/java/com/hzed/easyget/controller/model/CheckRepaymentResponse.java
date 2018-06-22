@@ -1,6 +1,5 @@
 package com.hzed.easyget.controller.model;
 
-import com.hzed.easyget.persistence.ext.entity.VaData;
 import lombok.Data;
 
 /**

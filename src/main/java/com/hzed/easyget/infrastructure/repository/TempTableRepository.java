@@ -74,4 +74,8 @@ public class TempTableRepository {
                 .andJobNameEqualTo(pushBankTask);
         return tempTableMapper.selectOneByExample(tempTableExample).getId();
     }
+
+    public void deleteById(Long id) {
+        tempMapper.deleteByPrimaryKey(id);
+    }
 }

@@ -35,6 +35,10 @@ public class ComConsts {
      */
     public static final String PUSH_BANK_TASK = "bankLoan";
     /**
+     * 处理还款失败定时任务名
+     */
+    public static final String REPAY_DAIL_TASK = "repayFail";
+    /**
      * 交易方式ATM
      */
     public static final String ATM="ATM";

@@ -55,6 +55,8 @@ public class HomeService {
     private BidRepository bidRepository;
     @Autowired
     private UserLoanVisitRepository userLoanVisitRepository;
+    @Autowired
+    private UserRepaymentVisitRepository userRepaymentVisitRepository;
 
     private static final String ANDROID_BOMB = "android_bomb";
     private static final String IOS_BOMB = "ios_bomb";
@@ -138,18 +140,14 @@ public class HomeService {
 
     public List<NewsResponse> getNewsList(NewsListRequest request) {
         List<NewsResponse> bombResponseList = Lists.newArrayList();
+
         Integer pageNo = request.getPageNo();
         Integer pageSize = request.getPageSize();
-        if (pageNo != null) {
-            pageNo = request.getPageNo() - 1;
-        }
-        if (pageSize != null) {
-            pageSize = request.getPageSize();
-        }
+
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String platform = globalHead.getPlatform();
         String version = globalHead.getVersion();
-        //安卓是否要弹窗
+        // 安卓是否要弹窗
         if (AppVersionEnum.ANDROID.getCode().equals(platform)) {
             Dict dictBomb = dictService.getDictByCode(ANDROID_BOMB);
             String dicValue = dictBomb.getDicValue();
@@ -158,7 +156,7 @@ public class HomeService {
                 return bombResponseList;
             }
         }
-        //苹果是否要弹窗
+        // 苹果是否要弹窗
         if (AppVersionEnum.IOS_VERSION.getCode().equals(platform)) {
             Dict dictBomb = dictService.getDictByCode(IOS_BOMB);
             String dicValue = dictBomb.getDicValue();
@@ -227,7 +225,8 @@ public class HomeService {
                     throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
                 } else {
                     // 交易成功失败都添加访问记录
-                    userRepository.insertUserRepaymentVisit(userId, transaction.getId());
+                    UserRepaymentVisit repaymentVisit = UserRepaymentVisit.builder().userId(userId).transactionId(transaction.getId()).build();
+                    userRepaymentVisitRepository.insertUserRepaymentVisit(repaymentVisit);
                     result.setStatus(status);
                     throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
                 }
@@ -243,7 +242,7 @@ public class HomeService {
         if (userExt != null && userExt.getRepaymentTime() != null) {
             LocalDateTime repaymentTime = userExt.getRepaymentTime();
             LocalDateTime now = LocalDateTime.now();
-            long days = Duration.between(now, repaymentTime).toDays();
+            int days = DateUtil.getBetweenDays(now, repaymentTime);
             // 有未结清的标,且离逾期天数小于等于两天。days = 今天日期 - 应还日期
             if (days < -2) {
                 return result;

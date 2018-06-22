@@ -2,6 +2,7 @@ package com.hzed.easyget.application.service;
 
 import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
+import com.hzed.easyget.application.service.product.model.EasyGetProduct;
 import com.hzed.easyget.controller.model.PushBidCallbackRequest;
 import com.hzed.easyget.controller.model.PushBidCallbackResponse;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
@@ -39,7 +40,7 @@ public class CallbackService {
             String resultCode = request.getResultCode();
             LocalDateTime dateTime = DateUtil.dateToLocalDateTime(new Date(Long.parseLong(request.getHandleTime())).toString());
             tempTableRepository.pushBidCallback(
-                    Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime)
+                    Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime).auditFee(new EasyGetProduct(loanAmount).getHeadFee())
                             .status("1".equals(resultCode) ? BidStatusEnum.AUDIT_PASS.getCode().byteValue() : BidStatusEnum.AUDIT_FAIL.getCode().byteValue()).build(),
                     BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue())
                             .createTime(dateTime).build(),

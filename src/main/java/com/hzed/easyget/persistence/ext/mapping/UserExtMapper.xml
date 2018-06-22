@@ -2,63 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hzed.easyget.persistence.ext.mapper.UserExtMapper">
 
-    <!--查询用户的逾期天数-->
-    <select id="queryOverdueDayByUId" resultType="com.hzed.easyget.persistence.ext.entity.UserExt">
-        SELECT CURDATE() - date(bill.repayment_time) AS overdueDay,bid.id bidId
-        FROM t_loan_bid bid
-        LEFT JOIN t_loan_bill bill ON bid.id = bill.bid_id
-        WHERE bid.`status` = 5 AND bid.user_id = #{id}
-    </select>
-
-    <!--查询用户的还款凭证-->
-    <select id="queryEvidences" resultType="string">
-        SELECT evidence_pic_url
-        FROM t_loan_user_transaction_pic pic
-        LEFT JOIN t_loan_user_transaction trans ON trans.id = pic.transaction_id
-        WHERE trans.`status` = 1 AND trans.type = 2 AND trans.user_id = #{id}
-    </select>
-
-    <!--获取用户最近的VA码数据-->
-    <select id="queryLastVa" resultType="com.hzed.easyget.persistence.ext.entity.VaData">
-        SELECT repay.va vaCode,repay.va_create_time AS createTime,repay.`mode` AS  mode,trans.id AS transactionId,
-                trans.amount AS amount, bill.repayment_time AS repaymentTime
-        FROM t_loan_user_transaction trans
-        LEFT JOIN t_loan_user_transaction_repay repay ON repay.transaction_id = trans.id
-        LEFT JOIN t_loan_bill bill ON bill.bid_id = trans.bid_id
-        WHERE trans.`status` = 1 AND trans.type = 2  AND repay.va_create_time =
-        (
-            SELECT MAX(r.va_create_time)
-            FROM t_loan_user_transaction t
-            LEFT JOIN t_loan_user_transaction_repay r ON r.transaction_id = t.id
-            WHERE t.`status` = 1 AND t.type = 2  AND t.user_id = #{id}
-        )
-        AND trans.user_id = #{id}
-    </select>
-
-
-
-    <!--查询用户的交易流水transactionId和确认时间confirmTime-->
-    <select id="queryTransaction" resultType="com.hzed.easyget.persistence.ext.entity.TransactionExt">
-        SELECT id AS transactionId, confirm_time AS confirmTime
-        FROM t_loan_user_transaction
-        WHERE `status` = 1 AND type = 2 AND user_id = #{id}
-    </select>
-
-    <select id="queryLastTransaction" resultType="com.hzed.easyget.persistence.auto.entity.UserTransaction">
-        SELECT id AS id,`status` AS status,create_time AS createTime,confirm_time AS confirmTime
-        FROM t_loan_user_transaction
-        WHERE type = 2
-        AND create_time = (SELECT MAX(create_time) FROM  t_loan_user_transaction  WHERE type = 2 AND user_id = #{id})
-        AND user_id = #{id}
-    </select>
-
-    <select id="queryRepaymentVisit" resultType="long">
-        SELECT id FROM t_loan_user_transaction_visit WHERE transaction_id = #{transactionId} AND  user_id = #{userId}
-    </select>
-
-    <insert id="insertUserRepaymentVisit">
-        INSERT INTO t_loan_user_repayment_visit (user_id,transaction_id) VALUES (#{userId},#{transactionId})
-    </insert>
 
     <select id="queryTransactionVisit" resultType="com.hzed.easyget.persistence.ext.entity.TransactionExt">
         SELECT trans.id AS id,trans.status AS status,trans.confirm_time AS confirmTime
@@ -71,6 +14,17 @@
         LEFT JOIN t_loan_bid bid ON bill.bid_id = bid.id
         WHERE bid.status = 5 AND bill.status = 1
         AND bid.user_id = #{id}
+    </select>
+
+    <select id="findUserTransToUpdateRepayFail" resultType="com.hzed.easyget.persistence.auto.entity.UserTransaction">
+        SELECT id AS id,bid_id AS bidId,status AS status,update_time AS updateTime
+        FROM t_loan_user_transaction
+        WHERE type = 2 AND status = 1 AND confirm_time &lt; #{time}
+        AND bid_id NOT IN (SELECT bd.id
+         FROM t_loan_bid bd
+         LEFT JOIN t_loan_temp_table tt
+         ON bd.id=tt.relase_id
+         WHERE tt.job_name='repayFail')
     </select>
 
 </mapper>

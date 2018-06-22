@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public class AdsController {
     @ApiOperation(value="获取广告产品列表")
     @ModuleFunc("获取广告产品列表")
     @PostMapping("/getAdsProductList")
-    public List<AdsProductResponse> getAdsProductList(@RequestBody AdsProductListRequest request) {
+    public List<AdsProductResponse> getAdsProductList(@Valid @RequestBody AdsProductListRequest request) {
         return adsService.getAdsProductList(request);
     }
 }

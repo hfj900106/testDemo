@@ -2,6 +2,9 @@ package com.hzed.easyget.controller.model;
 
 import lombok.Data;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 /**
  * 公告列表请求参数
  *
@@ -10,7 +13,9 @@ import lombok.Data;
  */
 @Data
 public class NewsListRequest {
-    private Integer pageNo = 0;
-    private Integer pageSize = 5;
+    @Min(0L) @NotNull(message = "{param.home.pageNo.isNotEmpty}")
+    private Integer pageNo;
+    @Min(1L) @NotNull(message = "{param.home.pageSize.isNotEmpty}")
+    private Integer pageSize;
 
 }

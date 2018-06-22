@@ -82,12 +82,5 @@ public class UserTransactionRepository {
         return userTransactionMapper.selectByPrimaryKey(payId);
     }
 
-    /**
-     * 找到还款两小时后还处于交易中的数据
-     */
-    public List<UserTransaction> findUserTransToUpdateRepayFail(){
-        UserTransactionExample repayExample = new UserTransactionExample();
-        repayExample.createCriteria().andTypeEqualTo((byte)2).andStatusEqualTo((byte)1).andConfirmTimeLessThan(DateUtil.addHour(LocalDateTime.now(),-2));
-        return userTransactionMapper.selectByExample(repayExample);
-    }
+
 }

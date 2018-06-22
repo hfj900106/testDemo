@@ -13,7 +13,6 @@ import com.hzed.easyget.controller.model.LoanTransactionRequest;
 import com.hzed.easyget.controller.model.ReceiverTransactionRequest;
 import com.hzed.easyget.infrastructure.config.PayProp;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
-import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.PayResponse;
@@ -63,7 +62,7 @@ public class TransactionService {
         log.info("支付放款接口请求报文：{}", JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
         if (result.equals(BizCodeEnum.TIMEOUT.getCode())) {
-            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR,new Object[]{request.getTransactionId()});
+            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, new Object[]{request.getTransactionId()});
         }
         log.info("支付放款接口返回报文：{}", result);
         PayResponse response = JSON.parseObject(result, new TypeReference<PayResponse>() {
@@ -174,25 +173,28 @@ public class TransactionService {
     }
 
     /**
-     * 放款回调成功  改标的状态,砍头息、插入账单、台账、标进度、交易记录表，删除中间表数据
+     * 放款成功
+     * 1、改标的状态
+     * 2、生成账单：砍头息、插入账单、台账、标进度、交易记录表
+     * 2、删除中间表数据
      *
      * @param userTransaction 交易记录
      * @param tempId          中间表id
      */
-    public void callBackupdateUserTrance(UserTransaction userTransaction, Long tempId) {
-        Long bidNo = userTransaction.getBidId();
+    public void loanSuccess(UserTransaction userTransaction, Long tempId) {
+        Long bidId = userTransaction.getBidId();
         String paymentId = userTransaction.getPaymentId();
-        // 回调操作
-        Bid bidInfo = bidRepository.findById(bidNo);
-        //改标的状态,砍头息、插入账单、台账、标进度、交易记录表，删除中间表数据
-        //工厂类获取bill和billLedgers
+        // 待修改标
+        Bid bid = bidRepository.findById(bidId);
+        // 相关账单
         ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
-        List<Bill> bills = product.createBills(bidInfo);
-        List<BillLedger> billLedgers = product.createBillLedger(bidInfo);
-        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId, bidInfo.getInBank(), bidInfo.getInAccount(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
+        List<Bill> bills = product.createBills(bid);
+        List<BillLedger> billLedgers = product.createBillLedger(bid);
+
+        UserTransaction transaction = buildUserTransaction(bid.getUserId(), bidId, TransactionTypeEnum.IN.getCode().byteValue(), bid.getLoanAmount(), paymentId, bid.getInBank(), bid.getInAccount(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
         tempTableRepository.afterBankLoan(
-                Bid.builder().id(bidNo).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetProduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
-                BidProgress.builder().bidId(bidNo).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
+                Bid.builder().id(bidId).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetProduct(bid.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
+                BidProgress.builder().bidId(bidId).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
                 bills.get(0),
                 billLedgers,
                 tempId,
@@ -204,8 +206,8 @@ public class TransactionService {
     /**
      * 修改交易记录状态
      */
-    public void updateUserTranState(String payMentId, byte b) {
-        UserTransaction userTransaction = UserTransaction.builder().paymentId(payMentId).status(b).updateTime(LocalDateTime.now()).build();
-        bidRepository.updateUserTranState(userTransaction);
+    public void updateUserTranState(String paymentId, byte b) {
+        UserTransaction userTransaction = UserTransaction.builder().paymentId(paymentId).status(b).updateTime(LocalDateTime.now()).build();
+        bidRepository.updateUserTranStatus(userTransaction);
     }
 }

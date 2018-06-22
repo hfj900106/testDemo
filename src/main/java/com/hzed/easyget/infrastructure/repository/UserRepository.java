@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -93,32 +94,20 @@ public class UserRepository {
         statusMapper.insertSelective(status);
     }
 
-    public UserExt queryOverdueDay(Long userId) {
-        return userExtMapper.queryOverdueDayByUId(userId);
-    }
-
-    public List<String> queryEvidences(Long userId) {
-        return userExtMapper.queryEvidences(userId);
-    }
-
-    public VaData queryLastVa(Long userId) {
-        return userExtMapper.queryLastVa(userId);
-    }
-
-    public TransactionExt queryTransaction(Long userId) {
-        return userExtMapper.queryTransaction(userId);
-    }
-
-    public UserTransaction queryLastTransaction(Long userId) {
-        return userExtMapper.queryLastTransaction(userId);
-    }
-
-    public Long queryRepaymentVisit(Long userId, Long id) {
-        return userExtMapper.queryRepaymentVisit(userId, id);
-    }
-
     @Transactional(rollbackFor = Exception.class)
     public void insertUserRepaymentVisit(Long userId, Long id) {
         userExtMapper.insertUserRepaymentVisit(userId, id);
+    }
+
+    public TransactionExt queryTransactionVisit(Long userId) {
+        return userExtMapper.queryTransactionVisit(userId);
+    }
+
+    public UserExt queryUnRepayment(Long userId) {
+        return userExtMapper.queryUnRepayment(userId);
+    }
+
+    public List<UserTransaction> findUserTransToUpdateRepayFail(LocalDateTime time){
+        return userExtMapper.findUserTransToUpdateRepayFail(time);
     }
 }

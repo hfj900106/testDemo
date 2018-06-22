@@ -74,8 +74,7 @@ public class HomeController {
     @ModuleFunc("首页检测还款状态")
     @PostMapping("/checkRepayment")
     public CheckRepaymentResponse checkRepayment() {
-        CheckRepaymentResponse response = homeService.checkRepayment();
-        return response;
+        return homeService.checkRepayment();
     }
 
 }

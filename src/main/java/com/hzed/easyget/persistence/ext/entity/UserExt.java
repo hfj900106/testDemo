@@ -2,6 +2,8 @@ package com.hzed.easyget.persistence.ext.entity;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /**
  * @author dengzhenhao
  * @since 2018/6/15 16:54
@@ -9,7 +11,7 @@ import lombok.Data;
 @Data
 public class UserExt {
 
-    private Integer overdueDay;
+    private LocalDateTime repaymentTime;
 
-    private Long bidId;
+    private Long id;
 }

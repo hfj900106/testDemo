@@ -21,6 +21,7 @@ public class ComConsts {
     public static final String RISK_OPERATOR_HAVE_SEND = "2";
     public static final String  RISK_OPERATOR_FREQ = "2.1";
     public static final String RISK_OPERATOR_ERROR = "3";
+    public static final String RISK_OPERATOR_PARAMS_ERROR = "1";
     public static final String RISK_OPERATOR_HAVE_AUTH = "0000";
 
     public static final int IS_ANDROID = 1;
@@ -33,6 +34,10 @@ public class ComConsts {
      * 推送放款定时任务名
      */
     public static final String PUSH_BANK_TASK = "bankLoan";
+    /**
+     * 处理还款失败定时任务名
+     */
+    public static final String REPAY_DAIL_TASK = "repayFail";
     /**
      * 交易方式ATM
      */

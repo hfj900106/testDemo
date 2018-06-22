@@ -64,8 +64,8 @@ public class JobServiceTest {
     public void test09(){
         RepayPartRequest request=new RepayPartRequest();
         request.setBidId(104094428696027136L);
-        LoanManagResponse managResponse=repayService.findloanManagResponse(BigDecimal.valueOf(20000),request.getBidId(),false);
-        System.out.println(managResponse);
+        long payid=repayService.findloanManagResponse(BigDecimal.valueOf(20000),request.getBidId(),false);
+        System.out.println(payid);
     }
 
     /**

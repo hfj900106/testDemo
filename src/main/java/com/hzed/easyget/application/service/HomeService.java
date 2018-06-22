@@ -18,13 +18,14 @@ import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.ext.entity.TransactionExt;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
-import com.hzed.easyget.persistence.ext.entity.VaData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -54,6 +55,8 @@ public class HomeService {
     private BidRepository bidRepository;
     @Autowired
     private UserLoanVisitRepository userLoanVisitRepository;
+    @Autowired
+    private UserRepaymentVisitRepository userRepaymentVisitRepository;
 
     private static final String ANDROID_BOMB = "android_bomb";
     private static final String IOS_BOMB = "ios_bomb";
@@ -158,12 +161,11 @@ public class HomeService {
             Dict dictBomb = dictService.getDictByCode(IOS_BOMB);
             String dicValue = dictBomb.getDicValue();
             if (StringUtils.isBlank(dicValue) || version.equals(dicValue)) {
-
                 return bombResponseList;
             }
         }
 
-        List<News> bombList = newsRepository.getBombList(pageNo,pageSize);
+        List<News> bombList = newsRepository.getBombList(pageNo, pageSize);
         for (News bomb : bombList) {
             NewsResponse bombResponse = new NewsResponse();
             bombResponse.setNewsTitle(bomb.getTitle());
@@ -175,9 +177,7 @@ public class HomeService {
     }
 
     public void checkLoan() {
-
         final String MK_02 = "MK02";
-
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String imei = RequestUtil.getGlobalHead().getImei();
         User user = userRepository.findById(userId);
@@ -197,7 +197,6 @@ public class HomeService {
     }
 
     public void checkLoanJump() {
-
         Long userId = RequestUtil.getGlobalUser().getUserId();
         //bid为空或访问记录表不为空无需跳转，0000为无需跳转，其他需跳转
         List<Bid> bidList = bidRepository.findByUserId(userId);
@@ -213,68 +212,48 @@ public class HomeService {
     public CheckRepaymentResponse checkRepayment() {
         Long userId = RequestUtil.getGlobalUser().getUserId();
         CheckRepaymentResponse result = new CheckRepaymentResponse();
-
-        // 场景4、已经提交还款凭证，但未能等到最后结果情况
-        UserTransaction transaction = userRepository.queryLastTransaction(userId);
-        LocalDateTime now = LocalDateTime.now();
-        // 确认时间不为空，即已经点击提交还款凭证
-        if (transaction.getConfirmTime() != null) {
-            // 判断状态
-            Byte status = transaction.getStatus();
-            if (status == 1) {
-                //交易中并且过期,返回交易失败状态
-                LocalDateTime confirmTime = transaction.getConfirmTime();
-                LocalDateTime expireTime = DateUtil.addHour(confirmTime, 2);
-                boolean expire = DateUtil.compare(now, expireTime);
-                if(expire){
-                    result.setStatus(Byte.parseByte("3"));
-                }else {
-                    result.setStatus(status);
-                }
-                throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
-            }
-            // -------------------成果或者失败状态，判断是否已经有访问过该条结果
-            Long id = userRepository.queryRepaymentVisit(userId,transaction.getId());
-            // 没访问过
-            if(id == null){
-                // 增加一条访问记录
-                userRepository.insertUserRepaymentVisit(userId,transaction.getId());
-                result.setStatus(status);
-                throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
-            }
-        }
-
-        // 场景3、判断是否已经生成va码,并且未提交还款凭证
-        // 找出最新的va码数据
-        VaData va = userRepository.queryLastVa(userId);
-        if (va != null) {
-            // 判断va是否过期
-            LocalDateTime createTime = va.getCreateTime();
-            LocalDateTime vaExpireTime = DateUtil.addHour(createTime, 6);
-            boolean vaExpire = DateUtil.compare(now, vaExpireTime);
-            va.setVaExpire(vaExpire);
-            result.setVaData(va);
-            result.setId(va.getTransactionId());
-            throw new ComBizException(BizCodeEnum.MSG_REPAY_UNSUCCESS, result);
-        }
-
-        // 场景1、2，是否借款即将到期、逾期
-        UserExt userExt = userRepository.queryOverdueDay(userId);
-        if (userExt != null) {
-            Integer overdueDay = userExt.getOverdueDay();
-            // 有未结清的标,且离逾期天数小于等于两天。overdueDay = 今天日期 - 应还日期
-            if (overdueDay != null) {
-                if (overdueDay < -2) {
-                    return result;
-                }
-                result.setId(userExt.getBidId());
-                if (overdueDay > 0) {
-                    throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_AFTER, result, new Object[]{overdueDay});
-                } else if (overdueDay == 0) {
-                    throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_TODAY, result);
+        TransactionExt transaction = userRepository.queryTransactionVisit(userId);
+        if (transaction != null) {
+            // 确认时间不为空，即已经点击提交还款凭证
+            if (transaction.getConfirmTime() != null) {
+                // 场景4、已经提交还款凭证，但未能等到最后结果情况
+                Byte status = transaction.getStatus();
+                if (status == 1) {
+                    // 交易中
+                    result.setStatus(transaction.getStatus());
+                    result.setConfirmTime(DateUtil.localDateTimeToStr1(transaction.getConfirmTime()));
+                    throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
                 } else {
-                    throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_BEFORE, result, new Object[]{Math.abs(overdueDay)});
+                    // 交易成功失败都添加访问记录
+                    UserRepaymentVisit repaymentVisit = UserRepaymentVisit.builder().userId(userId).transactionId(transaction.getId()).build();
+                    userRepaymentVisitRepository.insertUserRepaymentVisit(repaymentVisit);
+                    result.setStatus(status);
+                    throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
                 }
+            } else {
+                // 场景3、提交申请还款。未提交凭证
+                result.setId(transaction.getId());
+                throw new ComBizException(BizCodeEnum.MSG_REPAY_UNSUCCESS, result);
+            }
+        }
+        // 场景1、2，是否借款即将到期、逾期
+        // 查询该用户已放款的标的对应未结清的账单的应还时间
+        UserExt userExt = userRepository.queryUnRepayment(userId);
+        if (userExt != null && userExt.getRepaymentTime() != null) {
+            LocalDateTime repaymentTime = userExt.getRepaymentTime();
+            LocalDateTime now = LocalDateTime.now();
+            int days = DateUtil.getBetweenDays(now, repaymentTime);
+            // 有未结清的标,且离逾期天数小于等于两天。days = 今天日期 - 应还日期
+            if (days < -2) {
+                return result;
+            }
+            result.setId(userExt.getId());
+            if (days < 0) {
+                throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_BEFORE, result, new Object[]{Math.abs(days)});
+            } else if (days == 0) {
+                throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_TODAY, result);
+            } else {
+                throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_AFTER, result, new Object[]{days});
             }
         }
         return result;

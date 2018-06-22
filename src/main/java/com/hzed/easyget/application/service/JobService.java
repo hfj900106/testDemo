@@ -10,17 +10,16 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
-import com.hzed.easyget.infrastructure.repository.BidRepository;
-import com.hzed.easyget.infrastructure.repository.RepayInfoFlowJobRepository;
-import com.hzed.easyget.infrastructure.repository.TempTableRepository;
-import com.hzed.easyget.infrastructure.repository.UserTransactionRepository;
+import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.AesUtil;
+import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
 import com.hzed.easyget.persistence.auto.entity.TempTable;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
+import com.hzed.easyget.persistence.ext.entity.TransactionExt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +52,10 @@ public class JobService {
     @Autowired
     private RestService restService;
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private UserTransactionRepository transactionRepository;
+
 
     /**
      * 推风控
@@ -169,20 +171,26 @@ public class JobService {
      */
     public void repayFail(){
         //找到要处理的数据
-        List<UserTransaction> transactionList = transactionRepository.findUserTransToUpdateRepayFail();
+        List<UserTransaction> transactionList = userRepository.findUserTransToUpdateRepayFail(DateUtil.addHour(LocalDateTime.now(),-2));
         if(ObjectUtils.isEmpty(transactionList)){
             return;
         }
         transactionList.forEach(userTransaction -> {
-            //TODO 放中间表
+            MdcUtil.putTrace();
             log.info("标的：{}还款失败处理",userTransaction.getBidId());
+            Long tempId = IdentifierGenerator.nextId();
             try{
+                //插入中间表
+                tempTableRepository.insertJob(TempTable.builder().id(tempId).jobName(ComConsts.REPAY_DAIL_TASK).relaseId(userTransaction.getBidId()).remark("还款失败处理-待处理").createTime(LocalDateTime.now()).reRunTimes((byte) 1).build());
                 userTransaction.setStatus((byte)3);
                 userTransaction.setUpdateTime(LocalDateTime.now());
                 transactionRepository.transactionUpdateByKey(userTransaction);
             }catch (Exception ex){
                 log.info("标的：{}还款失败处理-失败",userTransaction.getBidId());
+                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark("还款失败处理-失败：" + ex.getMessage()).build());
             }
+            //处理成功后删除temp表
+            tempTableRepository.deleteById(tempId);
 
         });
     }

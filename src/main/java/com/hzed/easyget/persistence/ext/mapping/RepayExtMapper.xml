@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hzed.easyget.persistence.ext.mapper.RepayExtMapper">
-    <!--还款详情 va 应还信息-->
-    <select id="findloanManagResponse" resultType="com.hzed.easyget.controller.model.LoanManagResponse">
-        SELECT
-        l.repayment_time as repaymentTime
-        FROM
-        t_loan_bill l WHERE  l.bid_id=#{bidId}
-
-    </select>
     <!--查询va码-->
     <select id="getVACode" resultType="com.hzed.easyget.controller.model.LoanManagResponse">
         SELECT va as vaCodel,MAX(va_create_time) as createTime,mode

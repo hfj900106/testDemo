@@ -88,9 +88,9 @@ public class BidRepository {
         return bidExtMapper.findLoanTransaction(bidId);
     }
 
-    public void updateUserTranState(UserTransaction userTransaction) {
-        UserTransactionExample transaction=new UserTransactionExample();
+    public void updateUserTranStatus(UserTransaction userTransaction) {
+        UserTransactionExample transaction = new UserTransactionExample();
         transaction.createCriteria().andPaymentIdEqualTo(userTransaction.getPaymentId());
-        userTransactionMapper.updateByExampleSelective(userTransaction,transaction);
+        userTransactionMapper.updateByExampleSelective(userTransaction, transaction);
     }
 }

@@ -1,6 +1,7 @@
 package com.hzed.easyget.infrastructure.repository;
 
 import com.hzed.easyget.controller.model.RepaymentRequest;
+import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
@@ -10,6 +11,7 @@ import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -32,10 +34,10 @@ public class UserTransactionRepository {
         userTransactionMapper.insertSelective(transaction);
     }
 
-    public List<UserTransaction> findUserTranBypayMenid(String paymnetId) {
+    public UserTransaction findUserTranByPaymentId(String paymnetId) {
         UserTransactionExample userTransactionExample = new UserTransactionExample();
         userTransactionExample.createCriteria().andPaymentIdEqualTo(paymnetId);
-        return userTransactionMapper.selectByExample(userTransactionExample);
+        return userTransactionMapper.selectOneByExample(userTransactionExample);
     }
 
     /**
@@ -78,5 +80,14 @@ public class UserTransactionRepository {
      */
     public UserTransaction findUserTranById(Long payId) {
         return userTransactionMapper.selectByPrimaryKey(payId);
+    }
+
+    /**
+     * 找到还款两小时后还处于交易中的数据
+     */
+    public List<UserTransaction> findUserTransToUpdateRepayFail(){
+        UserTransactionExample repayExample = new UserTransactionExample();
+        repayExample.createCriteria().andTypeEqualTo((byte)2).andStatusEqualTo((byte)1).andConfirmTimeLessThan(DateUtil.addHour(LocalDateTime.now(),-2));
+        return userTransactionMapper.selectByExample(repayExample);
     }
 }

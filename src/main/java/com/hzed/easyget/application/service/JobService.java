@@ -13,11 +13,13 @@ import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayInfoFlowJobRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
+import com.hzed.easyget.infrastructure.repository.UserTransactionRepository;
 import com.hzed.easyget.infrastructure.utils.AesUtil;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
 import com.hzed.easyget.persistence.auto.entity.TempTable;
+import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,8 @@ public class JobService {
     private TransactionService transactionService;
     @Autowired
     private RestService restService;
+    @Autowired
+    private UserTransactionRepository transactionRepository;
 
     /**
      * 推风控
@@ -158,5 +162,30 @@ public class JobService {
 
 
     }
+
+
+    /**
+     * 处理还款失败
+     */
+    public void repayFail(){
+        //找到要处理的数据
+        List<UserTransaction> transactionList = transactionRepository.findUserTransToUpdateRepayFail();
+        if(ObjectUtils.isEmpty(transactionList)){
+            return;
+        }
+        transactionList.forEach(userTransaction -> {
+            //TODO 放中间表
+            log.info("标的：{}还款失败处理",userTransaction.getBidId());
+            try{
+                userTransaction.setStatus((byte)3);
+                userTransaction.setUpdateTime(LocalDateTime.now());
+                transactionRepository.transactionUpdateByKey(userTransaction);
+            }catch (Exception ex){
+                log.info("标的：{}还款失败处理-失败",userTransaction.getBidId());
+            }
+
+        });
+    }
+
 
 }

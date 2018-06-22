@@ -169,8 +169,8 @@ public class TransactionService {
      * @param paymnetId
      * @return 交易记录
      */
-    public List<UserTransaction> findUserTranBypayMenid(String paymnetId) {
-        return userTransactionRepository.findUserTranBypayMenid(paymnetId);
+    public UserTransaction findUserTranByPaymentId(String paymnetId) {
+        return userTransactionRepository.findUserTranByPaymentId(paymnetId);
     }
 
     /**

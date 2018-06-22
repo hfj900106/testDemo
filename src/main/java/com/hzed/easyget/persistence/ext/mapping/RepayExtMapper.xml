@@ -15,7 +15,7 @@
          from t_loan_user_transaction_repay WHERE transaction_id=#{id}
     </select>
     <!--查询va码-->
-    <select id="findVATranc" resultType="com.hzed.easyget.controller.model.TransactionVAResponse">
+    <select id="findVaTranc" resultType="com.hzed.easyget.controller.model.TransactionVAResponse">
       SELECT  va AS vaCodel,va_create_time AS createTime,transaction_id,MODE
         FROM
         t_loan_user_transaction_repay

@@ -93,32 +93,16 @@ public class UserRepository {
         statusMapper.insertSelective(status);
     }
 
-    public UserExt queryOverdueDay(Long userId) {
-        return userExtMapper.queryOverdueDayByUId(userId);
-    }
-
-    public List<String> queryEvidences(Long userId) {
-        return userExtMapper.queryEvidences(userId);
-    }
-
-    public VaData queryLastVa(Long userId) {
-        return userExtMapper.queryLastVa(userId);
-    }
-
-    public TransactionExt queryTransaction(Long userId) {
-        return userExtMapper.queryTransaction(userId);
-    }
-
-    public UserTransaction queryLastTransaction(Long userId) {
-        return userExtMapper.queryLastTransaction(userId);
-    }
-
-    public Long queryRepaymentVisit(Long userId, Long id) {
-        return userExtMapper.queryRepaymentVisit(userId, id);
-    }
-
     @Transactional(rollbackFor = Exception.class)
     public void insertUserRepaymentVisit(Long userId, Long id) {
         userExtMapper.insertUserRepaymentVisit(userId, id);
+    }
+
+    public TransactionExt queryTransactionVisit(Long userId) {
+        return userExtMapper.queryTransactionVisit(userId);
+    }
+
+    public UserExt queryUnRepayment(Long userId) {
+        return userExtMapper.queryUnRepayment(userId);
     }
 }

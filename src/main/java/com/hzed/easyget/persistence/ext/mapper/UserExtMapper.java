@@ -7,7 +7,6 @@ import com.hzed.easyget.persistence.ext.entity.VaData;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 
 public interface UserExtMapper {
@@ -60,6 +59,19 @@ public interface UserExtMapper {
      * 添加还款结果访问记录
      */
     int insertUserRepaymentVisit(@Param("userId")Long userId,@Param("transactionId")Long transactionId);
+
+    /**
+     * 查询是否有没访问过的交易记录
+     * @param id
+     */
+    TransactionExt queryTransactionVisit(@Param("id") Long id);
+
+    /**
+     * 查询该用户已放款的标的对应未结清的账单的对应信息
+     * @param id
+     * @return
+     */
+    UserExt queryUnRepayment(@Param("id") Long id);
 }
 
 

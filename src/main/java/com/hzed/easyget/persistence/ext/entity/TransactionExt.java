@@ -14,10 +14,15 @@ public class TransactionExt {
     /**
      * 交易记录id
      */
-    private Long transactionId;
+    private Long id;
 
     /**
      * 确认时间
      */
     private LocalDateTime confirmTime;
+
+    /**
+     * 交易状态
+     */
+    private Byte status;
 }

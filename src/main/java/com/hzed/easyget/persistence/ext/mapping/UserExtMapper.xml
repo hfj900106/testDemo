@@ -60,5 +60,17 @@
         INSERT INTO t_loan_user_repayment_visit (user_id,transaction_id) VALUES (#{userId},#{transactionId})
     </insert>
 
+    <select id="queryTransactionVisit" resultType="com.hzed.easyget.persistence.ext.entity.TransactionExt">
+        SELECT trans.id AS id,trans.`status` AS status,trans.confirm_time AS confirmTime FROM t_loan_user_transaction trans where type = 2
+        AND NOT EXISTS (SELECT 1 FROM t_loan_user_repayment_visit WHERE transaction_id = trans.id AND user_id = trans.user_id)
+        AND user_id = #{id}
+    </select>
+    <select id="queryUnRepayment" resultType="com.hzed.easyget.persistence.ext.entity.UserExt">
+        SELECT bid.id AS id,bill.repayment_time AS repaymentTime from t_loan_bill bill
+        LEFT JOIN t_loan_bid bid ON bill.bid_id = bid.id
+        WHERE bid.status = 5 AND bill.status = 1
+        AND bid.user_id = #{id}
+    </select>
+
 </mapper>
 

@@ -30,10 +30,11 @@ public class CallbackService {
     private TempTableRepository tempTableRepository;
 
     public PushBidCallbackResponse pushBidCallback(PushBidCallbackRequest request) {
-        PushBidCallbackResponse response = new PushBidCallbackResponse();
         Long bidId = request.getBidId();
-        try{
-            log.info("风控审核回调，标的：{}",bidId);
+        //成功或者失败都返回
+        PushBidCallbackResponse response = new PushBidCallbackResponse("0", "风控结果我已经收到了");
+        try {
+            log.info("风控审核回调，标的：{}", bidId);
             BigDecimal loanAmount = request.getLoanAmount();
             String resultCode = request.getResultCode();
             LocalDateTime dateTime = DateUtil.dateToLocalDateTime(new Date(Long.parseLong(request.getHandleTime())).toString());
@@ -43,11 +44,8 @@ public class CallbackService {
                     BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue())
                             .createTime(dateTime).build(),
                     bidId);
-            response.setCode("0");
-            response.setMessage("风控结果我已经收到了");
-        }catch (Exception ex){
-            log.error("风控审核回调失败，标的：{}",bidId);
-            throw new ComBizException(BizCodeEnum.FAIL_CALLBACK_RISK);
+        } catch (Exception ex) {
+            return response;
         }
         return response;
     }

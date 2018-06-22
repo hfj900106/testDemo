@@ -13,15 +13,15 @@ public class CheckRepaymentResponse {
 
     private Long id;
 
-
     /**
      * code=2004 时还款状态
      */
     private Byte status;
 
     /**
-     * code=2005 时va数据
+     * 确认时间，用于倒计时
      */
-    private VaData vaData;
+    private String confirmTime;
+
 
 }

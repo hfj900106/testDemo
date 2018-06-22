@@ -32,10 +32,10 @@ public class UserTransactionRepository {
         userTransactionMapper.insertSelective(transaction);
     }
 
-    public List<UserTransaction> findUserTranBypayMenid(String paymnetId) {
+    public UserTransaction findUserTranByPaymentId(String paymnetId) {
         UserTransactionExample userTransactionExample = new UserTransactionExample();
         userTransactionExample.createCriteria().andPaymentIdEqualTo(paymnetId);
-        return userTransactionMapper.selectByExample(userTransactionExample);
+        return userTransactionMapper.selectOneByExample(userTransactionExample);
     }
 
     /**

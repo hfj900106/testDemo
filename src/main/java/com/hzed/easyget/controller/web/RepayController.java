@@ -38,65 +38,53 @@ public class RepayController {
         return repayService.repaidList();
     }
 
-    @ModuleFunc("结清全部")
-    @PostMapping("/repayAll")
-    public Response repayAll(@Valid @RequestBody RepayAllRequest request){
-        repayService.repayAll(request);
-        return Response.getSuccessResponse();
-    }
-
-    @ModuleFunc("部分还款")
-    @PostMapping("/repayPart")
-    public Response repayPart(@Valid @RequestBody RepayPartRequest request){
-        repayService.repayPart(request);
-
-        return Response.getSuccessResponse();
-    }
-
     @ModuleFunc("还款详情")
     @PostMapping("/repayDetail")
-    public Response<RepayDetailResponse> repayDetail(@Valid @RequestBody RepayDetailRequest request){
+    public Response<RepayDetailResponse> repayDetail(@Valid @RequestBody RepayDetailRequest request) {
         return Response.getSuccessResponse(repayService.repayDetail(request));
     }
 
     @ModuleFunc("部分还款详情")
     @PostMapping("/repayPartDetail")
-    public Response<RepayPartDetailResponse> repayPartDetail(@Valid @RequestBody RepayPartDetailRequest request){
+    public Response<RepayPartDetailResponse> repayPartDetail(@Valid @RequestBody RepayPartDetailRequest request) {
         return Response.getSuccessResponse(repayService.repayPartDetail(request));
     }
 
-   /**-------------------------------------------还款部分-----------------------------------------------------**/
     @ModuleFunc("部分还款查询")
     @PostMapping("/Fullrepayment")
-    public LoanManagResponse fullRepayment(@Valid @RequestBody RepayPartRequest request){
-        LoanManagResponse managResponse=repayService.findloanManagResponse(request.getRepayAmount(),request.getBidId(),false);
+    public LoanManagResponse fullRepayment(@Valid @RequestBody RepayPartRequest request) {
+        LoanManagResponse managResponse = repayService.findloanManagResponse(request.getRepayAmount(), request.getBidId(), false);
         managResponse.setAmount(request.getRepayAmount());
         return managResponse;
     }
+
     @ModuleFunc("全部还款查询")
     @PostMapping("/Partialrepayment")
-    public LoanManagResponse partialRepayment(@Valid @RequestBody RepayAllRequest request){
-        BigDecimal amount=comService.getBidNoRepay(request.getBidId(), LocalDateTime.now());
-        LoanManagResponse managResponse=repayService.findloanManagResponse(amount,request.getBidId(),true);
+    public LoanManagResponse partialRepayment(@Valid @RequestBody RepayAllRequest request) {
+        BigDecimal amount = comService.getBidNoRepay(request.getBidId(), LocalDateTime.now());
+        LoanManagResponse managResponse = repayService.findloanManagResponse(amount, request.getBidId(), true);
         managResponse.setAmount(amount);
         return managResponse;
     }
 
     @ModuleFunc("获取VA码")
     @PostMapping("/vaInfoDetail")
-    public TransactionVAResponse vaInfoDetail(@Valid @RequestBody TransactionVARequest request){
-        return repayService.findVATranc(request);
+    public TransactionVAResponse vaInfoDetail(@Valid @RequestBody TransactionVARequest request) {
+        return repayService.findVaTranc(request);
     }
+
     @ModuleFunc("还款接口(测试环境专用)")
     @PostMapping("/testRepayment")
     public PayResponse testRepayment(@Valid @RequestBody RepaymentRequest request) throws Exception {
         return repayService.testRepayment(request);
     }
+
     @ModuleFunc("还款接口(正式环境专用)")
     @RequestMapping("/repayment")
     public PayResponse repayment(@Valid @RequestBody RepaymentRequest request) throws Exception {
         return repayService.repayment(request);
     }
+
     @ModuleFunc("刷新还款结果)")
     @RequestMapping("/refreshResult")
     public PayMentResponse refreshResult(@Valid @RequestBody RefreshPayMentRequest request) throws Exception {

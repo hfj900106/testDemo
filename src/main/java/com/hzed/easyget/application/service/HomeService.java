@@ -18,17 +18,14 @@ import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.*;
-import com.hzed.easyget.persistence.ext.entity.TransactionExt;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
 import com.hzed.easyget.persistence.ext.entity.VaData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -138,9 +135,16 @@ public class HomeService {
         return UpdateTokenResponse.builder().token(newToken).build();
     }
 
-    public List<NewsResponse> getNewsList() {
+    public List<NewsResponse> getNewsList(NewsListRequest request) {
         List<NewsResponse> bombResponseList = Lists.newArrayList();
-
+        Integer pageNo = request.getPageNo();
+        Integer pageSize = request.getPageSize();
+        if (pageNo != null) {
+           pageNo = request.getPageNo()-1;
+        }
+        if (pageSize != null) {
+            pageSize = request.getPageSize();
+        }
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String platform = globalHead.getPlatform();
         String version = globalHead.getVersion();
@@ -163,7 +167,7 @@ public class HomeService {
             }
         }
 
-        List<News> bombList = newsRepository.getBombList();
+        List<News> bombList = newsRepository.getBombList(pageNo,pageSize);
         for (News bomb : bombList) {
             NewsResponse bombResponse = new NewsResponse();
             bombResponse.setNewsTitle(bomb.getTitle());
@@ -196,7 +200,7 @@ public class HomeService {
 
     }
 
-    public void checkJump() {
+    public void checkLoanJump() {
 
         Long userId = RequestUtil.getGlobalUser().getUserId();
         //bid为空或访问记录表不为空无需跳转，0000为无需跳转，其他需跳转

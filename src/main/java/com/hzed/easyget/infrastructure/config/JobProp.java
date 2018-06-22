@@ -18,4 +18,6 @@ public class JobProp {
     private String bankLoanCron;
     private boolean repayInfoFlow;
     private String repayInfoFlowCron;
+    private boolean repayFail;
+    private String repayFailCron;
 }

@@ -55,8 +55,8 @@ public class HomeController {
     @TokenIgnore
     @ModuleFunc("获取公告列表")
     @PostMapping("/getNewsList")
-    public List<NewsResponse> getNewsList() {
-        return homeService.getNewsList();
+    public List<NewsResponse> getNewsList(@RequestBody NewsListRequest request) {
+        return homeService.getNewsList(request);
     }
 
     @ModuleFunc("发起借款校验")
@@ -65,10 +65,10 @@ public class HomeController {
         homeService.checkLoan();
     }
 
-    @ModuleFunc("检测首页是否跳转")
-    @PostMapping("/checkJump")
-    public void checkJump() {
-        homeService.checkJump();
+    @ModuleFunc("首页检测借款状态")
+    @PostMapping("/checkLoanJump")
+    public void checkLoanJump() {
+        homeService.checkLoanJump();
     }
 
     @ModuleFunc("首页检测还款状态")

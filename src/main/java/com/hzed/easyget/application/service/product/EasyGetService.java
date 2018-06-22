@@ -3,15 +3,20 @@ package com.hzed.easyget.application.service.product;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.BillLedgerItemEnum;
 import com.hzed.easyget.application.enums.BillStatusEnum;
-import com.hzed.easyget.application.service.product.model.BillInfo;
+import com.hzed.easyget.application.enums.ProductEnum;
+import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.application.service.product.model.EasyGetProduct;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.repository.ProductRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.Bill;
 import com.hzed.easyget.persistence.auto.entity.BillLedger;
+import com.hzed.easyget.persistence.auto.entity.Product;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -24,19 +29,18 @@ import java.util.List;
  * @date 2018/6/2
  */
 
+@Service
 public class EasyGetService implements ProductService {
 
-    @Override
-    public BillInfo createBillInfo(Bid bid) {
-        checkBid(bid);
-        //TODO
-        return null;
-    }
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     public List<Bill> createBills(Bid bid) {
+        checkBid(bid);
         List<Bill> lists = Lists.newArrayList();
-        lists.add(buildBill(bid.getId(), new EasyGetProduct(bid.getLoanAmount()).getRepaymentAmount(), bid.getPeriod()));
+//        lists.add(buildBill(bid.getId(), new EasyGetProduct(bid.getLoanAmount()).getRepaymentAmount(), bid.getPeriod()));
+        lists.add(buildBill(bid.getId(), createProduct(bid.getLoanAmount(), bid.getPeriod()).getTotalRepaymentAmount(), bid.getPeriod()));
         return lists;
     }
 
@@ -52,11 +56,11 @@ public class EasyGetService implements ProductService {
             billLedger.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), bid.getPeriod()));
             billLedger.setCreateTime(LocalDateTime.now());
 
-            //本金台账
+            // 本金台账
             billLedger.setRepaymentAmount(new EasyGetProduct(bid.getLoanAmount()).getAmount());
             billLedger.setRepaymentItem(BillLedgerItemEnum.CORPUS.getCode().byteValue());
             lists.add(billLedger);
-            //尾款台账
+            // 尾款台账
             billLedger.setRepaymentAmount(new EasyGetProduct(bid.getLoanAmount()).getTailFee());
             billLedger.setRepaymentItem(BillLedgerItemEnum.TAIL_FEE.getCode().byteValue());
             lists.add(billLedger);
@@ -70,6 +74,24 @@ public class EasyGetService implements ProductService {
             throw new ComBizException(BizCodeEnum.NOT_INDONESIA_PRODUCT, new Object[]{bid.getId()});
         }
     }
+
+    @Override
+    public AbstractProduct createProduct(BigDecimal amount, Integer days) {
+        Product productConf = productRepository.findByCode(ProductEnum.PRODUCT_CODE.getCode());
+
+        EasyGetProduct product = new EasyGetProduct(amount);
+        product.setHeadFeeRate(productConf.getHeadFeeRate());
+        product.setTailFeeRate(productConf.getTailFeeRate());
+        product.setOverFeeRate(productConf.getOverdueFeeRate());
+
+        return product;
+    }
+
+//    @Override
+//    public <EasyGetProduct> EasyGetProduct createProduct(EasyGetProduct clazz) {
+//        Product product = productRepository.findByCode(ProductEnum.PRODUCT_CODE.getCode());
+//        return null;
+//    }
 
     private Bill buildBill(Long bidId, BigDecimal repaymentAmount, Integer period) {
         Bill bill = new Bill();

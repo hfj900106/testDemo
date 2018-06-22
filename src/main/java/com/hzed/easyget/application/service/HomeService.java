@@ -2,6 +2,9 @@ package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AppVersionEnum;
+import com.hzed.easyget.application.enums.ProductEnum;
+import com.hzed.easyget.application.service.product.ProductFactory;
+import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.application.service.product.model.EasyGetProduct;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
@@ -25,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -64,7 +66,7 @@ public class HomeService {
     public ProductInfoResponse getProductInfo() {
 
         ProductInfoResponse productInfoResponse = new ProductInfoResponse();
-        Product product = productRepository.getProductInfo();
+        Product product = productRepository.findByCode(ProductEnum.PRODUCT_CODE.getCode());
         if (Objects.isNull(product)) {
             throw new ComBizException(BizCodeEnum.NO_USEFUL_PRODUCT);
         }
@@ -109,15 +111,18 @@ public class HomeService {
 
     public LoanCalculateResponse loanCalculate(LoanCalculateRequest request) {
         LoanCalculateResponse loanCalculateResponse = new LoanCalculateResponse();
+        BigDecimal loanAmount = request.getLoanAmount();
+        Integer period = request.getPeriod();
 
-        EasyGetProduct product = new EasyGetProduct(request.getLoanAmount());
+        AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
+        EasyGetProduct product = new EasyGetProduct(loanAmount);
 
-        loanCalculateResponse.setTotalAmount(product.getRepaymentAmount());
+        loanCalculateResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());
         BigDecimal headFee = product.getHeadFee();
         loanCalculateResponse.setCost(headFee);
-        loanCalculateResponse.setReceiveAmount(request.getLoanAmount().subtract(headFee));
-        loanCalculateResponse.setPeriod(request.getPeriod());
-        loanCalculateResponse.setLoanAmount(request.getLoanAmount());
+        loanCalculateResponse.setReceiveAmount(loanAmount.subtract(headFee));
+        loanCalculateResponse.setPeriod(period);
+        loanCalculateResponse.setLoanAmount(loanAmount);
         return loanCalculateResponse;
     }
 

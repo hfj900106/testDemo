@@ -15,43 +15,50 @@ import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
-public class EasyGetProduct {
+public class EasyGetProduct implements AbstractProduct {
     private BigDecimal amount;
     private Integer time;
+
+    /**
+     * 砍头息费率
+     */
+    private BigDecimal headFeeRate;
+    /**
+     * 尾款费率
+     */
+    private BigDecimal tailFeeRate;
+    /**
+     * 逾期费率
+     */
+    private BigDecimal overFeeRate;
 
     public EasyGetProduct(BigDecimal amount) {
         this.amount = amount;
     }
 
-    /**
-     * 砍头息
-     */
+    @Override
     public BigDecimal getHeadFee() {
-        return amount.multiply(new BigDecimal(0.15)).setScale(2, BigDecimal.ROUND_HALF_UP);
+        return amount.multiply(headFeeRate).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-    /**
-     * 尾款
-     */
+    @Override
+    public BigDecimal getInerest() {
+        return BigDecimal.ZERO;
+    }
+
+    @Override
     public BigDecimal getTailFee() {
-        return amount.multiply(new BigDecimal(0.06)).setScale(2, BigDecimal.ROUND_HALF_UP);
+        return amount.multiply(tailFeeRate).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-    /**
-     * 总还款金额
-     */
-
-    public BigDecimal getRepaymentAmount() {
+    @Override
+    public BigDecimal getTotalRepaymentAmount() {
         return amount.add(getTailFee());
     }
 
-    /**
-     * 逾期费
-     *
-     * @param overDay 逾期天数
-     */
+    @Override
     public BigDecimal getOverFee(Integer overDay) {
-        return Arith.mul(amount, new BigDecimal(overDay), new BigDecimal(0.02).setScale(2,BigDecimal.ROUND_HALF_UP));
+        return Arith.mul(amount, new BigDecimal(overDay), overFeeRate.setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
 

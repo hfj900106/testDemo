@@ -24,7 +24,7 @@ public interface RepayExtMapper {
     /**
      * 查询va码
      */
-    TransactionVAResponse findVATranc(@Param("payId") Long payId,@Param("mode") String mode);
+    TransactionVAResponse findVaTranc(@Param("payId") Long payId,@Param("mode") String mode);
     /**
      * 获取交易记录 根据交易id
      */

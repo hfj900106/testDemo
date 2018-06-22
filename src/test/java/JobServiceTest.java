@@ -8,7 +8,10 @@ import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayRepository;
 import com.hzed.easyget.infrastructure.repository.UserTransactionRepository;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
+import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
+import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
 import com.hzed.easyget.persistence.auto.mapper.UserTransactionMapper;
+import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper;
 import com.hzed.easyget.persistence.ext.mapper.BidExtMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +38,8 @@ public class JobServiceTest {
     private RepayService repayService;
     @Autowired
     private RepayRepository repayRepository;
+    @Autowired
+    private UserTransactionRepayMapper userTransactionRepayMapper;
 
     @Test
     public void test(){
@@ -50,8 +55,7 @@ public class JobServiceTest {
     }
     @Test
     public  void test02(){
-        List<UserTransaction> userTranBypayMenid = userTransactionRepository.findUserTranBypayMenid("103710541138501632");
-        userTranBypayMenid.stream().forEach(System.out::println);
+         UserTransaction userTranBypayMenid = userTransactionRepository.findUserTranByPaymentId("103710541138501632");
     }
     /**
      * 全部/部分借款返回页面详情
@@ -69,7 +73,7 @@ public class JobServiceTest {
      */
     @Test
     public  void test05(){
-        TransactionVAResponse response=repayRepository.findVATranc(1L,ComConsts.ATM);
+        TransactionVAResponse response=repayRepository.findVaTranc(1L,ComConsts.ATM);
         System.out.println(response);
     }
     /**
@@ -80,7 +84,7 @@ public class JobServiceTest {
         TransactionVARequest request=new TransactionVARequest();
         request.setPayId(108428379602427904L);
         request.setMode(ComConsts.ATM);
-        TransactionVAResponse vaTranc = repayService.findVATranc(request);
+        TransactionVAResponse vaTranc = repayService.findVaTranc(request);
         System.out.println(vaTranc);
     }
 
@@ -95,5 +99,20 @@ public class JobServiceTest {
         request.setAmount(BigDecimal.valueOf(20000.00));
         PayResponse vaTranc = repayService.testRepayment(request);
         System.out.println(vaTranc);
+    }
+    @Test
+    public void test10(){
+        UserTransactionRepayExample repayExample=new UserTransactionRepayExample();
+        repayExample.createCriteria()
+                .andModeEqualTo(ComConsts.ATM)
+                .andVaCreateTimeGreaterThan(LocalDateTime.now().minusHours(6))
+                .example().orderBy("va_create_time");
+        List<UserTransactionRepay> repay= userTransactionRepayMapper.selectByExample(repayExample);
+        System.out.println("----------------------->"+repay);
+    }
+    @Test
+    public void test11(){
+       int repay=LocalDateTime.now().compareTo(LocalDateTime.now().minusHours(4));
+        System.out.println("----------------------->"+LocalDateTime.now().minusHours(4));
     }
 }

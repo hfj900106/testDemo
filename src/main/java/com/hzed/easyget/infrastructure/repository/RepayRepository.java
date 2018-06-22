@@ -39,8 +39,8 @@ public class RepayRepository {
     /**
      * 获取va码
      */
-    public TransactionVAResponse findVATranc(Long payId,String mode) {
-        return repayExtMapper.findVATranc(payId,mode);
+    public TransactionVAResponse findVaTranc(Long payId,String mode) {
+        return repayExtMapper.findVaTranc(payId,mode);
     }
 
     /**

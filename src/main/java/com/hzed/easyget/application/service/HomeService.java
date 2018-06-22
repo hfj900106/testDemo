@@ -216,24 +216,38 @@ public class HomeService {
         });
     }
 
-    public HomePageResponse checkRepayment() {
+    public CheckRepaymentResponse checkRepayment() {
         Long userId = RequestUtil.getGlobalUser().getUserId();
-        HomePageResponse result = new HomePageResponse();
+        CheckRepaymentResponse result = new CheckRepaymentResponse();
 
         // 场景4、已经提交还款凭证，但未能等到最后结果情况
-        // 当前用户未结清的标是否有提交过凭证
-        List<String> evidences = userRepository.queryEvidences(userId);
+        UserTransaction transaction = userRepository.queryLastTransaction(userId);
         LocalDateTime now = LocalDateTime.now();
-        if (!ObjectUtils.isEmpty(evidences)) {
-            // 查询当前未完成还款的交易记录id，并检查交易是否已过期
-            TransactionExt transactionExt = userRepository.queryTransaction(userId);
-            result.setId(transactionExt.getTransactionId());
-            // 超过两个小时即失效
-            LocalDateTime confirmTime = transactionExt.getConfirmTime();
-            LocalDateTime expireTime = DateUtil.addHour(confirmTime, 2);
-            boolean expire = DateUtil.compare(now, expireTime);
-            result.setExpire(expire);
-            throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
+        // 确认时间不为空，即已经点击提交还款凭证
+        if (transaction.getConfirmTime() != null) {
+            // 判断状态
+            Byte status = transaction.getStatus();
+            if (status == 1) {
+                //交易中并且过期,返回交易失败状态
+                LocalDateTime confirmTime = transaction.getConfirmTime();
+                LocalDateTime expireTime = DateUtil.addHour(confirmTime, 2);
+                boolean expire = DateUtil.compare(now, expireTime);
+                if(expire){
+                    result.setStatus(Byte.parseByte("3"));
+                }else {
+                    result.setStatus(status);
+                }
+                throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
+            }
+            // -------------------成果或者失败状态，判断是否已经有访问过该条结果
+            Long id = userRepository.queryRepaymentVisit(userId,transaction.getId());
+            // 没访问过
+            if(id == null){
+                // 增加一条访问记录
+                userRepository.insertUserRepaymentVisit(userId,transaction.getId());
+                result.setStatus(status);
+                throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
+            }
         }
 
         // 场景3、判断是否已经生成va码,并且未提交还款凭证

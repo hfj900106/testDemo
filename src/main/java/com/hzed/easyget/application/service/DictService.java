@@ -1,7 +1,6 @@
 package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
-import com.hzed.easyget.application.enums.DictEnum;
 import com.hzed.easyget.controller.model.DictRequest;
 import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.controller.model.IDAreaRequest;
@@ -58,7 +57,7 @@ public class DictService {
         String i18n = RequestUtil.getGlobalHead().getI18n();
         // 获取缓存数据,缓存没有，才查询数据库
         List<DictResponse> dictResponseListCache = redisService.getObjCache(dictKey + moduleCode + RedisConsts.SPLIT + i18n);
-        if (dictResponseListCache !=null) {
+        if (!ObjectUtils.isEmpty(dictResponseListCache)) {
             return dictResponseListCache;
         }
 

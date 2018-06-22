@@ -65,8 +65,7 @@ public class TransactionService {
             throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR, new Object[]{request.getTransactionId()});
         }
         log.info("支付放款接口返回报文：{}", result);
-        PayResponse response = JSON.parseObject(result, new TypeReference<PayResponse>() {
-        });
+        PayResponse response = JSON.parseObject(result, PayResponse.class);
         //判断返回状态 0000 0001 0002
         if (!listCode.contains(response.getCode())) {
             tempTableRepository.upDateTemp(TempTable.builder().id(Long.valueOf(request.getRequestNo())).createTime(LocalDateTime.now()).remark("放款失败：" + response.getMsg()).build());

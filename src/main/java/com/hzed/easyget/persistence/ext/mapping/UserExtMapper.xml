@@ -73,5 +73,16 @@
         AND bid.user_id = #{id}
     </select>
 
+    <select id="findUserTransToUpdateRepayFail" resultType="com.hzed.easyget.persistence.auto.entity.UserTransaction">
+        SELECT id AS id,bid_id AS bidId,status AS status,update_time AS updateTime
+        FROM t_loan_user_transaction
+        WHERE type = 2 AND status = 1 AND confirm_time &lt; #{time}
+        AND bid_id NOT IN (SELECT bd.id
+         FROM t_loan_bid bd
+         LEFT JOIN t_loan_temp_table tt
+         ON bd.id=tt.relase_id
+         WHERE tt.job_name='repayFail')
+    </select>
+
 </mapper>
 

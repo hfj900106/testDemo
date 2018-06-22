@@ -17,6 +17,7 @@ import com.hzed.easyget.persistence.auto.entity.IDArea;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class DictService {
         String i18n = RequestUtil.getGlobalHead().getI18n();
         // 获取缓存数据,缓存没有，才查询数据库
         List<DictResponse> dictResponseListCache = redisService.getObjCache(dictKey + moduleCode + RedisConsts.SPLIT + i18n);
-        if (dictResponseListCache !=null) {
+        if (!ObjectUtils.isEmpty(dictResponseListCache)) {
             return dictResponseListCache;
         }
 
@@ -75,7 +76,7 @@ public class DictService {
         });
 
         //放入缓存5小时
-        redisService.setObjCache(dictKey+ moduleCode + RedisConsts.SPLIT + i18n, dictResponseList, 5 * 3600L);
+        redisService.setObjCache(dictKey + moduleCode + RedisConsts.SPLIT + i18n, dictResponseList, 5 * 3600L);
 
         return dictResponseList;
     }

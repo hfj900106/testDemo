@@ -57,12 +57,7 @@ public class DictRepository {
         example.setOrderByClause("orderby asc");
         example.createCriteria().andModuleCodeEqualTo(moduleCode).andLanguageEqualTo(language);
 
-        List<Dict> dicts = dictMapper.selectByExample(example);
-        if (ObjectUtils.isEmpty(dicts)) {
-            throw new ComBizException(BizCodeEnum.DICT_NOTEXISTS);
-        }
-        return dicts;
-
+        return dictMapper.selectByExample(example);
     }
 
 }

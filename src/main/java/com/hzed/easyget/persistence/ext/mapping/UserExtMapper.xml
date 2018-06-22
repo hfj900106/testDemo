@@ -44,5 +44,21 @@
         WHERE `status` = 1 AND type = 2 AND user_id = #{id}
     </select>
 
+    <select id="queryLastTransaction" resultType="com.hzed.easyget.persistence.auto.entity.UserTransaction">
+        SELECT id AS id,`status` AS status,create_time AS createTime,confirm_time AS confirmTime
+        FROM t_loan_user_transaction
+        WHERE type = 2
+        AND create_time = (SELECT MAX(create_time) FROM  t_loan_user_transaction  WHERE type = 2 AND user_id = #{id})
+        AND user_id = #{id}
+    </select>
+
+    <select id="queryRepaymentVisit" resultType="long">
+        SELECT id FROM t_loan_user_transaction_visit WHERE transaction_id = #{transactionId} AND  user_id = #{userId}
+    </select>
+
+    <insert id="insertUserRepaymentVisit">
+        INSERT INTO t_loan_user_repayment_visit (user_id,transaction_id) VALUES (#{userId},#{transactionId})
+    </insert>
+
 </mapper>
 

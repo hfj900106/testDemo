@@ -7,7 +7,7 @@ public enum DictEnum {
     /**
      * 字典表枚举
      */
-    AUTH_MODULE_CODE("auth_module_code","认证");
+    AUTH_MODULE_CODE("auth_code","认证");
 
     private String code;
     private String msg;

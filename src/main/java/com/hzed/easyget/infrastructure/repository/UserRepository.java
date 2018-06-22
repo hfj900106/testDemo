@@ -62,7 +62,7 @@ public class UserRepository {
 
     public List<UserTransaction> findTransactionRecordBySelect(Long userId) {
         UserTransactionExample example = new UserTransactionExample();
-        example.createCriteria().andUserIdEqualTo(userId).andStatusEqualTo((byte)2);
+        example.createCriteria().andUserIdEqualTo(userId).andStatusEqualTo((byte) 2);
         List<UserTransaction> transactionRecords = userTransactionMapper.selectByExample(example);
         return transactionRecords;
     }
@@ -107,5 +107,18 @@ public class UserRepository {
 
     public TransactionExt queryTransaction(Long userId) {
         return userExtMapper.queryTransaction(userId);
+    }
+
+    public UserTransaction queryLastTransaction(Long userId) {
+        return userExtMapper.queryLastTransaction(userId);
+    }
+
+    public Long queryRepaymentVisit(Long userId, Long id) {
+        return userExtMapper.queryRepaymentVisit(userId, id);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void insertUserRepaymentVisit(Long userId, Long id) {
+        userExtMapper.insertUserRepaymentVisit(userId, id);
     }
 }

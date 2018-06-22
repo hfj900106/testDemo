@@ -74,7 +74,7 @@ system:
     repayInfoFlow: false # 启动标志
     repayInfoFlowCron: 0/5 * * * * ? # 周期
     # 还款失败
-    repayFail: true # 启动标志
+    repayFail: false # 启动标志
     repayFailCron: 0/5 * * * * ? # 周期
 
 

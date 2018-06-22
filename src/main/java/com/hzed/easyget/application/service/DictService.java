@@ -65,10 +65,10 @@ public class DictService {
 
         List<Dict> dictList = dictRepository.findByModuleCodeAndLanguage(moduleCode, i18n);
         dictList.forEach(dict -> {
-            DictResponse dictResponse = null;
+            DictResponse dictResponse = new DictResponse();
             if (DictEnum.AUTH_MODULE_CODE.getCode().equals(dict.getModuleCode())) {
                 AuthItem authItem = authItemRepository.findByCode(dict.getDicCode());
-                dictResponse = new DictResponse();
+
                 if (authItem != null) {
                     dictResponse.setDictCode(dict.getDicCode());
                     dictResponse.setDictValue(dict.getDicValue());

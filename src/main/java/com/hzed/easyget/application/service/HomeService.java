@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -204,7 +203,7 @@ public class HomeService {
             //首页检测跳转，访问记录表为空需跳转，不为空无需跳转
             UserLoanVisit userVisitRecord = userLoanVisitRepository.findByUserIdAndBidId(userId, bid.getId());
             if (userVisitRecord == null) {
-                throw new ComBizException(BizCodeEnum.NEED_JUMP);
+                throw new WarnException(BizCodeEnum.NEED_JUMP);
             }
         });
     }

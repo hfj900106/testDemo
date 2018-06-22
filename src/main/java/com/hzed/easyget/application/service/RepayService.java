@@ -63,8 +63,11 @@ public class RepayService {
     @Autowired
     private FileService fileService;
 
-    public RepayListResponse repaidList() {
+    public RepayListResponse repaidList(RepayListRequest request) {
         RepayListResponse repayListResponse = new RepayListResponse();
+
+        Integer pageNo = request.getPageNo();
+        Integer pageSize = request.getPageSize();
 
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();

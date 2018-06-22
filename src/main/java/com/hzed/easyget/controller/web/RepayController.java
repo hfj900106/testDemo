@@ -52,19 +52,15 @@ public class RepayController {
 
     @ModuleFunc("部分还款查询")
     @PostMapping("/Fullrepayment")
-    public LoanManagResponse fullRepayment(@Valid @RequestBody RepayPartRequest request) {
-        LoanManagResponse managResponse = repayService.findloanManagResponse(request.getRepayAmount(), request.getBidId(), false);
-        managResponse.setAmount(request.getRepayAmount());
-        return managResponse;
+    public Long fullRepayment(@Valid @RequestBody RepayPartRequest request) {
+        return repayService.findloanManagResponse(request.getRepayAmount(), request.getBidId(), false);
     }
 
     @ModuleFunc("全部还款查询")
     @PostMapping("/Partialrepayment")
-    public LoanManagResponse partialRepayment(@Valid @RequestBody RepayAllRequest request) {
+    public long partialRepayment(@Valid @RequestBody RepayAllRequest request) {
         BigDecimal amount = comService.getBidNoRepay(request.getBidId(), LocalDateTime.now());
-        LoanManagResponse managResponse = repayService.findloanManagResponse(amount, request.getBidId(), true);
-        managResponse.setAmount(amount);
-        return managResponse;
+        return repayService.findloanManagResponse(amount, request.getBidId(), true);
     }
 
     @ModuleFunc("获取VA码")
@@ -89,5 +85,11 @@ public class RepayController {
     @RequestMapping("/refreshResult")
     public PayMentResponse refreshResult(@Valid @RequestBody RefreshPayMentRequest request) throws Exception {
         return repayService.refreshResult(request);
+    }
+
+    @ModuleFunc("查看还款信息)")
+    @RequestMapping("/LoanManagInfo")
+    public LoanManagResponse LoanManagInfo(@Valid @RequestBody LoanManagInfoRequest request) throws Exception {
+        return repayService.LoanManagInfo(request.getPayId());
     }
 }

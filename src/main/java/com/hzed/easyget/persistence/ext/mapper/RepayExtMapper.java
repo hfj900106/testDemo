@@ -12,11 +12,6 @@ import org.apache.ibatis.annotations.Param;
 **/
 public interface RepayExtMapper {
     /**
-     * 标的账单信息
-     */
-    LoanManagResponse findloanManagResponse(@Param("bidId") Long bidId);
-
-    /**
      * 查询va码
      */
     LoanManagResponse getVACode(@Param("id") Long id);

@@ -28,6 +28,7 @@ public enum BizCodeEnum {
     REPAYMENTS("0001","还款处理中"),
     PROCESS_LENDING("0002","放款处理中"),
     PAYMENTCODE_ERROR("8005","获取还款码接口异常"),
+    USERTRANSACTION_ERROR("8006","没有待交易的账单"),
 
 
 

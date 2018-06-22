@@ -8,47 +8,34 @@
 		http://www.springframework.org/schema/rabbit
 		http://www.springframework.org/schema/rabbit/spring-rabbit-1.5.xsd">
 
-	<bean id="messageConverter" class="com.hzed.easyget.application.mq.FastJsonMessageConverter"></bean>
-
 	<!-- 连接服务配置 -->
-	<rabbit:connection-factory id="rabbitConnectionFactory"
-	   host="10.10.30.114" port="32771" username="user"
-	   password="password" virtual-host="/" />
+	<rabbit:connection-factory id="rabbitConnectionFactory" host="10.10.30.114" port="32771" username="user" password="password" virtual-host="/" />
 
 	<rabbit:admin connection-factory="rabbitConnectionFactory"/>
 	
-	<rabbit:queue id="BLUEPAY_ORDER_NOTIFICATION_QUEUE_DEAD" durable="true"
-		auto-delete="false" exclusive="false" name="BLUEPAY_ORDER_NOTIFICATION_QUEUE_DEAD" />
-		
-	<rabbit:queue id="BLUEPAY_ORDER_NOTIFICATION_QUEUE" durable="true"
-		auto-delete="false" exclusive="false" name="BLUEPAY_ORDER_NOTIFICATION_QUEUE">
+	<rabbit:queue id="BLUEPAY_ORDER_NOTIFICATION_QUEUE_DEAD" name="BLUEPAY_ORDER_NOTIFICATION_QUEUE_DEAD" />
+	<rabbit:queue id="BLUEPAY_ORDER_NOTIFICATION_QUEUE" name="BLUEPAY_ORDER_NOTIFICATION_QUEUE">
 		<rabbit:queue-arguments>
             <entry key="x-dead-letter-exchange" value="BLUEPAY_ORDER_NOTIFICATION_EXCHANGE_DEAD"/>
             <entry key="x-dead-letter-routing-key" value="BLUEPAY_ORDER_NOTIFICATION_KEY_DEAD"/>
         </rabbit:queue-arguments>
 	</rabbit:queue>
 		
-	<rabbit:direct-exchange name="BLUEPAY_ORDER_NOTIFICATION_EXCHANGE"
-		durable="true" auto-delete="false" id="BLUEPAY_ORDER_NOTIFICATION_EXCHANGE">
+	<rabbit:direct-exchange name="BLUEPAY_ORDER_NOTIFICATION_EXCHANGE" id="BLUEPAY_ORDER_NOTIFICATION_EXCHANGE">
 		<rabbit:bindings>
 			<rabbit:binding queue="BLUEPAY_ORDER_NOTIFICATION_QUEUE" key="BLUEPAY_ORDER_NOTIFICATION_KEY" />
 		</rabbit:bindings>
 	</rabbit:direct-exchange>
 	
-	<rabbit:direct-exchange name="BLUEPAY_ORDER_NOTIFICATION_EXCHANGE_DEAD"
-		durable="true" auto-delete="false" id="BLUEPAY_ORDER_NOTIFICATION_EXCHANGE_DEAD">
+	<rabbit:direct-exchange name="BLUEPAY_ORDER_NOTIFICATION_EXCHANGE_DEAD" id="BLUEPAY_ORDER_NOTIFICATION_EXCHANGE_DEAD">
 		<rabbit:bindings>
 			<rabbit:binding queue="BLUEPAY_ORDER_NOTIFICATION_QUEUE_DEAD" key="BLUEPAY_ORDER_NOTIFICATION_KEY_DEAD" />
 		</rabbit:bindings>
 	</rabbit:direct-exchange>
 	
-	<bean id="notificationConsumer" class="com.hzed.easyget.application.mq.OrderNotificationConsumer">
-		<property name="messageConverter" ref="messageConverter"></property>
-	</bean>
-		
-	<rabbit:listener-container
-		connection-factory="rabbitConnectionFactory" concurrency="10" acknowledge="manual"
-		prefetch="10">
+	<bean id="notificationConsumer" class="com.hzed.easyget.application.mq.MqConsumer" />
+
+	<rabbit:listener-container connection-factory="rabbitConnectionFactory" concurrency="10" acknowledge="manual" prefetch="10">
 		<rabbit:listener ref="notificationConsumer" queue-names="BLUEPAY_ORDER_NOTIFICATION_QUEUE" />
 	</rabbit:listener-container>
 	

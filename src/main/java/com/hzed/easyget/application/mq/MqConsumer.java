@@ -5,8 +5,6 @@ import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.application.service.TransactionService;
 import com.hzed.easyget.controller.model.BlueNotificationRequest;
-import com.hzed.easyget.controller.model.RepayAllRequest;
-import com.hzed.easyget.controller.model.RepayPartRequest;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BluePayStatusEnum;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
@@ -20,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
-import java.util.List;
-
 /**
  * 功能概要：放款、收款通知消费接收
  * <p>Title: OrderNotificationConsumer </p>
@@ -31,9 +27,8 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class OrderNotificationConsumer implements ChannelAwareMessageListener {
+public class MqConsumer implements ChannelAwareMessageListener {
 
-    private FastJsonMessageConverter messageConverter;
     @Autowired
     private TempTableRepository tempTableRepository;
     @Autowired
@@ -43,37 +38,41 @@ public class OrderNotificationConsumer implements ChannelAwareMessageListener {
     /**
      * 放款标识
      */
-    private static  final String CASHOUT="cashout";
+    private static final String CASHOUT = "cashout";
     /**
      * 还款标识
      */
-    private static  final String BANK="bank";
+    private static final String BANK = "bank";
 
     @Override
-    public void onMessage(Message message, Channel channel) throws Exception {
-        BlueNotificationRequest bluePayRq = messageConverter.fromMessage(message, BlueNotificationRequest.class);
+    public void onMessage(Message messageByte, Channel channel) throws Exception {
+        String message = new String(messageByte.getBody(), "UTF-8");
+        log.info("MQ回调消息：{}", message);
+
+        BlueNotificationRequest bluePayRq = JSONObject.parseObject(message, BlueNotificationRequest.class);
+
         ValidatorUtil.validate(bluePayRq);
         log.info("放款/还款回调，bluepay端返回信息{}", JSONObject.toJSONString(bluePayRq));
         //判断是否交易完成
-        Long tempId = 0L;
+        Long tempId;
         //过滤处理中
-        if(bluePayRq.getStatus().equals(BluePayStatusEnum.OK.getKey())){
+        if (bluePayRq.getStatus().equals(BluePayStatusEnum.OK.getKey())) {
             log.info("放款/还款bluepay端正在处理中！");
             return;
         }
         //过滤失败直接修改交易记录
-        if(!bluePayRq.getStatus().equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())){
-            transactionService.updateUserTranState(bluePayRq.getT_id(),TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
-            log.info("放款/还款bluepay端返回处理失败{}",BluePayStatusEnum.getPayStatusEnum(bluePayRq.getStatus()));
+        if (!bluePayRq.getStatus().equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())) {
+            transactionService.updateUserTranState(bluePayRq.getT_id(), TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
+            log.info("放款/还款bluepay端返回处理失败{}", BluePayStatusEnum.getPayStatusEnum(bluePayRq.getStatus()));
             return;
         }
         //获取交易id 判断是否合法
         UserTransaction userTr = transactionService.findUserTranByPaymentId(bluePayRq.getT_id());
-        if(ObjectUtils.isEmpty(userTr)){
+        if (ObjectUtils.isEmpty(userTr)) {
             return;
         }
         //判断这个交易是否是 交易中
-        if(userTr.getStatus().intValue() != TransactionTypeEnum.IN_RANSACTION.getCode()){
+        if (userTr.getStatus().intValue() != TransactionTypeEnum.IN_RANSACTION.getCode()) {
             return;
         }
         //放款
@@ -90,9 +89,5 @@ public class OrderNotificationConsumer implements ChannelAwareMessageListener {
             repayService.afterRepayment(userTr);
             log.info("还款bluepay端返回处理成功，本地处理成功");
         }
-    }
-
-    public void setMessageConverter(FastJsonMessageConverter messageConverter) {
-        this.messageConverter = messageConverter;
     }
 }

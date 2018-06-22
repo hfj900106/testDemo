@@ -1,6 +1,7 @@
 package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
+import com.hzed.easyget.application.enums.DictEnum;
 import com.hzed.easyget.controller.model.DictRequest;
 import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.controller.model.IDAreaRequest;
@@ -63,18 +64,26 @@ public class DictService {
 
         List<Dict> dictList = dictRepository.findByModuleCodeAndLanguage(moduleCode, i18n);
         dictList.forEach(dict -> {
-            AuthItem authItem = authItemRepository.findByCode(dict.getDicCode());
-            DictResponse dictResponse = new DictResponse();
-            if (authItem != null) {
+            DictResponse dictResponse = null;
+            if (DictEnum.AUTH_MODULE_CODE.getCode().equals(dict.getModuleCode())) {
+                AuthItem authItem = authItemRepository.findByCode(dict.getDicCode());
+                dictResponse = new DictResponse();
+                if (authItem != null) {
+                    dictResponse.setDictCode(dict.getDicCode());
+                    dictResponse.setDictValue(dict.getDicValue());
+                    dictResponse.setDictName(dict.getDicName());
+
+                }
+
+            } else {
                 dictResponse.setDictCode(dict.getDicCode());
                 dictResponse.setDictValue(dict.getDicValue());
                 dictResponse.setDictName(dict.getDicName());
-
             }
             dictResponseList.add(dictResponse);
         });
 
-        //放入缓存5小时
+        // 放入缓存5小时
         redisService.setObjCache(dictKey+ moduleCode + RedisConsts.SPLIT + i18n, dictResponseList, 5 * 3600L);
 
         return dictResponseList;

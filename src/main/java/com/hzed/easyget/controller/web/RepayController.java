@@ -83,7 +83,7 @@ public class RepayController {
 
     @ModuleFunc("刷新还款结果)")
     @RequestMapping("/refreshResult")
-    public PayMentResponse refreshResult(@Valid @RequestBody RefreshPayMentRequest request) throws Exception {
+    public PayMentResponse refreshResult(@Valid @RequestBody RefreshPaymentRequest request){
         return repayService.refreshResult(request);
     }
 

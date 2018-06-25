@@ -613,18 +613,19 @@ public class RepayService {
      * @param request 请求对象
      * @return 响应对象
      */
-    public PayMentResponse refreshResult(RefreshPayMentRequest request) {
-        //先查询交易信息比对数据
-        UserTransaction transaction = userTransactionRepository.findUserTranById(request.getPayId());
+    public PayMentResponse refreshResult(RefreshPaymentRequest request) {
+        // 先查询交易信息比对数据
+        Long payId = request.getPayId();
+        UserTransaction transaction = userTransactionRepository.findUserTranById(payId);
         if (ObjectUtils.isEmpty(transaction)) {
-            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR);
+            throw new ComBizException(BizCodeEnum.RECEIVER_TRANSACTION_ERROR);
         }
-        //如果倒计时到期 直接处理失败
+        // 如果倒计时到期 直接处理失败
         PayMentResponse response = new PayMentResponse();
-        response.setPayId(request.getPayId());
+        response.setPayId(payId);
         if (request.isExpire()) {
             UserTransaction transactionUpdate = UserTransaction.builder()
-                    .id(request.getPayId())
+                    .id(payId)
                     .status(TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue()).build();
             userTransactionRepository.transactionUpdateByKey(transactionUpdate);
             response.setStatus(TransactionTypeEnum.FAIL_RANSACTION.getCode().toString());

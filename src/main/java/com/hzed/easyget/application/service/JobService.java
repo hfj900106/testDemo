@@ -103,7 +103,7 @@ public class JobService {
     public void repayInfoFlow() {
         List<RepayInfoFlowJob> jobList = repayInfoFlowJobRepository.findJobList(Lists.newArrayList((byte) 1, (byte) 2), 2);
         if (ObjectUtils.isEmpty(jobList)) {
-            log.info("没有需要走还款信息流的数据");
+            log.info("没有需要走还款信息流的记录");
             return;
         }
 
@@ -135,16 +135,18 @@ public class JobService {
     public void bankLoan() {
         //关联中间表查出要放款的标的
         List<BidExt> bidList = bidRepository.findBankLoanBids();
-        if (bidList == null || bidList.isEmpty()) {
+        if (ObjectUtils.isEmpty(bidList)) {
+            log.info("没有需要放款的记录");
             return;
         }
         bidList.forEach(bid -> {
             MdcUtil.putTrace();
-            log.info("放款任务开始，标的id{}", bid.getBidId());
+            Long bidId = bid.getBidId();
+            log.info("开始处理标ID：{}", bidId);
             //插入中间表
             Long tempId = IdentifierGenerator.nextId();
-            tempTableRepository.insertJob(TempTable.builder().id(tempId).jobName(ComConsts.PUSH_BANK_TASK).relaseId(bid.getBidId()).remark("放款").createTime(LocalDateTime.now()).reRunTimes((byte) 1).build());
-            LoanTransactionRequest loan = bidRepository.findLoanTransaction(bid.getBidId());
+            tempTableRepository.insertJob(TempTable.builder().id(tempId).jobName(ComConsts.PUSH_BANK_TASK).relaseId(bidId).remark("放款").reRunTimes((byte) 1).build());
+            LoanTransactionRequest loan = bidRepository.findLoanTransaction(bidId);
             if (!ObjectUtils.isEmpty(loan)) {
                 //交易编号
                 loan.setTransactionId(IdentifierGenerator.nextSeqNo());
@@ -154,9 +156,9 @@ public class JobService {
                 loan.setPayeeCountry("ID");
                 PayResponse response = transactionService.loanTransaction(loan);
                 if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
-                    transactionService.lendingCallback(bid.getBidId(), tempId, loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
+                    transactionService.lendingCallback(bidId, tempId, loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
                 } else {
-                    transactionService.insertUsrTransactionInfo(bid.getBidId(), loan.getTransactionId(), TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(), null);
+                    transactionService.insertUsrTransactionInfo(bidId, loan.getTransactionId(), TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(), null);
                 }
             }
         });

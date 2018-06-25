@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Objects;
 
@@ -217,6 +218,7 @@ public class HomeService {
         CheckRepaymentResponse result = new CheckRepaymentResponse();
         TransactionExt transaction = userRepository.queryTransactionVisit(userId);
         if (transaction != null) {
+            result.setId(transaction.getId());
             // 确认时间不为空，即已经点击提交还款凭证
             if (transaction.getConfirmTime() != null) {
                 // 场景4、已经提交还款凭证，但未能等到最后结果情况
@@ -224,7 +226,7 @@ public class HomeService {
                 if (status == 1) {
                     // 交易中
                     result.setStatus(transaction.getStatus());
-                    result.setConfirmTime(DateUtil.localDateTimeToStr1(transaction.getConfirmTime()));
+                    result.setConfirmTime(transaction.getConfirmTime().toInstant(ZoneOffset.of("+8")).toEpochMilli());
                     throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
                 } else {
                     // 交易成功失败都添加访问记录
@@ -235,7 +237,6 @@ public class HomeService {
                 }
             } else {
                 // 场景3、提交申请还款。未提交凭证
-                result.setId(transaction.getId());
                 throw new ComBizException(BizCodeEnum.MSG_REPAY_UNSUCCESS, result);
             }
         }
@@ -245,7 +246,7 @@ public class HomeService {
         if (userExt != null && userExt.getRepaymentTime() != null) {
             LocalDateTime repaymentTime = userExt.getRepaymentTime();
             LocalDateTime now = LocalDateTime.now();
-            int days = DateUtil.getBetweenDays(now, repaymentTime);
+            int days = DateUtil.getBetweenDays(repaymentTime, now);
             // 有未结清的标,且离逾期天数小于等于两天。days = 今天日期 - 应还日期
             if (days < -2) {
                 return result;

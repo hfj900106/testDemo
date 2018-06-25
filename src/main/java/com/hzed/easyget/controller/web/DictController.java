@@ -6,7 +6,7 @@ import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.controller.model.IDAreaRequest;
 import com.hzed.easyget.controller.model.IDAreaResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
-import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
+import com.hzed.easyget.infrastructure.annotation.head.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

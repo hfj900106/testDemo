@@ -2,9 +2,9 @@ package com.hzed.easyget.infrastructure.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.hzed.easyget.application.service.ComService;
-import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
+import com.hzed.easyget.infrastructure.annotation.head.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-import com.hzed.easyget.infrastructure.annotation.TokenIgnore;
+import com.hzed.easyget.infrastructure.annotation.head.TokenIgnore;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.utils.ComUtil;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
@@ -63,13 +63,12 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 
         // token验证
         TokenIgnore tokenIgnore = mHandler.getMethodAnnotation(TokenIgnore.class);
-        if (tokenIgnore != null) {
-            return true;
+        if (tokenIgnore == null) {
+            // 校验token
+            comService.validateToken(globalHeadr);
+            log.info("用户信息：{}", JSON.toJSONString(RequestUtil.getGlobalUser()));
         }
 
-        // 校验token
-        comService.validateToken(globalHeadr);
-        log.info("用户信息：{}", JSON.toJSONString(RequestUtil.getGlobalUser()));
 
         return true;
     }

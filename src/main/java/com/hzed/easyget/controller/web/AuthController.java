@@ -3,7 +3,7 @@ package com.hzed.easyget.controller.web;
 import com.hzed.easyget.application.service.AuthService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
-import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
+import com.hzed.easyget.infrastructure.annotation.head.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

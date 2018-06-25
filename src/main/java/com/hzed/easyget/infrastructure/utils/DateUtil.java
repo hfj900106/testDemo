@@ -42,7 +42,7 @@ public final class DateUtil {
      * LocalDateTime转时间戳
      */
     public static Long localDateTimeToTimestamp(LocalDateTime localDateTime) {
-        return LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        return localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
 

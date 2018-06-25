@@ -23,6 +23,7 @@ public class ComConsts {
     public static final String RISK_OPERATOR_ERROR = "3";
     public static final String RISK_OPERATOR_PARAMS_ERROR = "1";
     public static final String RISK_OPERATOR_HAVE_AUTH = "0000";
+    public static final String H5 = "H5";
 
     public static final int IS_ANDROID = 1;
     public static final int IS_IOS = 2;

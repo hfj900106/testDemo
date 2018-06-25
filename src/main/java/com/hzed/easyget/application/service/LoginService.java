@@ -4,6 +4,7 @@ import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
+import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
@@ -196,6 +197,14 @@ public class LoginService {
 
     public void sendSmsCode(SmsCodeRequest request) {
         String mobile = request.getMobile();
+        GlobalHead globalHead = RequestUtil.getGlobalHead();
+        String isH5 = globalHead.getPlatform();
+        if(ComConsts.H5.equals(isH5)){
+            User user = userRepository.findByMobile(mobile);
+            if (user != null) {
+                throw new WarnException(BizCodeEnum.EXIST_USER);
+            }
+        }
         log.info("发送验证码手机号：{}", mobile);
         String hasBeenSend = redisService.getCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile);
         if (StringUtils.isNotBlank(hasBeenSend)) {

@@ -41,6 +41,13 @@ public class BidRepository {
         return bidMapper.selectByExample(example);
     }
 
+    public List<Bid> findPageByUserIdAndStatus(Long userId, List<Byte> statuses, Integer pageNo, Integer pageSize) {
+        BidExample example = new BidExample();
+        example.createCriteria().andUserIdEqualTo(userId).andStatusIn(statuses);
+        example.page(pageNo, pageSize);
+        return bidMapper.selectByExample(example);
+    }
+
 
     public Bid findById(Long id) {
         return bidMapper.selectByPrimaryKey(id);

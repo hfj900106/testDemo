@@ -18,9 +18,9 @@ public class CheckRepaymentResponse {
     private Byte status;
 
     /**
-     * 确认时间，用于倒计时
+     * 确认时间时间戳，用于倒计时,
      */
-    private String confirmTime;
+    private Long confirmTime;
 
 
 }

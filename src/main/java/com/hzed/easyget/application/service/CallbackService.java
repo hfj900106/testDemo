@@ -2,15 +2,17 @@ package com.hzed.easyget.application.service;
 
 import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
-import com.hzed.easyget.application.service.product.model.EasyGetProduct;
+import com.hzed.easyget.application.service.product.ProductEnum;
+import com.hzed.easyget.application.service.product.ProductFactory;
+import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.PushBidCallbackRequest;
 import com.hzed.easyget.controller.model.PushBidCallbackResponse;
-import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
-import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.auto.entity.Bid;
+import com.hzed.easyget.persistence.auto.entity.BidProgress;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,8 @@ public class CallbackService {
 
     @Autowired
     private TempTableRepository tempTableRepository;
+    @Autowired
+    private BidRepository bidRepository;
 
     public PushBidCallbackResponse pushBidCallback(PushBidCallbackRequest request) {
         Long bidId = request.getBidId();
@@ -36,11 +40,13 @@ public class CallbackService {
         PushBidCallbackResponse response = new PushBidCallbackResponse("0", "风控结果我已经收到了");
         try {
             log.info("风控审核回调，标的：{}", bidId);
+            Bid bid = bidRepository.findById(bidId);
             BigDecimal loanAmount = request.getLoanAmount();
             String resultCode = request.getResultCode();
             LocalDateTime dateTime = DateUtil.dateToLocalDateTime(new Date(Long.parseLong(request.getHandleTime())).toString());
+            AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
             tempTableRepository.pushBidCallback(
-                    Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime).auditFee(new EasyGetProduct(loanAmount).getHeadFee())
+                    Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime).auditFee(absProduct.getHeadFee())
                             .status("1".equals(resultCode) ? BidStatusEnum.AUDIT_PASS.getCode().byteValue() : BidStatusEnum.AUDIT_FAIL.getCode().byteValue()).build(),
                     BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue())
                             .createTime(dateTime).build(),

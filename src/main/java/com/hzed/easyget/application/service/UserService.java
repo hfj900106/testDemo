@@ -1,5 +1,6 @@
 package com.hzed.easyget.application.service;
 
+import com.hzed.easyget.controller.model.TransactionRecordRequest;
 import com.hzed.easyget.controller.model.TransactionRecordResponse;
 import com.hzed.easyget.controller.model.TransactionVO;
 import com.hzed.easyget.controller.model.UserResponse;
@@ -49,10 +50,10 @@ public class UserService {
     /**
      * 我的交易记录,根据用户id，时间倒序
      */
-    public TransactionRecordResponse getTransactionRecord() {
+    public TransactionRecordResponse getTransactionRecord(TransactionRecordRequest request) {
         TransactionRecordResponse response = new TransactionRecordResponse();
         GlobalUser user = getGlobalUser();
-        List<UserTransaction> list = queryTransactionRecordForApp(user.getUserId());
+        List<UserTransaction> list = queryTransactionRecordForApp(user.getUserId(),request.getPageNo(),request.getPageSize());
         List<TransactionVO> listResponse = new ArrayList<>();
         list.forEach(userTransaction -> {
             TransactionVO transactionVO = new TransactionVO();
@@ -70,8 +71,8 @@ public class UserService {
      * 查询交易记录app
      */
 
-    public  List<UserTransaction> queryTransactionRecordForApp(Long userId) {
-        return userRepository.findTransactionRecordBySelect(userId);
+    public  List<UserTransaction> queryTransactionRecordForApp(Long userId,Integer pageNo,Integer pageSize) {
+        return userRepository.findTransactionRecordBySelect(userId,pageNo,pageSize);
     }
 
 

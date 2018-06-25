@@ -5,7 +5,6 @@ import com.hzed.easyget.application.enums.AppVersionEnum;
 import com.hzed.easyget.application.enums.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
-import com.hzed.easyget.application.service.product.model.EasyGetProduct;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
@@ -115,10 +114,9 @@ public class HomeService {
         Integer period = request.getPeriod();
 
         AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
-        EasyGetProduct product = new EasyGetProduct(loanAmount);
 
         loanCalculateResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());
-        BigDecimal headFee = product.getHeadFee();
+        BigDecimal headFee = productInfo.getHeadFee();
         loanCalculateResponse.setCost(headFee);
         loanCalculateResponse.setReceiveAmount(loanAmount.subtract(headFee));
         loanCalculateResponse.setPeriod(period);

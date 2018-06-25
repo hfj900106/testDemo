@@ -1,14 +1,13 @@
 package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.ProductService;
-import com.hzed.easyget.application.service.product.model.EasyGetProduct;
+import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
 import com.hzed.easyget.controller.model.ReceiverTransactionRequest;
 import com.hzed.easyget.infrastructure.config.PayProp;
@@ -104,9 +103,10 @@ public class TransactionService {
         ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
         List<Bill> bills = product.createBills(bidInfo);
         List<BillLedger> billLedgers = product.createBillLedger(bidInfo);
+        AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(bidInfo.getLoanAmount(), bidInfo.getPeriod());
         UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId, bidInfo.getInBank(), bidInfo.getInAccount(), states, overTime);
         tempTableRepository.afterBankLoan(
-                Bid.builder().id(bidNo).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetProduct(bidInfo.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
+                Bid.builder().id(bidNo).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(absProduct.getHeadFee()).updateTime(LocalDateTime.now()).build(),
                 BidProgress.builder().bidId(bidNo).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
                 bills.get(0),
                 billLedgers,
@@ -191,8 +191,9 @@ public class TransactionService {
         List<BillLedger> billLedgers = product.createBillLedger(bid);
 
         UserTransaction transaction = buildUserTransaction(bid.getUserId(), bidId, TransactionTypeEnum.IN.getCode().byteValue(), bid.getLoanAmount(), paymentId, bid.getInBank(), bid.getInAccount(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
+        AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(bid.getLoanAmount(), bid.getPeriod());
         tempTableRepository.afterBankLoan(
-                Bid.builder().id(bidId).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(new EasyGetProduct(bid.getLoanAmount()).getHeadFee()).updateTime(LocalDateTime.now()).build(),
+                Bid.builder().id(bidId).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(absProduct.getHeadFee()).updateTime(LocalDateTime.now()).build(),
                 BidProgress.builder().bidId(bidId).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
                 bills.get(0),
                 billLedgers,

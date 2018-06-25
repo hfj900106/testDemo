@@ -12,26 +12,37 @@ import java.math.BigDecimal;
 public interface AbstractProduct {
     /**
      * 砍头息
+     *
+     * @return 砍头息
      */
     BigDecimal getHeadFee();
 
     /**
      * 利息
+     *
+     * @return 利息
      */
     BigDecimal getInerest();
 
     /**
      * 尾款
+     *
+     * @return 尾款
      */
     BigDecimal getTailFee();
 
     /**
      * 总还款金额
+     *
+     * @return 总还款金额
      */
     BigDecimal getTotalRepaymentAmount();
 
     /**
      * 逾期费
+     *
+     * @param overDay 逾期天数
+     * @return 逾期费
      */
     BigDecimal getOverFee(Integer overDay);
 }

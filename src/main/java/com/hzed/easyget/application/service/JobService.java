@@ -58,7 +58,7 @@ public class JobService {
 
 
     /**
-     * 推风控
+     * 风控审核
      */
     public void pushBid() {
         // 关联中间表，拿到所有推送资产的ids
@@ -91,7 +91,7 @@ public class JobService {
                     throw new ComBizException(BizCodeEnum.FAIL_PUSH_RISK);
                 }
             } catch (Exception ex) {
-                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark("推送失败：" + ex.getMessage()).build());
+                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).updateTime(LocalDateTime.now()).remark("推送失败：" + ex.getMessage()).build());
                 throw new ComBizException(BizCodeEnum.FAIL_PUSH_RISK);
             }
         });

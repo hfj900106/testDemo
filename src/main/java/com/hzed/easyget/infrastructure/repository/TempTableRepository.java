@@ -1,6 +1,7 @@
 package com.hzed.easyget.infrastructure.repository;
 
 
+import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.auto.entity.example.TempTableExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
@@ -33,15 +34,15 @@ public class TempTableRepository {
     private TempTableMapper tempTableMapper;
 
     public void insertJob(TempTable tempTable) {
-        tempMapper.insert(tempTable);
+        tempMapper.insertSelective(tempTable);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void pushBidCallback(Bid bid, BidProgress bidProgress, Long bidId) {
         bidMapper.updateByPrimaryKeySelective(bid);
-        bidProgressMapper.insert(bidProgress);
+        bidProgressMapper.insertSelective(bidProgress);
         TempTableExample tableExample = new TempTableExample();
-        tableExample.createCriteria().andRelaseIdEqualTo(bidId).andJobNameEqualTo("bankLoan");
+        tableExample.createCriteria().andRelaseIdEqualTo(bidId).andJobNameEqualTo(ComConsts.PUSH_RISK_TASK);
         tempMapper.deleteByExample(tableExample);
     }
 
@@ -56,7 +57,7 @@ public class TempTableRepository {
         bidProgressMapper.insertSelective(bidProgress);
         billMapper.insertSelective(bill);
         //TODO
-        billLedgerMapper.batchInsert(billLedgers);
+        billLedgerMapper.batchInsertSelective(billLedgers);
         tempMapper.deleteByPrimaryKey(tempId);
         if (flag) {
             transactionMapper.insertSelective(transaction);

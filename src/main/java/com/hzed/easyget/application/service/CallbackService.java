@@ -36,16 +36,13 @@ public class CallbackService {
     public PushBidCallbackResponse pushBidCallback(PushBidCallbackRequest request) {
         Long bidId = request.getBidId();
         BigDecimal loanAmount = request.getLoanAmount();
-        String resultCode = request.getResultCode();
+        byte status = "1".equals(request.getResultCode()) ? BidStatusEnum.AUDIT_PASS.getCode().byteValue() : BidStatusEnum.AUDIT_FAIL.getCode().byteValue();
 
-        Bid bid = bidRepository.findById(bidId);
         LocalDateTime dateTime = DateUtil.timestampToLocalDateTimeTo(Long.parseLong(request.getHandleTime()));
-        AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
+        AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bidRepository.findById(bidId).getPeriod());
         tempTableRepository.pushBidCallback(
-                Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime).auditFee(absProduct.getHeadFee())
-                        .status("1".equals(resultCode) ? BidStatusEnum.AUDIT_PASS.getCode().byteValue() : BidStatusEnum.AUDIT_FAIL.getCode().byteValue()).build(),
-                BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue())
-                        .createTime(dateTime).build(),
+                Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime).auditFee(absProduct.getHeadFee()).status(status).build(),
+                BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue()).build(),
                 bidId);
 
         //成功或者失败都返回

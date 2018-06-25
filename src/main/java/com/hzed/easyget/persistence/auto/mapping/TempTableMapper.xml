@@ -6,6 +6,7 @@
     <result column="relase_id" jdbcType="BIGINT" property="relaseId" />
     <result column="job_name" jdbcType="VARCHAR" property="jobName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="re_run_times" jdbcType="TINYINT" property="reRunTimes" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, relase_id, job_name, create_time, re_run_times, remark
+    id, relase_id, job_name, create_time, update_time, re_run_times, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.TempTableExample" resultMap="BaseResultMap">
     select
@@ -134,11 +135,11 @@
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.TempTable">
     insert into t_loan_temp_table (id, relase_id, job_name, 
-      create_time, re_run_times, remark
-      )
+      create_time, update_time, re_run_times, 
+      remark)
     values (#{id,jdbcType=BIGINT}, #{relaseId,jdbcType=BIGINT}, #{jobName,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{reRunTimes,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}
-      )
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{reRunTimes,jdbcType=TINYINT}, 
+      #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.TempTable">
     insert into t_loan_temp_table
@@ -154,6 +155,9 @@
       </if>
       <if test="createTime != null">
         create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
       </if>
       <if test="reRunTimes != null">
         re_run_times,
@@ -174,6 +178,9 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="reRunTimes != null">
         #{reRunTimes,jdbcType=TINYINT},
@@ -204,6 +211,9 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.reRunTimes != null">
         re_run_times = #{record.reRunTimes,jdbcType=TINYINT},
       </if>
@@ -221,6 +231,7 @@
       relase_id = #{record.relaseId,jdbcType=BIGINT},
       job_name = #{record.jobName,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       re_run_times = #{record.reRunTimes,jdbcType=TINYINT},
       remark = #{record.remark,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -239,6 +250,9 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="reRunTimes != null">
         re_run_times = #{reRunTimes,jdbcType=TINYINT},
       </if>
@@ -253,6 +267,7 @@
     set relase_id = #{relaseId,jdbcType=BIGINT},
       job_name = #{jobName,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
       re_run_times = #{reRunTimes,jdbcType=TINYINT},
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
@@ -285,12 +300,12 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_temp_table
-    (id, relase_id, job_name, create_time, re_run_times, remark)
+    (id, relase_id, job_name, create_time, update_time, re_run_times, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.relaseId,jdbcType=BIGINT}, #{item.jobName,jdbcType=VARCHAR}, 
-        #{item.createTime,jdbcType=TIMESTAMP}, #{item.reRunTimes,jdbcType=TINYINT}, #{item.remark,jdbcType=VARCHAR}
-        )
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.reRunTimes,jdbcType=TINYINT}, 
+        #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -314,6 +329,9 @@
         </if>
         <if test="'create_time' == column.value">
           #{item.createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'update_time' == column.value">
+          #{item.updateTime,jdbcType=TIMESTAMP}
         </if>
         <if test="'re_run_times' == column.value">
           #{item.reRunTimes,jdbcType=TINYINT}

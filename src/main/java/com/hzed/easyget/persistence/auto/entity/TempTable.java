@@ -24,6 +24,11 @@ public class TempTable implements Serializable {
     private LocalDateTime createTime;
 
     /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
+
+    /**
      * 重跑次数
      */
     private Byte reRunTimes;
@@ -67,6 +72,14 @@ public class TempTable implements Serializable {
         this.createTime = createTime;
     }
 
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
+
     public Byte getReRunTimes() {
         return reRunTimes;
     }
@@ -93,6 +106,7 @@ public class TempTable implements Serializable {
         sb.append(", relaseId=").append(relaseId);
         sb.append(", jobName=").append(jobName);
         sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
         sb.append(", reRunTimes=").append(reRunTimes);
         sb.append(", remark=").append(remark);
         sb.append(", serialVersionUID=").append(serialVersionUID);
@@ -131,6 +145,11 @@ public class TempTable implements Serializable {
             return this;
         }
 
+        public Builder updateTime(LocalDateTime updateTime) {
+            obj.setUpdateTime(updateTime);
+            return this;
+        }
+
         public Builder reRunTimes(Byte reRunTimes) {
             obj.setReRunTimes(reRunTimes);
             return this;
@@ -151,6 +170,7 @@ public class TempTable implements Serializable {
         relaseId("relase_id"),
         jobName("job_name"),
         createTime("create_time"),
+        updateTime("update_time"),
         reRunTimes("re_run_times"),
         remark("remark");
 

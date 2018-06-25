@@ -2,29 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hzed.easyget.persistence.ext.mapper.BidExtMapper">
 
-    <select id="selectBidsToPush" parameterType="java.util.Map" resultType="com.hzed.easyget.persistence.ext.entity.BidExt">
-      select bd.id as bidId,bd.user_id as userId
-      from t_loan_bid bd
-      where bd.status=1 and bd.id not in
-        (select bd.id
-         from t_loan_bid bd
-         left join t_loan_temp_table tt
-         on bd.id=tt.relase_id
-         where tt.job_name='pushBid'
-        )
+    <select id="selectBidsToPushOrBankLoan" parameterType="java.util.Map" resultType="com.hzed.easyget.persistence.ext.entity.BidExt">
+        SELECT bd.id AS bidId,bd.user_id AS userId
+        FROM t_loan_bid bd  LEFT JOIN t_loan_temp_table tt
+        ON bd.id=tt.relase_id
+        WHERE bd.status=#{status} AND(( tt.re_run_times &lt; #{times}  AND tt.job_name=#{jobName} ) OR tt.relase_id IS NULL)
     </select>
-    <select id="findBankLoanBids" parameterType="java.util.Map" resultType="com.hzed.easyget.persistence.ext.entity.BidExt">
-        select bd.id as bidId
-        from t_loan_bid bd
-        where bd.status=4 and bd.id not in
-        (select bd.id
-        from t_loan_bid bd
-        left join t_loan_temp_table tt
-        on bd.id=tt.relase_id
-        where tt.job_name='bankLoan'
-        )
-    </select>
-
     <!--放款信息查询-->
     <select id="findLoanTransaction" resultType="com.hzed.easyget.controller.model.LoanTransactionRequest">
         SELECT

@@ -76,6 +76,14 @@ public class TempTableRepository {
         return tempTableMapper.selectOneByExample(tempTableExample).getId();
     }
 
+    public TempTable findTempTableByBidNoAndJobName(Long bidId, String pushBankTask) {
+        TempTableExample tempTableExample = new TempTableExample();
+        tempTableExample.createCriteria()
+                .andRelaseIdEqualTo(bidId)
+                .andJobNameEqualTo(pushBankTask);
+        return tempTableMapper.selectOneByExample(tempTableExample);
+    }
+
     public void deleteById(Long id) {
         tempMapper.deleteByPrimaryKey(id);
     }

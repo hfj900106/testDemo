@@ -61,8 +61,8 @@ public class JobService {
      * 风控审核
      */
     public void pushBid() {
-        // 关联中间表，拿到所有推送资产的ids
-        List<BidExt> bids = bidRepository.gitBidsToPush();
+        // 关联中间表，拿到所有推送标ids
+        List<BidExt> bids = bidRepository.selectBidsToPushOrBankLoan((byte) 1, (byte) 1, ComConsts.PUSH_RISK_TASK);
         if (ObjectUtils.isEmpty(bids)) {
             log.info("暂无待风控审核的标的");
             return;
@@ -71,10 +71,21 @@ public class JobService {
             MdcUtil.putTrace();
             Long bidId = bidExt.getBidId();
             log.info("开始处理标ID：{}", bidId);
-            Long tempId = IdentifierGenerator.nextId();
+            long tempId = IdentifierGenerator.nextId();
+            int times = 1;
             try {
-                // 推送bid写入中间表
-                tempTableRepository.insertJob(TempTable.builder().id(tempId).relaseId(bidId).jobName(ComConsts.PUSH_RISK_TASK).remark("推送资产").reRunTimes((byte) 1).build());
+                TempTable tempTable = tempTableRepository.findTempTableByBidNoAndJobName(bidId, ComConsts.PUSH_RISK_TASK);
+                if (ObjectUtils.isEmpty(tempTable)) {
+                    //插入中间表
+                    TempTable tempInsert = buildTempTableToInsert(tempId,ComConsts.PUSH_RISK_TASK,bidId,"推送资产");
+                    tempTableRepository.insertJob(tempInsert);
+                } else {
+                    tempId = tempTable.getId();
+                    times = tempTable.getReRunTimes().intValue() + 1;
+                    //更新中间表
+                    TempTable tempUpdate = buildTempTableToUpdate(tempId,(byte)times,"推送资产");
+                    tempTableRepository.upDateTemp(tempUpdate);
+                }
                 // 推送-调风控接口
                 Long timeStamp = System.currentTimeMillis();
                 Map<String, Object> map = new HashMap<>(16);
@@ -82,7 +93,9 @@ public class JobService {
                 map.put("userId", bidExt.getUserId());
                 map.put("timeStamp", timeStamp);
                 map.put("bid", bidId);
+                //TODO 补充地址
                 log.info("请求风控接口，URL：{}, 请求参数：{}", "", JSON.toJSONString(map));
+
                 RiskResponse riskResponse = restService.postJson("http://10.10.20.203:9611/api/risk/auto/antifraud", map, RiskResponse.class);
                 log.info("风控返回数据：{}", JSON.toJSONString(riskResponse));
 
@@ -91,8 +104,10 @@ public class JobService {
                     throw new ComBizException(BizCodeEnum.FAIL_PUSH_RISK);
                 }
             } catch (Exception ex) {
-                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).updateTime(LocalDateTime.now()).remark("推送失败：" + ex.getMessage()).build());
-                throw new ComBizException(BizCodeEnum.FAIL_PUSH_RISK);
+                log.info("标ID：{}，推送失败",bidId);
+                //更新中间表
+                TempTable tempUpdate = buildTempTableToUpdate(tempId,(byte)times,"推送失败");
+                tempTableRepository.upDateTemp(tempUpdate);
             }
         });
     }
@@ -134,7 +149,7 @@ public class JobService {
      */
     public void bankLoan() {
         //关联中间表查出要放款的标的
-        List<BidExt> bidList = bidRepository.findBankLoanBids();
+        List<BidExt> bidList = bidRepository.selectBidsToPushOrBankLoan((byte) 4, (byte) 1, ComConsts.PUSH_BANK_TASK);
         if (ObjectUtils.isEmpty(bidList)) {
             log.info("没有需要放款的记录");
             return;
@@ -179,22 +194,44 @@ public class JobService {
         transactionList.forEach(userTransaction -> {
             MdcUtil.putTrace();
             log.info("标的：{}还款失败处理", userTransaction.getBidId());
-            Long tempId = IdentifierGenerator.nextId();
+            long bidId = userTransaction.getBidId();
+            long tempId = IdentifierGenerator.nextId();
+            int times = 1;
             try {
-                //插入中间表
-                tempTableRepository.insertJob(TempTable.builder().id(tempId).jobName(ComConsts.REPAY_DAIL_TASK).relaseId(userTransaction.getBidId()).remark("还款失败处理-待处理").createTime(LocalDateTime.now()).reRunTimes((byte) 1).build());
+                TempTable tempTable = tempTableRepository.findTempTableByBidNoAndJobName(bidId, ComConsts.PUSH_RISK_TASK);
+                if (ObjectUtils.isEmpty(tempTable)) {
+                    //插入中间表
+                    TempTable tempInsert = buildTempTableToInsert(tempId,ComConsts.REPAY_DAIL_TASK,bidId,"还款失败处理-待处理");
+                    tempTableRepository.insertJob(tempInsert);
+                } else {
+                    tempId = tempTable.getId();
+                    times = tempTable.getReRunTimes().intValue() + 1;
+                    //更新中间表
+                    TempTable tempUpdate = buildTempTableToUpdate(tempId,(byte)times,"还款失败处理-待处理");
+                    tempTableRepository.upDateTemp(tempUpdate);
+                }
                 userTransaction.setStatus((byte) 3);
                 userTransaction.setUpdateTime(LocalDateTime.now());
                 transactionRepository.transactionUpdateByKey(userTransaction);
+
+                //处理成功后删除temp表
+                tempTableRepository.deleteById(tempId);
             } catch (Exception ex) {
                 log.info("标的：{}还款失败处理-失败", userTransaction.getBidId());
-                tempTableRepository.upDateTemp(TempTable.builder().id(tempId).createTime(LocalDateTime.now()).remark("还款失败处理-失败：" + ex.getMessage()).build());
+                //更新中间表
+                TempTable tempUpdate = buildTempTableToUpdate(tempId,(byte)times,"还款失败处理-失败");
+                tempTableRepository.upDateTemp(tempUpdate);
             }
-            //处理成功后删除temp表
-            tempTableRepository.deleteById(tempId);
+
 
         });
     }
 
+    private TempTable buildTempTableToInsert(Long tempId,String jobName,Long bidId,String remark){
+        return TempTable.builder().id(tempId).jobName(jobName).relaseId(bidId).remark(remark).reRunTimes((byte)1).createTime(LocalDateTime.now()).build();
+    }
+    private TempTable buildTempTableToUpdate(Long tempId,Byte times,String remark){
+        return TempTable.builder().id(tempId).reRunTimes(times).remark(remark).updateTime(LocalDateTime.now()).build();
+    }
 
 }

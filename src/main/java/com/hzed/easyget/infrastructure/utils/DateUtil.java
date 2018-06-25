@@ -2,10 +2,7 @@ package com.hzed.easyget.infrastructure.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
@@ -35,15 +32,19 @@ public final class DateUtil {
 
 
     /**
-     * date 转LocalDateTime
+     * 时间戳转LocalDateTime
      */
-    public static LocalDateTime dateToLocalDateTime(String dateStr) {
-        Date date = new Date(dateStr);
-        Instant instant = date.toInstant();
-        ZoneId zoneId = ZoneId.systemDefault();
-        LocalDateTime localDateTime = instant.atZone(zoneId).toLocalDateTime();
-        return localDateTime;
+    public static LocalDateTime timestampToLocalDateTimeTo(long timestamp) {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
     }
+
+    /**
+     * LocalDateTime转时间戳
+     */
+    public static Long localDateTimeToTimestamp(LocalDateTime localDateTime) {
+        return LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
 
     /**
      * 把字符串转化成LocalDateTime
@@ -91,7 +92,7 @@ public final class DateUtil {
     public static int getBetweenDays(LocalDateTime startTime, LocalDateTime endTime) {
         LocalDateTime start = LocalDateTime.of(startTime.getYear(), startTime.getMonth(), startTime.getDayOfMonth(), 0, 0);
         LocalDateTime end = LocalDateTime.of(endTime.getYear(), endTime.getMonth(), endTime.getDayOfMonth(), 0, 0);
-        return (int)Duration.between(start, end).toDays();
+        return (int) Duration.between(start, end).toDays();
     }
 
     /**

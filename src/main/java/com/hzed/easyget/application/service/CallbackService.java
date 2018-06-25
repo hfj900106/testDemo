@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @author hfj
@@ -36,25 +35,21 @@ public class CallbackService {
 
     public PushBidCallbackResponse pushBidCallback(PushBidCallbackRequest request) {
         Long bidId = request.getBidId();
+        BigDecimal loanAmount = request.getLoanAmount();
+        String resultCode = request.getResultCode();
+
+        Bid bid = bidRepository.findById(bidId);
+        LocalDateTime dateTime = DateUtil.timestampToLocalDateTimeTo(Long.parseLong(request.getHandleTime()));
+        AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
+        tempTableRepository.pushBidCallback(
+                Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime).auditFee(absProduct.getHeadFee())
+                        .status("1".equals(resultCode) ? BidStatusEnum.AUDIT_PASS.getCode().byteValue() : BidStatusEnum.AUDIT_FAIL.getCode().byteValue()).build(),
+                BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue())
+                        .createTime(dateTime).build(),
+                bidId);
+
         //成功或者失败都返回
-        PushBidCallbackResponse response = new PushBidCallbackResponse("0", "风控结果我已经收到了");
-        try {
-            log.info("风控审核回调，标的：{}", bidId);
-            Bid bid = bidRepository.findById(bidId);
-            BigDecimal loanAmount = request.getLoanAmount();
-            String resultCode = request.getResultCode();
-            LocalDateTime dateTime = DateUtil.dateToLocalDateTime(new Date(Long.parseLong(request.getHandleTime())).toString());
-            AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
-            tempTableRepository.pushBidCallback(
-                    Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime).auditFee(absProduct.getHeadFee())
-                            .status("1".equals(resultCode) ? BidStatusEnum.AUDIT_PASS.getCode().byteValue() : BidStatusEnum.AUDIT_FAIL.getCode().byteValue()).build(),
-                    BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue())
-                            .createTime(dateTime).build(),
-                    bidId);
-        } catch (Exception ex) {
-            return response;
-        }
-        return response;
+        return PushBidCallbackResponse.getSuccessResponse();
     }
 
 }

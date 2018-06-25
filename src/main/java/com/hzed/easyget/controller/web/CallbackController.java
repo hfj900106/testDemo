@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 /**
- * 风控回调
+ * 风控回调，无须做国际化
+ *
  * @author hfj
  * @date 2018/6/9
  */
@@ -28,7 +29,7 @@ public class CallbackController {
     @Autowired
     private CallbackService callbackService;
 
-    @ModuleFunc(value = "推送资产-审核回调",isCommonResponse = false)
+    @ModuleFunc(value = "风控审核回调", isCommonResponse = false)
     @PostMapping("/riskCallback/pushBidCallback")
     @HeaderIgnore
     public PushBidCallbackResponse pushBidCallback(@Valid @RequestBody PushBidCallbackRequest request) {

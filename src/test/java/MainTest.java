@@ -1,4 +1,5 @@
-import com.hzed.easyget.infrastructure.utils.PicUtil;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * 暂无描述
@@ -20,9 +21,16 @@ public class MainTest {
 //        }
 
 
-        String imgPath = "C:\\Users\\Administrator\\Desktop\\3.png";
-        String base64String = PicUtil.picToBase64(imgPath);
-        System.out.println(base64String);
+//        String imgPath = "C:\\Users\\Administrator\\Desktop\\3.png";
+//        String base64String = PicUtil.picToBase64(imgPath);
+//        System.out.println(base64String);
+
+        long l = System.currentTimeMillis();
+        System.out.println(l);
+        long l1 = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        System.out.println(l1);
+
+
     }
 
 }

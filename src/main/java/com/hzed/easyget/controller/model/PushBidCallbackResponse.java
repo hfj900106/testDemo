@@ -12,4 +12,9 @@ import lombok.Data;
 public class PushBidCallbackResponse {
     private String code;
     private String message;
+
+
+    public static PushBidCallbackResponse getSuccessResponse() {
+        return new PushBidCallbackResponse("0", "风控结果我已经收到了");
+    }
 }

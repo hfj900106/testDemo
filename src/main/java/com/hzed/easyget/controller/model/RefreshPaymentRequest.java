@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  * @date 2018/6/20
  */
 @Data
-public class RefreshPayMentRequest {
+public class RefreshPaymentRequest {
     /**
      * 交易流水id(非交易id)
      */

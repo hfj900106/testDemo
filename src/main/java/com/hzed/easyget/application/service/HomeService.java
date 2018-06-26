@@ -226,7 +226,7 @@ public class HomeService {
                 if (status == 1) {
                     // 交易中
                     result.setStatus(transaction.getStatus());
-                    result.setConfirmTime(transaction.getConfirmTime().toInstant(ZoneOffset.of("+8")).toEpochMilli());
+                    result.setConfirmTime(DateUtil.localDateTimeToTimestamp(transaction.getConfirmTime()));
                     throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
                 } else {
                     // 交易成功失败都添加访问记录

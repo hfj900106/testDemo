@@ -122,7 +122,7 @@ public class RestService {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            result = BizCodeEnum.TIMEOUT.getCode();
+            result = "TIMEOUT";
         } finally {
             httpPost.releaseConnection();
         }

@@ -2,7 +2,7 @@ package com.hzed.easyget.persistence.ext.mapper;
 
 import com.hzed.easyget.controller.model.LoanManagResponse;
 import com.hzed.easyget.controller.model.PaymentCodeRequest;
-import com.hzed.easyget.controller.model.TransactionVAResponse;
+import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -19,7 +19,7 @@ public interface RepayExtMapper {
     /**
      * 查询va码
      */
-    TransactionVAResponse findVaTranc(@Param("payId") Long payId,@Param("mode") String mode);
+    UserTransactionRepay findVaTranc(@Param("payId") Long payId, @Param("mode") String mode);
     /**
      * 获取交易记录 根据交易id
      */

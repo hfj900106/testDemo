@@ -3,7 +3,7 @@ package com.hzed.easyget.controller.web;
 import com.hzed.easyget.application.service.AuthService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
-import com.hzed.easyget.infrastructure.annotation.HeaderIgnore;
+import com.hzed.easyget.infrastructure.annotation.head.IgnoreHeader;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,14 +90,14 @@ public class AuthController {
         authService.professionalAuth(request);
     }
 
-    @HeaderIgnore
+    @IgnoreHeader
     @ModuleFunc("facebook认证")
     @PostMapping("/facebook")
     public void facebookAuth(@Valid @RequestBody FacebookRequest request) {
         authService.facebookAuth(request);
     }
 
-    @HeaderIgnore
+    @IgnoreHeader
     @ModuleFunc("ins认证")
     @PostMapping("/ins")
     public void insAuth(@Valid @RequestBody InsRequest request) {

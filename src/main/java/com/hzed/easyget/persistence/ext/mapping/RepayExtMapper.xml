@@ -7,8 +7,8 @@
          from t_loan_user_transaction_repay WHERE transaction_id=#{id}
     </select>
     <!--查询va码-->
-    <select id="findVaTranc" resultType="com.hzed.easyget.controller.model.TransactionVAResponse">
-      SELECT  va AS vaCodel,va_create_time AS createTime,transaction_id,MODE
+    <select id="findVaTranc" resultType="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
+      SELECT  va AS vaCodel,va_create_time,transaction_id,MODE
         FROM
         t_loan_user_transaction_repay
         GROUP BY id HAVING (TIMESTAMPDIFF(HOUR,MAX(va_create_time),NOW())) &lt;=6 AND transaction_id = #{payId} AND MODE = #{mode}

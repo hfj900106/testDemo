@@ -1,7 +1,8 @@
 package com.hzed.easyget.controller.model;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 借款详情请求参数
@@ -11,6 +12,6 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class LoanDetailRequest {
-    @NotBlank(message = "{param.loan.bid.isNotEmpty}")
+    @NotNull(message = "{param.loan.bid.isNotEmpty}")
     private Long bid;
 }

@@ -71,12 +71,8 @@ public class BidRepository {
         userBankMapper.insertSelective(userBank);
     }
 
-    public List<BidExt> gitBidsToPush() {
-        return bidExtMapper.selectBidsToPush();
-    }
-
-    public List<BidExt> findBankLoanBids() {
-        return bidExtMapper.findBankLoanBids();
+    public List<BidExt> selectBidsToPushOrBankLoan(Byte status, Byte times,String jobName) {
+        return bidExtMapper.selectBidsToPushOrBankLoan( status,  times, jobName);
     }
 
     public List<Bid> findByUserId(Long userId) {

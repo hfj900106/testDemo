@@ -17,14 +17,13 @@
     </select>
 
     <select id="findUserTransToUpdateRepayFail" resultType="com.hzed.easyget.persistence.auto.entity.UserTransaction">
-        SELECT id AS id,bid_id AS bidId,status AS status,update_time AS updateTime
-        FROM t_loan_user_transaction
-        WHERE type = 2 AND status = 1 AND confirm_time &lt; #{time}
-        AND bid_id NOT IN (SELECT bd.id
-         FROM t_loan_bid bd
-         LEFT JOIN t_loan_temp_table tt
-         ON bd.id=tt.relase_id
-         WHERE tt.job_name='repayFail')
+        SELECT  tu.id AS id,tu.bid_id AS bidId,tu.status AS status,tu.update_time AS updateTime
+        FROM t_loan_user_transaction tu LEFT JOIN t_loan_temp_table tt
+        ON tu.bid_id=tt.relase_id
+        WHERE    tu.type = 2
+        AND tu.status = 1
+        AND tu.confirm_time &lt; #{time}
+        AND(( tt.re_run_times &lt; 2  AND tt.job_name='repayFail' ) OR tt.relase_id is null)
     </select>
 
 </mapper>

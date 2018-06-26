@@ -6,10 +6,12 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.PayResponse;
-import com.hzed.easyget.infrastructure.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -40,24 +42,24 @@ public class RepayController {
 
     @ModuleFunc("还款详情")
     @PostMapping("/repayDetail")
-    public Response<RepayDetailResponse> repayDetail(@Valid @RequestBody RepayDetailRequest request) {
-        return Response.getSuccessResponse(repayService.repayDetail(request));
+    public RepayDetailResponse repayDetail(@Valid @RequestBody RepayDetailRequest request) {
+        return repayService.repayDetail(request);
     }
 
     @ModuleFunc("部分还款详情")
     @PostMapping("/repayPartDetail")
-    public Response<RepayPartDetailResponse> repayPartDetail(@Valid @RequestBody RepayPartDetailRequest request) {
-        return Response.getSuccessResponse(repayService.repayPartDetail(request));
+    public RepayPartDetailResponse repayPartDetail(@Valid @RequestBody RepayPartDetailRequest request) {
+        return repayService.repayPartDetail(request);
     }
 
     @ModuleFunc("部分还款查询")
-    @PostMapping("/Fullrepayment")
+    @PostMapping("/fullrepayment")
     public PayMentIdResponse fullRepayment(@Valid @RequestBody RepayPartRequest request) {
         return repayService.findloanManagResponse(request.getRepayAmount(), request.getBidId(), false);
     }
 
     @ModuleFunc("全部还款查询")
-    @PostMapping("/Partialrepayment")
+    @PostMapping("/partialrepayment")
     public PayMentIdResponse partialRepayment(@Valid @RequestBody RepayAllRequest request) {
         BigDecimal amount = comService.getBidNoRepay(request.getBidId(), LocalDateTime.now());
         return repayService.findloanManagResponse(amount, request.getBidId(), true);

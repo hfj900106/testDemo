@@ -77,13 +77,13 @@ public class JobService {
                 TempTable tempTable = tempTableRepository.findTempTableByBidNoAndJobName(bidId, ComConsts.PUSH_RISK_TASK);
                 if (ObjectUtils.isEmpty(tempTable)) {
                     //插入中间表
-                    TempTable tempInsert = buildTempTableToInsert(tempId,ComConsts.PUSH_RISK_TASK,bidId,"推送资产");
+                    TempTable tempInsert = buildTempTableToInsert(tempId, ComConsts.PUSH_RISK_TASK, bidId, "推送资产");
                     tempTableRepository.insertJob(tempInsert);
                 } else {
                     tempId = tempTable.getId();
                     times = tempTable.getReRunTimes().intValue() + 1;
                     //更新中间表
-                    TempTable tempUpdate = buildTempTableToUpdate(tempId,(byte)times,"推送资产");
+                    TempTable tempUpdate = buildTempTableToUpdate(tempId, (byte) times, "推送资产");
                     tempTableRepository.updateTemp(tempUpdate);
                 }
                 // 推送-调风控接口
@@ -104,9 +104,9 @@ public class JobService {
                     throw new ComBizException(BizCodeEnum.FAIL_PUSH_RISK);
                 }
             } catch (Exception ex) {
-                log.info("标ID：{}，推送失败",bidId);
+                log.info("标ID：{}，推送失败", bidId);
                 //更新中间表
-                TempTable tempUpdate = buildTempTableToUpdate(tempId,(byte)times,"推送失败");
+                TempTable tempUpdate = buildTempTableToUpdate(tempId, (byte) times, "推送失败");
                 tempTableRepository.updateTemp(tempUpdate);
             }
         });
@@ -175,8 +175,8 @@ public class JobService {
                         transactionService.insertUsrTransactionInfo(bidId, loan.getTransactionId(), TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(), null);
                     }
                 }
-            }catch (Exception e){
-                log.info("标的：{}放款失败处理-失败", bidId);
+            } catch (Exception e) {
+                log.error("标ID：{}，放款失败", bidId, e);
                 //更新中间表
                 tempTableRepository.updateTemp(TempTable.builder().id(Long.valueOf(tempId)).updateTime(LocalDateTime.now()).remark("放款失败：" + e.getMessage()).build());
             }
@@ -205,13 +205,13 @@ public class JobService {
                 TempTable tempTable = tempTableRepository.findTempTableByBidNoAndJobName(bidId, ComConsts.PUSH_RISK_TASK);
                 if (ObjectUtils.isEmpty(tempTable)) {
                     //插入中间表
-                    TempTable tempInsert = buildTempTableToInsert(tempId,ComConsts.REPAY_DAIL_TASK,bidId,"还款失败处理-待处理");
+                    TempTable tempInsert = buildTempTableToInsert(tempId, ComConsts.REPAY_DAIL_TASK, bidId, "还款失败处理-待处理");
                     tempTableRepository.insertJob(tempInsert);
                 } else {
                     tempId = tempTable.getId();
                     times = tempTable.getReRunTimes().intValue() + 1;
                     //更新中间表
-                    TempTable tempUpdate = buildTempTableToUpdate(tempId,(byte)times,"还款失败处理-待处理");
+                    TempTable tempUpdate = buildTempTableToUpdate(tempId, (byte) times, "还款失败处理-待处理");
                     tempTableRepository.updateTemp(tempUpdate);
                 }
                 userTransaction.setStatus((byte) 3);
@@ -223,7 +223,7 @@ public class JobService {
             } catch (Exception ex) {
                 log.info("标的：{}还款失败处理-失败", userTransaction.getBidId());
                 //更新中间表
-                TempTable tempUpdate = buildTempTableToUpdate(tempId,(byte)times,"还款失败处理-失败");
+                TempTable tempUpdate = buildTempTableToUpdate(tempId, (byte) times, "还款失败处理-失败");
                 tempTableRepository.updateTemp(tempUpdate);
             }
 
@@ -231,10 +231,11 @@ public class JobService {
         });
     }
 
-    private TempTable buildTempTableToInsert(Long tempId,String jobName,Long bidId,String remark){
-        return TempTable.builder().id(tempId).jobName(jobName).relaseId(bidId).remark(remark).reRunTimes((byte)1).createTime(LocalDateTime.now()).build();
+    private TempTable buildTempTableToInsert(Long tempId, String jobName, Long bidId, String remark) {
+        return TempTable.builder().id(tempId).jobName(jobName).relaseId(bidId).remark(remark).reRunTimes((byte) 1).createTime(LocalDateTime.now()).build();
     }
-    private TempTable buildTempTableToUpdate(Long tempId,Byte times,String remark){
+
+    private TempTable buildTempTableToUpdate(Long tempId, Byte times, String remark) {
         return TempTable.builder().id(tempId).reRunTimes(times).remark(remark).updateTime(LocalDateTime.now()).build();
     }
 

@@ -3,8 +3,7 @@ package com.hzed.easyget.infrastructure.interceptor;
 import com.alibaba.fastjson.JSON;
 import com.hzed.easyget.application.service.ComService;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-import com.hzed.easyget.infrastructure.annotation.head.IgnoreHeader;
-import com.hzed.easyget.infrastructure.annotation.head.TokenIgnore;
+import com.hzed.easyget.infrastructure.annotation.head.*;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.utils.ComUtil;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
@@ -50,36 +49,40 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
             log.info("请求报文：{}", StringUtils.isBlank(body) ? "无请求参数" : body);
         }
 
-        // 请求头忽略标志
-        IgnoreHeader ignoreHeader = mHandler.getMethodAnnotation(IgnoreHeader.class);
-        if (ignoreHeader != null) {
-            return true;
-        }
-
         GlobalHead globalHeadr = RequestUtil.getGlobalHead();
         log.info("请求头信息：{}", JSON.toJSONString(globalHeadr));
-        // header中一些必要参数校验
-        comService.validateHeader(globalHeadr);
 
-//        token验证
+        // 校验token
         TokenIgnore tokenIgnore = mHandler.getMethodAnnotation(TokenIgnore.class);
         if (tokenIgnore == null) {
-            // 校验token
             comService.validateToken(globalHeadr);
             log.info("用户信息：{}", JSON.toJSONString(RequestUtil.getGlobalUser()));
         }
-
-//        TokenIgnore tokenIgnore = mHandler.getMethodAnnotation(TokenIgnore.class);
-//        if(tokenIgnore == null) {
-//            // TODO
-//        }
-//
-//        PlatformIgnore platformIgnore = mHandler.getMethodAnnotation(PlatformIgnore.class);
-//        if(platformIgnore == null) {
-//            // TODO
-//        }
-//
-//        // ...
+        // 校验platform
+        PlatformIgnore platformIgnore = mHandler.getMethodAnnotation(PlatformIgnore.class);
+        if(platformIgnore == null) {
+            globalHeadr.validatePlatform();
+        }
+        // 校验imei
+        ImeiIgnore imeiIgnore = mHandler.getMethodAnnotation(ImeiIgnore.class);
+        if(imeiIgnore == null) {
+            globalHeadr.validImei();
+        }
+        // 校验i18n
+        I18nIgnore i18nIgnore = mHandler.getMethodAnnotation(I18nIgnore.class);
+        if(i18nIgnore == null) {
+            globalHeadr.validateI18n();
+        }
+        // 校验version
+        VersionIgnore versionIgnore = mHandler.getMethodAnnotation(VersionIgnore.class);
+        if(versionIgnore == null) {
+            globalHeadr.validateVersion();
+        }
+        // 校验appkey
+        AppkeyIgnore appkeyIgnore = mHandler.getMethodAnnotation(AppkeyIgnore.class);
+        if(appkeyIgnore == null) {
+            globalHeadr.validateAppkey();
+        }
 
 
         return true;

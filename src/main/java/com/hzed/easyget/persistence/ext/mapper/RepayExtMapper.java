@@ -1,6 +1,5 @@
 package com.hzed.easyget.persistence.ext.mapper;
 
-import com.hzed.easyget.controller.model.LoanManagResponse;
 import com.hzed.easyget.controller.model.PaymentCodeRequest;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import org.apache.ibatis.annotations.Param;
@@ -11,11 +10,6 @@ import org.apache.ibatis.annotations.Param;
 *@time：2018/6/15-16:03
 **/
 public interface RepayExtMapper {
-    /**
-     * 查询va码
-     */
-    LoanManagResponse getVACode(@Param("id") Long id);
-
     /**
      * 查询va码
      */

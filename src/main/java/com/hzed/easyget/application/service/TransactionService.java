@@ -60,9 +60,9 @@ public class TransactionService {
      */
     public PayResponse loanTransaction(LoanTransactionRequest request) {
         List<String> listCode = Arrays.asList(BizCodeEnum.PROCESS_LENDING.getCode(), BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.REPAYMENTS.getCode());
-        log.info("请求报文：{}", JSON.toJSONString(request));
+        log.info("请求地址{},请求报文：{}",prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
-        log.info("返回报文：{}", result);
+        log.info("请求地址{},返回报文：{}",prop.getAbsLoanTransactionUrl(), result);
         if (timeout.equals(result)) {
             throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR);
         }

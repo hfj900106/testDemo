@@ -432,10 +432,10 @@ public class RepayService {
         if (request.getMode().equals(ComConsts.OTC)) {
             payment.setBankType(null);
         }
-        log.info("获取还款码，请求bluepay请求参数{}", JSONObject.toJSONString(payment));
+        log.info("获取还款码，bluepay请求地址{},参数：{}", prop.getAbsGetPaymentCodeUrl(), JSONObject.toJSONString(payment));
 
         String result = restService.doPostJson(prop.getAbsGetPaymentCodeUrl(), JSONObject.toJSONString(payment));
-        log.info("获取还款码，bluepay返回数据{}", result);
+        log.info("获取还款码，bluepay返回数据：{}", result);
 
         if (result.equals(timeout)) {
             throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR);
@@ -446,7 +446,7 @@ public class RepayService {
             throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR);
         }
         String paymentCode = JSON.parseObject(response.getData()).getString("paymentCode");
-        log.info("还款码{}", paymentCode);
+        log.info("获取还款码，bluepay返回还款码：{}", paymentCode);
         UserTransactionRepay repay = UserTransactionRepay.builder()
                 .id(IdentifierGenerator.nextId())
                 .mode(request.getMode())
@@ -510,12 +510,12 @@ public class RepayService {
         for (UserTransactionRepay x : repayList) {
             compleRequest.setPaymentCode(x.getVa());
             compleRequest.setRequestNo(IdentifierGenerator.nextSeqNo());
-            log.info("完成还款接口请求报文：{}", JSON.toJSONString(compleRequest));
+            log.info("完成还款接口请求地址{},报文：{}", prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(compleRequest));
             String result = restService.doPostJson(prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(compleRequest));
+            log.info("完成还款接口返回报文：{}", result);
             if (result.equals(timeout)) {
                 throw new ComBizException(BizCodeEnum.RECEIVER_TRANSACTION_ERROR);
             }
-            log.info("完成还款接口返回报文：{}", result);
             response = JSON.parseObject(result, PayResponse.class);
             //判断返回状态 0000 0001 0002
             if (!listCode.contains(response.getCode())) {
@@ -625,7 +625,7 @@ public class RepayService {
         Long payId = request.getPayId();
         UserTransaction transaction = userTransactionRepository.findUserTranById(payId);
         if (ObjectUtils.isEmpty(transaction)) {
-            throw new ComBizException(BizCodeEnum.RECEIVER_TRANSACTION_ERROR);
+            throw new ComBizException(BizCodeEnum.USERTRANSACTION_ERROR);
         }
         // 如果倒计时到期 直接处理失败
         PayMentResponse response = new PayMentResponse();
@@ -657,14 +657,14 @@ public class RepayService {
                 .andTypeEqualTo(TransactionTypeEnum.OUT.getCode().byteValue());
         UserTransaction trance = userTransactionRepository.findoldTrance(userTransactionExample);
         if (ObjectUtils.isEmpty(trance)) {
-            throw new ComBizException(BizCodeEnum.USERTRANSACTION_ERROR, new Object[]{payId});
+            throw new ComBizException(BizCodeEnum.USERTRANSACTION_ERROR);
         }
         LocalDateTime repaymentTime = repayRepository.findRepaymentTime(trance.getBidId());
         LoanManagResponse managResponse = new LoanManagResponse();
-        LoanManagResponse vaCode = repayRepository.getVACode(trance.getId());
+        UserTransactionRepay vaCode = repayRepository.getVACode(trance.getId());
         if (!ObjectUtils.isEmpty(vaCode)) {
-            managResponse.setVaCodel(vaCode.getVaCodel());
-            managResponse.setCreateTime(vaCode.getCreateTime());
+            managResponse.setVaCodel(vaCode.getVa());
+            managResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(vaCode.getVaCreateTime()));
             managResponse.setMode(vaCode.getMode());
         }
         managResponse.setAmount(trance.getAmount());

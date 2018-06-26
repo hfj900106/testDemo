@@ -5,6 +5,7 @@ import com.hzed.easyget.application.service.LoginService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
+import com.hzed.easyget.infrastructure.annotation.head.NotIgnorePlatformI18n;
 import com.hzed.easyget.infrastructure.annotation.head.TokenIgnore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,15 @@ public class LoginController {
         return loginService.loginByCode(request);
     }
 
-    @TokenIgnore
+    @NotIgnorePlatformI18n
+    @ModuleFunc("H5发送短信验证码")
+    @PostMapping("/sendSmsCodeH5")
+    public void sendSmsCodeH5(@Valid @RequestBody SmsCodeRequest request) {
+        loginService.sendSmsCode(request);
+    }
+
+
+    @NotIgnorePlatformI18n
     @ModuleFunc("H5手机验证码注册")
     @PostMapping("/registerH5")
     public void registerH5(@Valid @RequestBody RegisterH5Request request) {
@@ -63,6 +72,20 @@ public class LoginController {
     @ModuleFunc("验证图片验证码")
     @PostMapping("/checkPictureCode")
     public void checkPictureCode(@Valid @RequestBody CheckPictureCodeRequest request) {
+        loginService.checkPictureCode(request.getMobile(), request.getCode());
+    }
+
+    @NotIgnorePlatformI18n
+    @ModuleFunc("H5获取图片验证码")
+    @PostMapping("/getPictureCodeH5")
+    public PictureCodeResponse getPictureCodeH5(@Valid @RequestBody PictureCodeRequest request) {
+        return loginService.getPictureCode(request.getMobile());
+    }
+
+    @NotIgnorePlatformI18n
+    @ModuleFunc("H5验证图片验证码")
+    @PostMapping("/checkPictureCodeH5")
+    public void checkPictureCodeH5(@Valid @RequestBody CheckPictureCodeRequest request) {
         loginService.checkPictureCode(request.getMobile(), request.getCode());
     }
 }

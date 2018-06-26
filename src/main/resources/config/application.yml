@@ -12,9 +12,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://10.10.30.91:3306/easy-get?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
-    username: root
-#    password: 123456 明文密码
-    password: ENC(piWM79kO6kiDDcjR2jhwAw==) # 密码密文
+    username: ENC(djxDOCrXhNQN5FAfcpTPIw==) # 用户密文 明文用户：root
+    password: ENC(piWM79kO6kiDDcjR2jhwAw==) # 密码密文 明文密码：123456
   # Resid相关配置
   redis:
     database: 0

@@ -52,7 +52,7 @@ public class RepayRepository {
     /**
      * 获取va码
      */
-    public TransactionVAResponse findVaTranc(Long payId, String mode) {
+    public UserTransactionRepay findVaTranc(Long payId, String mode) {
         return repayExtMapper.findVaTranc(payId, mode);
     }
 

@@ -1,5 +1,6 @@
 package com.hzed.easyget.controller.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -22,7 +23,7 @@ public class LoanManagResponse {
     /**
      * 应还时间
      */
-    private String repaymentTime;
+    private Long repaymentTime;
     /**
      * VA码
      */
@@ -30,7 +31,7 @@ public class LoanManagResponse {
     /**
      * va码创建时间
      */
-    private String  createTime;
+    private Long  createTime;
     /**
      * 交易方式
      */

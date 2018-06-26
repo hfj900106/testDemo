@@ -9,6 +9,7 @@ import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.utils.PicUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import org.apache.commons.codec.binary.Base64;
+import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class BootTest {
     private FileService fileService;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private StringEncryptor stringEncryptor;
 
     @Test
     public void redisTest() {
@@ -70,7 +73,14 @@ public class BootTest {
         AbstractProduct product = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(new BigDecimal(60000), 14);
         System.out.println(product.getHeadFee());
         System.out.println(product.getInerest());
+    }
 
+
+    @Test
+    public void passwordTest() {
+        // java -cp jasypt-1.9.2.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI input=原文 password=123456 algorithm=PBEWithMD5AndDES
+        String decrypt = stringEncryptor.encrypt("123456");
+        System.out.println(decrypt);
     }
 
 }

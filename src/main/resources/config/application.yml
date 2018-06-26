@@ -2,8 +2,9 @@
 server.port: 8150
 # 默认根路径
 server.context-path: /hzed/easy-get
+# 加盐
+jasypt.encryptor.password: sdfhfw09GDS20403
 
-# TODO 密码加密 https://blog.csdn.net/linhongwangok/article/details/79076178;https://github.com/ulisesbocchio/jasypt-spring-boot
 spring:
   resources.static-locations: file:${system.imgUploadPath},classpath:/META-INF/resources/,classpath:/swagger/ # 静态资源文件路径，多个用逗号隔开 ,classpath:/public/,file:${web.upload-path}
   profiles.active: dev # 环境
@@ -12,7 +13,8 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://10.10.30.91:3306/easy-get?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
     username: root
-    password: 123456
+#    password: 123456 明文密码
+    password: ENC(piWM79kO6kiDDcjR2jhwAw==) # 密码密文
   # Resid相关配置
   redis:
     database: 0

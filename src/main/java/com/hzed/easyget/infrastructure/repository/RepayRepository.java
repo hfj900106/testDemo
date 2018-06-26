@@ -102,10 +102,12 @@ public class RepayRepository {
     }
 
     /**
-     * 根绝交易id获取va码
+     * 根据交易id获取va码
      */
-    public LoanManagResponse getVACode(Long id) {
-        return repayExtMapper.getVACode(id);
+    public UserTransactionRepay getVACode(Long id) {
+        UserTransactionRepayExample repayExample=new UserTransactionRepayExample();
+        repayExample.createCriteria().andTransactionIdEqualTo(id).example().orderBy("va_create_time desc").limit(1);
+        return repayMapper.selectOneByExample(repayExample);
     }
 
     /**

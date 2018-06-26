@@ -104,9 +104,8 @@ public class JobServiceTest {
     public void test10(){
         UserTransactionRepayExample repayExample=new UserTransactionRepayExample();
         repayExample.createCriteria()
-                .andModeEqualTo(ComConsts.ATM)
-                .andVaCreateTimeGreaterThan(LocalDateTime.now().minusHours(6))
-                .example().orderBy("va_create_time");
+                .andTransactionIdEqualTo(108432517484650496L)
+                .example().orderBy("va_create_time desc").limit(1);
         List<UserTransactionRepay> repay= userTransactionRepayMapper.selectByExample(repayExample);
         System.out.println("----------------------->"+repay);
     }

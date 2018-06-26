@@ -2,11 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hzed.easyget.persistence.ext.mapper.RepayExtMapper">
     <!--查询va码-->
-    <select id="getVACode" resultType="com.hzed.easyget.controller.model.LoanManagResponse">
-        SELECT va as vaCodel,MAX(va_create_time) as createTime,mode
-         from t_loan_user_transaction_repay WHERE transaction_id=#{id}
-    </select>
-    <!--查询va码-->
     <select id="findVaTranc" resultType="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
       SELECT  va AS vaCodel,va_create_time,transaction_id,MODE
         FROM

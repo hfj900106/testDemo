@@ -130,11 +130,20 @@ public class ComService {
         bidRepository.findByIdWithExp(bidId);
 
         BigDecimal total = BigDecimal.ZERO;
-        List<Bill> bills = billRepository.findAllBillByBidIdWithExp(bidId);
+        Long billId = billRepository.findAllBillByBidIdWithExp(bidId).get(0).getId();
         // TODO 目前不做多期
-        List<BillLedger> ledgers = billLedgerRepository.findAllBillLedgerByBillIdWithExp(bills.get(0).getId());
+        List<BillLedger> ledgers = billLedgerRepository.findAllBillLedgerByBillIdWithExp(billId);
+        // 台账中是否有逾期费标志
+        boolean overdueFlag = false;
         for (BillLedger ledger : ledgers) {
             total = total.add(getBillItemNoRepay(ledger.getBillId(), ledger.getRepaymentItem().intValue(), realRepaymentTime));
+            if(BillLedgerItemEnum.OVERDUE_FEE.getCode().intValue() == ledger.getRepaymentItem().intValue()) {
+                overdueFlag = true;
+            }
+        }
+        // 单独处理逾期费
+        if(!overdueFlag) {
+            total = total.add(getBillItemNoRepay(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode(), realRepaymentTime));
         }
         return total;
     }

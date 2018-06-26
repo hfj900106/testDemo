@@ -14,5 +14,5 @@ import javax.validation.constraints.NotNull;
 @Data
 public class RepayPartDetailRequest {
     @NotNull(message = "{param.repay.bidId.isNotEmpty}")
-    private String bidId;
+    private Long bidId;
 }

@@ -53,11 +53,12 @@ public class TransactionService {
     @Autowired
     private TempTableRepository tempTableRepository;
 
+    private static final String timeout = "TIMEOUT";
+
     /**
      * 放款
      */
     public PayResponse loanTransaction(LoanTransactionRequest request) {
-        String timeout="TIMEOUT";
         List<String> listCode = Arrays.asList(BizCodeEnum.PROCESS_LENDING.getCode(), BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.REPAYMENTS.getCode());
         log.info("请求报文：{}", JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));

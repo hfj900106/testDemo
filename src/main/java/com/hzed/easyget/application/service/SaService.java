@@ -3,8 +3,8 @@ package com.hzed.easyget.application.service;
 import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.BillStatusEnum;
 import com.hzed.easyget.application.enums.RepayTypeEnum;
-import com.hzed.easyget.infrastructure.config.sa.SensorsAnalyticsUrl;
-import com.hzed.easyget.infrastructure.consts.SensorsAnalyticsConsts;
+import com.hzed.easyget.infrastructure.config.SaProp;
+import com.hzed.easyget.infrastructure.consts.SaConsts;
 import com.hzed.easyget.infrastructure.repository.SaRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.persistence.ext.entity.SaExt;
@@ -27,7 +27,7 @@ public class SaService {
     private SaRepository saRepository;
 
     @Autowired
-    private SensorsAnalyticsUrl saUrl;
+    private SaProp saUrl;
 
 
     public void inData() {
@@ -103,7 +103,7 @@ public class SaService {
         // EventResult	事件结果	字符串
         properties.put("EventResult", auditSuggest);
         // ProductType	产品名称	字符串
-        properties.put("ProductType", SensorsAnalyticsConsts.projectName);
+        properties.put("ProductType", SaConsts.projectName);
         int loanTimes = calculateLoanTimes(info.getUserId());
         // LoanTimes	第几次借款	数值
         properties.put("LoanTimes", loanTimes);
@@ -188,7 +188,7 @@ public class SaService {
         // InDataID	     进件订单ID	字符串
         properties.put("InDataID", info.getBidId());
         // ProductType	产品名称	字符串    //1:立借、2:爱分期    ProductType	产品名称	字符串
-        properties.put("ProductType", SensorsAnalyticsConsts.projectName);
+        properties.put("ProductType", SaConsts.projectName);
         // RepaymentTime 合约还款日期	日期
         properties.put("RepaymentTime", info.getRealRepaymentTime());
         int loanTimes = calculateLoanTimes(info.getUserId());
@@ -266,7 +266,7 @@ public class SaService {
         //    InDataID	进件订单ID	字符串
         properties.put("InDataID", info.getBidId());
         //    ProductType	产品名称	字符串
-        properties.put("ProductType", SensorsAnalyticsConsts.projectName);
+        properties.put("ProductType", SaConsts.projectName);
         //    RepaymentMethod	还款方式	字符串  全额还款、部分还款
         properties.put("RepaymentMethod", isAlreadyRepayment(info));
         //    RepaymentTime	合约还款日期	日期

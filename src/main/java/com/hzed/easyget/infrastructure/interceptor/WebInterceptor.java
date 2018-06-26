@@ -60,27 +60,27 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         }
         // 校验platform
         PlatformIgnore platformIgnore = mHandler.getMethodAnnotation(PlatformIgnore.class);
-        if(platformIgnore == null) {
+        if (platformIgnore == null) {
             globalHeadr.validatePlatform();
         }
         // 校验imei
         ImeiIgnore imeiIgnore = mHandler.getMethodAnnotation(ImeiIgnore.class);
-        if(imeiIgnore == null) {
+        if (imeiIgnore == null) {
             globalHeadr.validImei();
         }
         // 校验i18n
         I18nIgnore i18nIgnore = mHandler.getMethodAnnotation(I18nIgnore.class);
-        if(i18nIgnore == null) {
+        if (i18nIgnore == null) {
             globalHeadr.validateI18n();
         }
         // 校验version
         VersionIgnore versionIgnore = mHandler.getMethodAnnotation(VersionIgnore.class);
-        if(versionIgnore == null) {
+        if (versionIgnore == null) {
             globalHeadr.validateVersion();
         }
         // 校验appkey
         AppkeyIgnore appkeyIgnore = mHandler.getMethodAnnotation(AppkeyIgnore.class);
-        if(appkeyIgnore == null) {
+        if (appkeyIgnore == null) {
             globalHeadr.validateAppkey();
         }
 

@@ -82,50 +82,6 @@ public class ComService {
         }
     }
 
-    /**
-     * 校验appkey
-     */
-    public void validateAppkey(String appkey) {
-        if (StringUtils.isBlank(appkey)) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_APPKEY);
-        }
-    }
-
-    /**
-     * 校验platform
-     */
-    public void validatePlatform(String platform) {
-        if (StringUtils.isBlank(platform)) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_PLATFORM);
-        }
-    }
-
-    /**
-     * 校验version
-     */
-    public void validateVersion(String version) {
-        if (StringUtils.isBlank(version)) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_VERSION);
-        }
-    }
-
-    /**
-     * 校验i18n
-     */
-    public void validateI18n(String i18n) {
-        if (StringUtils.isBlank(i18n)) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_I18N);
-        }
-    }
-
-    /**
-     * 校验imei
-     */
-    public void validateImei(String imei) {
-        if (StringUtils.isBlank(imei)) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_IMEI);
-        }
-    }
 
     /**
      * 校验token参数

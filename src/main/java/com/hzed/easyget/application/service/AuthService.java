@@ -201,27 +201,26 @@ public class AuthService {
         map.put("timeStamp", timeStamp);
         map.put("smsCode", request.getSmsCode());
         log.info("请求风控URL：{},参数：{}","",JSONObject.toJSONString(map));
-        //TODO 暂时注释
-//        RiskResponse response = restService.postJson("http://10.10.20.203:9611/api/riskOperator/sendSmsCode", map, RiskResponse.class);
-//        log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
-//        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_FREQ)) {
-//            //认证频繁，要等一分钟再认证
-//            throw new WarnException(BizCodeEnum.FREQUENTLY_AUTH_RISK);
-//        }
-//        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_ERROR)) {
-//            //认证失败，删除重发标志
-//            redisService.clearCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
-//            throw new WarnException(BizCodeEnum.FAIL_AUTH);
-//        }
-//        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_HAVE_SEND)) {
-//            //验证码错误，需要输入验证码，后台自动让第三方接口重发验证码
-//            throw new WarnException(BizCodeEnum.NEED_SMS_AUTH_RISK);
-//        }
-//        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
-//            //已经认证过
-//            throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
-//        }
-//        afterResponse(response, user.getUserId(), AuthCodeEnum.SMS.getCode(), "运营商认证");
+        RiskResponse response = restService.postJson("http://10.10.20.203:9611/api/riskOperator/sendSmsCode", map, RiskResponse.class);
+        log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
+        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_FREQ)) {
+            //认证频繁，要等一分钟再认证
+            throw new WarnException(BizCodeEnum.FREQUENTLY_AUTH_RISK);
+        }
+        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_ERROR)) {
+            //认证失败，删除重发标志
+            redisService.clearCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
+            throw new WarnException(BizCodeEnum.FAIL_AUTH);
+        }
+        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_HAVE_SEND)) {
+            //验证码错误，需要输入验证码，后台自动让第三方接口重发验证码
+            throw new WarnException(BizCodeEnum.NEED_SMS_AUTH_RISK);
+        }
+        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
+            //已经认证过
+            throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
+        }
+        afterResponse(response, user.getUserId(), AuthCodeEnum.SMS.getCode(), "运营商认证");
         //认证成功，删除重发标志
         redisService.clearCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
     }

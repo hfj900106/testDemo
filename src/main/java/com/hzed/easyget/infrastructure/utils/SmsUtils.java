@@ -1,5 +1,6 @@
 package com.hzed.easyget.infrastructure.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
@@ -31,7 +32,9 @@ public class SmsUtils {
         smsDownRequest.setSourceadd("hztele");
         smsDownRequest.setExtno(123);
         smsDownRequest.setContent(content);
+        log.info("发送短信请求参数：{}",JSONObject.toJSONString(smsDownRequest));
         NxSmsDownResponse smsDownResponse = NxSmsUtil.smsSend(smsDownRequest);
+        log.info("发送短信返回数据：{}",JSONObject.toJSONString(smsDownResponse));
         //发送失败
         if(!SmsCodeEnum.OK.getKey().equals(smsDownResponse.getCode())){
             throw new ComBizException(BizCodeEnum.SMS_CODE_SEND_FAIL);
@@ -42,8 +45,6 @@ public class SmsUtils {
         if (EnvEnum.isTestEnv(env) ) {
             return "0000";
         }
-        //TODO 开发调试用
-//        return StringUtils.leftPad(String.valueOf(new Random().nextInt(9999)), 4, "0");
-        return "0000";
+        return StringUtils.leftPad(String.valueOf(new Random().nextInt(9999)), 4, "0");
     }
 }

@@ -55,6 +55,8 @@ public class JobService {
     private UserRepository userRepository;
     @Autowired
     private UserTransactionRepository transactionRepository;
+    @Autowired
+    private SaService saService;
 
 
     /**
@@ -195,4 +197,24 @@ public class JobService {
     }
 
 
+    /**
+     * 神策进件
+     */
+    public void inData() {
+        saService.inData();
+    }
+
+    /**
+     * 神策借款成功
+     */
+    public void loanSuccess() {
+        saService.loanSuccess();
+    }
+
+    /**
+     * 神策还款成功
+     */
+    public void repaymentSuccess() {
+        saService.repaymentSuccess();
+    }
 }

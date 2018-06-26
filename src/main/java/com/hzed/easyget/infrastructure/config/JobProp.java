@@ -20,4 +20,10 @@ public class JobProp {
     private String repayInfoFlowCron;
     private boolean repayFail;
     private String repayFailCron;
+    private boolean inData;
+    private String inDataCron;
+    private boolean loanSuccess;
+    private String loanSuccessCron;
+    private boolean repaymentSuccess;
+    private String repaymentSuccessCron;
 }

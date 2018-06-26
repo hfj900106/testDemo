@@ -136,6 +136,13 @@
             <version>RELEASE</version>
         </dependency>
 
+        <!-- 集成 Sensors Analytics SDK -->
+        <dependency>
+            <groupId>com.sensorsdata.analytics.javasdk</groupId>
+            <artifactId>SensorsAnalyticsSDK</artifactId>
+            <version>3.1.6</version>
+        </dependency>
+
     </dependencies>
 
     <build>

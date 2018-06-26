@@ -76,6 +76,18 @@ system:
     # 还款失败
     repayFail: false # 启动标志
     repayFailCron: 0/5 * * * * ? # 周期
+    # 神策进件
+    inData: false   # 启动标志
+    inDataCron: 0/5 * * * * ? # 周期
+    # 神策借款成功
+    loanSuccess: false    # 启动标志
+    loanSuccessCron: 0/5 * * * * ? # 周期
+    # 神策还款
+    repaymentSuccess: false   # 启动标志
+    repaymentSuccessCron: 0/5 * * * * ?  # 周期
 
+# 神策配置
+sensorsAnalyticsUrl:
+    saServerLogUrl: /logs/service_log.log    # 神策测试环境和生产环境LogAgent日志目录
 
 #======================================= 系统参数 结束 =======================================#

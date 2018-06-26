@@ -84,7 +84,7 @@ public class JobService {
                     times = tempTable.getReRunTimes().intValue() + 1;
                     //更新中间表
                     TempTable tempUpdate = buildTempTableToUpdate(tempId,(byte)times,"推送资产");
-                    tempTableRepository.upDateTemp(tempUpdate);
+                    tempTableRepository.updateTemp(tempUpdate);
                 }
                 // 推送-调风控接口
                 Long timeStamp = System.currentTimeMillis();
@@ -107,7 +107,7 @@ public class JobService {
                 log.info("标ID：{}，推送失败",bidId);
                 //更新中间表
                 TempTable tempUpdate = buildTempTableToUpdate(tempId,(byte)times,"推送失败");
-                tempTableRepository.upDateTemp(tempUpdate);
+                tempTableRepository.updateTemp(tempUpdate);
             }
         });
     }
@@ -158,23 +158,27 @@ public class JobService {
             MdcUtil.putTrace();
             Long bidId = bid.getBidId();
             log.info("开始处理标ID：{}", bidId);
-            //插入中间表
             Long tempId = IdentifierGenerator.nextId();
-            tempTableRepository.insertJob(TempTable.builder().id(tempId).jobName(ComConsts.PUSH_BANK_TASK).relaseId(bidId).remark("放款").reRunTimes((byte) 1).build());
-            LoanTransactionRequest loan = bidRepository.findLoanTransaction(bidId);
-            if (!ObjectUtils.isEmpty(loan)) {
-                //交易编号
-                loan.setTransactionId(IdentifierGenerator.nextSeqNo());
-                //交易流水
-                loan.setRequestNo(tempId.toString());
-                //收款人所在国
-                loan.setPayeeCountry("ID");
-                PayResponse response = transactionService.loanTransaction(loan);
-                if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
-                    transactionService.lendingCallback(bidId, tempId, loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
-                } else {
-                    transactionService.insertUsrTransactionInfo(bidId, loan.getTransactionId(), TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(), null);
+            try {
+                //插入中间表
+                tempTableRepository.insertJob(TempTable.builder().id(tempId).jobName(ComConsts.PUSH_BANK_TASK).relaseId(bidId).remark("放款").reRunTimes((byte) 1).build());
+                LoanTransactionRequest loan = bidRepository.findLoanTransaction(bidId);
+                if (!ObjectUtils.isEmpty(loan)) {
+                    //交易编号
+                    loan.setTransactionId(IdentifierGenerator.nextSeqNo());
+                    //交易流水
+                    loan.setRequestNo(tempId.toString());
+                    PayResponse response = transactionService.loanTransaction(loan);
+                    if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
+                        transactionService.lendingCallback(bidId, tempId, loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
+                    } else {
+                        transactionService.insertUsrTransactionInfo(bidId, loan.getTransactionId(), TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(), null);
+                    }
                 }
+            }catch (Exception e){
+                log.info("标的：{}放款失败处理-失败", bidId);
+                //更新中间表
+                tempTableRepository.updateTemp(TempTable.builder().id(Long.valueOf(tempId)).updateTime(LocalDateTime.now()).remark("放款失败：" + e.getMessage()).build());
             }
         });
 
@@ -208,7 +212,7 @@ public class JobService {
                     times = tempTable.getReRunTimes().intValue() + 1;
                     //更新中间表
                     TempTable tempUpdate = buildTempTableToUpdate(tempId,(byte)times,"还款失败处理-待处理");
-                    tempTableRepository.upDateTemp(tempUpdate);
+                    tempTableRepository.updateTemp(tempUpdate);
                 }
                 userTransaction.setStatus((byte) 3);
                 userTransaction.setUpdateTime(LocalDateTime.now());
@@ -220,7 +224,7 @@ public class JobService {
                 log.info("标的：{}还款失败处理-失败", userTransaction.getBidId());
                 //更新中间表
                 TempTable tempUpdate = buildTempTableToUpdate(tempId,(byte)times,"还款失败处理-失败");
-                tempTableRepository.upDateTemp(tempUpdate);
+                tempTableRepository.updateTemp(tempUpdate);
             }
 
 

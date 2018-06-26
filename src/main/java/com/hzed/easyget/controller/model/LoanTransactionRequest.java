@@ -26,7 +26,7 @@ public class LoanTransactionRequest {
      * 收款所在国
      */
     @NotBlank(message = "收款所在国不能为空")
-    private String payeeCountry;
+    private String payeeCountry="ID";
     /**
      * 银行名称
      */

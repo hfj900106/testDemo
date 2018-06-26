@@ -1,6 +1,5 @@
 package com.hzed.easyget.controller.model;
 
-import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,4 +22,8 @@ public class PayMentResponse {
      * 还款状态
      */
     private String status;
+    /**
+     * 标的id
+     */
+    private Long bidId;
 }

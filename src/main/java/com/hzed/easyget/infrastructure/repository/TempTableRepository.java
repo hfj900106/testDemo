@@ -47,7 +47,7 @@ public class TempTableRepository {
     }
 
 
-    public void upDateTemp(TempTable tempTable) {
+    public void updateTemp(TempTable tempTable) {
         tempMapper.updateByPrimaryKeySelective(tempTable);
     }
 

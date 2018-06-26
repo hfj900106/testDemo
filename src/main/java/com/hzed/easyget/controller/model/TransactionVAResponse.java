@@ -14,7 +14,7 @@ public class TransactionVAResponse {
     /**
      * va码创建时间
      */
-    private String  createTime;
+    private long  createTime;
     /**
      * 交易方式
      */

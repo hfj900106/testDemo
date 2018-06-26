@@ -23,10 +23,12 @@ spring:
     basename: i18n/messages
     encoding: utf-8
     cacheSeconds: 86400 # 24小时
+
 # 日志文件配置
 logging:
   config: classpath:config/logback-spring.xml # 配置文件路径
   logHome: D:/logs/easy-get # 日志路径
+  saLogPath: ${logging.logHome}/sa.log    # 神策测试环境和生产环境LogAgent日志目录
   appNameCN: 印尼借贷项目 # 应用中文名
   envNameCN: 开发环境 # 环境中文名
   emailTo: guichang@hzed.com # 邮件接收者，多个用逗号隔开
@@ -61,7 +63,6 @@ system:
   tokenExpire: 7 # token失效时间 7 天
   expected_audit_time_interval: 1440 #预计审核时间间隔 单位分
   expected_lending_time_interval: 60 #预计放款时间间隔 单位分
-  saServerLogUrl: /logs/service_log.log    # 神策测试环境和生产环境LogAgent日志目录
 
   # 定时任务
   job:

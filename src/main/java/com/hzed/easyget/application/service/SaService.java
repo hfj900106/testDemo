@@ -110,7 +110,7 @@ public class SaService {
 
         try {
             log.info("SensorsAnalytics inData track method begin, bidId:{}, userId:{}, bidStatus:{}" , info.getBidId(), info.getUserId(), info.getBidStatus());
-            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaServerLogUrl()));
+            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaLogPath()));
             sa.track(String.valueOf(info.getUserId()), true, "InData", properties);
             sa.flush();
             log.info("SensorsAnalytics inData track method end.");
@@ -197,7 +197,7 @@ public class SaService {
 
         try {
             log.info("SensorsAnalytics loanSuccess track method begin, bidId:{}, userId:{}, bidStatus:{}" , info.getBidId(), info.getUserId(), info.getBidStatus());
-            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaServerLogUrl()));
+            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaLogPath()));
             sa.track(String.valueOf(info.getUserId()), true, "LoanSuccessed", properties);
             sa.flush();
             log.info("SensorsAnalytics loanSuccess track method end.");
@@ -279,7 +279,7 @@ public class SaService {
         try {
             log.info("SensorsAnalytics repaymentSuccess track method begin, bidId:{}, userId:{}, bidStatus:{}" , info.getBidId(), info.getUserId(), info.getBidStatus());
 
-            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaServerLogUrl()));
+            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaLogPath()));
             sa.track(String.valueOf(info.getUserId()), true, "Repayment", properties);
             sa.flush();
             log.info("SensorsAnalytics repaymentSuccess track method end.");

@@ -67,8 +67,8 @@ public class HomeController {
 
     @ModuleFunc("首页检测借款状态")
     @PostMapping("/checkLoanJump")
-    public void checkLoanJump() {
-        homeService.checkLoanJump();
+    public CheckLoanResponse checkLoanJump() {
+        return homeService.checkLoanJump();
     }
 
     @ModuleFunc("首页检测还款状态")

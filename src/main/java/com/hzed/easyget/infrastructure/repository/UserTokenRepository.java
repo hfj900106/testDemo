@@ -27,7 +27,7 @@ public class UserTokenRepository {
     @Transactional(rollbackFor = Exception.class)
     public int updateByUserIdAndImei(UserToken userToken) {
         UserTokenExample example = new UserTokenExample();
-        example.createCriteria().andIdEqualTo(userToken.getId());
+        example.createCriteria().andIdEqualTo(userToken.getUserId());
         return userTokenMapper.updateByExampleSelective(userToken, example);
     }
 

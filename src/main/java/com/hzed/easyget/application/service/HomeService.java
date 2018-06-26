@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Objects;
 
@@ -79,7 +78,7 @@ public class HomeService {
 
         AppVersionResponse appVersionResponse = new AppVersionResponse();
         String platform = RequestUtil.getGlobalHead().getPlatform();
-        String oldVersion = request.getOldVersion();
+        String oldVersion = String.valueOf(request.getOldVersion());
         String verDicCode;
         String updateDicCode;
         if (AppVersionEnum.ANDROID.getCode().equals(platform)) {
@@ -131,6 +130,7 @@ public class HomeService {
         String imei = RequestUtil.getGlobalHead().getImei();
         String newToken = JwtUtil.createToken(globalUser);
         UserToken userToken = new UserToken();
+        userToken.setUserId(userId);
         userToken.setUpdateTime(LocalDateTime.now());
         userToken.setToken(newToken);
         userToken.setImei(imei);
@@ -200,7 +200,8 @@ public class HomeService {
 
     }
 
-    public void checkLoanJump() {
+    public CheckLoanResponse checkLoanJump() {
+        CheckLoanResponse checkLoanResponse = new CheckLoanResponse();
         Long userId = RequestUtil.getGlobalUser().getUserId();
         //bid为空或访问记录表不为空无需跳转，0000为无需跳转，其他需跳转
         List<Bid> bidList = bidRepository.findByUserId(userId);
@@ -208,9 +209,11 @@ public class HomeService {
             //首页检测跳转，访问记录表为空需跳转，不为空无需跳转
             UserLoanVisit userVisitRecord = userLoanVisitRepository.findByUserIdAndBidId(userId, bid.getId());
             if (userVisitRecord == null) {
-                throw new WarnException(BizCodeEnum.NEED_JUMP);
+                checkLoanResponse.setBid(bid.getId());
+                throw new WarnException(BizCodeEnum.NEED_JUMP,checkLoanResponse);
             }
         });
+        return checkLoanResponse;
     }
 
     public CheckRepaymentResponse checkRepayment() {

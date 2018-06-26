@@ -3,7 +3,7 @@ package com.hzed.easyget.infrastructure.annotation.head;
 import java.lang.annotation.*;
 
 /**
- * 忽略Platform验证
+ * 忽略Platform（来源渠道）验证
  *
  * @author guichang
  * @date 2018/05/16

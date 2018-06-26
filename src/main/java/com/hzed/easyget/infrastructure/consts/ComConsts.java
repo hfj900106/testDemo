@@ -32,7 +32,7 @@ public class ComConsts {
      * 牛信
      */
     public static final String NX = "NX";
-    public static final int BULK_SMS_OK = 200;
+    public static final int BULK_SMS_OK = 0;
     public static final int IS_ANDROID = 1;
     public static final int IS_IOS = 2;
     /**

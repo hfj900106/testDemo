@@ -6,7 +6,7 @@ import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.controller.model.IDAreaRequest;
 import com.hzed.easyget.controller.model.IDAreaResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
-import com.hzed.easyget.infrastructure.annotation.head.HeaderIgnore;
+import com.hzed.easyget.infrastructure.annotation.head.IgnoreHeader;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +30,14 @@ public class DictController {
     @Autowired
     private DictService dictService;
 
-    @HeaderIgnore
+    @IgnoreHeader
     @ModuleFunc("根据module清除字典缓存")
     @GetMapping("/clearModuleCache/{module}")
     public void clearModuleCache(@PathVariable String module) {
         dictService.clearModuleCache(module);
     }
 
-    @HeaderIgnore
+    @IgnoreHeader
     @ModuleFunc("根据moduleAndI18n清除字典缓存")
     @GetMapping("/clearModuleAndI18nCache/{module}/{i18n}")
     public void clearModuleAndI18nCache(@PathVariable String module, @PathVariable String i18n) {

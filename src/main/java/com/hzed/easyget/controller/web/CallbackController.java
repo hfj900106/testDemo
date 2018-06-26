@@ -4,7 +4,7 @@ import com.hzed.easyget.application.service.CallbackService;
 import com.hzed.easyget.controller.model.PushBidCallbackRequest;
 import com.hzed.easyget.controller.model.PushBidCallbackResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
-import com.hzed.easyget.infrastructure.annotation.head.HeaderIgnore;
+import com.hzed.easyget.infrastructure.annotation.head.IgnoreHeader;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class CallbackController {
 
     @ModuleFunc(value = "风控审核回调", isCommonResponse = false)
     @PostMapping("/riskCallback/pushBidCallback")
-    @HeaderIgnore
+    @IgnoreHeader
     public PushBidCallbackResponse pushBidCallback(@Valid @RequestBody PushBidCallbackRequest request) {
         return callbackService.pushBidCallback(request);
     }

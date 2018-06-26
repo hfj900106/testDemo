@@ -2,8 +2,8 @@ package com.hzed.easyget.infrastructure.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.hzed.easyget.application.service.ComService;
-import com.hzed.easyget.infrastructure.annotation.head.HeaderIgnore;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
+import com.hzed.easyget.infrastructure.annotation.head.IgnoreHeader;
 import com.hzed.easyget.infrastructure.annotation.head.TokenIgnore;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.utils.ComUtil;
@@ -51,8 +51,8 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         }
 
         // 请求头忽略标志
-        HeaderIgnore headerIgnore = mHandler.getMethodAnnotation(HeaderIgnore.class);
-        if (headerIgnore != null) {
+        IgnoreHeader ignoreHeader = mHandler.getMethodAnnotation(IgnoreHeader.class);
+        if (ignoreHeader != null) {
             return true;
         }
 
@@ -61,13 +61,25 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         // header中一些必要参数校验
         comService.validateHeader(globalHeadr);
 
-        // token验证
+//        token验证
         TokenIgnore tokenIgnore = mHandler.getMethodAnnotation(TokenIgnore.class);
         if (tokenIgnore == null) {
             // 校验token
             comService.validateToken(globalHeadr);
             log.info("用户信息：{}", JSON.toJSONString(RequestUtil.getGlobalUser()));
         }
+
+//        TokenIgnore tokenIgnore = mHandler.getMethodAnnotation(TokenIgnore.class);
+//        if(tokenIgnore == null) {
+//            // TODO
+//        }
+//
+//        PlatformIgnore platformIgnore = mHandler.getMethodAnnotation(PlatformIgnore.class);
+//        if(platformIgnore == null) {
+//            // TODO
+//        }
+//
+//        // ...
 
 
         return true;

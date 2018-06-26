@@ -81,14 +81,14 @@ system:
     repayFail: false # 启动标志
     repayFailCron: 0/5 * * * * ? # 周期
     # 神策进件
-    inData: false   # 启动标志
-    inDataCron: 0/5 * * * * ? # 周期
+    saInData: false   # 启动标志
+    saInDataCron: 0/5 * * * * ? # 周期
     # 神策借款成功
-    loanSuccess: false    # 启动标志
-    loanSuccessCron: 0/5 * * * * ? # 周期
+    saLoanSuccess: false    # 启动标志
+    saLoanSuccessCron: 0/5 * * * * ? # 周期
     # 神策还款
-    repaymentSuccess: false   # 启动标志
-    repaymentSuccessCron: 0/5 * * * * ?  # 周期
+    saRepaymentSuccess: true   # 启动标志
+    saRepaymentSuccessCron: 0/5 * * * * ?  # 周期
 
 
 

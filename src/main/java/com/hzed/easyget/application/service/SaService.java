@@ -30,7 +30,7 @@ public class SaService {
     private SaProp saUrl;
 
 
-    public void inData() {
+    public void saInData() {
         try {
             log.info("SensorsAnalytics inData begin.");
 
@@ -138,7 +138,7 @@ public class SaService {
         return loanTimes;
     }
 
-    public void loanSuccess() {
+    public void saLoanSuccess() {
         try {
             log.info("SensorsAnalytics loanSuccess begin.");
             List<SaExt> list = saRepository.loanSuccessList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
@@ -215,7 +215,7 @@ public class SaService {
         saRepository.batchSaveLoanSuccess(list);
     }
 
-    public void repaymentSuccess() {
+    public void saRepaymentSuccess() {
         try {
             log.info("SensorsAnalytics repaymentSuccess begin.");
             List<SaExt> list = saRepository.repaymentSuccessList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));

@@ -15,8 +15,8 @@ public enum AppVersionEnum {
     IOS_VERSION("ios_update","苹果版本号"),
     ANDROID_UPDATE("android_update","安卓版本号更新"),
     IOS_UPDATE("ios_update","苹果版本号更新"),
-    NOT_UPDATE("0","不需要更新"),
-    HAS_UPDATE("1","需要更新");
+    NOT_UPDATE("1","不需要更新"),
+    HAS_UPDATE("0","需要更新");
     private String code;
     private String msg;
 

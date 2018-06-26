@@ -230,17 +230,17 @@ public class HomeService {
                     // 交易中
                     result.setStatus(transaction.getStatus());
                     result.setConfirmTime(DateUtil.localDateTimeToTimestamp(transaction.getConfirmTime()));
-                    throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
+                    throw new WarnException(BizCodeEnum.MSG_REPAY_APPLY, result);
                 } else {
                     // 交易成功失败都添加访问记录
                     UserRepaymentVisit repaymentVisit = UserRepaymentVisit.builder().userId(userId).transactionId(transaction.getId()).build();
                     userRepaymentVisitRepository.insertUserRepaymentVisit(repaymentVisit);
                     result.setStatus(status);
-                    throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
+                    throw new WarnException(BizCodeEnum.MSG_REPAY_APPLY, result);
                 }
             } else {
                 // 场景3、提交申请还款。未提交凭证
-                throw new ComBizException(BizCodeEnum.MSG_REPAY_UNSUCCESS, result);
+                throw new WarnException(BizCodeEnum.MSG_REPAY_UNSUCCESS, result);
             }
         }
         // 场景1、2，是否借款即将到期、逾期
@@ -256,11 +256,11 @@ public class HomeService {
             }
             result.setId(userExt.getId());
             if (days < 0) {
-                throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_BEFORE, result, new Object[]{Math.abs(days)});
+                throw new WarnException(BizCodeEnum.MSG_BID_OVERDUE_BEFORE, result, new Object[]{Math.abs(days)});
             } else if (days == 0) {
-                throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_TODAY, result);
+                throw new WarnException(BizCodeEnum.MSG_BID_OVERDUE_TODAY, result);
             } else {
-                throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_AFTER, result, new Object[]{days});
+                throw new WarnException(BizCodeEnum.MSG_BID_OVERDUE_AFTER, result, new Object[]{days});
             }
         }
         return result;

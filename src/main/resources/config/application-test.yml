@@ -2,13 +2,13 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://10.10.30.91:3306/easy-get-test?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
-    username: root
-    password: 123456
+    username: ENC(djxDOCrXhNQN5FAfcpTPIw==) # 用户密文 明文用户：root
+    password: ENC(piWM79kO6kiDDcjR2jhwAw==) # 密码密文 明文密码：123456
 # 日志文件配置
 logging:
   logHome: /work/easy-get-8150/logs # 日志路径
   envNameCN: 测试环境 # 环境中文名
-  emailTo: guichang@hzed.com,wuchengwu@hzed.com,huangfengjing@hzed.com # 邮件接收者，多个用逗号隔开
+  emailTo: guichang@hzed.com,wuchengwu@hzed.com,huangfengjing@hzed.com,dengzhenhao@hzed.com,zhangruilin@hzed.com # 邮件接收者，多个用逗号隔开
 
 # 第三方
 thirdParty:

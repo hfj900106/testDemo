@@ -8,7 +8,7 @@ import com.hzed.easyget.controller.model.SubmitLoanRequest;
 import com.hzed.easyget.controller.model.SubmitLoanResponse;
 import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
-import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.UserLoanVisitRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -68,7 +68,7 @@ public class LoanService {
     public SubmitLoanResponse submitLoan(SubmitLoanRequest request) {
         Long userId = RequestUtil.getGlobalUser().getUserId();
         if (!comService.isLoan(userId)) {
-            throw new ComBizException(BizCodeEnum.BID_EXISTS);
+            throw new WarnException(BizCodeEnum.BID_EXISTS);
         }
         Bid bid = new Bid();
         Long bidId = IdentifierGenerator.nextId();

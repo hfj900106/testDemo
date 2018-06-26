@@ -84,7 +84,7 @@ system:
     saLoanSuccess: false    # 启动标志
     saLoanSuccessCron: 0/5 * * * * ? # 周期
     # 神策还款
-    saRepaymentSuccess: true   # 启动标志
+    saRepaymentSuccess: false   # 启动标志
     saRepaymentSuccessCron: 0/5 * * * * ?  # 周期
 
 

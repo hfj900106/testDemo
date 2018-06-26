@@ -1,10 +1,10 @@
 # 应用端口号
-server.port: 8060
+server.port: 8150
 
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://10.10.30.91:3306/easy-get?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
+    url: jdbc:mysql://10.10.30.91:3306/easy-get-test?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
     username: root
     password: 123456
 # 日志文件配置

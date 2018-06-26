@@ -55,9 +55,6 @@ thirdParty:
     operatorSendSmsCodeUrl:   /api/riskOperator/createTaskAndlogin  #运营商-发送验证码
     operatorAuthUrl:          /app/riskOperator/sendSmsCode  #运营商-输入验证码认证
 
-
-
-
 #======================================= 系统参数 开始 =======================================#
 system:
   imgUploadPath: c:/imgUpload # 上传图片文件目录

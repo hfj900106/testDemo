@@ -512,10 +512,10 @@ public class RepayService {
             compleRequest.setRequestNo(IdentifierGenerator.nextSeqNo());
             log.info("完成还款接口请求报文：{}", JSON.toJSONString(compleRequest));
             String result = restService.doPostJson(prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(compleRequest));
+            log.info("完成还款接口返回报文：{}", result);
             if (result.equals(timeout)) {
                 throw new ComBizException(BizCodeEnum.RECEIVER_TRANSACTION_ERROR);
             }
-            log.info("完成还款接口返回报文：{}", result);
             response = JSON.parseObject(result, PayResponse.class);
             //判断返回状态 0000 0001 0002
             if (!listCode.contains(response.getCode())) {

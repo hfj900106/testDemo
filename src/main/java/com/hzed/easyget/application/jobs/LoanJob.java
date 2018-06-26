@@ -49,20 +49,20 @@ public class LoanJob {
     }
 
     @JobAnnotation("神策进件")
-    @Scheduled(cron = "0/5 * * * * ?")
-    public void inData() throws Exception {
-        jobService.inData();
+    @Scheduled(cron = "${system.job.saInDataCron}")
+    public void saInData() throws Exception {
+        jobService.saInData();
     }
 
     @JobAnnotation("神策借款成功")
-    @Scheduled(cron = "0/5 * * * * ?")
-    public void loanSuccess() throws Exception {
-        jobService.loanSuccess();
+    @Scheduled(cron = "${system.job.saLoanSuccessCron}")
+    public void saLoanSuccess() throws Exception {
+        jobService.saLoanSuccess();
     }
 
     @JobAnnotation("神策还款成功")
-    @Scheduled(cron = "0/5 * * * * ?")
-    public void repaymentSuccess() throws Exception {
-        jobService.repaymentSuccess();
+    @Scheduled(cron = "${system.job.saRepaymentSuccessCron}")
+    public void saRepaymentSuccess() throws Exception {
+        jobService.saRepaymentSuccess();
     }
 }

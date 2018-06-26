@@ -244,21 +244,21 @@ public class JobService {
     /**
      * 神策进件
      */
-    public void inData() {
-        saService.inData();
+    public void saInData() {
+        saService.saInData();
     }
 
     /**
      * 神策借款成功
      */
-    public void loanSuccess() {
-        saService.loanSuccess();
+    public void saLoanSuccess() {
+        saService.saLoanSuccess();
     }
 
     /**
      * 神策还款成功
      */
-    public void repaymentSuccess() {
-        saService.repaymentSuccess();
+    public void saRepaymentSuccess() {
+        saService.saRepaymentSuccess();
     }
 }

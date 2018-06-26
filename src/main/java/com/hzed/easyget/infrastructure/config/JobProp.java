@@ -13,17 +13,10 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "system.job")
 public class JobProp {
     private boolean pushBid;
-    private String pushBidCron;
     private boolean bankLoan;
-    private String bankLoanCron;
     private boolean repayInfoFlow;
-    private String repayInfoFlowCron;
     private boolean repayFail;
-    private String repayFailCron;
-    private boolean inData;
-    private String inDataCron;
-    private boolean loanSuccess;
-    private String loanSuccessCron;
-    private boolean repaymentSuccess;
-    private String repaymentSuccessCron;
+    private boolean saInData;
+    private boolean saLoanSuccess;
+    private boolean saRepaymentSuccess;
 }

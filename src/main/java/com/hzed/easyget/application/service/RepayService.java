@@ -62,7 +62,8 @@ public class RepayService {
     private PayProp prop;
     @Autowired
     private FileService fileService;
-    private static final String timeout="TIMEOUT";
+
+    private static final String timeout = "TIMEOUT";
 
     public RepayListResponse repaidList(RepayListRequest request) {
         RepayListResponse repayListResponse = new RepayListResponse();
@@ -537,6 +538,7 @@ public class RepayService {
 
     /**
      * 还款成功信息流
+     *
      * @param userTransaction 交易对象
      */
     public void repaymentSuccess(UserTransaction userTransaction) {

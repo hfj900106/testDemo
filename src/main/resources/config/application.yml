@@ -55,12 +55,16 @@ thirdParty:
     operatorSendSmsCodeUrl:   /api/riskOperator/createTaskAndlogin  #运营商-发送验证码
     operatorAuthUrl:          /app/riskOperator/sendSmsCode  #运营商-输入验证码认证
 
+
+
+
 #======================================= 系统参数 开始 =======================================#
 system:
   imgUploadPath: c:/imgUpload # 上传图片文件目录
   tokenExpire: 7 # token失效时间 7 天
   expected_audit_time_interval: 1440 #预计审核时间间隔 单位分
   expected_lending_time_interval: 60 #预计放款时间间隔 单位分
+  saServerLogUrl: /logs/service_log.log    # 神策测试环境和生产环境LogAgent日志目录
 
   # 定时任务
   job:
@@ -76,6 +80,16 @@ system:
     # 还款失败
     repayFail: false # 启动标志
     repayFailCron: 0/5 * * * * ? # 周期
+    # 神策进件
+    inData: false   # 启动标志
+    inDataCron: 0/5 * * * * ? # 周期
+    # 神策借款成功
+    loanSuccess: false    # 启动标志
+    loanSuccessCron: 0/5 * * * * ? # 周期
+    # 神策还款
+    repaymentSuccess: false   # 启动标志
+    repaymentSuccessCron: 0/5 * * * * ?  # 周期
+
 
 
 #======================================= 系统参数 结束 =======================================#

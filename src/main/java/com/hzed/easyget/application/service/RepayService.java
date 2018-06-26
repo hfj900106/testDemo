@@ -346,19 +346,18 @@ public class RepayService {
     }
 
     public RepayPartDetailResponse repayPartDetail(RepayPartDetailRequest request) {
-        String bidStr = request.getBidId();
-        Long bidId = Long.valueOf(bidStr);
+        Long bidId = request.getBidId();
         //获取标的待还总费用
         BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, LocalDateTime.now());
         //获取账单待还逾期费
-        Bill bill = billRepository.findByBid(bidId);
-        BigDecimal billOverFeeNoRepay = comService.getBillOverFeeNoRepay(bill.getId(), LocalDateTime.now());
+//        Bill bill = billRepository.findByBid(bidId);
+//        BigDecimal billOverFeeNoRepay = comService.getBillOverFeeNoRepay(bill.getId(), LocalDateTime.now());
         //待应还总额
-        BigDecimal totalRepayAmount = bidNoRepay.add(billOverFeeNoRepay);
+//        BigDecimal totalRepayAmount = bidNoRepay.add(billOverFeeNoRepay);
         Bid bid = bidRepository.findByIdWithExp(bidId);
         //todo 计算最小应还金额
 
-        return RepayPartDetailResponse.builder().totalAmount(totalRepayAmount.toString()).inAccount(bid.getInAccount()).build();
+        return RepayPartDetailResponse.builder().totalAmount(bidNoRepay.toString()).inAccount(bid.getInAccount()).build();
     }
 
     /**
@@ -373,7 +372,7 @@ public class RepayService {
         //查询标的信息
         Bid bid = bidRepository.findById(bidId);
         if (ObjectUtils.isEmpty(bid)) {
-            throw new ComBizException(BizCodeEnum.NOT_INDONESIA_PRODUCT);
+            throw new ComBizException(BizCodeEnum.NOT_INDONESIA_PRODUCT, new Object[]{bid});
         }
         //先查询是否有交易记录
         UserTransaction trance;
@@ -384,6 +383,7 @@ public class RepayService {
                 .andStatusEqualTo(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
                 .andRepaymentTypeEqualTo(flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
         trance = userTransactionRepository.findoldTrance(userTransactionExample);
+        String remark = flag ? "全部还款" : "部分还款";
         if (ObjectUtils.isEmpty(trance)) {
             //生成交易记录
             trance = UserTransaction.builder()
@@ -398,12 +398,12 @@ public class RepayService {
                     .status(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
                     .repaymentType(flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue())
                     .createTime(LocalDateTime.now())
-                    .remark(flag ? "全部还款" : "部分还款").build();
+                    .remark(remark).build();
             userTransactionRepository.insertSelective(trance);
         } else {
             trance.setRepaymentType(flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
             trance.setAmount(amount);
-            trance.setRemark(flag ? "全部还款" : "部分还款");
+            trance.setRemark(remark);
             userTransactionRepository.transactionUpdateByKey(trance);
         }
         return new PayMentIdResponse(trance.getId());

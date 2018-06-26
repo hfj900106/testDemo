@@ -48,4 +48,21 @@ public class LoanJob {
         jobService.repayFail();
     }
 
+    @JobAnnotation("神策进件")
+    @Scheduled(cron = "0/5 * * * * ?")
+    public void inData() throws Exception {
+        jobService.inData();
+    }
+
+    @JobAnnotation("神策借款成功")
+    @Scheduled(cron = "0/5 * * * * ?")
+    public void loanSuccess() throws Exception {
+        jobService.loanSuccess();
+    }
+
+    @JobAnnotation("神策还款成功")
+    @Scheduled(cron = "0/5 * * * * ?")
+    public void repaymentSuccess() throws Exception {
+        jobService.repaymentSuccess();
+    }
 }

@@ -7,6 +7,7 @@ spring:
 # 日志文件配置
 logging:
   logHome: /work/easy-get-8150/logs # 日志路径
+  saLogPath: /logs/sa.log # 神策测试环境和生产环境LogAgent日志目录
   envNameCN: 测试环境 # 环境中文名
   emailTo: guichang@hzed.com,wuchengwu@hzed.com,huangfengjing@hzed.com # 邮件接收者，多个用逗号隔开
 

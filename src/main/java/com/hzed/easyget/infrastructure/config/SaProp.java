@@ -6,13 +6,13 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * 神策配置
+ *
  * @author wuchengwu
  * @since 2018/6/9
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "system")
+@ConfigurationProperties(prefix = "logging")
 public class SaProp {
-
-    private String saServerLogUrl;
+    private String saLogPath;
 }

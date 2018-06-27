@@ -234,4 +234,16 @@ public final class DateUtil {
             return new Date();
         }
     }
+
+    public static boolean compareDay(LocalDateTime localTime){
+        LocalDateTime startTime = LocalDate.now().atTime(0, 0, 0);
+        LocalDateTime endTime = LocalDate.now().atTime(23, 59, 59);
+
+        //如果大于今天的开始日期，小于今天的结束日期 时间是今天
+        if (localTime.isAfter(startTime) && localTime.isBefore(endTime)) {
+            return true;
+        }
+
+        return false;
+    }
 }

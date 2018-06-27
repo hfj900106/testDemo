@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Objects;
 
@@ -129,6 +128,12 @@ public class HomeService {
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
         String imei = RequestUtil.getGlobalHead().getImei();
+        UserToken byUserIdAndImei = userTokenRepository.findByUserIdAndImei(userId, imei);
+        // 时间是今天，就不用更新token
+        if (DateUtil.compareDay(byUserIdAndImei.getUpdateTime())) {
+            return UpdateTokenResponse.builder().token(RequestUtil.getGlobalHead().getToken()).build();
+        }
+
         String newToken = JwtUtil.createToken(globalUser);
         UserToken userToken = new UserToken();
         userToken.setUserId(userId);
@@ -176,7 +181,7 @@ public class HomeService {
             newsResponse.setNewsTitle(news.getTitle());
             newsResponse.setImgUrl(news.getImgUrl());
             newsResponse.setToUrl(news.getToUrl());
-            newsResponse.setUpTime(news.getUpTime().toInstant(ZoneOffset.of("+8")).toEpochMilli());
+            newsResponse.setUpTime(DateUtil.localDateTimeToTimestamp(news.getUpTime()));
             newsResponseList.add(newsResponse);
         }
         return newsResponseList;

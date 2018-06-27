@@ -129,6 +129,12 @@ public class HomeService {
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
         String imei = RequestUtil.getGlobalHead().getImei();
+        UserToken byUserIdAndImei = userTokenRepository.findByUserIdAndImei(userId, imei);
+        // 时间是今天，就不用更新token
+        if (DateUtil.compareDay(byUserIdAndImei.getUpdateTime())) {
+            return UpdateTokenResponse.builder().token(RequestUtil.getGlobalHead().getToken()).build();
+        }
+
         String newToken = JwtUtil.createToken(globalUser);
         UserToken userToken = new UserToken();
         userToken.setUserId(userId);

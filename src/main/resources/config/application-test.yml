@@ -29,9 +29,9 @@ system:
     # 处理还款信息流
     repayInfoFlow: false # 启动标志
     repayInfoFlowCron: 0/5 * * * * ? # 周期
-    # 还款失败
-    repayFail: false # 启动标志
-    repayFailCron: 0/5 * * * * ? # 周期
+#    # 还款失败
+#    repayFail: false # 启动标志
+#    repayFailCron: 0/5 * * * * ? # 周期
     # 神策进件
     saInData: false   # 启动标志
     saInDataCron: 0/5 * * * * ? # 周期

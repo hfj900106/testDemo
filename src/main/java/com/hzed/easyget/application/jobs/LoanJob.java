@@ -42,11 +42,11 @@ public class LoanJob {
         jobService.repayInfoFlow();
     }
 
-    @JobAnnotation("处理还款失败结果")
-    @Scheduled(cron = "${system.job.repayFailCron}")
-    public void repayFail() {
-        jobService.repayFail();
-    }
+//    @JobAnnotation("处理还款失败结果")
+//    @Scheduled(cron = "${system.job.repayFailCron}")
+//    public void repayFail() {
+//        jobService.repayFail();
+//    }
 
     @JobAnnotation("神策进件")
     @Scheduled(cron = "${system.job.saInDataCron}")

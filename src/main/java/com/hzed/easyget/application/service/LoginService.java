@@ -3,6 +3,7 @@ package com.hzed.easyget.application.service;
 import com.hzed.easyget.application.enums.BidEnum;
 import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.controller.model.*;
+import com.hzed.easyget.infrastructure.config.SaProp;
 import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
@@ -18,6 +19,7 @@ import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.*;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
+import com.sensorsdata.analytics.javasdk.SensorsAnalytics;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,8 @@ public class LoginService {
     private UserTokenRepository userTokenRepository;
     @Autowired
     private SystemProp systemProp;
+    @Autowired
+    SaService saService;
 
     @Value("${spring.profiles.active}")
     private String env;
@@ -64,6 +68,8 @@ public class LoginService {
         String imei = globalHead.getImei();
         String device = request.getDevice();
         String ip = RequestUtil.getIp();
+        //用户匿名id
+        String anonymousId = request.getAnonymousId();
         //校验验证码
         checkSmsCode(mobile, smsCode);
 
@@ -81,6 +87,7 @@ public class LoginService {
             token = JwtUtil.createToken(newUserToken);
             //build UserToken
             UserToken userToken = buildUserToken(IdentifierGenerator.nextId(), userId, token, imei);
+            userToken.setCreateTime(LocalDateTime.now());
             // UserLogin
             UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
             //UserStatus
@@ -107,12 +114,15 @@ public class LoginService {
             UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
             userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
         }
-        // 放入redis 3个小时
-        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 10800L);
-        // 验证SmsCode之后删除掉
+        saService.saLogin(userId, anonymousId);
+        //放入redis 3个小时
+        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, RedisConsts.THREE_HOUR);
+        //验证SmsCode之后删除掉
         redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
         return LoginByCodeResponse.builder().token(token).userId(userId).build();
     }
+
+
 
     /**
      * H5页面注册

@@ -126,4 +126,10 @@ public interface SaExtMapper {
      * @return
      */
     int findRepaymentSuccess(@Param("bidId") Long bidId,  @Param("userId") Long userId);
+
+    /**
+     * 神策-运营商认证
+     * @param saExt
+     */
+    void saOperator(SaExt saExt);
 }

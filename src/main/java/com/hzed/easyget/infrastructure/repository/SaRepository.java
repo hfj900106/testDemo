@@ -83,4 +83,8 @@ public class SaRepository {
     public int findRepaymentSuccess(Long bidId, Long userId) {
         return saExtMapper.findRepaymentSuccess(bidId, userId);
     }
+
+    public void saOperator(SaExt saExt) {
+        saExtMapper.saOperator(saExt);
+    }
 }

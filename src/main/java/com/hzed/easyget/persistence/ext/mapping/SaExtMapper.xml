@@ -130,5 +130,9 @@
         update t_sa_repayment_succee_order set status = 120, update_time = NOW() where bid_id = #{bidId} and user_id = #{userId}
     </update>
 
+    <insert id="saOperator" parameterType="com.hzed.easyget.persistence.ext.entity.SaExt">
+       INSERT INTO t_sa_yunyingshang_order (id, user_id, user_mobile, is_boolean, desc, create_time, update_time)
+       VALUES (NULL,  #{userId},  #{userMobile},  #{bool},  #{desc}, NOW(), NULL)
+    </insert>
 
 </mapper>

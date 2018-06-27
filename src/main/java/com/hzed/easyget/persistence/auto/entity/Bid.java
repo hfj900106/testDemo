@@ -66,12 +66,12 @@ public class Bid implements Serializable {
     private String inAccount;
 
     /**
-     * 进件渠道 1-印尼APP
+     * 进件渠道 Rupiah Get-印尼app进件
      */
-    private Byte client;
+    private String client;
 
     /**
-     * 状态 1-待走风控 2-待人审 3-审核不通过 4-审核通过 5-已放款 6-已结清
+     * 状态 1-待走风控 2-待人审 3-人工审核不通过 4-审核通过 5-已放款 6-已结清
      */
     private Byte status;
 
@@ -80,6 +80,7 @@ public class Bid implements Serializable {
     private Long createBy;
 
     /**
+     * 进件时间
      */
     private LocalDateTime createTime;
 
@@ -193,12 +194,12 @@ public class Bid implements Serializable {
         this.inAccount = inAccount == null ? null : inAccount.trim();
     }
 
-    public Byte getClient() {
+    public String getClient() {
         return client;
     }
 
-    public void setClient(Byte client) {
-        this.client = client;
+    public void setClient(String client) {
+        this.client = client == null ? null : client.trim();
     }
 
     public Byte getStatus() {
@@ -350,7 +351,7 @@ public class Bid implements Serializable {
             return this;
         }
 
-        public Builder client(Byte client) {
+        public Builder client(String client) {
             obj.setClient(client);
             return this;
         }

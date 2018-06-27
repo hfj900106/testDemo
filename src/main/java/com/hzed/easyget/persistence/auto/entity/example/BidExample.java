@@ -952,52 +952,62 @@ public class BidExample {
             return (Criteria) this;
         }
 
-        public Criteria andClientEqualTo(Byte value) {
+        public Criteria andClientEqualTo(String value) {
             addCriterion("client =", value, "client");
             return (Criteria) this;
         }
 
-        public Criteria andClientNotEqualTo(Byte value) {
+        public Criteria andClientNotEqualTo(String value) {
             addCriterion("client <>", value, "client");
             return (Criteria) this;
         }
 
-        public Criteria andClientGreaterThan(Byte value) {
+        public Criteria andClientGreaterThan(String value) {
             addCriterion("client >", value, "client");
             return (Criteria) this;
         }
 
-        public Criteria andClientGreaterThanOrEqualTo(Byte value) {
+        public Criteria andClientGreaterThanOrEqualTo(String value) {
             addCriterion("client >=", value, "client");
             return (Criteria) this;
         }
 
-        public Criteria andClientLessThan(Byte value) {
+        public Criteria andClientLessThan(String value) {
             addCriterion("client <", value, "client");
             return (Criteria) this;
         }
 
-        public Criteria andClientLessThanOrEqualTo(Byte value) {
+        public Criteria andClientLessThanOrEqualTo(String value) {
             addCriterion("client <=", value, "client");
             return (Criteria) this;
         }
 
-        public Criteria andClientIn(List<Byte> values) {
+        public Criteria andClientLike(String value) {
+            addCriterion("client like", value, "client");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientNotLike(String value) {
+            addCriterion("client not like", value, "client");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientIn(List<String> values) {
             addCriterion("client in", values, "client");
             return (Criteria) this;
         }
 
-        public Criteria andClientNotIn(List<Byte> values) {
+        public Criteria andClientNotIn(List<String> values) {
             addCriterion("client not in", values, "client");
             return (Criteria) this;
         }
 
-        public Criteria andClientBetween(Byte value1, Byte value2) {
+        public Criteria andClientBetween(String value1, String value2) {
             addCriterion("client between", value1, value2, "client");
             return (Criteria) this;
         }
 
-        public Criteria andClientNotBetween(Byte value1, Byte value2) {
+        public Criteria andClientNotBetween(String value1, String value2) {
             addCriterion("client not between", value1, value2, "client");
             return (Criteria) this;
         }
@@ -1399,6 +1409,11 @@ public class BidExample {
 
         public Criteria andInAccountLikeInsensitive(String value) {
             addCriterion("upper(in_account) like", value.toUpperCase(), "inAccount");
+            return (Criteria) this;
+        }
+
+        public Criteria andClientLikeInsensitive(String value) {
+            addCriterion("upper(client) like", value.toUpperCase(), "client");
             return (Criteria) this;
         }
 

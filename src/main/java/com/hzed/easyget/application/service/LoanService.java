@@ -82,7 +82,7 @@ public class LoanService {
         bid.setInBank(request.getInBank());
         bid.setInAccount(request.getInAccount());
         bid.setPurposeCode(request.getPurposeId());
-        bid.setClient((byte) 1);
+        bid.setClient("Rupiah Get");
         bid.setStatus(BidStatusEnum.RISK_ING.getCode().byteValue());
 
         UserBank userBank = new UserBank();

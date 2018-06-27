@@ -1,5 +1,6 @@
 package com.hzed.easyget.application.service;
 
+import com.hzed.easyget.application.enums.BidEnum;
 import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.SaProp;
@@ -80,7 +81,7 @@ public class LoginService {
         if (user == null) {
             userId = IdentifierGenerator.nextId();
             //build User
-            user = User.builder().id(userId).mobileAccount(mobile).platform(platform).client("Rupiah Get").imei(imei).build();
+            user = User.builder().id(userId).mobileAccount(mobile).platform(platform).client(BidEnum.INDONESIA_APP.getCode()).imei(imei).build();
             // 生成token
             GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
             token = JwtUtil.createToken(newUserToken);
@@ -146,7 +147,7 @@ public class LoginService {
         user.setId(userId);
         user.setMobileAccount(mobile);
         user.setPlatform(platform);
-        user.setClient("Rupiah Get");
+        user.setClient(BidEnum.INDONESIA_APP.getCode());
         user.setImei(RequestUtil.getGlobalHead().getImei());
         //UserStatus
         UserStatus userStatus = buildUserStatus(userId);

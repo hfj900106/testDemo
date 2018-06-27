@@ -375,31 +375,28 @@ public class RepayService {
         //先查询是否有交易记录
         UserTransaction tranceQuery = userTransactionRepository.findOldTrance(bidId, TransactionTypeEnum.OUT.getCode().byteValue(), TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(), flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
         String remark = flag ? "全部还款" : "部分还款";
-        if (ObjectUtils.isEmpty(tranceQuery)) {
-            // 首次进入 生成交易记录
-            UserTransaction tranceInsert = UserTransaction.builder()
-                    .id(IdentifierGenerator.nextId())
-                    .userId(bid.getUserId())
-                    .paymentId(IdentifierGenerator.nextSeqNo())
-                    .bank(bid.getInBank())
-                    .account(bid.getInAccount())
-                    .type(TransactionTypeEnum.OUT.getCode().byteValue())
-                    .amount(amount)
-                    .bidId(bidId)
-                    .status(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
-                    .repaymentType(flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue())
-                    .createTime(LocalDateTime.now())
-                    .remark(remark).build();
-            userTransactionRepository.insertSelective(tranceInsert);
-        } else {
-            // 不是首次进入
-////            tranceQuery.setRepaymentType(flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
-////            tranceQuery.setAmount(amount);
-////            tranceQuery.setRemark(remark);
-////            userTransactionRepository.transactionUpdateByKey(tranceQuery);
+
+        if(!ObjectUtils.isEmpty(tranceQuery)) {
             return new PaymentIdResponse(tranceQuery.getId());
         }
-        return new PaymentIdResponse(tranceQuery.getId());
+
+        // 首次进入 生成交易记录
+        UserTransaction tranceInsert = UserTransaction.builder()
+                .id(IdentifierGenerator.nextId())
+                .userId(bid.getUserId())
+                .paymentId(IdentifierGenerator.nextSeqNo())
+                .bank(bid.getInBank())
+                .account(bid.getInAccount())
+                .type(TransactionTypeEnum.OUT.getCode().byteValue())
+                .amount(amount)
+                .bidId(bidId)
+                .status(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
+                .repaymentType(flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue())
+                .remark(remark).build();
+        userTransactionRepository.insertSelective(tranceInsert);
+
+        return new PaymentIdResponse(tranceInsert.getId());
+
     }
 
     /**

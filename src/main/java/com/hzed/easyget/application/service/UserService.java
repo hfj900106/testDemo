@@ -6,6 +6,7 @@ import com.hzed.easyget.controller.model.TransactionVO;
 import com.hzed.easyget.controller.model.UserResponse;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
+import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
@@ -62,7 +63,7 @@ public class UserService {
                 transactionVO.setAmount(userTransaction.getAmount());
                 transactionVO.setRemark(userTransaction.getRemark());
                 transactionVO.setStatus(userTransaction.getStatus());
-                transactionVO.setUpdateTime(userTransaction.getUpdateTime().toInstant(ZoneOffset.of("+8")).toEpochMilli());
+                transactionVO.setUpdateTime(DateUtil.localDateTimeToTimestamp(userTransaction.getUpdateTime()));
                 listResponse.add(transactionVO);
             });
         }

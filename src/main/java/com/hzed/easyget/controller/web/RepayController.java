@@ -65,7 +65,7 @@ public class RepayController {
         return repayService.findloanManagResponse(amount, request.getBidId(), true);
     }
 
-    @ModuleFunc("获取VA码")
+    @ModuleFunc("生成VA码")
     @PostMapping("/vaInfoDetail")
     public TransactionVAResponse vaInfoDetail(@Valid @RequestBody TransactionVARequest request) {
         return repayService.findVaTranc(request.getPayId(),request.getMode());

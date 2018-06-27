@@ -26,6 +26,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -87,7 +88,7 @@ public class RepayService {
 
             // 已结清
             if (BidStatusEnum.CLEARED.getCode().byteValue() == bid.getStatus().byteValue()) {
-                repaymentResponse.setRepayTime(bidProgress.getHandleTime().toString());
+                repaymentResponse.setRepayTime(bidProgress.getHandleTime().toInstant(ZoneOffset.of("+8")).toEpochMilli());
                 repaymentResponse.setStatus(RepayStatusEnum.CLEAR_REPAY.getCode().intValue());
             }
             // 未结清

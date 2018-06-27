@@ -27,6 +27,7 @@ public class RequestFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         if (servletRequest instanceof HttpServletRequest) {
+            MdcUtil.clear();
             // 日志加入trace
             MdcUtil.putTrace();
             // local替换成请求头中的

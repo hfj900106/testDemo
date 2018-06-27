@@ -277,7 +277,7 @@ public class RepayService {
             return BigDecimal.ZERO;
         }
         // 待还总额
-        BigDecimal billItemNoRepay = comService.getBillItemNoRepay(billId, item, realRepaymentTime);
+        BigDecimal billItemNoRepay = comService.getBillItemNoRepayFee(billId, item, realRepaymentTime);
         // 已结清则直接返回还款金额
         if (billItemNoRepay.compareTo(Arith.ZERO) <= 0) {
             return repayAmount;

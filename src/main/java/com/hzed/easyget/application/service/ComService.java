@@ -115,14 +115,14 @@ public class ComService {
         // 台账中是否有逾期费标志
         boolean overdueFlag = false;
         for (BillLedger ledger : ledgers) {
-            total = total.add(getBillItemNoRepay(ledger.getBillId(), ledger.getRepaymentItem().intValue(), realRepaymentTime));
+            total = total.add(getBillItemNoRepayFee(ledger.getBillId(), ledger.getRepaymentItem().intValue(), realRepaymentTime));
             if(BillLedgerItemEnum.OVERDUE_FEE.getCode().intValue() == ledger.getRepaymentItem().intValue()) {
                 overdueFlag = true;
             }
         }
         // 单独处理逾期费
         if(!overdueFlag) {
-            total = total.add(getBillItemNoRepay(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode(), realRepaymentTime));
+            total = total.add(getBillItemNoRepayFee(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode(), realRepaymentTime));
         }
         return total;
     }
@@ -134,7 +134,7 @@ public class ComService {
      * @param item              台账类型枚举值 如 BillLedgerItemEnum.OVERDUE_FEE.getCode()
      * @param realRepaymentTime 实际还款时间
      */
-    public BigDecimal getBillItemNoRepay(Long billId, Integer item, LocalDateTime realRepaymentTime) {
+    public BigDecimal getBillItemNoRepayFee(Long billId, Integer item, LocalDateTime realRepaymentTime) {
         Bill bill = billRepository.findByIdWithExp(billId);
         int status = bill.getStatus().intValue();
         // 账单已结清则没有逾期费

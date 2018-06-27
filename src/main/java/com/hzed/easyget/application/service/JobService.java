@@ -98,9 +98,7 @@ public class JobService {
                 map.put("timeStamp", timeStamp);
                 map.put("bid", bidId);
                 String url = riskProp.getPushBidUrl();
-                //TODO 补充地址
                 log.info("请求风控接口，URL：{}, 请求参数：{}", url, JSON.toJSONString(map));
-
                 RiskResponse riskResponse = restService.postJson(url, map, RiskResponse.class);
                 log.info("风控返回数据：{}", JSON.toJSONString(riskResponse));
 

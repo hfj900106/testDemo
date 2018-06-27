@@ -235,6 +235,11 @@ public final class DateUtil {
         }
     }
 
+    /**
+     * 判断一个时间是不是今天的时间范围内
+     * @param localTime
+     * @return
+     */
     public static boolean compareDay(LocalDateTime localTime){
         LocalDateTime startTime = LocalDate.now().atTime(0, 0, 0);
         LocalDateTime endTime = LocalDate.now().atTime(23, 59, 59);

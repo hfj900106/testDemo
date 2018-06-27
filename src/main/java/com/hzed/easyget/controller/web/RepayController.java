@@ -90,7 +90,7 @@ public class RepayController {
     }
 
     @ModuleFunc("查看还款信息)")
-    @RequestMapping("/LoanManagInfo")
+    @RequestMapping("/loanManagInfo")
     public LoanManagResponse loanManagInfo(@Valid @RequestBody LoanManagInfoRequest request){
         return repayService.loanManagInfo(request.getPayId());
     }

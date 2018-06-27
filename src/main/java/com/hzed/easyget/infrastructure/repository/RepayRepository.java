@@ -57,8 +57,8 @@ public class RepayRepository {
     /**
      * 获取交易记录 根据交易id
      */
-    public UserTransaction findUserTransByPaymentId(Long payId) {
-        return userTransactionMapper.selectByPrimaryKey(payId);
+    public UserTransaction findById(Long id) {
+        return userTransactionMapper.selectByPrimaryKey(id);
     }
 
     /**

@@ -1,7 +1,6 @@
 package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.controller.model.*;
@@ -407,17 +406,19 @@ public class RepayService {
      * @return va码构建对象
      */
     public TransactionVAResponse findVaTranc(Long payId, String mode) {
-        //先查询数据库 是否存在没过期的还款码
         TransactionVAResponse vaResponse = new TransactionVAResponse();
         UserTransactionRepay repayQuery = repayRepository.findVaTranc(payId, mode);
+
+        // 存在没过期的VA码则直接返回
         if (!ObjectUtils.isEmpty(repayQuery)) {
             vaResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(repayQuery.getVaCreateTime()));
             vaResponse.setVaCodel(repayQuery.getVa());
             vaResponse.setMode(repayQuery.getMode());
             return vaResponse;
         }
-        //当数据库为空 或者va码失效了
-        UserTransaction transactionQuery = repayRepository.findUserTransByPaymentId(payId);
+
+        // 当数据库为空 或者va码失效了
+        UserTransaction transactionQuery = repayRepository.findById(payId);
         //组装请求信息
         PaymentCodeRequest paymentRequest = new PaymentCodeRequest();
         paymentRequest.setBankType(transactionQuery.getBank().toUpperCase());
@@ -429,9 +430,8 @@ public class RepayService {
         if (mode.equals(ComConsts.OTC)) {
             paymentRequest.setBankType(null);
         }
-        log.info("获取还款码，bluepay请求地址{},参数：{}", prop.getAbsGetPaymentCodeUrl(), JSONObject.toJSONString(paymentRequest));
-
-        String result = restService.doPostJson(prop.getAbsGetPaymentCodeUrl(), JSONObject.toJSONString(paymentRequest));
+        log.info("获取还款码，bluepay请求地址{}，参数：{}", prop.getAbsGetPaymentCodeUrl(), JSON.toJSONString(paymentRequest));
+        String result = restService.doPostJson(prop.getAbsGetPaymentCodeUrl(), JSON.toJSONString(paymentRequest));
         log.info("获取还款码，bluepay返回数据：{}", result);
 
         if (result.equals(TIMEOUT)) {

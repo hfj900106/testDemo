@@ -105,7 +105,7 @@ public class ComService {
      * @param bidId             标id
      * @param realRepaymentTime 实际还款时间
      */
-    public BigDecimal getBidNoRepay(Long bidId, LocalDateTime realRepaymentTime) {
+    public BigDecimal getBidNoRepayFee(Long bidId, LocalDateTime realRepaymentTime) {
         bidRepository.findByIdWithExp(bidId);
 
         BigDecimal total = BigDecimal.ZERO;

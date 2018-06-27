@@ -93,7 +93,7 @@ public class RepayService {
             // 未结清
             else {
                 // 获取待还款标的的待还总额
-                repayListResponse.setTotalAmount(comService.getBidNoRepay(bidId, LocalDateTime.now()));
+                repayListResponse.setTotalAmount(comService.getBidNoRepayFee(bidId, LocalDateTime.now()));
 
                 // 查询应还时间与当前时间对比，大于当前时间表示逾期，小于等于表示没到期
                 int days = DateUtil.getBetweenDays(bill.getRepaymentTime(), LocalDateTime.now());
@@ -154,7 +154,7 @@ public class RepayService {
         }
 
         // 标的待还总费用
-        BigDecimal totalRepayAmount = comService.getBidNoRepay(bidId, LocalDateTime.now());
+        BigDecimal totalRepayAmount = comService.getBidNoRepayFee(bidId, LocalDateTime.now());
 
         repayDetailResponse.setTotalRepayAmount(totalRepayAmount);
         repayDetailResponse.setPeriod(bid.getPeriod());
@@ -179,7 +179,7 @@ public class RepayService {
     @Transactional(rollbackFor = Exception.class)
     public void repayInformationFlow(Long bidId, BigDecimal repayAmount, LocalDateTime realRepaymentTime, Long transactionId, RepayInfoFlowJob job) {
         // 判断还款金额是否大于项目待还总额
-        BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, realRepaymentTime);
+        BigDecimal bidNoRepay = comService.getBidNoRepayFee(bidId, realRepaymentTime);
         if (repayAmount.compareTo(bidNoRepay) > 0) {
             throw new ComBizException(BizCodeEnum.OVER_REPAYMENT_MONEY);
         }
@@ -348,7 +348,7 @@ public class RepayService {
     public RepayPartDetailResponse repayPartDetail(RepayPartDetailRequest request) {
         Long bidId = request.getBidId();
         //获取标的待还总费用
-        BigDecimal bidNoRepay = comService.getBidNoRepay(bidId, LocalDateTime.now());
+        BigDecimal bidNoRepay = comService.getBidNoRepayFee(bidId, LocalDateTime.now());
         //获取账单待还逾期费
 //        Bill bill = billRepository.findByBid(bidId);
 //        BigDecimal billOverFeeNoRepay = comService.getBillOverFeeNoRepay(bill.getId(), LocalDateTime.now());

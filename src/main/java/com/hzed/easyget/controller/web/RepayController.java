@@ -61,7 +61,7 @@ public class RepayController {
     @ModuleFunc("全部还款查询")
     @PostMapping("/partialrepayment")
     public PaymentIdResponse partialRepayment(@Valid @RequestBody RepayAllRequest request) {
-        BigDecimal amount = comService.getBidNoRepay(request.getBidId(), LocalDateTime.now());
+        BigDecimal amount = comService.getBidNoRepayFee(request.getBidId(), LocalDateTime.now());
         return repayService.findloanManagResponse(amount, request.getBidId(), true);
     }
 

@@ -65,8 +65,8 @@ public class AuthService {
     @Autowired
     FileService fileService;
     @Autowired
-    private RiskProp riskProp;    @Autowired
-    private RiskProp riskProp;    @Autowired
+    private RiskProp riskProp;
+    @Autowired
     SaService saService;
     @Autowired
     private SaProp saUrl;
@@ -493,7 +493,7 @@ public class AuthService {
             properties.put("EventResult", desc);
 
             log.info("SensorsAnalytics DetailedList track method begin, userId:{}, userMobile:{}, bool:{}, desc{}" , user.getUserId(), user.getMobile(), bool, desc);
-            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaServerLogUrl()));
+            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaLogPath()));
             sa.track(String.valueOf(user.getUserId()), true, "DetailedList", properties);
             sa.flush();
             log.info("SensorsAnalytics DetailedList track method end.");

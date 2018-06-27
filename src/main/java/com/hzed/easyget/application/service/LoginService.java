@@ -129,7 +129,7 @@ public class LoginService {
     public void saLogin(Long userId, String anonymousId) {
         try {
             log.info("SensorsAnalytics Login, userId binding anonymousId begin, userId:{}, anonymousId:{}", userId, anonymousId);
-            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaServerLogUrl()));
+            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaLogPath()));
             sa.trackSignUp(String.valueOf(userId), anonymousId);
             log.info("SensorsAnalytics Login, userId binding anonymousId end, userId:{}, anonymousId:{}", userId, anonymousId);
         } catch (Exception e) {

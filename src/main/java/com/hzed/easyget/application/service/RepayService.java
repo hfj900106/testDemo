@@ -368,25 +368,21 @@ public class RepayService {
      * @param flag   是否全部还清
      * @return
      */
-    public PayMentIdResponse findloanManagResponse(BigDecimal amount, Long bidId, boolean flag) {
+    public PaymentIdResponse findloanManagResponse(BigDecimal amount, Long bidId, boolean flag) {
         //查询标的信息
-        Bid bid = bidRepository.findById(bidId);
-        if (ObjectUtils.isEmpty(bid)) {
-            throw new ComBizException(BizCodeEnum.NOT_INDONESIA_PRODUCT, new Object[]{bid});
-        }
+        Bid bid = bidRepository.findByIdWithExp(bidId);
         //先查询是否有交易记录
-        UserTransaction trance;
         UserTransactionExample userTransactionExample = new UserTransactionExample();
         userTransactionExample.createCriteria()
                 .andBidIdEqualTo(bidId)
                 .andTypeEqualTo(TransactionTypeEnum.OUT.getCode().byteValue())
                 .andStatusEqualTo(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
                 .andRepaymentTypeEqualTo(flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
-        trance = userTransactionRepository.findoldTrance(userTransactionExample);
+        UserTransaction tranceQuery = userTransactionRepository.findOldTrance(userTransactionExample);
         String remark = flag ? "全部还款" : "部分还款";
-        if (ObjectUtils.isEmpty(trance)) {
-            //生成交易记录
-            trance = UserTransaction.builder()
+        if (ObjectUtils.isEmpty(tranceQuery)) {
+            // 首次进入 生成交易记录
+            UserTransaction tranceInsert = UserTransaction.builder()
                     .id(IdentifierGenerator.nextId())
                     .userId(bid.getUserId())
                     .paymentId(IdentifierGenerator.nextSeqNo())
@@ -399,14 +395,15 @@ public class RepayService {
                     .repaymentType(flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue())
                     .createTime(LocalDateTime.now())
                     .remark(remark).build();
-            userTransactionRepository.insertSelective(trance);
+            userTransactionRepository.insertSelective(tranceInsert);
         } else {
-            trance.setRepaymentType(flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
-            trance.setAmount(amount);
-            trance.setRemark(remark);
-            userTransactionRepository.transactionUpdateByKey(trance);
+            // 不是首次进入
+//            tranceQuery.setRepaymentType(flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
+//            tranceQuery.setAmount(amount);
+//            tranceQuery.setRemark(remark);
+//            userTransactionRepository.transactionUpdateByKey(tranceQuery);
         }
-        return new PayMentIdResponse(trance.getId());
+        return new PaymentIdResponse(tranceQuery.getId());
     }
 
     /**
@@ -655,7 +652,7 @@ public class RepayService {
         userTransactionExample.createCriteria()
                 .andIdEqualTo(payId)
                 .andTypeEqualTo(TransactionTypeEnum.OUT.getCode().byteValue());
-        UserTransaction trance = userTransactionRepository.findoldTrance(userTransactionExample);
+        UserTransaction trance = userTransactionRepository.findOldTrance(userTransactionExample);
         if (ObjectUtils.isEmpty(trance)) {
             throw new ComBizException(BizCodeEnum.USERTRANSACTION_ERROR);
         }

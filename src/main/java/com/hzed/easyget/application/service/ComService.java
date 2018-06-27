@@ -62,28 +62,6 @@ public class ComService {
     private RiskProp riskProp;
 
     /**
-     * 校验请求头非token参数
-     */
-    public void validateHeader(GlobalHead globalHeadr) {
-        if (StringUtils.isBlank(globalHeadr.getAppKey())) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_APPKEY);
-        }
-        if (StringUtils.isBlank(globalHeadr.getPlatform())) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_PLATFORM);
-        }
-        if (StringUtils.isBlank(globalHeadr.getVersion())) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_VERSION);
-        }
-        if (StringUtils.isBlank(globalHeadr.getI18n())) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_I18N);
-        }
-        if (StringUtils.isBlank(globalHeadr.getImei())) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_IMEI);
-        }
-    }
-
-
-    /**
      * 校验token参数
      */
     public void validateToken(GlobalHead globalHeadr) {
@@ -113,7 +91,7 @@ public class ComService {
                 throw new WarnException(BizCodeEnum.TOKEN_EXPIRE);
             } else {
                 //刷新Redis缓存
-                redisService.setCache(tokenCacheKey, userToken.getToken(), RedisConsts.THREE_HOUR);
+                redisService.setCache(tokenCacheKey, userToken.getToken(), 10800L);
             }
         } else if (!token.equals(tokenCache)) {
             // 检查redis token是否与传过来的一致

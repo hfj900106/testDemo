@@ -1,7 +1,6 @@
 package com.hzed.easyget.infrastructure.repository;
 
 import com.hzed.easyget.controller.model.RepaymentRequest;
-import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
@@ -11,7 +10,6 @@ import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -43,7 +41,7 @@ public class UserTransactionRepository {
     /**
      * 查询匹配的交易记录
      */
-    public UserTransaction findoldTrance(UserTransactionExample userTransactionExample) {
+    public UserTransaction findOldTrance(UserTransactionExample userTransactionExample) {
         return userTransactionMapper.selectOneByExample(userTransactionExample);
     }
 

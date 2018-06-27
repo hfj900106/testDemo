@@ -12,6 +12,7 @@ import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -55,14 +56,16 @@ public class UserService {
         GlobalUser user = getGlobalUser();
         List<UserTransaction> list = queryTransactionRecordForApp(user.getUserId(),request.getPageNo(),request.getPageSize());
         List<TransactionVO> listResponse = new ArrayList<>();
-        list.forEach(userTransaction -> {
-            TransactionVO transactionVO = new TransactionVO();
-            transactionVO.setAmount(userTransaction.getAmount());
-            transactionVO.setRemark(userTransaction.getRemark());
-            transactionVO.setStatus(userTransaction.getStatus());
-            transactionVO.setUpdateTime(userTransaction.getUpdateTime().toInstant(ZoneOffset.of("+8")).toEpochMilli());
-            listResponse.add(transactionVO);
-        });
+        if(!ObjectUtils.isEmpty(listResponse)){
+            list.forEach(userTransaction -> {
+                TransactionVO transactionVO = new TransactionVO();
+                transactionVO.setAmount(userTransaction.getAmount());
+                transactionVO.setRemark(userTransaction.getRemark());
+                transactionVO.setStatus(userTransaction.getStatus());
+                transactionVO.setUpdateTime(userTransaction.getUpdateTime().toInstant(ZoneOffset.of("+8")).toEpochMilli());
+                listResponse.add(transactionVO);
+            });
+        }
         response.setList(listResponse);
         return response;
     }

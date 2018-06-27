@@ -46,6 +46,10 @@ public class SmsUtils {
         String smsIdStr = String.valueOf(smsId);
         DictService dictService = SpringContextUtil.getBean(DictService.class);
         Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
+        if(ObjectUtils.isEmpty(dictSms)){
+            log.error("没有配置短信渠道");
+            throw new ComBizException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
         String dicValue = dictSms.getDicValue();
         if (!ObjectUtils.isEmpty(dicValue) && ComConsts.NX.equalsIgnoreCase(dicValue)) {
             //使用牛信发送短信
@@ -95,9 +99,11 @@ public class SmsUtils {
             //设置短信下发请求消息body列表
             message.setMsg(msgBodyList);
             smsDownRequest.setMessages(message);
-
+            log.info("发送短信请求参数：{}", JSONObject.toJSONString(smsDownRequest));
             BulkSmsDownResponse smsDownResponse = BulkSmsUtil.smsSend(smsDownRequest);
+            log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
             if (ComConsts.BULK_SMS_OK != smsDownResponse.getErrorCode()) {
+                log.error("发送失败：{}",JSONObject.toJSONString(smsDownResponse.getMessages()));
                 throw new ComBizException(BizCodeEnum.SMS_CODE_SEND_FAIL);
             }
         }

@@ -172,5 +172,8 @@ token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIxN
 }
 
 ###
+POST http://10.10.30.55:28080/easy-get-admin/login
+
+###
 
 

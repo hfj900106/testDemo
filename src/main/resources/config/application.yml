@@ -65,29 +65,29 @@ system:
   expected_audit_time_interval: 1440 #预计审核时间间隔 单位分
   expected_lending_time_interval: 60 #预计放款时间间隔 单位分
 
-  # 定时任务
+  # 定时任务 启动标志 周期
   job:
     # 风控审核
-    pushBid: false # 启动标志
-    pushBidCron: 0/5 * * * * ? # 周期
+    pushBid: false
+    pushBidCron: 0/5 * * * * ?
     # 放款
-    bankLoan: false # 启动标志
-    bankLoanCron: 0/5 * * * * ? # 周期
+    bankLoan: false
+    bankLoanCron: 0/5 * * * * ?
     # 处理还款信息流
-    repayInfoFlow: false # 启动标志
-    repayInfoFlowCron: 0/5 * * * * ? # 周期
+    repayInfoFlow: false
+    repayInfoFlowCron: 0/5 * * * * ?
     # 还款失败
-    repayFail: false # 启动标志
-    repayFailCron: 0/5 * * * * ? # 周期
+    repayFail: false # 功能暂时不用
+    repayFailCron: 0/5 * * * * ?
     # 神策进件
-    saInData: false   # 启动标志
-    saInDataCron: 0/5 * * * * ? # 周期
+    saInData: false
+    saInDataCron: 0/5 * * * * ?
     # 神策借款成功
-    saLoanSuccess: false    # 启动标志
-    saLoanSuccessCron: 0/5 * * * * ? # 周期
+    saLoanSuccess: false
+    saLoanSuccessCron: 0/5 * * * * ?
     # 神策还款
-    saRepaymentSuccess: false   # 启动标志
-    saRepaymentSuccessCron: 0/5 * * * * ?  # 周期
+    saRepaymentSuccess: false
+    saRepaymentSuccessCron: 0/5 * * * * ?
 
 
 

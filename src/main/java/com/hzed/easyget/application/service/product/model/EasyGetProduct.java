@@ -32,6 +32,11 @@ public class EasyGetProduct implements AbstractProduct {
      */
     private BigDecimal overFeeRate;
 
+    /**
+     * 最小还款金额
+     */
+    private BigDecimal minRepayAmount;
+
     public EasyGetProduct(BigDecimal amount) {
         this.amount = amount;
     }
@@ -61,5 +66,8 @@ public class EasyGetProduct implements AbstractProduct {
         return Arith.mul(amount, new BigDecimal(overDay), overFeeRate.setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
-
+    @Override
+    public BigDecimal getMinRepayAmount() {
+        return minRepayAmount;
+    }
 }

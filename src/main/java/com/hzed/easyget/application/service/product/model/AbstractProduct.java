@@ -45,4 +45,9 @@ public interface AbstractProduct {
      * @return 逾期费
      */
     BigDecimal getOverFee(Integer overDay);
+
+    /**
+     * 最小还款金额
+     */
+    BigDecimal getMinRepayAmount();
 }

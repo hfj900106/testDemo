@@ -76,6 +76,11 @@ public class Product implements Serializable {
     private BigDecimal overdueFeeRate;
 
     /**
+     * 最小还款金额
+     */
+    private BigDecimal minRepayAmount;
+
+    /**
      */
     private Long createBy;
 
@@ -209,6 +214,14 @@ public class Product implements Serializable {
         this.overdueFeeRate = overdueFeeRate;
     }
 
+    public BigDecimal getMinRepayAmount() {
+        return minRepayAmount;
+    }
+
+    public void setMinRepayAmount(BigDecimal minRepayAmount) {
+        this.minRepayAmount = minRepayAmount;
+    }
+
     public Long getCreateBy() {
         return createBy;
     }
@@ -269,6 +282,7 @@ public class Product implements Serializable {
         sb.append(", headFeeRate=").append(headFeeRate);
         sb.append(", tailFeeRate=").append(tailFeeRate);
         sb.append(", overdueFeeRate=").append(overdueFeeRate);
+        sb.append(", minRepayAmount=").append(minRepayAmount);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -360,6 +374,11 @@ public class Product implements Serializable {
             return this;
         }
 
+        public Builder minRepayAmount(BigDecimal minRepayAmount) {
+            obj.setMinRepayAmount(minRepayAmount);
+            return this;
+        }
+
         public Builder createBy(Long createBy) {
             obj.setCreateBy(createBy);
             return this;
@@ -405,6 +424,7 @@ public class Product implements Serializable {
         headFeeRate("head_fee_rate"),
         tailFeeRate("tail_fee_rate"),
         overdueFeeRate("overdue_fee_rate"),
+        minRepayAmount("min_repay_amount"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

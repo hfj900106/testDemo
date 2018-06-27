@@ -3,12 +3,17 @@ package com.hzed.easyget.application.service;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
+import com.hzed.easyget.application.service.product.ProductEnum;
+import com.hzed.easyget.application.service.product.ProductFactory;
+import com.hzed.easyget.application.service.product.ProductService;
+import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.PayProp;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.repository.*;
@@ -348,15 +353,22 @@ public class RepayService {
         Long bidId = request.getBidId();
         //获取标的待还总费用
         BigDecimal bidNoRepay = comService.getBidNoRepayFee(bidId, LocalDateTime.now());
-        //获取账单待还逾期费
-//        Bill bill = billRepository.findByBid(bidId);
-//        BigDecimal billOverFeeNoRepay = comService.getBillOverFeeNoRepay(bill.getId(), LocalDateTime.now());
-        //待应还总额
-//        BigDecimal totalRepayAmount = bidNoRepay.add(billOverFeeNoRepay);
+        //获取产品最小还款值
         Bid bid = bidRepository.findByIdWithExp(bidId);
-        //todo 计算最小应还金额
+        // 相关账单
+        ProductService productService = ProductFactory.getProduct(ProductEnum.EasyGet);
+        AbstractProduct product = productService.createProduct(bid.getLoanAmount(), bid.getPeriod());
+        BigDecimal minRepayAmount = productService.getMinRepayAmount(product);
+        if (ObjectUtils.isEmpty(minRepayAmount)) {
+            log.error("找不到产品的最小还款金额");
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
 
-        return RepayPartDetailResponse.builder().totalAmount(bidNoRepay.toString()).inAccount(bid.getInAccount()).build();
+        //待还总费用大于0 且小于最小还款金额
+        if (1 == bidNoRepay.compareTo(BigDecimal.ZERO) && -1 == bidNoRepay.compareTo(minRepayAmount)) {
+            minRepayAmount = bidNoRepay;
+        }
+        return RepayPartDetailResponse.builder().totalAmount(String.valueOf(bidNoRepay)).minRepayAmount(String.valueOf(minRepayAmount)).inAccount(bid.getInAccount()).build();
     }
 
     /**
@@ -374,7 +386,7 @@ public class RepayService {
         UserTransaction tranceQuery = userTransactionRepository.findOldTrance(bidId, TransactionTypeEnum.OUT.getCode().byteValue(), TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(), flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
         String remark = flag ? "全部还款" : "部分还款";
 
-        if(!ObjectUtils.isEmpty(tranceQuery)) {
+        if (!ObjectUtils.isEmpty(tranceQuery)) {
             return new PaymentIdResponse(tranceQuery.getId());
         }
 

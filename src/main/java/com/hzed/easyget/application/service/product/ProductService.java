@@ -1,9 +1,11 @@
 package com.hzed.easyget.application.service.product;
 
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
+import com.hzed.easyget.application.service.product.model.EasyGetProduct;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.Bill;
 import com.hzed.easyget.persistence.auto.entity.BillLedger;
+import com.hzed.easyget.persistence.auto.entity.Product;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -37,9 +39,15 @@ public interface ProductService {
 
     /**
      * 创建产品，主要是一些费用信息
+     *
      * @param amount 借款金额
-     * @param days 借款天数
+     * @param days   借款天数
      * @return 产品
      */
     AbstractProduct createProduct(BigDecimal amount, Integer days);
+
+    /**
+     * 获取最小还款额
+     */
+    BigDecimal getMinRepayAmount(AbstractProduct product);
 }

@@ -16,6 +16,7 @@
     <result column="head_fee_rate" jdbcType="DECIMAL" property="headFeeRate" />
     <result column="tail_fee_rate" jdbcType="DECIMAL" property="tailFeeRate" />
     <result column="overdue_fee_rate" jdbcType="DECIMAL" property="overdueFeeRate" />
+    <result column="min_repay_amount" jdbcType="DECIMAL" property="minRepayAmount" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -82,8 +83,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, code, name, loan_amount_arr, currency, loan_time_arr, loan_time_dmy, apr, description, 
-    picture, is_use, head_fee_rate, tail_fee_rate, overdue_fee_rate, create_by, create_time, 
-    update_by, update_time, remark
+    picture, is_use, head_fee_rate, tail_fee_rate, overdue_fee_rate, min_repay_amount, 
+    create_by, create_time, update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProductExample" resultMap="BaseResultMap">
     select
@@ -152,16 +153,16 @@
       currency, loan_time_arr, loan_time_dmy, 
       apr, description, picture, 
       is_use, head_fee_rate, tail_fee_rate, 
-      overdue_fee_rate, create_by, create_time, 
-      update_by, update_time, remark
-      )
+      overdue_fee_rate, min_repay_amount, create_by, 
+      create_time, update_by, update_time, 
+      remark)
     values (#{id,jdbcType=BIGINT}, #{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{loanAmountArr,jdbcType=VARCHAR}, 
       #{currency,jdbcType=CHAR}, #{loanTimeArr,jdbcType=VARCHAR}, #{loanTimeDmy,jdbcType=CHAR}, 
       #{apr,jdbcType=DECIMAL}, #{description,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR}, 
       #{isUse,jdbcType=BIT}, #{headFeeRate,jdbcType=DECIMAL}, #{tailFeeRate,jdbcType=DECIMAL}, 
-      #{overdueFeeRate,jdbcType=DECIMAL}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
-      )
+      #{overdueFeeRate,jdbcType=DECIMAL}, #{minRepayAmount,jdbcType=DECIMAL}, #{createBy,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.Product">
     insert into t_loan_product
@@ -207,6 +208,9 @@
       </if>
       <if test="overdueFeeRate != null">
         overdue_fee_rate,
+      </if>
+      <if test="minRepayAmount != null">
+        min_repay_amount,
       </if>
       <if test="createBy != null">
         create_by,
@@ -266,6 +270,9 @@
       </if>
       <if test="overdueFeeRate != null">
         #{overdueFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="minRepayAmount != null">
+        #{minRepayAmount,jdbcType=DECIMAL},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -335,6 +342,9 @@
       <if test="record.overdueFeeRate != null">
         overdue_fee_rate = #{record.overdueFeeRate,jdbcType=DECIMAL},
       </if>
+      <if test="record.minRepayAmount != null">
+        min_repay_amount = #{record.minRepayAmount,jdbcType=DECIMAL},
+      </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
       </if>
@@ -371,6 +381,7 @@
       head_fee_rate = #{record.headFeeRate,jdbcType=DECIMAL},
       tail_fee_rate = #{record.tailFeeRate,jdbcType=DECIMAL},
       overdue_fee_rate = #{record.overdueFeeRate,jdbcType=DECIMAL},
+      min_repay_amount = #{record.minRepayAmount,jdbcType=DECIMAL},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -422,6 +433,9 @@
       <if test="overdueFeeRate != null">
         overdue_fee_rate = #{overdueFeeRate,jdbcType=DECIMAL},
       </if>
+      <if test="minRepayAmount != null">
+        min_repay_amount = #{minRepayAmount,jdbcType=DECIMAL},
+      </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
       </if>
@@ -455,6 +469,7 @@
       head_fee_rate = #{headFeeRate,jdbcType=DECIMAL},
       tail_fee_rate = #{tailFeeRate,jdbcType=DECIMAL},
       overdue_fee_rate = #{overdueFeeRate,jdbcType=DECIMAL},
+      min_repay_amount = #{minRepayAmount,jdbcType=DECIMAL},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
@@ -491,8 +506,8 @@
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_product
     (id, code, name, loan_amount_arr, currency, loan_time_arr, loan_time_dmy, apr, description, 
-      picture, is_use, head_fee_rate, tail_fee_rate, overdue_fee_rate, create_by, create_time, 
-      update_by, update_time, remark)
+      picture, is_use, head_fee_rate, tail_fee_rate, overdue_fee_rate, min_repay_amount, 
+      create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.code,jdbcType=CHAR}, #{item.name,jdbcType=VARCHAR}, 
@@ -500,8 +515,9 @@
         #{item.loanTimeDmy,jdbcType=CHAR}, #{item.apr,jdbcType=DECIMAL}, #{item.description,jdbcType=VARCHAR}, 
         #{item.picture,jdbcType=VARCHAR}, #{item.isUse,jdbcType=BIT}, #{item.headFeeRate,jdbcType=DECIMAL}, 
         #{item.tailFeeRate,jdbcType=DECIMAL}, #{item.overdueFeeRate,jdbcType=DECIMAL}, 
-        #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
-        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
+        #{item.minRepayAmount,jdbcType=DECIMAL}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -555,6 +571,9 @@
         </if>
         <if test="'overdue_fee_rate' == column.value">
           #{item.overdueFeeRate,jdbcType=DECIMAL}
+        </if>
+        <if test="'min_repay_amount' == column.value">
+          #{item.minRepayAmount,jdbcType=DECIMAL}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

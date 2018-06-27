@@ -84,6 +84,7 @@ public class EasyGetService implements ProductService {
         product.setHeadFeeRate(productConf.getHeadFeeRate());
         product.setTailFeeRate(productConf.getTailFeeRate());
         product.setOverFeeRate(productConf.getOverdueFeeRate());
+        product.setMinRepayAmount(productConf.getMinRepayAmount());
 
         return product;
     }
@@ -106,6 +107,11 @@ public class EasyGetService implements ProductService {
         bill.setIsPartialRepayment(false);
         bill.setCreateTime(LocalDateTime.now());
         return bill;
+    }
+
+    @Override
+    public BigDecimal getMinRepayAmount(AbstractProduct product) {
+        return product.getMinRepayAmount();
     }
 
 }

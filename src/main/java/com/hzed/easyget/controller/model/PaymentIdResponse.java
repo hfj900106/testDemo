@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PayMentIdResponse {
+public class PaymentIdResponse {
     /**
      * 交易流水id(非交易id)
      */

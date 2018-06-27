@@ -31,6 +31,6 @@ public enum EnvEnum {
         }
 
         // 默认是测试环境
-        return true;
+        return false;
     }
 }

@@ -41,15 +41,13 @@ public class DictService {
 
     private final String dictKey = RedisConsts.DICT_MODULE_CODE + RedisConsts.SPLIT;
 
-    public Dict getDictByCode(String moduleCode) {
+    public Dict getDictByCode(String dictCode) {
 
-        Dict dict = redisService.getObjCache(dictKey + moduleCode);
+        Dict dict = redisService.getObjCache(dictKey + dictCode);
         if (dict == null) {
-            dict = dictRepository.findByCode(moduleCode);
+            dict = dictRepository.findByCode(dictCode);
+            redisService.setObjCache(dictKey + dictCode, dict, 5 * 3600L);
         }
-
-        redisService.setObjCache(dictKey + moduleCode, dict, 5 * 3600L);
-
         return dict;
     }
 

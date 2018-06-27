@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Objects;
 
@@ -143,7 +144,7 @@ public class HomeService {
     }
 
     public List<NewsResponse> getNewsList(NewsListRequest request) {
-        List<NewsResponse> bombResponseList = Lists.newArrayList();
+        List<NewsResponse> newsResponseList = Lists.newArrayList();
 
         Integer pageNo = request.getPageNo();
         Integer pageSize = request.getPageSize();
@@ -157,7 +158,7 @@ public class HomeService {
             String dicValue = dictBomb.getDicValue();
             if (StringUtils.isBlank(dicValue) || version.equals(dicValue)) {
 
-                return bombResponseList;
+                return newsResponseList;
             }
         }
         // 苹果是否要弹窗
@@ -165,19 +166,20 @@ public class HomeService {
             Dict dictBomb = dictService.getDictByCode(IOS_BOMB);
             String dicValue = dictBomb.getDicValue();
             if (StringUtils.isBlank(dicValue) || version.equals(dicValue)) {
-                return bombResponseList;
+                return newsResponseList;
             }
         }
 
-        List<News> bombList = newsRepository.getBombList(pageNo, pageSize);
-        for (News bomb : bombList) {
-            NewsResponse bombResponse = new NewsResponse();
-            bombResponse.setNewsTitle(bomb.getTitle());
-            bombResponse.setImgUrl(bomb.getImgUrl());
-            bombResponse.setToUrl(bomb.getToUrl());
-            bombResponseList.add(bombResponse);
+        List<News> newList = newsRepository.getBombList(pageNo, pageSize);
+        for (News news: newList) {
+            NewsResponse newsResponse = new NewsResponse();
+            newsResponse.setNewsTitle(news.getTitle());
+            newsResponse.setImgUrl(news.getImgUrl());
+            newsResponse.setToUrl(news.getToUrl());
+            newsResponse.setUpTime(news.getUpTime().toInstant(ZoneOffset.of("+8")).toEpochMilli());
+            newsResponseList.add(newsResponse);
         }
-        return bombResponseList;
+        return newsResponseList;
     }
 
     public void checkLoan() {
@@ -230,17 +232,17 @@ public class HomeService {
                     // 交易中
                     result.setStatus(transaction.getStatus());
                     result.setConfirmTime(DateUtil.localDateTimeToTimestamp(transaction.getConfirmTime()));
-                    throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
+                    throw new WarnException(BizCodeEnum.MSG_REPAY_APPLY, result);
                 } else {
                     // 交易成功失败都添加访问记录
                     UserRepaymentVisit repaymentVisit = UserRepaymentVisit.builder().userId(userId).transactionId(transaction.getId()).build();
                     userRepaymentVisitRepository.insertUserRepaymentVisit(repaymentVisit);
                     result.setStatus(status);
-                    throw new ComBizException(BizCodeEnum.MSG_REPAY_APPLY, result);
+                    throw new WarnException(BizCodeEnum.MSG_REPAY_APPLY, result);
                 }
             } else {
                 // 场景3、提交申请还款。未提交凭证
-                throw new ComBizException(BizCodeEnum.MSG_REPAY_UNSUCCESS, result);
+                throw new WarnException(BizCodeEnum.MSG_REPAY_UNSUCCESS, result);
             }
         }
         // 场景1、2，是否借款即将到期、逾期
@@ -256,11 +258,11 @@ public class HomeService {
             }
             result.setId(userExt.getId());
             if (days < 0) {
-                throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_BEFORE, result, new Object[]{Math.abs(days)});
+                throw new WarnException(BizCodeEnum.MSG_BID_OVERDUE_BEFORE, result, new Object[]{Math.abs(days)});
             } else if (days == 0) {
-                throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_TODAY, result);
+                throw new WarnException(BizCodeEnum.MSG_BID_OVERDUE_TODAY, result);
             } else {
-                throw new ComBizException(BizCodeEnum.MSG_BID_OVERDUE_AFTER, result, new Object[]{days});
+                throw new WarnException(BizCodeEnum.MSG_BID_OVERDUE_AFTER, result, new Object[]{days});
             }
         }
         return result;

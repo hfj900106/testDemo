@@ -15,4 +15,6 @@ public class LoginByCodeRequest {
     private String smsCode;
     @NotBlank(message = "{param.login.device.isNotEmpty}")
     private String device;
+    @NotBlank(message = "{param.login.anonymousId.isNotEmpty}")
+    private String anonymousId;
 }

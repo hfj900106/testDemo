@@ -1,7 +1,7 @@
 package com.hzed.easyget.infrastructure.repository;
 
+import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.controller.model.RepaymentRequest;
-import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
@@ -11,7 +11,6 @@ import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -43,29 +42,14 @@ public class UserTransactionRepository {
     /**
      * 查询匹配的交易记录
      */
-    public UserTransaction findoldTrance(UserTransactionExample userTransactionExample) {
+    public UserTransaction findOldTrance(Long bidId, byte type, byte status,byte repayMentType) {
+        UserTransactionExample userTransactionExample=new UserTransactionExample();
+        userTransactionExample.createCriteria()
+                .andBidIdEqualTo(bidId)
+                .andTypeEqualTo(type)
+                .andStatusEqualTo(status)
+                .andRepaymentTypeEqualTo(repayMentType);
         return userTransactionMapper.selectOneByExample(userTransactionExample);
-    }
-
-    /**
-     * 返回交易记录
-     */
-    public UserTransaction selectByKey(Long payId, byte status) {
-        UserTransactionExample userTransactionExample = new UserTransactionExample();
-        userTransactionExample.createCriteria().andIdEqualTo(payId).andStatusEqualTo(status);
-        return userTransactionMapper.selectOneByExample(userTransactionExample);
-    }
-
-    /**
-     * 获取所有的va码记录
-     */
-    public List<UserTransactionRepay> finaAllVAcodeBypermas(RepaymentRequest request) {
-        UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
-        repayExample.createCriteria()
-                .andTransactionIdEqualTo(request.getPayId())
-                .andModeEqualTo(request.getMode());
-        return userTransactionRepayMapper.selectByExample(repayExample);
-
     }
 
     /**
@@ -82,5 +66,15 @@ public class UserTransactionRepository {
         return userTransactionMapper.selectByPrimaryKey(payId);
     }
 
-
+    /**
+     * 查询交易信息
+     */
+    public UserTransaction findOldTranceByExample(Long payId, byte type,Byte status) {
+        UserTransactionExample userTransactionExample = new UserTransactionExample();
+        userTransactionExample.createCriteria()
+                .andIdEqualTo(payId)
+                .andTypeEqualTo(TransactionTypeEnum.OUT.getCode().byteValue())
+                .andStatusEqualTo(status);
+        return userTransactionMapper.selectOneByExample(userTransactionExample);
+    }
 }

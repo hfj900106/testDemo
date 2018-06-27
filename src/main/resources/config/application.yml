@@ -2,8 +2,9 @@
 server.port: 8150
 # 默认根路径
 server.context-path: /hzed/easy-get
+# 加盐
+jasypt.encryptor.password: sdfhfw09GDS20403
 
-# TODO 密码加密 https://blog.csdn.net/linhongwangok/article/details/79076178;https://github.com/ulisesbocchio/jasypt-spring-boot
 spring:
   resources.static-locations: file:${system.imgUploadPath},classpath:/META-INF/resources/,classpath:/swagger/ # 静态资源文件路径，多个用逗号隔开 ,classpath:/public/,file:${web.upload-path}
   profiles.active: dev # 环境
@@ -11,8 +12,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://10.10.30.91:3306/easy-get?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
-    username: root
-    password: 123456
+    username: ENC(djxDOCrXhNQN5FAfcpTPIw==) # 用户密文 明文用户：root
+    password: ENC(piWM79kO6kiDDcjR2jhwAw==) # 密码密文 明文密码：123456
   # Resid相关配置
   redis:
     database: 0
@@ -23,10 +24,12 @@ spring:
     basename: i18n/messages
     encoding: utf-8
     cacheSeconds: 86400 # 24小时
+
 # 日志文件配置
 logging:
   config: classpath:config/logback-spring.xml # 配置文件路径
   logHome: D:/logs/easy-get # 日志路径
+  saLogPath: ${logging.logHome}/sa.log    # 神策测试环境和生产环境LogAgent日志目录
   appNameCN: 印尼借贷项目 # 应用中文名
   envNameCN: 开发环境 # 环境中文名
   emailTo: guichang@hzed.com # 邮件接收者，多个用逗号隔开
@@ -47,13 +50,15 @@ thirdParty:
     getPaymentCodeUrl:        /bluepay/getPaymentCode #获取还款码接口
   risk:
     domain:                   http://10.10.20.202:9611 # 请求风控域名地址
-    checkRiskEnableBorrowUrl: /api/risk/checkRiskEnableBorrow #请求风控查询用户贷款资格
-    idCardRecognitionUrl:     /api/risk/core/ocr #身份证识别
-    faceRecognitionUrl:       /api/risk/core/faceComparison #人脸识别
-    contactsUrl:              /api/risk/Contacts/add #通讯录授权
-    messagesUrl:              /api/risk/Sms/add #短信授权
-    operatorSendSmsCodeUrl:   /api/riskOperator/createTaskAndlogin  #运营商-发送验证码
-    operatorAuthUrl:          /app/riskOperator/sendSmsCode  #运营商-输入验证码认证
+    checkRiskEnableBorrowUrl: /api/risk/checkRiskEnableBorrow # 请求风控查询用户贷款资格
+    idCardRecognitionUrl:     /api/risk/core/ocr   # 身份证识别
+    faceRecognitionUrl:       /api/risk/core/faceComparison # 人脸识别
+    contactsUrl:              /api/risk/Contacts/add    # 通讯录授权
+    messagesUrl:              /api/risk/Sms/add    # 短信授权
+    operatorSendSmsCodeUrl:   /api/riskOperator/createTaskAndlogin  # 运营商-发送验证码
+    operatorAuthUrl:          /api/riskOperator/sendSmsCode  # 运营商-输入验证码认证
+    identityInfoUrl:          /api/risk/core/identity   # 身份信息认证
+    pushBidUrl:                /api/risk/auto/antifraud  # 风控审核
 
 #======================================= 系统参数 开始 =======================================#
 system:
@@ -61,31 +66,30 @@ system:
   tokenExpire: 7 # token失效时间 7 天
   expected_audit_time_interval: 1440 #预计审核时间间隔 单位分
   expected_lending_time_interval: 60 #预计放款时间间隔 单位分
-  saServerLogUrl: /logs/service_log.log    # 神策测试环境和生产环境LogAgent日志目录
 
-  # 定时任务
+  # 定时任务 启动标志 周期
   job:
     # 风控审核
-    pushBid: false # 启动标志
-    pushBidCron: 0/5 * * * * ? # 周期
+    pushBid: false
+    pushBidCron: 0/5 * * * * ?
     # 放款
-    bankLoan: false # 启动标志
-    bankLoanCron: 0/5 * * * * ? # 周期
+    bankLoan: false
+    bankLoanCron: 0/5 * * * * ?
     # 处理还款信息流
-    repayInfoFlow: false # 启动标志
-    repayInfoFlowCron: 0/5 * * * * ? # 周期
+    repayInfoFlow: false
+    repayInfoFlowCron: 0/5 * * * * ?
     # 还款失败
-    repayFail: false # 启动标志
-    repayFailCron: 0/5 * * * * ? # 周期
+    repayFail: false # 功能暂时不用
+    repayFailCron: 0/5 * * * * ?
     # 神策进件
-    saInData: false   # 启动标志
-    saInDataCron: 0/5 * * * * ? # 周期
+    saInData: false
+    saInDataCron: 0/5 * * * * ?
     # 神策借款成功
-    saLoanSuccess: false    # 启动标志
-    saLoanSuccessCron: 0/5 * * * * ? # 周期
+    saLoanSuccess: false
+    saLoanSuccessCron: 0/5 * * * * ?
     # 神策还款
-    saRepaymentSuccess: false   # 启动标志
-    saRepaymentSuccessCron: 0/5 * * * * ?  # 周期
+    saRepaymentSuccess: false
+    saRepaymentSuccessCron: 0/5 * * * * ?
 
 
 

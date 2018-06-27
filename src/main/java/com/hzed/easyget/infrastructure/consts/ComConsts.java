@@ -19,12 +19,20 @@ public class ComConsts {
     public static final String RISK_OK = "ok";
     public static final String RISK_CODE = "code";
     public static final String RISK_OPERATOR_HAVE_SEND = "2";
-    public static final String  RISK_OPERATOR_FREQ = "2.1";
+    public static final String RISK_OPERATOR_FREQ = "2.1";
     public static final String RISK_OPERATOR_ERROR = "3";
     public static final String RISK_OPERATOR_PARAMS_ERROR = "1";
     public static final String RISK_OPERATOR_HAVE_AUTH = "0000";
     public static final String H5 = "H5";
-
+    /**
+     * 短信发送渠道字典code
+     */
+    public static final String SMS_DICT_CODE = "071";
+    /**
+     * 牛信
+     */
+    public static final String NX = "NX";
+    public static final int BULK_SMS_OK = 0;
     public static final int IS_ANDROID = 1;
     public static final int IS_IOS = 2;
     /**
@@ -42,10 +50,10 @@ public class ComConsts {
     /**
      * 交易方式ATM
      */
-    public static final String ATM="ATM";
+    public static final String ATM = "ATM";
     /**
      * 交易方式OTC
      */
-    public static final String OTC="OTC";
+    public static final String OTC = "OTC";
 
 }

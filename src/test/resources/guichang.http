@@ -14,8 +14,8 @@ version:1.0.0
 
 
 ### 用户登录
-#POST http://localhost:8150/hzed/easy-get/api/login/loginByCode
-POST http://10.10.30.92:8150/hzed/easy-get/api/login/loginByCode
+POST http://localhost:8150/hzed/easy-get/api/login/loginByCode
+#POST http://10.10.30.92:8150/hzed/easy-get/api/login/loginByCode
 Accept: application/json;charset=UTF-8
 Cache-Control: no-cache
 Content-Type: application/json
@@ -170,6 +170,9 @@ token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIxN
 "pageNo":0,
 "pageSize":5
 }
+
+###
+POST http://10.10.30.55:28080/easy-get-admin/login
 
 ###
 

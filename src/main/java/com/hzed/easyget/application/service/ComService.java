@@ -62,28 +62,6 @@ public class ComService {
     private RiskProp riskProp;
 
     /**
-     * 校验请求头非token参数
-     */
-    public void validateHeader(GlobalHead globalHeadr) {
-        if (StringUtils.isBlank(globalHeadr.getAppKey())) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_APPKEY);
-        }
-        if (StringUtils.isBlank(globalHeadr.getPlatform())) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_PLATFORM);
-        }
-        if (StringUtils.isBlank(globalHeadr.getVersion())) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_VERSION);
-        }
-        if (StringUtils.isBlank(globalHeadr.getI18n())) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_I18N);
-        }
-        if (StringUtils.isBlank(globalHeadr.getImei())) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_IMEI);
-        }
-    }
-
-
-    /**
      * 校验token参数
      */
     public void validateToken(GlobalHead globalHeadr) {
@@ -113,7 +91,7 @@ public class ComService {
                 throw new WarnException(BizCodeEnum.TOKEN_EXPIRE);
             } else {
                 //刷新Redis缓存
-                redisService.setCache(tokenCacheKey, userToken.getToken(), RedisConsts.THREE_HOUR);
+                redisService.setCache(tokenCacheKey, userToken.getToken(), 10800L);
             }
         } else if (!token.equals(tokenCache)) {
             // 检查redis token是否与传过来的一致
@@ -127,7 +105,7 @@ public class ComService {
      * @param bidId             标id
      * @param realRepaymentTime 实际还款时间
      */
-    public BigDecimal getBidNoRepay(Long bidId, LocalDateTime realRepaymentTime) {
+    public BigDecimal getBidNoRepayFee(Long bidId, LocalDateTime realRepaymentTime) {
         bidRepository.findByIdWithExp(bidId);
 
         BigDecimal total = BigDecimal.ZERO;
@@ -137,14 +115,14 @@ public class ComService {
         // 台账中是否有逾期费标志
         boolean overdueFlag = false;
         for (BillLedger ledger : ledgers) {
-            total = total.add(getBillItemNoRepay(ledger.getBillId(), ledger.getRepaymentItem().intValue(), realRepaymentTime));
+            total = total.add(getBillItemNoRepayFee(ledger.getBillId(), ledger.getRepaymentItem().intValue(), realRepaymentTime));
             if(BillLedgerItemEnum.OVERDUE_FEE.getCode().intValue() == ledger.getRepaymentItem().intValue()) {
                 overdueFlag = true;
             }
         }
         // 单独处理逾期费
         if(!overdueFlag) {
-            total = total.add(getBillItemNoRepay(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode(), realRepaymentTime));
+            total = total.add(getBillItemNoRepayFee(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode(), realRepaymentTime));
         }
         return total;
     }
@@ -156,7 +134,7 @@ public class ComService {
      * @param item              台账类型枚举值 如 BillLedgerItemEnum.OVERDUE_FEE.getCode()
      * @param realRepaymentTime 实际还款时间
      */
-    public BigDecimal getBillItemNoRepay(Long billId, Integer item, LocalDateTime realRepaymentTime) {
+    public BigDecimal getBillItemNoRepayFee(Long billId, Integer item, LocalDateTime realRepaymentTime) {
         Bill bill = billRepository.findByIdWithExp(billId);
         int status = bill.getStatus().intValue();
         // 账单已结清则没有逾期费

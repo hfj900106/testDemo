@@ -66,19 +66,19 @@ public class AuthController {
         authService.identityInfoAuth(request);
     }
 
-    @ModuleFunc("/获取用户认证信息")
+    @ModuleFunc("获取用户认证信息")
     @PostMapping("/getAuthStatus")
     public List<AuthStatusResponse> getAuthStatus() {
         return authService.getAuthStatus();
     }
 
-    @ModuleFunc("/运营商认证-发送验证码")
+    @ModuleFunc("运营商认证-发送验证码")
     @PostMapping("/operatorSendSmsCode")
     public void operatorSendSmsCode() {
         authService.operatorSendSmsCode();
     }
 
-    @ModuleFunc("/运营商认证-验证码认证")
+    @ModuleFunc("运营商认证-验证码认证")
     @PostMapping("/operatorAuth")
     public void operatorAuth(@Valid @RequestBody PeratorAuthRequest request) {
         authService.operatorAuth(request);

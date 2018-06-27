@@ -2,46 +2,42 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://10.10.30.91:3306/easy-get-test?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
-    username: root
-    password: 123456
+    username: ENC(djxDOCrXhNQN5FAfcpTPIw==) # 用户密文 明文用户：root
+    password: ENC(piWM79kO6kiDDcjR2jhwAw==) # 密码密文 明文密码：123456
 # 日志文件配置
 logging:
   logHome: /work/easy-get-8150/logs # 日志路径
   envNameCN: 测试环境 # 环境中文名
-  emailTo: guichang@hzed.com,wuchengwu@hzed.com,huangfengjing@hzed.com # 邮件接收者，多个用逗号隔开
+  emailTo: guichang@hzed.com,wuchengwu@hzed.com,huangfengjing@hzed.com,dengzhenhao@hzed.com,zhangruilin@hzed.com # 邮件接收者，多个用逗号隔开
 
 # 第三方
 thirdParty:
   pay.domain: http://10.10.30.114:8081 # 请求bulepay域名地址
-  risk.domain: http://10.10.20.202:9611 # 请求风控域名地址
+  risk.domain: http://10.10.30.92:9611 # 请求风控域名地址
 #======================================= 系统参数 开始 =======================================#
 system:
   imgUploadPath: /work/easy-get-8150/imgUpload # 上传图片文件目录
-  saServerLogUrl: ${logging.logHome}/sa_log.log    # 神策测试环境和生产环境LogAgent日志目录
 
-  # 定时任务
+  # 定时任务 启动标志 周期
   job:
     # 风控审核
-    pushBid: false # 启动标志
-    pushBidCron: 0/5 * * * * ? # 周期
+    pushBid: false
+    pushBidCron: 0/5 * * * * ?
     # 放款
-    bankLoan: false # 启动标志
-    bankLoanCron: 0/5 * * * * ? # 周期
+    bankLoan: false
+    bankLoanCron: 0/5 * * * * ?
     # 处理还款信息流
-    repayInfoFlow: false # 启动标志
-    repayInfoFlowCron: 0/5 * * * * ? # 周期
-    # 还款失败
-    repayFail: false # 启动标志
-    repayFailCron: 0/5 * * * * ? # 周期
+    repayInfoFlow: false
+    repayInfoFlowCron: 0/5 * * * * ?
     # 神策进件
-    saInData: false   # 启动标志
-    saInDataCron: 0/5 * * * * ? # 周期
+    saInData: false
+    saInDataCron: 0/5 * * * * ?
     # 神策借款成功
-    saLoanSuccess: false    # 启动标志
-    saLoanSuccessCron: 0/5 * * * * ? # 周期
+    saLoanSuccess: false
+    saLoanSuccessCron: 0/5 * * * * ?
     # 神策还款
-    saRepaymentSuccess: false   # 启动标志
-    saRepaymentSuccessCron: 0/5 * * * * ?  # 周期
+    saRepaymentSuccess: false
+    saRepaymentSuccessCron: 0/5 * * * * ?
 #======================================= 系统参数 结束 =======================================#
 
 

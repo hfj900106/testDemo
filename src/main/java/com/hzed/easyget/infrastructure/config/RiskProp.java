@@ -22,6 +22,8 @@ public class RiskProp {
     private String messagesUrl;
     private String operatorSendSmsCodeUrl;
     private String operatorAuthUrl;
+    private String identityInfoUrl;
+    private String pushBidUrl;
 
     public String getAbsCheckRiskEnableBorrowUrl(){ return this.domain + this.checkRiskEnableBorrowUrl; }
     public String getIdCardRecognitionUrl(){ return this.domain + this.idCardRecognitionUrl; }
@@ -30,4 +32,7 @@ public class RiskProp {
     public String getMessagesUrl(){ return this.domain + this.messagesUrl; }
     public String getOperatorSendSmsCodeUrl(){ return this.domain + this.operatorSendSmsCodeUrl; }
     public String getOperatorAuthUrl(){ return this.domain + this.operatorAuthUrl; }
+    public String getIdentityInfoUrl(){ return this.domain + this.identityInfoUrl; }
+    public String getPushBidUrl(){ return this.domain + this.pushBidUrl; }
+
 }

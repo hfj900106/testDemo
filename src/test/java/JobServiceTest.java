@@ -1,5 +1,4 @@
 import com.hzed.BootApplication;
-import com.hzed.easyget.application.service.ComService;
 import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
@@ -10,9 +9,7 @@ import com.hzed.easyget.infrastructure.repository.UserTransactionRepository;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
-import com.hzed.easyget.persistence.auto.mapper.UserTransactionMapper;
 import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper;
-import com.hzed.easyget.persistence.ext.mapper.BidExtMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +61,7 @@ public class JobServiceTest {
     public void test09(){
         RepayPartRequest request=new RepayPartRequest();
         request.setBidId(104094428696027136L);
-        PayMentIdResponse idResponse=repayService.findloanManagResponse(BigDecimal.valueOf(20000),request.getBidId(),false);
+        PaymentIdResponse idResponse=repayService.findloanManagResponse(BigDecimal.valueOf(20000),request.getBidId(),false);
         System.out.println(idResponse);
     }
 

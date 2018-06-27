@@ -80,7 +80,6 @@ public class LoginService {
             token = JwtUtil.createToken(newUserToken);
             //build UserToken
             UserToken userToken = buildUserToken(IdentifierGenerator.nextId(), userId, token, imei);
-            userToken.setCreateTime(LocalDateTime.now());
             // UserLogin
             UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
             //UserStatus
@@ -107,9 +106,9 @@ public class LoginService {
             UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
             userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
         }
-        //放入redis 3个小时
-        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, RedisConsts.THREE_HOUR);
-        //验证SmsCode之后删除掉
+        // 放入redis 3个小时
+        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 10800L);
+        // 验证SmsCode之后删除掉
         redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
         return LoginByCodeResponse.builder().token(token).build();
     }

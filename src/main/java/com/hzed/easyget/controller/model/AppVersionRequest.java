@@ -1,8 +1,7 @@
 package com.hzed.easyget.controller.model;
 
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 版本更新请求参数
@@ -12,6 +11,6 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class AppVersionRequest {
-    @NotNull(message = "{param.home.oldVersion.isNotEmpty}")
-    private Integer oldVersion;
+    @NotBlank(message = "{param.home.oldVersion.isNotEmpty}")
+    private String oldVersion;
 }

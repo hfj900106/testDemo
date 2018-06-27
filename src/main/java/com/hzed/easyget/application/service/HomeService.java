@@ -78,7 +78,7 @@ public class HomeService {
 
         AppVersionResponse appVersionResponse = new AppVersionResponse();
         String platform = RequestUtil.getGlobalHead().getPlatform();
-        String oldVersion = String.valueOf(request.getOldVersion());
+        String oldVersion = request.getOldVersion();
         String verDicCode;
         String updateDicCode;
         if (AppVersionEnum.ANDROID.getCode().equals(platform)) {
@@ -128,9 +128,10 @@ public class HomeService {
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
         String imei = RequestUtil.getGlobalHead().getImei();
-        UserToken byUserIdAndImei = userTokenRepository.findByUserIdAndImei(userId, imei);
+        UserToken utk = userTokenRepository.findByUserIdAndImei(userId, imei);
         // 时间是今天，就不用更新token
-        if (DateUtil.compareDay(byUserIdAndImei.getUpdateTime())) {
+        LocalDateTime updateTime = utk.getUpdateTime();
+        if (updateTime != null && DateUtil.compareDay(updateTime)) {
             return UpdateTokenResponse.builder().token(RequestUtil.getGlobalHead().getToken()).build();
         }
 

@@ -8,6 +8,7 @@ import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.persistence.auto.entity.Dict;
 import com.hzed.indonesia.sms.constants.SmsCodeEnum;
 import com.hzed.indonesia.sms.model.request.BulkSmsDownRequest;
@@ -60,7 +61,8 @@ public class SmsUtils {
             log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
             //发送失败
             if (!SmsCodeEnum.OK.getKey().equals(smsDownResponse.getCode())) {
-                throw new ComBizException(BizCodeEnum.SMS_CODE_SEND_FAIL);
+                log.error("发送失败：{}",smsDownResponse.getInfo());
+                throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
             }
         } else {
             //bulk短信下发请求bean

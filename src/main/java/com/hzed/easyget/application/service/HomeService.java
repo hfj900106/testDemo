@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Objects;
 
@@ -143,7 +144,7 @@ public class HomeService {
     }
 
     public List<NewsResponse> getNewsList(NewsListRequest request) {
-        List<NewsResponse> bombResponseList = Lists.newArrayList();
+        List<NewsResponse> newsResponseList = Lists.newArrayList();
 
         Integer pageNo = request.getPageNo();
         Integer pageSize = request.getPageSize();
@@ -157,7 +158,7 @@ public class HomeService {
             String dicValue = dictBomb.getDicValue();
             if (StringUtils.isBlank(dicValue) || version.equals(dicValue)) {
 
-                return bombResponseList;
+                return newsResponseList;
             }
         }
         // 苹果是否要弹窗
@@ -165,19 +166,20 @@ public class HomeService {
             Dict dictBomb = dictService.getDictByCode(IOS_BOMB);
             String dicValue = dictBomb.getDicValue();
             if (StringUtils.isBlank(dicValue) || version.equals(dicValue)) {
-                return bombResponseList;
+                return newsResponseList;
             }
         }
 
-        List<News> bombList = newsRepository.getBombList(pageNo, pageSize);
-        for (News bomb : bombList) {
-            NewsResponse bombResponse = new NewsResponse();
-            bombResponse.setNewsTitle(bomb.getTitle());
-            bombResponse.setImgUrl(bomb.getImgUrl());
-            bombResponse.setToUrl(bomb.getToUrl());
-            bombResponseList.add(bombResponse);
+        List<News> newList = newsRepository.getBombList(pageNo, pageSize);
+        for (News news: newList) {
+            NewsResponse newsResponse = new NewsResponse();
+            newsResponse.setNewsTitle(news.getTitle());
+            newsResponse.setImgUrl(news.getImgUrl());
+            newsResponse.setToUrl(news.getToUrl());
+            newsResponse.setUpTime(news.getUpTime().toInstant(ZoneOffset.of("+8")).toEpochMilli());
+            newsResponseList.add(newsResponse);
         }
-        return bombResponseList;
+        return newsResponseList;
     }
 
     public void checkLoan() {

@@ -20,7 +20,7 @@ public class RepaymentResponse {
     /** 借款金额 */
     private BigDecimal loanAmount;
     /** 实际还款时间 或 到期时间 -结清才会显示*/
-    private String repayTime;
+    private Long repayTime;
     private Integer status;
     private Integer days;
     private Long bid;

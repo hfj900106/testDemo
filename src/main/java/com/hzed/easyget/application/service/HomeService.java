@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Objects;
 
@@ -182,7 +181,7 @@ public class HomeService {
             newsResponse.setNewsTitle(news.getTitle());
             newsResponse.setImgUrl(news.getImgUrl());
             newsResponse.setToUrl(news.getToUrl());
-            newsResponse.setUpTime(news.getUpTime().toInstant(ZoneOffset.of("+8")).toEpochMilli());
+            newsResponse.setUpTime(DateUtil.localDateTimeToTimestamp(news.getUpTime()));
             newsResponseList.add(newsResponse);
         }
         return newsResponseList;

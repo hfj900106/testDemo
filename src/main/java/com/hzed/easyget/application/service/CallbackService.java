@@ -16,6 +16,7 @@ import com.hzed.easyget.persistence.auto.entity.BidProgress;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -39,7 +40,11 @@ public class CallbackService {
         byte status = "1".equals(request.getResultCode()) ? BidStatusEnum.AUDIT_PASS.getCode().byteValue() : BidStatusEnum.AUDIT_FAIL.getCode().byteValue();
 
         LocalDateTime dateTime = DateUtil.timestampToLocalDateTimeTo(Long.parseLong(request.getHandleTime()));
-        AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bidRepository.findById(bidId).getPeriod());
+        Bid bid = bidRepository.findById(bidId);
+        if(ObjectUtils.isEmpty(bid)){
+            log.error("回调处理的标ID：{}不存在标的表中",bidId);
+        }
+        AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
         tempTableRepository.pushBidCallback(
                 Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime).auditFee(absProduct.getHeadFee()).status(status).build(),
                 BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue()).build(),

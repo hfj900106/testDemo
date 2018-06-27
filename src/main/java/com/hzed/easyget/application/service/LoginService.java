@@ -118,7 +118,7 @@ public class LoginService {
         redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, RedisConsts.THREE_HOUR);
         //验证SmsCode之后删除掉
         redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
-        return LoginByCodeResponse.builder().token(token).build();
+        return LoginByCodeResponse.builder().token(token).userId(userId).build();
     }
 
     /**

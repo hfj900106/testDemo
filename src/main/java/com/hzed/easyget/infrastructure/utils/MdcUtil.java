@@ -20,4 +20,8 @@ public class MdcUtil {
     public static void putModuleName(String moduleName) {
         MDC.put("moduleName", moduleName);
     }
+
+    public static void clear() {
+        MDC.clear();
+    }
 }

@@ -20,4 +20,5 @@ public class NewsResponse {
     private String newsTitle;
     private String imgUrl;
     private String toUrl;
+    private Long upTime;
 }

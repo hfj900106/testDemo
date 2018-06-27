@@ -78,6 +78,7 @@ public enum BizCodeEnum {
     PARAMS_AUTH_RISK("1040","认证数据不正确"),
     NOT_END_AUTH_RISK("1041","认证未结束不能重发验证码"),
     NEED_SMS_AUTH_RISK("1042","验证码错误，请重新输入验证码"),
+    SUCCESS_AUTH("1043", "运营商认证成功"),
 
     // 首页还款检测
     MSG_BID_OVERDUE_TODAY("2001","您的借款于今天到期，请尽快还款，以免逾期"),

@@ -5,12 +5,14 @@ import com.hzed.easyget.application.enums.BillStatusEnum;
 import com.hzed.easyget.application.enums.RepayTypeEnum;
 import com.hzed.easyget.infrastructure.config.SaProp;
 import com.hzed.easyget.infrastructure.consts.SaConsts;
+import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.SaRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.persistence.ext.entity.SaExt;
 import com.sensorsdata.analytics.javasdk.SensorsAnalytics;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import java.util.*;
@@ -25,9 +27,8 @@ public class SaService {
 
     @Autowired
     private SaRepository saRepository;
-
     @Autowired
-    private SaProp saUrl;
+    private SaProp saProp;
 
 
     public void saInData() {
@@ -110,7 +111,7 @@ public class SaService {
 
         try {
             log.info("SensorsAnalytics inData track method begin, bidId:{}, userId:{}, bidStatus:{}" , info.getBidId(), info.getUserId(), info.getBidStatus());
-            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaLogPath()));
+            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saProp.getSaLogPath()));
             sa.track(String.valueOf(info.getUserId()), true, "InData", properties);
             sa.flush();
             log.info("SensorsAnalytics inData track method end.");
@@ -197,7 +198,7 @@ public class SaService {
 
         try {
             log.info("SensorsAnalytics loanSuccess track method begin, bidId:{}, userId:{}, bidStatus:{}" , info.getBidId(), info.getUserId(), info.getBidStatus());
-            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaLogPath()));
+            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saProp.getSaLogPath()));
             sa.track(String.valueOf(info.getUserId()), true, "LoanSuccessed", properties);
             sa.flush();
             log.info("SensorsAnalytics loanSuccess track method end.");
@@ -279,7 +280,7 @@ public class SaService {
         try {
             log.info("SensorsAnalytics repaymentSuccess track method begin, bidId:{}, userId:{}, bidStatus:{}" , info.getBidId(), info.getUserId(), info.getBidStatus());
 
-            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaLogPath()));
+            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saProp.getSaLogPath()));
             sa.track(String.valueOf(info.getUserId()), true, "Repayment", properties);
             sa.flush();
             log.info("SensorsAnalytics repaymentSuccess track method end.");
@@ -332,5 +333,54 @@ public class SaService {
 
     public void saOperator(SaExt saExt) {
         saRepository.saOperator(saExt);
+    }
+
+    /**
+     * 匿名id 绑定用户id，方便神策数据统计
+     * @param userId 用户id
+     * @param anonymousId 匿名id, 由app生成提供
+     */
+    @Async
+    public void saLogin(Long userId, String anonymousId) {
+        try {
+            log.info("SensorsAnalytics Login, userId binding anonymousId begin, userId:{}, anonymousId:{}", userId, anonymousId);
+            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saProp.getSaLogPath()));
+            sa.trackSignUp(String.valueOf(userId), anonymousId);
+            log.info("SensorsAnalytics Login, userId binding anonymousId end, userId:{}, anonymousId:{}", userId, anonymousId);
+        } catch (Exception e) {
+            log.error("SensorsAnalytics Login trackSignUp method exception, userId:{}, anonymousId:{} ,info: {}", userId, anonymousId, e);
+        }
+    }
+
+    /**
+     * 神策运营商认证信息推送，存库
+     * @param user 登陆用户
+     * @param bool true : 认证成功，false : 认证失败
+     * @param desc 认证结果描述
+     */
+    @Async
+    public void saOperator(GlobalUser user, boolean bool, String desc) {
+        try {
+            SaExt saExt = new SaExt();
+            saExt.setUserId(user.getUserId());
+            saExt.setUserMobile(user.getMobile());
+            saExt.setBool(bool);
+            saExt.setDesc(desc);
+
+            Map<String, Object> properties = new HashMap<>(16);
+            // IsSuccess	是否成功	BOOL
+            properties.put("IsSuccess", bool);
+            // FailReason	认证失败原因	字符串
+            properties.put("EventResult", desc);
+
+            log.info("SensorsAnalytics DetailedList track method begin, userId:{}, userMobile:{}, bool:{}, desc{}" , user.getUserId(), user.getMobile(), bool, desc);
+            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saProp.getSaLogPath()));
+            sa.track(String.valueOf(user.getUserId()), true, "DetailedList", properties);
+            sa.flush();
+            log.info("SensorsAnalytics DetailedList track method end.");
+            saOperator(saExt);
+        } catch (Exception e){
+            log.error("SensorsAnalytics DetailedList track method exception, userId:{}, userMobile:{}, info: {}",user.getUserId(), user.getMobile(), e);
+        }
     }
 }

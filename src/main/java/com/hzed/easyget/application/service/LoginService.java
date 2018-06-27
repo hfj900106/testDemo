@@ -48,7 +48,7 @@ public class LoginService {
     @Autowired
     private SystemProp systemProp;
     @Autowired
-    private SaProp saUrl;
+    SaService saService;
 
     @Value("${spring.profiles.active}")
     private String env;
@@ -67,8 +67,8 @@ public class LoginService {
         String imei = globalHead.getImei();
         String device = request.getDevice();
         String ip = RequestUtil.getIp();
-        /** 神策 - 匿名id String anonymousId = request.getAnonymousId(); */
-        String anonymousId = "";
+        //用户匿名id
+        String anonymousId = request.getAnonymousId();
         //校验验证码
         checkSmsCode(mobile, smsCode);
 
@@ -113,7 +113,7 @@ public class LoginService {
             UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
             userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
         }
-        saLogin(userId, anonymousId);
+        saService.saLogin(userId, anonymousId);
         //放入redis 3个小时
         redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, RedisConsts.THREE_HOUR);
         //验证SmsCode之后删除掉
@@ -121,21 +121,7 @@ public class LoginService {
         return LoginByCodeResponse.builder().token(token).userId(userId).build();
     }
 
-    /**
-     * 匿名id绑定用户id，方便神策数据统计
-     * @param userId 用户id
-     * @param anonymousId 匿名id, 由app生成提供
-     */
-    public void saLogin(Long userId, String anonymousId) {
-        try {
-            log.info("SensorsAnalytics Login, userId binding anonymousId begin, userId:{}, anonymousId:{}", userId, anonymousId);
-            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaLogPath()));
-            sa.trackSignUp(String.valueOf(userId), anonymousId);
-            log.info("SensorsAnalytics Login, userId binding anonymousId end, userId:{}, anonymousId:{}", userId, anonymousId);
-        } catch (Exception e) {
-            log.error("SensorsAnalytics Login trackSignUp method exception, userId:{}, anonymousId:{} ,info: {}", userId, anonymousId, e);
-        }
-    }
+
 
     /**
      * H5页面注册

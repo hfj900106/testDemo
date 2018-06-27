@@ -43,4 +43,11 @@ public class SaExt {
     /** 神策还款 */
     /** 账单的部分还款标志：1-是 0-否 */
     private Byte isPartialRepayment;
+
+    /*** 运营商认证 */
+    /** 用户手机号码 */
+    private String userMobile;
+    /** 是否推送成功 */
+    private boolean bool;
+    private String desc;
 }

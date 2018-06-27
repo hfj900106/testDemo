@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.controller.model.*;
+import com.hzed.easyget.infrastructure.config.SaProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
@@ -21,11 +22,14 @@ import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.ext.entity.SaExt;
+import com.sensorsdata.analytics.javasdk.SensorsAnalytics;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.jws.Oneway;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -61,6 +65,10 @@ public class AuthService {
     private RestService restService;
     @Autowired
     FileService fileService;
+    @Autowired
+    SaService saService;
+    @Autowired
+    private SaProp saUrl;
 
     /**
      * 获取用户认证状态
@@ -147,6 +155,7 @@ public class AuthService {
         String isSend = redisService.getCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
         if (StringUtils.isNotBlank(isSend)) {
             //发送过于频繁,不打error
+            saOperator(user, false, BizCodeEnum.NOT_END_AUTH_RISK.getMessage());
             throw new WarnException(BizCodeEnum.NOT_END_AUTH_RISK);
         }
         User userInfo = userRepository.findById(user.getUserId());
@@ -154,6 +163,7 @@ public class AuthService {
         String identityCode = userInfo.getIdCardNo();
         if (StringUtils.isBlank(realName) || StringUtils.isBlank(identityCode)) {
             //未进行身份验证
+            saOperator(user, false, BizCodeEnum.UN_IDENTITY_AUTH.getMessage());
             throw new WarnException(BizCodeEnum.UN_IDENTITY_AUTH);
         }
         Long timeStamp = System.currentTimeMillis();
@@ -167,21 +177,26 @@ public class AuthService {
         RiskResponse response = restService.postJson("http://10.10.20.203:9611/api/riskOperator/createTaskAndlogin", map, RiskResponse.class);
         log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
         if (null == response) {
+            saOperator(user, false, BizCodeEnum.ERROR_RISK__RESULT.getMessage());
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
+            saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
         if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
             //已经认证过
+            saOperator(user, false, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
             throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
         }
         if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_PARAMS_ERROR)) {
             //认证数据不正确，数据从数据库取，一般不出现
+            saOperator(user, false, BizCodeEnum.PARAMS_AUTH_RISK.getMessage());
             throw new WarnException(BizCodeEnum.PARAMS_AUTH_RISK);
         }
         if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_ERROR)) {
             //认证失败
+            saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
         //redis存一个发送标识，要等输入验证认证结束才可以重新发送，第三方接口要求
@@ -205,22 +220,29 @@ public class AuthService {
         log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
         if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_FREQ)) {
             //认证频繁，要等一分钟再认证
+            saOperator(user, false, BizCodeEnum.FREQUENTLY_AUTH_RISK.getMessage());
             throw new WarnException(BizCodeEnum.FREQUENTLY_AUTH_RISK);
         }
         if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_ERROR)) {
             //认证失败，删除重发标志
+            saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
             redisService.clearCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
         if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_HAVE_SEND)) {
             //验证码错误，需要输入验证码，后台自动让第三方接口重发验证码
+            saOperator(user, false, BizCodeEnum.NEED_SMS_AUTH_RISK.getMessage());
             throw new WarnException(BizCodeEnum.NEED_SMS_AUTH_RISK);
         }
         if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
             //已经认证过
+            saOperator(user, false, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
             throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
         }
         afterResponse(response, user.getUserId(), AuthCodeEnum.SMS.getCode(), "运营商认证");
+
+        saOperator(user, true, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
+
         //认证成功，删除重发标志
         redisService.clearCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
     }
@@ -435,6 +457,37 @@ public class AuthService {
         }
         UserAuthStatus userAuthStatus = buildUserAuthStatus(request.getUserId(), AuthCodeEnum.INS.getCode(), "ins认证");
         authStatusRepository.insertSelective(userAuthStatus);
+    }
+
+    /**
+     * 神策 - 运营商认证
+     * @param user
+     * @param bool
+     * @param desc
+     */
+    public void saOperator(GlobalUser user, boolean bool, String desc) {
+        try {
+            SaExt saExt = new SaExt();
+            saExt.setUserId(user.getUserId());
+            saExt.setUserMobile(user.getMobile());
+            saExt.setBool(bool);
+            saExt.setDesc(desc);
+
+            Map<String, Object> properties = new HashMap<>(16);
+            // IsSuccess	是否成功	BOOL
+            properties.put("IsSuccess", bool);
+            // FailReason	认证失败原因	字符串
+            properties.put("EventResult", desc);
+
+            log.info("SensorsAnalytics DetailedList track method begin, userId:{}, userMobile:{}, bool:{}, desc{}" , user.getUserId(), user.getMobile(), bool, desc);
+            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaServerLogUrl()));
+            sa.track(String.valueOf(user.getUserId()), true, "DetailedList", properties);
+            sa.flush();
+            log.info("SensorsAnalytics DetailedList track method end.");
+            saService.saOperator(saExt);
+        } catch (Exception e){
+            log.error("SensorsAnalytics DetailedList track method exception, userId:{}, userMobile:{}, info: {}",user.getUserId(), user.getMobile(), e);
+        }
     }
 
 }

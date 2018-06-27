@@ -329,4 +329,8 @@ public class SaService {
     public void initRepaymentSuccess(List<SaExt> list) {
         saRepository.batchSaveRepaymentSuccess(list);
     }
+
+    public void saOperator(SaExt saExt) {
+        saRepository.saOperator(saExt);
+    }
 }

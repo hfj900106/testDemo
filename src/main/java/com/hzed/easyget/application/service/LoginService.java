@@ -2,6 +2,7 @@ package com.hzed.easyget.application.service;
 
 import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.controller.model.*;
+import com.hzed.easyget.infrastructure.config.SaProp;
 import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
@@ -17,6 +18,7 @@ import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.*;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
+import com.sensorsdata.analytics.javasdk.SensorsAnalytics;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,8 @@ public class LoginService {
     private UserTokenRepository userTokenRepository;
     @Autowired
     private SystemProp systemProp;
+    @Autowired
+    private SaProp saUrl;
 
     @Value("${spring.profiles.active}")
     private String env;
@@ -63,6 +67,8 @@ public class LoginService {
         String imei = globalHead.getImei();
         String device = request.getDevice();
         String ip = RequestUtil.getIp();
+        /** 神策 - 匿名id String anonymousId = request.getAnonymousId(); */
+        String anonymousId = "";
         //校验验证码
         checkSmsCode(mobile, smsCode);
 
@@ -107,11 +113,28 @@ public class LoginService {
             UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
             userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
         }
+        saLogin(userId, anonymousId);
         //放入redis 3个小时
         redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, RedisConsts.THREE_HOUR);
         //验证SmsCode之后删除掉
         redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
         return LoginByCodeResponse.builder().token(token).build();
+    }
+
+    /**
+     * 匿名id绑定用户id，方便神策数据统计
+     * @param userId 用户id
+     * @param anonymousId 匿名id, 由app生成提供
+     */
+    public void saLogin(Long userId, String anonymousId) {
+        try {
+            log.info("SensorsAnalytics Login, userId binding anonymousId begin, userId:{}, anonymousId:{}", userId, anonymousId);
+            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saUrl.getSaServerLogUrl()));
+            sa.trackSignUp(String.valueOf(userId), anonymousId);
+            log.info("SensorsAnalytics Login, userId binding anonymousId end, userId:{}, anonymousId:{}", userId, anonymousId);
+        } catch (Exception e) {
+            log.error("SensorsAnalytics Login trackSignUp method exception, userId:{}, anonymousId:{} ,info: {}", userId, anonymousId, e);
+        }
     }
 
     /**

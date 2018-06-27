@@ -1,9 +1,6 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.controller.model.LoanManagResponse;
-import com.hzed.easyget.controller.model.PaymentCodeRequest;
 import com.hzed.easyget.controller.model.RepaymentRequest;
-import com.hzed.easyget.controller.model.TransactionVAResponse;
 import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionPic;
@@ -40,6 +37,7 @@ public class RepayRepository {
     private UserTransactionMapper userTransactionMapper;
     @Autowired
     private BillMapper billMapper;
+
     /**
      * 标的应还时间
      */
@@ -59,8 +57,8 @@ public class RepayRepository {
     /**
      * 获取交易记录 根据交易id
      */
-    public PaymentCodeRequest finduserTransBypaymentId(Long payId) {
-        return repayExtMapper.finduserTransBypaymentId(payId);
+    public UserTransaction findUserTransByPaymentId(Long payId) {
+        return userTransactionMapper.selectByPrimaryKey(payId);
     }
 
     /**
@@ -74,7 +72,7 @@ public class RepayRepository {
     /**
      * 获取所有的va码记录
      */
-    public List<UserTransactionRepay> finaAllVAcodeBypermas(RepaymentRequest request) {
+    public List<UserTransactionRepay> findAllVaCodeByPermas(RepaymentRequest request) {
         UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
         repayExample.createCriteria()
                 .andTransactionIdEqualTo(request.getPayId())
@@ -104,8 +102,8 @@ public class RepayRepository {
     /**
      * 根据交易id获取va码
      */
-    public UserTransactionRepay getVACode(Long id) {
-        UserTransactionRepayExample repayExample=new UserTransactionRepayExample();
+    public UserTransactionRepay getVaCode(Long id) {
+        UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
         repayExample.createCriteria().andTransactionIdEqualTo(id).example().orderBy("va_create_time desc").limit(1);
         return repayMapper.selectOneByExample(repayExample);
     }

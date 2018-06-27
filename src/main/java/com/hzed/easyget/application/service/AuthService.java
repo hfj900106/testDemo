@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.controller.model.*;
+import com.hzed.easyget.infrastructure.config.RiskProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
@@ -61,6 +62,8 @@ public class AuthService {
     private RestService restService;
     @Autowired
     FileService fileService;
+    @Autowired
+    private RiskProp riskProp;
 
     /**
      * 获取用户认证状态
@@ -81,7 +84,7 @@ public class AuthService {
     }
 
     /**
-     * 通讯录认证通讯录和通话记录都可能为空
+     * 通讯录认证
      */
     public void authContacts(ContactsRequest request) {
         GlobalUser user = getGlobalUser();
@@ -94,8 +97,9 @@ public class AuthService {
         map.put("contacts", request.getContacts());
         map.put("callRecord", request.getCallLogs());
         map.put("source", "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS);
-        log.info("请求风控URL：{},参数：{}","",JSONObject.toJSONString(map));
-        RiskResponse response = restService.postJson("http://10.10.20.203:9611/api/risk/Contacts/add", map, RiskResponse.class);
+        String url = riskProp.getContactsUrl();
+        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
+        RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
         afterResponse(response, user.getUserId(), AuthCodeEnum.CONTACTS.getCode(), "通讯录认证");
     }
@@ -132,8 +136,9 @@ public class AuthService {
         map.put("timeStamp", timeStamp);
         map.put("sms", request.getMessage());
         map.put("source", "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS);
-        log.info("请求风控URL：{},参数：{}","",JSONObject.toJSONString(map));
-        RiskResponse response = restService.postJson("http://10.10.20.203:9611/api/risk/Sms/add", map, RiskResponse.class);
+        String url = riskProp.getMessagesUrl();
+        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
+        RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
         afterResponse(response, user.getUserId(), AuthCodeEnum.MESSAGE.getCode(), "短信认证");
     }
@@ -163,8 +168,9 @@ public class AuthService {
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
         map.put("source", "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS);
-        log.info("请求风控URL：{},参数：{}","",JSONObject.toJSONString(map));
-        RiskResponse response = restService.postJson("http://10.10.20.203:9611/api/riskOperator/createTaskAndlogin", map, RiskResponse.class);
+        String url = riskProp.getOperatorSendSmsCodeUrl();
+        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
+        RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
         if (null == response) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
@@ -200,8 +206,9 @@ public class AuthService {
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
         map.put("smsCode", request.getSmsCode());
-        log.info("请求风控URL：{},参数：{}","",JSONObject.toJSONString(map));
-        RiskResponse response = restService.postJson("http://10.10.20.203:9611/api/riskOperator/sendSmsCode", map, RiskResponse.class);
+        String url = riskProp.getOperatorAuthUrl();
+        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
+        RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
         if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_FREQ)) {
             //认证频繁，要等一分钟再认证
@@ -261,8 +268,9 @@ public class AuthService {
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
         map.put("imageFile", idCardBase64ImgStr);
-        log.info("请求风控URL：{},参数：{}","",JSONObject.toJSONString(map));
-        RiskResponse riskResponse = restService.postJson("http://10.10.20.202:9611/api/risk/core/ocr", map, RiskResponse.class);
+        String url = riskProp.getIdCardRecognitionUrl();
+        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
+        RiskResponse riskResponse = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSONObject.toJSONString(riskResponse));
         if (null == riskResponse) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
@@ -293,8 +301,9 @@ public class AuthService {
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
         map.put("imageFile", faceBase64ImgStr);
-        log.info("请求风控URL：{},参数：{}","",JSONObject.toJSONString(map));
-        RiskResponse riskResponse = restService.postJson("http://10.10.20.202:9611/api/risk/core/faceComparison", map, RiskResponse.class);
+        String url = riskProp.getFaceRecognitionUrl();
+        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
+        RiskResponse riskResponse = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSONObject.toJSONString(riskResponse));
         if (null == riskResponse) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
@@ -318,8 +327,9 @@ public class AuthService {
         map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
-        log.info("请求风控URL：{},参数：{}","",JSONObject.toJSONString(map));
-        RiskResponse response = restService.postJson("http://10.10.20.202:9611/api/risk/core/identity", map, RiskResponse.class);
+        String url = riskProp.getIdentityInfoUrl();
+        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
+        RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
         if (null == response) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);

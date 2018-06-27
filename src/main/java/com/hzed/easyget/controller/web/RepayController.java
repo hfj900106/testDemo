@@ -65,10 +65,10 @@ public class RepayController {
         return repayService.findloanManagResponse(amount, request.getBidId(), true);
     }
 
-    @ModuleFunc("获取VA码")
+    @ModuleFunc("生成VA码")
     @PostMapping("/vaInfoDetail")
     public TransactionVAResponse vaInfoDetail(@Valid @RequestBody TransactionVARequest request) {
-        return repayService.findVaTranc(request);
+        return repayService.findVaTranc(request.getPayId(),request.getMode());
     }
 
     @ModuleFunc("还款接口(测试环境专用)")
@@ -86,7 +86,7 @@ public class RepayController {
     @ModuleFunc("刷新还款结果)")
     @RequestMapping("/refreshResult")
     public PayMentResponse refreshResult(@Valid @RequestBody RefreshPaymentRequest request){
-        return repayService.refreshResult(request);
+        return repayService.refreshResult(request.getPayId(),request.isExpire());
     }
 
     @ModuleFunc("查看还款信息)")

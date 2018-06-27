@@ -13,7 +13,7 @@ logging:
 # 第三方
 thirdParty:
   pay.domain: http://10.10.30.114:8081 # 请求bulepay域名地址
-  risk.domain: http://10.10.20.202:9611 # 请求风控域名地址
+  risk.domain: http://10.10.30.92:9611 # 请求风控域名地址
 #======================================= 系统参数 开始 =======================================#
 system:
   imgUploadPath: /work/easy-get-8150/imgUpload # 上传图片文件目录

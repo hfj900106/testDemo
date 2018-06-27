@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.JobStatusEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
+import com.hzed.easyget.infrastructure.config.RiskProp;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
@@ -57,7 +58,8 @@ public class JobService {
     private UserTransactionRepository transactionRepository;
     @Autowired
     private SaService saService;
-
+    @Autowired
+    private RiskProp riskProp;
 
     /**
      * 风控审核
@@ -95,10 +97,11 @@ public class JobService {
                 map.put("userId", bidExt.getUserId());
                 map.put("timeStamp", timeStamp);
                 map.put("bid", bidId);
+                String url = riskProp.getPushBidUrl();
                 //TODO 补充地址
-                log.info("请求风控接口，URL：{}, 请求参数：{}", "", JSON.toJSONString(map));
+                log.info("请求风控接口，URL：{}, 请求参数：{}", url, JSON.toJSONString(map));
 
-                RiskResponse riskResponse = restService.postJson("http://10.10.20.203:9611/api/risk/auto/antifraud", map, RiskResponse.class);
+                RiskResponse riskResponse = restService.postJson(url, map, RiskResponse.class);
                 log.info("风控返回数据：{}", JSON.toJSONString(riskResponse));
 
                 // 推送风控失败

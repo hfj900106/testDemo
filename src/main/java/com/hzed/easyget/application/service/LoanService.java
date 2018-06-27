@@ -1,5 +1,6 @@
 package com.hzed.easyget.application.service;
 
+import com.hzed.easyget.application.enums.BidEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.ProductEnum;
 import com.hzed.easyget.controller.model.LoanDetailRequest;
@@ -82,7 +83,7 @@ public class LoanService {
         bid.setInBank(request.getInBank());
         bid.setInAccount(request.getInAccount());
         bid.setPurposeCode(request.getPurposeId());
-        bid.setClient("Rupiah Get");
+        bid.setClient(BidEnum.INDONESIA_APP.getCode());
         bid.setStatus(BidStatusEnum.RISK_ING.getCode().byteValue());
 
         UserBank userBank = new UserBank();

@@ -227,30 +227,6 @@ public class HomeService {
     public CheckRepaymentResponse checkRepayment() {
         Long userId = RequestUtil.getGlobalUser().getUserId();
         CheckRepaymentResponse result = new CheckRepaymentResponse();
-        TransactionExt transaction = userRepository.queryTransactionVisit(userId);
-        if (transaction != null) {
-            result.setId(transaction.getId());
-            // 确认时间不为空，即已经点击提交还款凭证
-            if (transaction.getConfirmTime() != null) {
-                // 场景4、已经提交还款凭证，但未能等到最后结果情况
-                Byte status = transaction.getStatus();
-                if (status == 1) {
-                    // 交易中
-                    result.setStatus(transaction.getStatus());
-                    result.setConfirmTime(DateUtil.localDateTimeToTimestamp(transaction.getConfirmTime()));
-                    throw new WarnException(BizCodeEnum.MSG_REPAY_APPLY, result);
-                } else {
-                    // 交易成功失败都添加访问记录
-                    UserRepaymentVisit repaymentVisit = UserRepaymentVisit.builder().userId(userId).transactionId(transaction.getId()).build();
-                    userRepaymentVisitRepository.insertUserRepaymentVisit(repaymentVisit);
-                    result.setStatus(status);
-                    throw new WarnException(BizCodeEnum.MSG_REPAY_APPLY, result);
-                }
-            } else {
-                // 场景3、提交申请还款。未提交凭证
-                throw new WarnException(BizCodeEnum.MSG_REPAY_UNSUCCESS, result);
-            }
-        }
         // 场景1、2，是否借款即将到期、逾期
         // 查询该用户已放款的标的对应未结清的账单的应还时间
         UserExt userExt = userRepository.queryUnRepayment(userId);

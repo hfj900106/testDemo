@@ -124,19 +124,19 @@
             <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
 
-        <table tableName="t_loan_user_transaction" domainObjectName="UserTransaction" >
-            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-            <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-        </table>
+        <!--<table tableName="t_loan_user_transaction" domainObjectName="UserTransaction" >-->
+            <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+            <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
         <table tableName="t_loan_user_transaction_repay" domainObjectName="UserTransactionRepay" >
             <columnOverride column="repayment_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
             <columnOverride column="va_create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
             <columnOverride column="va_expire_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
             <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
         </table>
-        <table tableName="t_loan_user_transaction_pic" domainObjectName="UserTransactionPic" >
-            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
-        </table>
+        <!--<table tableName="t_loan_user_transaction_pic" domainObjectName="UserTransactionPic" >-->
+            <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
+        <!--</table>-->
 
         <!--<table tableName="t_loan_user" domainObjectName="User" >-->
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->

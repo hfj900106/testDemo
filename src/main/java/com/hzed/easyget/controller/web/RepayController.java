@@ -7,6 +7,7 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.PayResponse;
+import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 还款
@@ -96,5 +98,11 @@ public class RepayController {
     @RequestMapping("/loanManagInfo")
     public LoanManagResponse loanManagInfo(@Valid @RequestBody LoanManagInfoRequest request){
         return repayService.loanManagInfo(request.getPayId());
+    }
+
+    @ModuleFunc("获取va码记录")
+    @RequestMapping("/getVaHistory")
+    public List<UserTransactionRepay> getVaHistory(@Valid @RequestBody VaHistoryRequest request){
+        return repayService.getVaHistory(request);
     }
 }

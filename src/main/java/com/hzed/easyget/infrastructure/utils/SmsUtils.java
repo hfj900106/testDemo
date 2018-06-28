@@ -3,7 +3,6 @@ package com.hzed.easyget.infrastructure.utils;
 import com.alibaba.fastjson.JSONObject;
 import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.application.service.DictService;
-import com.hzed.easyget.infrastructure.config.PayProp;
 import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
@@ -48,7 +47,7 @@ public class SmsUtils {
         Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
         if(ObjectUtils.isEmpty(dictSms)){
             log.error("没有配置短信渠道");
-            throw new ComBizException(BizCodeEnum.UNKNOWN_EXCEPTION);
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
         String dicValue = dictSms.getDicValue();
         if (!ObjectUtils.isEmpty(dicValue) && ComConsts.NX.equalsIgnoreCase(dicValue)) {

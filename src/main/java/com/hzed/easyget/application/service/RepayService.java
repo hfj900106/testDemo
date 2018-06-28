@@ -477,6 +477,7 @@ public class RepayService {
     /**
      * 查看还款信息
      * TODO 待改造
+     *
      * @param payId 交易流水id
      * @return 还款信息
      */
@@ -501,23 +502,20 @@ public class RepayService {
     }
 
     public List<VaHistoryResponse> getVaHistory(VaHistoryRequest request) {
-        List<UserTransactionRepay> repays = userTransactionRepayRepository.findVaHistoryBybId(request);
+        List<UserTransactionRepay> repays = userTransactionRepayRepository.findByBidId(request);
         List<VaHistoryResponse> results = Lists.newArrayList();
-        repays.forEach(repay ->{
-            VaHistoryResponse result = VaHistoryResponse.builder().mode(repay.getMode()).va(repay.getVa()).build();
-            results.add(result);
-        });
+        repays.forEach(repay -> results.add(VaHistoryResponse.builder().mode(repay.getMode()).va(repay.getVa()).build()));
         return results;
     }
 
-    public void uploadPicEvidence(PicEvidenceRequest request) {
+    public void uploadPicEvidence(UploadPicEvidenceRequest request) {
         String[] base64Imgs = request.getBase64Imgs();
         String[] picSuffixs = request.getPicSuffixs();
-        if(base64Imgs.length != picSuffixs.length){
+        if (base64Imgs.length != picSuffixs.length) {
             throw new ComBizException(BizCodeEnum.UPLOAD_PIC_FAIL);
         }
         List<UserTransactionPic> userTransactionPicList = Lists.newArrayList();
-        for (int i = 0; i < base64Imgs.length ; i++){
+        for (int i = 0; i < base64Imgs.length; i++) {
             String picUrl;
             try {
                 picUrl = fileService.uploadBase64Img(base64Imgs[i], picSuffixs[i]);
@@ -527,7 +525,7 @@ public class RepayService {
             UserTransactionPic repayPicInsert = UserTransactionPic.builder()
                     .evidencePicUrl(picUrl)
                     .va(request.getVa())
-                    .bidId(request.getBId())
+                    .bidId(request.getBidId())
                     .mode(request.getMode())
                     .build();
             userTransactionPicList.add(repayPicInsert);

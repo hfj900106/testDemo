@@ -1,7 +1,6 @@
 package com.hzed.easyget.infrastructure.repository;
 
 import com.hzed.easyget.controller.model.VaHistoryRequest;
-import com.hzed.easyget.controller.model.VaHistoryResponse;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
 import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper;
@@ -20,7 +19,7 @@ public class UserTransactionRepayRepository {
     @Autowired
     private UserTransactionRepayMapper userTransactionRepayMapper;
 
-    public List<UserTransactionRepay> findVaHistoryBybId(VaHistoryRequest request) {
+    public List<UserTransactionRepay> findByBidId(VaHistoryRequest request) {
         UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
         repayExample.createCriteria().andBidIdEqualTo(request.getBId());
         repayExample.orderBy(UserTransactionRepay.Column.createTime.desc());

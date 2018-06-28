@@ -7,8 +7,6 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.PayResponse;
-import com.hzed.easyget.infrastructure.model.Response;
-import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -109,7 +107,7 @@ public class RepayController {
 
     @ModuleFunc("提交图片凭证")
     @RequestMapping("/uploadPicEvidence")
-    public void uploadPicEvidence(@Valid @RequestBody PicEvidenceRequest request){
+    public void uploadPicEvidence(@Valid @RequestBody UploadPicEvidenceRequest request){
         repayService.uploadPicEvidence(request);
     }
 }

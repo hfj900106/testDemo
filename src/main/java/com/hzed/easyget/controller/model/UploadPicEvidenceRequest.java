@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
  * @since 2018/6/28 17:01
  */
 @Data
-public class PicEvidenceRequest {
+public class UploadPicEvidenceRequest {
 
     /**
      * va码
@@ -30,7 +30,7 @@ public class PicEvidenceRequest {
      * 标的id
      */
     @NotNull(message = "{param.repay.bidId.isNotEmpty}")
-    private Long bId;
+    private Long bidId;
     /**
      * base64Img 图片数组
      */

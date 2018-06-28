@@ -1,10 +1,14 @@
 package com.hzed.easyget.infrastructure.utils;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -25,6 +29,20 @@ public class ComUtil {
         } else {
             return str.substring(0, length);
         }
+    }
+
+    public static String subJsonString(String json, int length) {
+        Map mapResult = Maps.newHashMap();
+        JSONObject jsonObject;
+        try {
+            jsonObject = JSON.parseObject(json);
+        } catch (Exception ex) {
+            return subString(json, length);
+        }
+
+        jsonObject.entrySet().forEach(obj -> mapResult.put(obj.getKey(), subString(obj.getValue().toString(), length)));
+
+        return JSON.toJSONString(mapResult);
     }
 
     /**

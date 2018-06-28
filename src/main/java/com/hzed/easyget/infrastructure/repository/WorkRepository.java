@@ -28,7 +28,7 @@ public class WorkRepository {
 
     @Transactional(rollbackFor = Exception.class)
     public void insertIdentityInfo(List<UserPic> list, UserAuthStatus userAuthStatus, User user) {
-        userPicMapper.batchInsertSelective(list);
+        userPicMapper.batchInsertSelective(list,UserPic.Column.id,UserPic.Column.userId,UserPic.Column.type,UserPic.Column.picUrl);
         userAuthStatusMapper.insertSelective(userAuthStatus);
         userMapper.updateByPrimaryKeySelective(user);
     }

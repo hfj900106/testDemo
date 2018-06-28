@@ -512,7 +512,7 @@ public class RepayService {
         String[] base64Imgs = request.getBase64Imgs();
         String[] picSuffixs = request.getPicSuffixs();
         if (base64Imgs.length != picSuffixs.length) {
-            throw new ComBizException(BizCodeEnum.UPLOAD_PIC_FAIL);
+            throw new ComBizException(BizCodeEnum.PIC_SIZE_ERROR);
         }
         List<UserTransactionPic> userTransactionPicList = Lists.newArrayList();
         for (int i = 0; i < base64Imgs.length; i++) {

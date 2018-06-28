@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 public class VaHistoryRequest {
 
     @NotNull(message = "{param.repay.bidId.isNotEmpty}")
-    private Long bId;
+    private Long bidId;
 
     @Min(1) @NotNull(message = "{param.repay.pageNo.isNotEmpty}")
     private Integer page;

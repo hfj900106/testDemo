@@ -17,7 +17,7 @@ public class UploadPicEvidenceRequest {
     /**
      * va码
      */
-    @NotBlank
+    @NotBlank(message = "{param.repay.va.isNotEmpty}")
     private String va;
 
     /**

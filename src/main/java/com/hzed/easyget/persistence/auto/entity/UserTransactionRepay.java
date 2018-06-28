@@ -1,6 +1,7 @@
 package com.hzed.easyget.persistence.auto.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class UserTransactionRepay implements Serializable {
@@ -9,9 +10,24 @@ public class UserTransactionRepay implements Serializable {
     private Long id;
 
     /**
-     * t_loan_user_transaction的id
+     * 标id
      */
-    private Long transactionId;
+    private Long bidId;
+
+    /**
+     * bluepay交易id
+     */
+    private String paymentId;
+
+    /**
+     * 交易金额
+     */
+    private BigDecimal amount;
+
+    /**
+     * 还款日期,没有时分秒
+     */
+    private LocalDateTime repaymentTime;
 
     /**
      * 交易方式 BNI ATM ;OTC
@@ -29,6 +45,20 @@ public class UserTransactionRepay implements Serializable {
     private LocalDateTime vaCreateTime;
 
     /**
+     * VA码失效时间
+     */
+    private LocalDateTime vaExpireTime;
+
+    /**
+     * 交易状态 1-初始状态 2-交易成功 3-交易失败
+     */
+    private Byte status;
+
+    /**
+     */
+    private LocalDateTime createTime;
+
+    /**
      * 备注
      */
     private String remark;
@@ -43,12 +73,36 @@ public class UserTransactionRepay implements Serializable {
         this.id = id;
     }
 
-    public Long getTransactionId() {
-        return transactionId;
+    public Long getBidId() {
+        return bidId;
     }
 
-    public void setTransactionId(Long transactionId) {
-        this.transactionId = transactionId;
+    public void setBidId(Long bidId) {
+        this.bidId = bidId;
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId == null ? null : paymentId.trim();
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public LocalDateTime getRepaymentTime() {
+        return repaymentTime;
+    }
+
+    public void setRepaymentTime(LocalDateTime repaymentTime) {
+        this.repaymentTime = repaymentTime;
     }
 
     public String getMode() {
@@ -75,6 +129,30 @@ public class UserTransactionRepay implements Serializable {
         this.vaCreateTime = vaCreateTime;
     }
 
+    public LocalDateTime getVaExpireTime() {
+        return vaExpireTime;
+    }
+
+    public void setVaExpireTime(LocalDateTime vaExpireTime) {
+        this.vaExpireTime = vaExpireTime;
+    }
+
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
+    }
+
     public String getRemark() {
         return remark;
     }
@@ -90,10 +168,16 @@ public class UserTransactionRepay implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", transactionId=").append(transactionId);
+        sb.append(", bidId=").append(bidId);
+        sb.append(", paymentId=").append(paymentId);
+        sb.append(", amount=").append(amount);
+        sb.append(", repaymentTime=").append(repaymentTime);
         sb.append(", mode=").append(mode);
         sb.append(", va=").append(va);
         sb.append(", vaCreateTime=").append(vaCreateTime);
+        sb.append(", vaExpireTime=").append(vaExpireTime);
+        sb.append(", status=").append(status);
+        sb.append(", createTime=").append(createTime);
         sb.append(", remark=").append(remark);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
@@ -116,8 +200,23 @@ public class UserTransactionRepay implements Serializable {
             return this;
         }
 
-        public Builder transactionId(Long transactionId) {
-            obj.setTransactionId(transactionId);
+        public Builder bidId(Long bidId) {
+            obj.setBidId(bidId);
+            return this;
+        }
+
+        public Builder paymentId(String paymentId) {
+            obj.setPaymentId(paymentId);
+            return this;
+        }
+
+        public Builder amount(BigDecimal amount) {
+            obj.setAmount(amount);
+            return this;
+        }
+
+        public Builder repaymentTime(LocalDateTime repaymentTime) {
+            obj.setRepaymentTime(repaymentTime);
             return this;
         }
 
@@ -136,6 +235,21 @@ public class UserTransactionRepay implements Serializable {
             return this;
         }
 
+        public Builder vaExpireTime(LocalDateTime vaExpireTime) {
+            obj.setVaExpireTime(vaExpireTime);
+            return this;
+        }
+
+        public Builder status(Byte status) {
+            obj.setStatus(status);
+            return this;
+        }
+
+        public Builder createTime(LocalDateTime createTime) {
+            obj.setCreateTime(createTime);
+            return this;
+        }
+
         public Builder remark(String remark) {
             obj.setRemark(remark);
             return this;
@@ -148,10 +262,16 @@ public class UserTransactionRepay implements Serializable {
 
     public enum Column {
         id("id"),
-        transactionId("transaction_id"),
+        bidId("bid_id"),
+        paymentId("payment_id"),
+        amount("amount"),
+        repaymentTime("repayment_time"),
         mode("mode"),
         va("va"),
         vaCreateTime("va_create_time"),
+        vaExpireTime("va_expire_time"),
+        status("status"),
+        createTime("create_time"),
         remark("remark");
 
         private final String column;

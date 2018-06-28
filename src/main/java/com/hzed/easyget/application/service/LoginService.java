@@ -104,7 +104,7 @@ public class LoginService {
             if (userToken == null) {
                 //有用户但是tonken表没数据，正常情况下不存在这种情况
                 log.error("根据用户id：{}和用户imei：{}没有找到该用户的token", user.getId(), imei);
-                throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION);
+                throw new WarnException(BizCodeEnum.SERVICE_EXCEPTION);
             }
 
             // UserToken 老用户登录都要刷新token表，刷新过期时间

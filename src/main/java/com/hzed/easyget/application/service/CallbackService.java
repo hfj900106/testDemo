@@ -43,12 +43,13 @@ public class CallbackService {
         Bid bid = bidRepository.findById(bidId);
         if(ObjectUtils.isEmpty(bid)){
             log.error("回调处理的标ID：{}不存在标的表中",bidId);
+        }else {
+            AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
+            tempTableRepository.pushBidCallback(
+                    Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime).auditFee(absProduct.getHeadFee()).status(status).build(),
+                    BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue()).build(),
+                    bidId);
         }
-        AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
-        tempTableRepository.pushBidCallback(
-                Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime).auditFee(absProduct.getHeadFee()).status(status).build(),
-                BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue()).build(),
-                bidId);
 
         //成功或者失败都返回
         return PushBidCallbackResponse.getSuccessResponse();

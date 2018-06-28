@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 /**
  * 返回交易流水号
@@ -17,8 +17,31 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class PaymentIdResponse {
     /**
-     * 交易流水id(非交易id)
+     * 标的id
      */
-    @NotNull(message = "{param.repay.payId.isNotEmpty}")
-    private Long payId;
+    private Long bidId;
+    /**
+     * 还款金额
+     */
+    private BigDecimal amount;
+    /**
+     * 应还时间
+     */
+    private Long repaymentTime;
+    /**
+     * 全部结清标识
+     */
+    private boolean flag;
+    /**
+     * va码
+     */
+    private String vaCode;
+    /**
+     * va码过期时间
+     */
+    private Long expireTime;
+    /**
+     * 还款方式
+     */
+    private String mode;
 }

@@ -2,22 +2,23 @@ package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hzed.easyget.application.enums.BankTypeEnum;
 import com.hzed.easyget.application.enums.RepayFlowJobEnum;
+import com.hzed.easyget.application.enums.RepayMentEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
-import com.hzed.easyget.controller.model.LoanTransactionRequest;
-import com.hzed.easyget.controller.model.PaymentCodeRequest;
-import com.hzed.easyget.controller.model.RepaymentCompleRequest;
-import com.hzed.easyget.controller.model.TransactionVAResponse;
+import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.PayProp;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
-import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.PayResponse;
+import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayRepository;
 import com.hzed.easyget.infrastructure.repository.UserTransactionRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
+import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
@@ -45,47 +46,46 @@ public class BluePayService {
     private RestService restService;
     @Autowired
     private PayProp prop;
+    @Autowired
+    private BidRepository bidRepository;
 
     private static final String TIMEOUT = "TIMEOUT";
     private static final List<String> LISTCODE = Arrays.asList(BizCodeEnum.PROCESS_LENDING.getCode(), BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.REPAYMENTS.getCode());
 
 
     /**
-     * 获取va码
+     * 获取va码接口
      *
-     * @param payId 交易流水id
-     * @param mode  交易方式
+     * @param request
      * @return va码构建对象
      */
-    public TransactionVAResponse findVaTranc(Long payId, String mode) {
+    public TransactionVAResponse findVaTranc(TransactionVARequest request) {
+        //查询标的信息
+        Bid bid = bidRepository.findByIdWithExp(request.getBidId());
         //先查询数据库 是否存在没过期的还款码
-        UserTransactionRepay repayQuery = repayRepository.findVaTranc(payId, mode);
+        UserTransactionRepay repayQuery = repayRepository.getVaCodeByParmers(request.getBidId(), request.getAmount(), request.isFlag() ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue(),request.getMode());
         TransactionVAResponse vaResponse = new TransactionVAResponse();
-        if (!ObjectUtils.isEmpty(repayQuery)) {
-            vaResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(repayQuery.getVaCreateTime()));
+        if (!ObjectUtils.isEmpty(repayQuery) && repayQuery.getMode().equals(request.getMode())) {
+            vaResponse.setExpireTime(DateUtil.localDateTimeToTimestamp(repayQuery.getVaExpireTime()));
             vaResponse.setVaCodel(repayQuery.getVa());
             vaResponse.setMode(repayQuery.getMode());
             return vaResponse;
         }
-        //当数据库为空 或者va码失效了
-        UserTransaction transactionQuery = repayRepository.findById(payId);
+        String payMentId = IdentifierGenerator.nextSeqNo();
         //组装请求信息
         PaymentCodeRequest paymentRequest = new PaymentCodeRequest();
-        paymentRequest.setBankType(transactionQuery.getBank().toLowerCase());
-        paymentRequest.setTransactionId(transactionQuery.getPaymentId());
-        paymentRequest.setCardNo(transactionQuery.getAccount());
-        paymentRequest.setPrice(transactionQuery.getAmount());
-//        paymentRequest.setMsisdn(RequestUtil.getGlobalUser().getMobile());
-        paymentRequest.setMsisdn("8615926633889");
-        paymentRequest.setPayType(mode.toLowerCase());
-        if (mode.equals(ComConsts.OTC)) {
+        paymentRequest.setBankType(bid.getInBank().toLowerCase());
+        paymentRequest.setTransactionId(payMentId);
+        paymentRequest.setCardNo(bid.getInAccount());
+        paymentRequest.setPrice(request.getAmount());
+        paymentRequest.setMsisdn(RequestUtil.getGlobalUser().getMobile());
+        paymentRequest.setPayType(RepayMentEnum.getBlue(request.getMode()));
+        if (request.getMode().equals(RepayMentEnum.OTC.getMode())) {
             paymentRequest.setBankType(null);
         }
         log.info("获取还款码，bluepay请求地址{},参数：{}", prop.getAbsGetPaymentCodeUrl(), JSONObject.toJSONString(paymentRequest));
-
         String result = restService.doPostJson(prop.getAbsGetPaymentCodeUrl(), JSONObject.toJSONString(paymentRequest));
         log.info("获取还款码，bluepay返回数据：{}", result);
-
         if (result.equals(TIMEOUT)) {
             throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR);
         }
@@ -96,17 +96,25 @@ public class BluePayService {
         }
         String paymentCode = JSON.parseObject(response.getData()).getString("paymentCode");
         log.info("获取还款码，bluepay返回还款码：{}", paymentCode);
+        LocalDateTime createTime = LocalDateTime.now();
         UserTransactionRepay repayInsert = UserTransactionRepay.builder()
                 .id(IdentifierGenerator.nextId())
-                .mode(mode)
-//                .transactionId(payId)
+                .bidId(request.getBidId())
+                .paymentId(payMentId)
+                .amount(request.getAmount())
+                .repaymentTime(LocalDateTime.now())
+                .mode(request.getMode())
                 .va(paymentCode)
-                .vaCreateTime(LocalDateTime.now()).build();
+                .vaCreateTime(createTime)
+                .vaExpireTime(createTime.plusHours(6))
+                .repaymentType(request.isFlag() ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue())
+                .status(TransactionTypeEnum.INIT_RANSACTION.getCode().byteValue())
+                .build();
         //插入va码到数据库
         repayRepository.insertSelective(repayInsert);
         //组装返回信息
-        vaResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(repayInsert.getVaCreateTime()));
-        vaResponse.setMode(mode);
+        vaResponse.setExpireTime(DateUtil.localDateTimeToTimestamp(repayInsert.getVaExpireTime()));
+        vaResponse.setMode(request.getMode());
         vaResponse.setVaCodel(paymentCode);
         return vaResponse;
     }
@@ -118,26 +126,6 @@ public class BluePayService {
      * @return 返回状态
      */
     public PayResponse testRepayment(RepaymentCompleRequest request) {
-        //先校验
-        if (request.getPayType().equals(ComConsts.ATM)) {
-            if (ObjectUtils.isEmpty(request.getMsisdn()) || ObjectUtils.isEmpty(request.getBankType())) {
-                throw new ComBizException(BizCodeEnum.REPAYMENT_INFORMATION_ERROR);
-            }
-            if (request.getBankType().equals(ComConsts.PERMATA) || request.getBankType().equals(ComConsts.BNI)) {
-                throw new ComBizException(BizCodeEnum.REPAYMENT_INFORMATION_ERROR);
-            }
-        }
-        //先查询交易信息比对数据
-        UserTransaction transactionQuery = userTransactionRepository.findOldTranceByExample(request.getTransactionId(), TransactionTypeEnum.OUT.getCode().byteValue(), TransactionTypeEnum.INIT_RANSACTION.getCode().byteValue());
-        if (ObjectUtils.isEmpty(transactionQuery)) {
-            throw new ComBizException(BizCodeEnum.USERTRANSACTION_ERROR);
-        }
-        //组装请求报文
-        request.setPayType(request.getPayType().toLowerCase());
-//        request.setMsisdn("8615926633889");
-        if (!request.getPayType().equals(ComConsts.OTC)) {
-            request.setBankType(request.getPayType().toLowerCase());
-        }
         request.setRequestNo(IdentifierGenerator.nextSeqNo());
         log.info("完成还款接口请求地址{},报文：{}", prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(request));
@@ -145,40 +133,21 @@ public class BluePayService {
         if (result.equals(TIMEOUT)) {
             throw new ComBizException(BizCodeEnum.RECEIVER_TRANSACTION_ERROR);
         }
-        PayResponse response = JSON.parseObject(result, PayResponse.class);
-        //判断返回状态 0000 0001 0002
-        if (!LISTCODE.contains(response.getCode())) {
-            throw new ComBizException(BizCodeEnum.RECEIVER_TRANSACTION_ERROR);
-        }
-        //直接处理成功
-        if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
-            this.repaymentSuccess(transactionQuery);
-        } else {
-            //修改状态 交易中
-            UserTransaction userTransaction = UserTransaction.builder().id(transactionQuery.getId()).status(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue()).build();
-            repayRepository.updateByPrimaryKey(userTransaction);
-        }
-        //修改交易的确认时间
-        LocalDateTime time = LocalDateTime.now();
-//        repayRepository.updateByPrimaryKey(UserTransaction.builder().id(transactionQuery.getId()).confirmTime(time).build());
-        response.setConfirmTime(DateUtil.localDateTimeToTimestamp(time));
-        response.setCode(BizCodeEnum.SUCCESS.getCode());
-        response.setPayId(transactionQuery.getId());
-        return response;
+        return JSON.parseObject(result, PayResponse.class);
     }
 
     /**
      * 还款成功信息流
      *
      * @param userTransaction 交易对象
+     * @param repayUpdate
      */
-    public void repaymentSuccess(UserTransaction userTransaction) {
+    public void repaymentSuccess(UserTransaction userTransaction, UserTransactionRepay repayUpdate) {
         // 修改交易记录
-        UserTransaction userTransactionUpdate = new UserTransaction();
-        userTransactionUpdate.setId(userTransaction.getId());
-        userTransactionUpdate.setStatus(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue());
-        userTransactionUpdate.setUpdateTime(LocalDateTime.now());
-
+        UserTransaction userTransactionUpdate = UserTransaction.builder()
+                .id(userTransaction.getId())
+                .status(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue())
+                .updateTime(LocalDateTime.now()).build();
         // 插入还款定时任务
         RepayInfoFlowJob repayInfoFlowJobInsert = RepayInfoFlowJob.builder()
                 .id(IdentifierGenerator.nextId())
@@ -190,7 +159,7 @@ public class BluePayService {
                 .repaymentMode(RepayFlowJobEnum.UNDER_LINE.getCode().byteValue())
                 .repaymentType(userTransaction.getRepaymentType())
                 .build();
-        repayRepository.afterRepayment(userTransactionUpdate, repayInfoFlowJobInsert);
+        repayRepository.afterRepayment(userTransactionUpdate, repayInfoFlowJobInsert,repayUpdate);
     }
 
     /**

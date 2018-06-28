@@ -24,14 +24,10 @@ public class PayResponse {
 
     private boolean flag;
 
-    private long confirmTime;
-
     private String data;
 
-    private Long payId;
-
     public static PayResponse getFailResponse() {
-        PayResponse response = new PayResponse(BizCodeEnum.UNKNOWN_EXCEPTION.getCode(), BizCodeEnum.UNKNOWN_EXCEPTION.getMessage(), false, 0, null, null);
+        PayResponse response = new PayResponse(BizCodeEnum.UNKNOWN_EXCEPTION.getCode(), BizCodeEnum.UNKNOWN_EXCEPTION.getMessage(), false,"");
         return response;
     }
 

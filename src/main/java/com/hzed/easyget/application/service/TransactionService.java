@@ -141,13 +141,13 @@ public class TransactionService {
     }
 
     /**
-     * 根据交易id 查询交易记录
+     * 根据交易id 交易类型 查询交易记录
      *
      * @param paymnetId
      * @return 交易记录
      */
-    public UserTransaction findUserTranByPaymentId(String paymnetId) {
-        return userTransactionRepository.findUserTranByPaymentId(paymnetId);
+    public UserTransaction findUserTranByPaymentId(String paymnetId,Byte type) {
+        return userTransactionRepository.findUserTranByPaymentId(paymnetId,type);
     }
 
     /**

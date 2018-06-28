@@ -23,7 +23,7 @@ public class RepaymentCompleRequest {
      * 支付方式
      *
      */
-    @Pattern(regexp = "^ATM|OTC$", message = "支付方式必须是ATM或者OTC")
+    @Pattern(regexp = "^atm|otc$", message = "支付方式必须是atm或者otc")
     private String payType;
     /**
      * 银行类型如果payType=atm,那么bankType必须等于其中之一：permata,bni。如果payType=otc,bankType不用传,取决于payType

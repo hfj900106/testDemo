@@ -1,21 +1,22 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.controller.model.RepaymentRequest;
 import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
-import com.hzed.easyget.persistence.auto.entity.UserTransactionPic;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import com.hzed.easyget.persistence.auto.entity.example.BillExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
-import com.hzed.easyget.persistence.auto.mapper.*;
-import com.hzed.easyget.persistence.ext.mapper.RepayExtMapper;
+import com.hzed.easyget.persistence.auto.mapper.BillMapper;
+import com.hzed.easyget.persistence.auto.mapper.RepayInfoFlowJobMapper;
+import com.hzed.easyget.persistence.auto.mapper.UserTransactionMapper;
+import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 还款 仓储类
@@ -27,11 +28,7 @@ import java.util.List;
 @Repository
 public class RepayRepository {
     @Autowired
-    private RepayExtMapper repayExtMapper;
-    @Autowired
     private UserTransactionRepayMapper repayMapper;
-    @Autowired
-    private UserTransactionPicMapper picMapper;
     @Autowired
     private RepayInfoFlowJobMapper repayInfoFlowJobMapper;
     @Autowired
@@ -49,20 +46,6 @@ public class RepayRepository {
     }
 
     /**
-     * 获取va码
-     */
-    public UserTransactionRepay findVaTranc(Long payId, String mode) {
-        return repayExtMapper.findVaTranc(payId, mode);
-    }
-
-    /**
-     * 获取交易记录 根据交易id
-     */
-    public UserTransaction findById(Long id) {
-        return userTransactionMapper.selectByPrimaryKey(id);
-    }
-
-    /**
      * 生成va码记录
      */
     public void insertSelective(UserTransactionRepay repay) {
@@ -71,29 +54,16 @@ public class RepayRepository {
 
 
     /**
-     * 获取所有的va码记录
-     */
-    public List<UserTransactionRepay> findAllVaCodeByPermas(String tranactionId, String mode) {
-        UserTransactionExample transactionExample = new UserTransactionExample();
-        transactionExample.createCriteria().andPaymentIdEqualTo(tranactionId);
-        UserTransaction userTransaction = userTransactionMapper.selectOneByExample(transactionExample);
-        UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
-        repayExample.createCriteria()
-//                .andTransactionIdEqualTo(userTransaction.getId())
-                .andModeEqualTo(mode);
-        return repayMapper.selectByExample(repayExample);
-    }
-
-    /**
      * 还款完成走信息流
      */
     @Transactional(rollbackFor = Exception.class)
-    public void afterRepayment(UserTransaction transaction, RepayInfoFlowJob repayInfoFlowJob) {
+    public void afterRepayment(UserTransaction transaction, RepayInfoFlowJob repayInfoFlowJob, UserTransactionRepay repayUpdate) {
         //修改交易记录
         userTransactionMapper.updateByPrimaryKeySelective(transaction);
         //插入还款定时任务
         repayInfoFlowJobMapper.insertSelective(repayInfoFlowJob);
-
+        //修改va码信息
+        repayMapper.updateByPrimaryKey(repayUpdate);
     }
 
     /**
@@ -104,18 +74,59 @@ public class RepayRepository {
     }
 
     /**
-     * 根据交易id获取va码
+     * 根据bid 金额 还款类型 获取va码
      */
-    public UserTransactionRepay getVaCode(Long id) {
+    public UserTransactionRepay getVaCode(Long id, BigDecimal amount, Byte repayMentType) {
+        LocalDateTime time = LocalDateTime.now();
         UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
-//        repayExample.createCriteria().andTransactionIdEqualTo(id).example().orderBy("va_create_time desc").limit(1);
+        repayExample.createCriteria()
+                .andBidIdEqualTo(id)
+                .andAmountEqualTo(amount)
+                .andRepaymentTypeEqualTo(repayMentType)
+                .andCreateTimeGreaterThanOrEqualTo(time)
+                .andVaExpireTimeLessThan(time)
+                .example().orderBy("create_time desc").limit(1);
         return repayMapper.selectOneByExample(repayExample);
     }
 
     /**
-     * 保存凭证图片
+     * 根绝交易订单号查询va码记录
+     *
+     * @param paymentId 订单号
+     * @return va码信息
      */
-    public void picinsertSelective(UserTransactionPic repayPic) {
-        picMapper.insertSelective(repayPic);
+    public UserTransactionRepay findReayInfoByPayMentId(String paymentId) {
+        UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
+        repayExample.createCriteria()
+                .andPaymentIdEqualTo(paymentId);
+        return repayMapper.selectOneByExample(repayExample);
+    }
+
+    /**
+     * 根据交易id 金额 还款类型 交易方式 获取va码
+     */
+    public UserTransactionRepay getVaCodeByParmers(Long bidId, BigDecimal amount, byte repayMentType, String mode) {
+        LocalDateTime time = LocalDateTime.now();
+        UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
+        repayExample.createCriteria()
+                .andBidIdEqualTo(bidId)
+                .andAmountEqualTo(amount)
+                .andRepaymentTypeEqualTo(repayMentType)
+                .andModeEqualTo(mode)
+                .andCreateTimeGreaterThanOrEqualTo(time)
+                .andVaExpireTimeLessThan(time)
+                .example().orderBy("create_time desc").limit(1);
+        return repayMapper.selectOneByExample(repayExample);
+    }
+
+    /**
+     * 修改va码信息
+     *
+     * @param repayUpdate va码对象
+     */
+    public void updateUserTransactionRepay(UserTransactionRepay repayUpdate) {
+        UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
+        repayExample.createCriteria().andPaymentIdEqualTo(repayUpdate.getPaymentId());
+        repayMapper.updateByExample(repayUpdate, repayExample);
     }
 }

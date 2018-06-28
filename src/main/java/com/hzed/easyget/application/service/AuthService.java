@@ -5,9 +5,7 @@ import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.controller.model.*;
-import com.hzed.easyget.infrastructure.config.RiskProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
-import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
@@ -17,7 +15,6 @@ import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
-import com.hzed.easyget.infrastructure.utils.AesUtil;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
@@ -26,11 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalHead;
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
@@ -89,7 +85,7 @@ public class AuthService {
         GlobalUser user = getGlobalUser();
         String platForm = getGlobalHead().getPlatform();
         int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
-        RiskResponse response = riskService.authContacts(request.getContacts(),request.getCallLogs(),source);
+        RiskResponse response = riskService.authContacts(request.getContacts(), request.getCallLogs(), source);
         afterResponse(response, user.getUserId(), AuthCodeEnum.CONTACTS.getCode(), "通讯录认证");
     }
 
@@ -119,7 +115,7 @@ public class AuthService {
         GlobalUser user = getGlobalUser();
         String platForm = getGlobalHead().getPlatform();
         int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
-        RiskResponse response = riskService.authMessages(request.getMessage(),source);
+        RiskResponse response = riskService.authMessages(request.getMessage(), source);
         afterResponse(response, user.getUserId(), AuthCodeEnum.MESSAGE.getCode(), "短信认证");
     }
 
@@ -205,8 +201,11 @@ public class AuthService {
         String gender = jsonObject.getString("gender");
         String idNumber = jsonObject.getString("idNumber");
         recognitionResponse.setName(name);
-        //TODO 性别转化
-        recognitionResponse.setGender(gender);
+        int genderInt = 1;
+        if (!ObjectUtils.isEmpty(gender) && ComConsts.FEMALE.equalsIgnoreCase(gender)) {
+            genderInt = 2;
+        }
+        recognitionResponse.setGender(genderInt);
         recognitionResponse.setIdNumber(idNumber);
         return recognitionResponse;
     }
@@ -317,7 +316,7 @@ public class AuthService {
      * @param request
      */
     public void facebookAuth(FacebookRequest request) {
-        log.info("facebook认证-风控回调数据：{}",JSONObject.toJSONString(request));
+        log.info("facebook认证-风控回调数据：{}", JSONObject.toJSONString(request));
         if (!ComConsts.RISK_OK.equals(request.getResultCode())) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
@@ -331,7 +330,7 @@ public class AuthService {
      * @param request
      */
     public void insAuth(InsRequest request) {
-        log.info("ins认证-风控回调数据：{}",JSONObject.toJSONString(request));
+        log.info("ins认证-风控回调数据：{}", JSONObject.toJSONString(request));
         if (!ComConsts.RISK_OK.equals(request.getResultCode())) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }

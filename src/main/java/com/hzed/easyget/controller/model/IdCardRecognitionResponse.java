@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class IdCardRecognitionResponse {
      private  String idNumber ;
-     private  String gender ;
+     private  Integer gender ;
      private  String name ;
 
 }

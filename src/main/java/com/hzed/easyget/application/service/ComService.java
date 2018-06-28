@@ -60,6 +60,8 @@ public class ComService {
     private RestService restService;
     @Autowired
     private RiskProp riskProp;
+    @Autowired
+    private RiskService riskService;
 
     /**
      * 校验token参数
@@ -207,14 +209,7 @@ public class ComService {
      */
 
     public RiskResponse checkRiskEnableBorrow(String mobile, String imei) {
-
-        Map<String, String> paramMap = Maps.newHashMap();
-        paramMap.put("mobile", mobile);
-        paramMap.put("imei", imei);
-        log.info("查询风控是否有贷款规则请求报文：{}", paramMap);
-        RiskResponse response = restService.postJson(riskProp.getAbsCheckRiskEnableBorrowUrl(), paramMap, RiskResponse.class);
-        log.info("查询风控是否有贷款规则返回报文：{}", response);
-        return response;
+        return riskService.checkRiskEnableBorrow(mobile,imei);
 
     }
 

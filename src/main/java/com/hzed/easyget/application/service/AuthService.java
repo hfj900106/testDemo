@@ -58,13 +58,11 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RestService restService;
-    @Autowired
     FileService fileService;
     @Autowired
-    private RiskProp riskProp;
+    private SaService saService;
     @Autowired
-    SaService saService;
+    private RiskService riskService;
 
     /**
      * 获取用户认证状态
@@ -90,18 +88,8 @@ public class AuthService {
     public void authContacts(ContactsRequest request) {
         GlobalUser user = getGlobalUser();
         String platForm = getGlobalHead().getPlatform();
-        Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
-        map.put("contacts", request.getContacts());
-        map.put("callRecord", request.getCallLogs());
-        map.put("source", "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS);
-        String url = riskProp.getContactsUrl();
-        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
-        RiskResponse response = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
+        int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
+        RiskResponse response = riskService.authContacts(request.getContacts(),request.getCallLogs(),source);
         afterResponse(response, user.getUserId(), AuthCodeEnum.CONTACTS.getCode(), "通讯录认证");
     }
 
@@ -130,18 +118,8 @@ public class AuthService {
     public void authMessages(MessagesRequest request) {
         GlobalUser user = getGlobalUser();
         String platForm = getGlobalHead().getPlatform();
-        Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
-        map.put("sms", request.getMessage());
-        map.put("source", "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS);
-
-        String url = riskProp.getMessagesUrl();
-        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
-        RiskResponse response = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
+        int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
+        RiskResponse response = riskService.authMessages(request.getMessage(),source);
         afterResponse(response, user.getUserId(), AuthCodeEnum.MESSAGE.getCode(), "短信认证");
     }
 
@@ -165,41 +143,10 @@ public class AuthService {
             saService.saOperator(user, false, BizCodeEnum.UN_IDENTITY_AUTH.getMessage());
             throw new WarnException(BizCodeEnum.UN_IDENTITY_AUTH);
         }
-        Long timeStamp = System.currentTimeMillis();
         String platForm = getGlobalHead().getPlatform();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
-        map.put("source", "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS);
+        int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
+        riskService.operatorSendSmsCode(source);
 
-        String url = riskProp.getOperatorSendSmsCodeUrl();
-        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
-        RiskResponse response = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
-        if (null == response) {
-            saService.saOperator(user, false, BizCodeEnum.ERROR_RISK__RESULT.getMessage());
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
-        }
-        if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
-            saService.saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
-            throw new WarnException(BizCodeEnum.FAIL_AUTH);
-        }
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
-            //已经认证过
-            saService.saOperator(user, false, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
-            throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
-        }
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_PARAMS_ERROR)) {
-            //认证数据不正确，数据从数据库取，一般不出现
-            saService.saOperator(user, false, BizCodeEnum.PARAMS_AUTH_RISK.getMessage());
-            throw new WarnException(BizCodeEnum.PARAMS_AUTH_RISK);
-        }
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_ERROR)) {
-            //认证失败
-            saService.saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
-            throw new WarnException(BizCodeEnum.FAIL_AUTH);
-        }
         saService.saOperator(user, true, BizCodeEnum.SUCCESS_AUTH.getMessage());
         //redis存一个发送标识，要等输入验证认证结束才可以重新发送，第三方接口要求
         redisService.setCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId(), "operatorAuth", 24 * 3600L);
@@ -211,38 +158,9 @@ public class AuthService {
      */
     public void operatorAuth(PeratorAuthRequest request) {
         GlobalUser user = getGlobalUser();
-        Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
-        map.put("smsCode", request.getSmsCode());
 
-        String url = riskProp.getOperatorAuthUrl();
-        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
-        RiskResponse response = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_FREQ)) {
-            //认证频繁，要等一分钟再认证
-            saService.saOperator(user, false, BizCodeEnum.FREQUENTLY_AUTH_RISK.getMessage());
-            throw new WarnException(BizCodeEnum.FREQUENTLY_AUTH_RISK);
-        }
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_ERROR)) {
-            //认证失败，删除重发标志
-            saService.saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
-            redisService.clearCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
-            throw new WarnException(BizCodeEnum.FAIL_AUTH);
-        }
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_HAVE_SEND)) {
-            //验证码错误，需要输入验证码，后台自动让第三方接口重发验证码
-            saService.saOperator(user, false, BizCodeEnum.NEED_SMS_AUTH_RISK.getMessage());
-            throw new WarnException(BizCodeEnum.NEED_SMS_AUTH_RISK);
-        }
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
-            //已经认证过
-            saService.saOperator(user, false, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
-            throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
-        }
+        RiskResponse response = riskService.operatorAuth(request.getSmsCode());
+
         afterResponse(response, user.getUserId(), AuthCodeEnum.SMS.getCode(), "运营商认证");
 
         saService.saOperator(user, true, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
@@ -279,31 +197,15 @@ public class AuthService {
      */
     public IdCardRecognitionResponse idCardRecognition(IdCardRecognitionRequest request) {
         IdCardRecognitionResponse recognitionResponse = new IdCardRecognitionResponse();
-        GlobalUser user = getGlobalUser();
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
-        Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
-        map.put("imageFile", idCardBase64ImgStr);
-
-        String url = riskProp.getIdCardRecognitionUrl();
-        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
-        RiskResponse riskResponse = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}", JSONObject.toJSONString(riskResponse));
-        if (null == riskResponse) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
-        }
-        if (!riskResponse.getHead().getStatus().equals(ComConsts.RISK_OK)) {
-            throw new WarnException(BizCodeEnum.FAIL_FACE_RECOGNITION);
-        }
-        String bobyStr = riskResponse.getBody().toString();
+        RiskResponse response = riskService.idCardRecognition(idCardBase64ImgStr);
+        String bobyStr = response.getBody().toString();
         JSONObject jsonObject = JSONObject.parseObject(bobyStr, JSONObject.class).getJSONObject("data");
         String name = jsonObject.getString("name");
         String gender = jsonObject.getString("gender");
         String idNumber = jsonObject.getString("idNumber");
         recognitionResponse.setName(name);
+        //TODO 性别转化
         recognitionResponse.setGender(gender);
         recognitionResponse.setIdNumber(idNumber);
         return recognitionResponse;
@@ -313,25 +215,8 @@ public class AuthService {
      * 人脸识别
      */
     public void faceRecognition(FaceRecognitionRequest request) {
-        GlobalUser user = getGlobalUser();
         String faceBase64ImgStr = request.getFaceBase64ImgStr();
-        Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
-        map.put("imageFile", faceBase64ImgStr);
-
-        String url = riskProp.getFaceRecognitionUrl();
-        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
-        RiskResponse riskResponse = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}", JSONObject.toJSONString(riskResponse));
-        if (null == riskResponse) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
-        }
-        if (!riskResponse.getHead().getStatus().equals(ComConsts.RISK_OK)) {
-            throw new WarnException(BizCodeEnum.FAIL_FACE_RECOGNITION);
-        }
+        riskService.idCardRecognition(faceBase64ImgStr);
     }
 
     /**
@@ -342,23 +227,8 @@ public class AuthService {
         String realName = request.getRealName();
         String idCardNo = request.getIdCardNo();
         Integer gender = request.getGender();
-        Long timeStamp = System.currentTimeMillis();
         //调风控身份认证接口，认证通过记录表数据
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
-
-        String url = riskProp.getIdentityInfoUrl();
-        log.info("请求风控URL：{},参数：{}",url,JSONObject.toJSONString(map));
-        RiskResponse response = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
-        if (null == response) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
-        }
-        if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
-            throw new WarnException(BizCodeEnum.FAIL_AUTH);
-        }
+        riskService.identityInfoAuth();
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         String faceBase64ImgStr = request.getFaceBase64ImgStr();
         String picSuffix = request.getPicSuffix();

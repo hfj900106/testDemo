@@ -30,13 +30,13 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @ModuleFunc("通讯录认证")
+    @ModuleFunc(value = "通讯录认证", printParameterLength = 500)
     @PostMapping("/contacts")
     public void contacts(@Valid @RequestBody ContactsRequest request) {
         authService.authContacts(request);
     }
 
-    @ModuleFunc("短信认证")
+    @ModuleFunc(value = "短信认证", printParameterLength = 500)
     @PostMapping("/messages")
     public void messages(@Valid @RequestBody MessagesRequest request) {
         authService.authMessages(request);
@@ -84,7 +84,7 @@ public class AuthController {
         authService.operatorAuth(request);
     }
 
-    @ModuleFunc("专业信息认证")
+    @ModuleFunc(value = "专业信息认证", printParameterLength = 500)
     @PostMapping("/professional")
     public void professionalAuth(@Valid @RequestBody ProfessionalRequest request) {
         authService.professionalAuth(request);

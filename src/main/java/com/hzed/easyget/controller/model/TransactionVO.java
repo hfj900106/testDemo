@@ -12,6 +12,10 @@ import java.math.BigDecimal;
 @Data
 public class TransactionVO {
     /**
+     * 标id
+     */
+    private Long bidId;
+    /**
      * 金额
      */
     private BigDecimal amount;

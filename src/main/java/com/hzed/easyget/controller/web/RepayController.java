@@ -72,7 +72,7 @@ public class RepayController {
     @ModuleFunc("生成VA码")
     @PostMapping("/vaInfoDetail")
     public TransactionVAResponse vaInfoDetail(@Valid @RequestBody TransactionVARequest request) {
-        return bluePayService.findVaTranc(request.getPayId(),request.getMode());
+        return bluePayService.findVaTranc(request);
     }
 
     @ModuleFunc("还款接口(测试环境专用)")
@@ -81,33 +81,15 @@ public class RepayController {
         return bluePayService.testRepayment(request);
     }
 
-    @ModuleFunc("确认转账上传凭证")
-    @RequestMapping("/repayment")
-    public PayResponse repayment(@Valid @RequestBody RepaymentRequest request) throws Exception {
-        return repayService.repayment(request);
-    }
-
-    @ModuleFunc("刷新还款结果)")
-    @RequestMapping("/refreshResult")
-    public PayMentResponse refreshResult(@Valid @RequestBody RefreshPaymentRequest request){
-        return repayService.refreshResult(request.getPayId(),request.isExpire());
-    }
-
-    @ModuleFunc("查看还款信息)")
-    @RequestMapping("/loanManagInfo")
-    public LoanManagResponse loanManagInfo(@Valid @RequestBody LoanManagInfoRequest request){
-        return repayService.loanManagInfo(request.getPayId());
-    }
-
     @ModuleFunc("获取va码记录")
     @RequestMapping("/getVaHistory")
-    public List<VaHistoryResponse> getVaHistory(@Valid @RequestBody VaHistoryRequest request){
+    public List<VaHistoryResponse> getVaHistory(@Valid @RequestBody VaHistoryRequest request) {
         return repayService.getVaHistory(request);
     }
 
     @ModuleFunc("提交图片凭证")
     @RequestMapping("/uploadPicEvidence")
-    public void uploadPicEvidence(@Valid @RequestBody UploadPicEvidenceRequest request){
+    public void uploadPicEvidence(@Valid @RequestBody UploadPicEvidenceRequest request) {
         repayService.uploadPicEvidence(request);
     }
 }

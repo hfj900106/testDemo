@@ -30,13 +30,13 @@ system:
     repayInfoFlow: false
     repayInfoFlowCron: 0/5 * * * * ?
     # 神策进件
-    saInData: false
+    saInData: true
     saInDataCron: 0/5 * * * * ?
     # 神策借款成功
-    saLoanSuccess: false
+    saLoanSuccess: true
     saLoanSuccessCron: 0/5 * * * * ?
     # 神策还款
-    saRepaymentSuccess: false
+    saRepaymentSuccess: true
     saRepaymentSuccessCron: 0/5 * * * * ?
 #======================================= 系统参数 结束 =======================================#
 

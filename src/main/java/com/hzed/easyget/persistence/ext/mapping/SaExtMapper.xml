@@ -3,10 +3,10 @@
 <mapper namespace="com.hzed.easyget.persistence.ext.mapper.SaExtMapper">
 
     <select id="queryInDataInfo" resultType="com.hzed.easyget.persistence.ext.entity.SaExt">
-        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, pro.handle_time, pro.handle_result, users.telephone, users.user_name
+        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, pro.handle_time, pro.handle_result,users.mobile_account as telephone, users.nick_name as user_name
         FROM t_loan_bid bid
         LEFT JOIN t_loan_bid_progress pro ON bid.id = pro.bid_id
-        LEFT JOIN t_sys_user users ON bid.user_id = users.id
+        LEFT JOIN t_loan_user users ON bid.user_id = users.id
         WHERE pro.handle_time BETWEEN #{startDate} AND #{endDate}
         AND bid.status IN (3, 4)
     </select>
@@ -26,10 +26,10 @@
     </insert>
 
     <select id="pushInDataList" resultType="com.hzed.easyget.persistence.ext.entity.SaExt">
-        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, pro.handle_time, pro.handle_result, users.telephone, users.user_name
+        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, pro.handle_time, pro.handle_result, users.mobile_account as telephone, users.nick_name as user_name
         FROM t_loan_bid bid
         LEFT JOIN t_loan_bid_progress pro ON bid.id = pro.bid_id
-        LEFT JOIN t_sys_user users ON bid.user_id = users.id
+        LEFT JOIN t_loan_user users ON bid.user_id = users.id
         LEFT JOIN t_sa_jinjian_order jijian ON jijian.bid_id = bid.id
         WHERE (pro.handle_time BETWEEN #{startDate} AND #{endDate})
         AND bid.status IN (3, 4)
@@ -48,7 +48,7 @@
       SELECT bid.id as bid_id, bid.status as bid_status, bid.user_id, date_add(bill.repayment_time, INTERVAL - 1 DAY) as real_repayment_time
       FROM t_loan_bid bid
       LEFT JOIN t_loan_bid_progress prog on bid.id = prog.bid_id
-      LEFT JOIN t_sys_user users on users.id = bid.user_id
+      LEFT JOIN t_loan_user users ON bid.user_id = users.id
       LEFT JOIN t_loan_bill bill ON bid.id = bill.bid_id
       WHERE bid.status = 5 AND prog.type = 2 AND prog.handle_time IS NOT NULL
       AND (date_add(bill.repayment_time, INTERVAL - 14 DAY)  BETWEEN #{startDate} AND #{endDate})
@@ -73,7 +73,7 @@
       SELECT bid.id as bid_id, bid.status as bid_status, bid.user_id, date_add(bill.repayment_time, INTERVAL - 1 DAY) as real_repayment_time
       FROM t_loan_bid bid
       LEFT JOIN t_loan_bid_progress prog on bid.id = prog.bid_id
-      LEFT JOIN t_sys_user users on users.id = bid.user_id
+      LEFT JOIN t_loan_user users ON bid.user_id = users.id
       LEFT JOIN t_loan_bill bill ON bid.id = bill.bid_id
       LEFT JOIN t_sa_loan_succee_order loan ON bid.id = loan.bid_id
       WHERE bid.status = 5 AND prog.type = 2 AND prog.handle_time IS NOT NULL

@@ -134,7 +134,7 @@ public class JobService {
                 LocalDateTime realRepaymentTime = repayjob.getRealRepaymentTime();
                 repayService.repayInformationFlow(bidId, repaymentAmount, realRepaymentTime, repayjob.getTransactionId(), repayjob);
             } catch (Exception e) {
-                log.error("标的{}走还款信息流失败", repayjob.getBidId());
+                log.error("标的：{}走还款信息流失败", repayjob.getBidId());
 
                 RepayInfoFlowJob jobUpdate = new RepayInfoFlowJob();
                 jobUpdate.setId(repayjob.getId());

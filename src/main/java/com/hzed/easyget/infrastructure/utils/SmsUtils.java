@@ -34,13 +34,6 @@ import java.util.Random;
 @Slf4j
 public class SmsUtils {
 
-    private static String env;
-
-    @Value("${spring.profiles.active}")
-    public void setEnv(String env) {
-        SmsUtils.env = env;
-    }
-
     public static void sendSms(String mobile, String content, Long smsId) {
         String smsIdStr = String.valueOf(smsId);
         DictService dictService = SpringContextUtil.getBean(DictService.class);
@@ -103,7 +96,7 @@ public class SmsUtils {
             log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
             if (ComConsts.BULK_SMS_OK != smsDownResponse.getErrorCode()) {
                 log.error("发送失败：{}",JSONObject.toJSONString(smsDownResponse.getMessages()));
-                throw new ComBizException(BizCodeEnum.SMS_CODE_SEND_FAIL);
+                throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
             }
         }
 

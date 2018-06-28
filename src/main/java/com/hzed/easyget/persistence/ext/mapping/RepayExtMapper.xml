@@ -12,4 +12,10 @@
         t_loan_user_transaction_repay
         GROUP BY id HAVING (TIMESTAMPDIFF(HOUR,MAX(va_create_time),NOW())) &lt;=6 AND transaction_id = #{payId} AND MODE = #{mode}
     </select>
+    <!--查询当天的交易记录-->
+    <select id="selectOneByExample" resultType="com.hzed.easyget.persistence.auto.entity.UserTransaction">
+        SELECT *
+        FROM t_loan_user_transaction
+        WHERE DATE(create_time) = CURDATE() and type=#{type} and status=#{status} and  bid_id=#{bidId} and repayment_type=#{repayMentType}
+    </select>
 </mapper>

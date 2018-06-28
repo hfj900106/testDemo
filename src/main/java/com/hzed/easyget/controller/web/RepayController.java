@@ -1,5 +1,6 @@
 package com.hzed.easyget.controller.web;
 
+import com.hzed.easyget.application.service.BluePayService;
 import com.hzed.easyget.application.service.ComService;
 import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.controller.model.*;
@@ -33,6 +34,8 @@ public class RepayController {
     private RepayService repayService;
     @Autowired
     private ComService comService;
+    @Autowired
+    private BluePayService bluePayService;
 
     @ModuleFunc("还款列表")
     @PostMapping("/repaidList")
@@ -52,13 +55,13 @@ public class RepayController {
         return repayService.repayPartDetail(request);
     }
 
-    @ModuleFunc("部分还款查询")
+    @ModuleFunc("部分还款")
     @PostMapping("/fullrepayment")
     public PaymentIdResponse fullRepayment(@Valid @RequestBody RepayPartRequest request) {
         return repayService.findloanManagResponse(request.getRepayAmount(), request.getBidId(), false);
     }
 
-    @ModuleFunc("全部还款查询")
+    @ModuleFunc("全部还款")
     @PostMapping("/partialrepayment")
     public PaymentIdResponse partialRepayment(@Valid @RequestBody RepayAllRequest request) {
         BigDecimal amount = comService.getBidNoRepayFee(request.getBidId(), LocalDateTime.now());
@@ -68,16 +71,16 @@ public class RepayController {
     @ModuleFunc("生成VA码")
     @PostMapping("/vaInfoDetail")
     public TransactionVAResponse vaInfoDetail(@Valid @RequestBody TransactionVARequest request) {
-        return repayService.findVaTranc(request.getPayId(),request.getMode());
+        return bluePayService.findVaTranc(request.getPayId(),request.getMode());
     }
 
     @ModuleFunc("还款接口(测试环境专用)")
     @PostMapping("/testRepayment")
-    public PayResponse testRepayment(@Valid @RequestBody RepaymentRequest request) throws Exception {
-        return repayService.testRepayment(request);
+    public PayResponse testRepayment(@Valid @RequestBody RepaymentCompleRequest request) {
+        return bluePayService.testRepayment(request);
     }
 
-    @ModuleFunc("还款接口(正式环境专用)")
+    @ModuleFunc("确认转账上传凭证")
     @RequestMapping("/repayment")
     public PayResponse repayment(@Valid @RequestBody RepaymentRequest request) throws Exception {
         return repayService.repayment(request);

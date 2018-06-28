@@ -1,5 +1,6 @@
 package com.hzed.easyget.persistence.auto.entity.example;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -221,63 +222,253 @@ public class UserTransactionRepayExample {
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdIsNull() {
-            addCriterion("transaction_id is null");
+        public Criteria andBidIdIsNull() {
+            addCriterion("bid_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdIsNotNull() {
-            addCriterion("transaction_id is not null");
+        public Criteria andBidIdIsNotNull() {
+            addCriterion("bid_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdEqualTo(Long value) {
-            addCriterion("transaction_id =", value, "transactionId");
+        public Criteria andBidIdEqualTo(Long value) {
+            addCriterion("bid_id =", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdNotEqualTo(Long value) {
-            addCriterion("transaction_id <>", value, "transactionId");
+        public Criteria andBidIdNotEqualTo(Long value) {
+            addCriterion("bid_id <>", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdGreaterThan(Long value) {
-            addCriterion("transaction_id >", value, "transactionId");
+        public Criteria andBidIdGreaterThan(Long value) {
+            addCriterion("bid_id >", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("transaction_id >=", value, "transactionId");
+        public Criteria andBidIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("bid_id >=", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdLessThan(Long value) {
-            addCriterion("transaction_id <", value, "transactionId");
+        public Criteria andBidIdLessThan(Long value) {
+            addCriterion("bid_id <", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdLessThanOrEqualTo(Long value) {
-            addCriterion("transaction_id <=", value, "transactionId");
+        public Criteria andBidIdLessThanOrEqualTo(Long value) {
+            addCriterion("bid_id <=", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdIn(List<Long> values) {
-            addCriterion("transaction_id in", values, "transactionId");
+        public Criteria andBidIdIn(List<Long> values) {
+            addCriterion("bid_id in", values, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdNotIn(List<Long> values) {
-            addCriterion("transaction_id not in", values, "transactionId");
+        public Criteria andBidIdNotIn(List<Long> values) {
+            addCriterion("bid_id not in", values, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdBetween(Long value1, Long value2) {
-            addCriterion("transaction_id between", value1, value2, "transactionId");
+        public Criteria andBidIdBetween(Long value1, Long value2) {
+            addCriterion("bid_id between", value1, value2, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdNotBetween(Long value1, Long value2) {
-            addCriterion("transaction_id not between", value1, value2, "transactionId");
+        public Criteria andBidIdNotBetween(Long value1, Long value2) {
+            addCriterion("bid_id not between", value1, value2, "bidId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdIsNull() {
+            addCriterion("payment_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdIsNotNull() {
+            addCriterion("payment_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdEqualTo(String value) {
+            addCriterion("payment_id =", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdNotEqualTo(String value) {
+            addCriterion("payment_id <>", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdGreaterThan(String value) {
+            addCriterion("payment_id >", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdGreaterThanOrEqualTo(String value) {
+            addCriterion("payment_id >=", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdLessThan(String value) {
+            addCriterion("payment_id <", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdLessThanOrEqualTo(String value) {
+            addCriterion("payment_id <=", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdLike(String value) {
+            addCriterion("payment_id like", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdNotLike(String value) {
+            addCriterion("payment_id not like", value, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdIn(List<String> values) {
+            addCriterion("payment_id in", values, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdNotIn(List<String> values) {
+            addCriterion("payment_id not in", values, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdBetween(String value1, String value2) {
+            addCriterion("payment_id between", value1, value2, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdNotBetween(String value1, String value2) {
+            addCriterion("payment_id not between", value1, value2, "paymentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountIsNull() {
+            addCriterion("amount is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountIsNotNull() {
+            addCriterion("amount is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountEqualTo(BigDecimal value) {
+            addCriterion("amount =", value, "amount");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountNotEqualTo(BigDecimal value) {
+            addCriterion("amount <>", value, "amount");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountGreaterThan(BigDecimal value) {
+            addCriterion("amount >", value, "amount");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("amount >=", value, "amount");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountLessThan(BigDecimal value) {
+            addCriterion("amount <", value, "amount");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("amount <=", value, "amount");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountIn(List<BigDecimal> values) {
+            addCriterion("amount in", values, "amount");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountNotIn(List<BigDecimal> values) {
+            addCriterion("amount not in", values, "amount");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("amount between", value1, value2, "amount");
+            return (Criteria) this;
+        }
+
+        public Criteria andAmountNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("amount not between", value1, value2, "amount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTimeIsNull() {
+            addCriterion("repayment_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTimeIsNotNull() {
+            addCriterion("repayment_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTimeEqualTo(LocalDateTime value) {
+            addCriterion("repayment_time =", value, "repaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("repayment_time <>", value, "repaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTimeGreaterThan(LocalDateTime value) {
+            addCriterion("repayment_time >", value, "repaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("repayment_time >=", value, "repaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTimeLessThan(LocalDateTime value) {
+            addCriterion("repayment_time <", value, "repaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("repayment_time <=", value, "repaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTimeIn(List<LocalDateTime> values) {
+            addCriterion("repayment_time in", values, "repaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("repayment_time not in", values, "repaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("repayment_time between", value1, value2, "repaymentTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("repayment_time not between", value1, value2, "repaymentTime");
             return (Criteria) this;
         }
 
@@ -481,6 +672,186 @@ public class UserTransactionRepayExample {
             return (Criteria) this;
         }
 
+        public Criteria andVaExpireTimeIsNull() {
+            addCriterion("va_expire_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaExpireTimeIsNotNull() {
+            addCriterion("va_expire_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaExpireTimeEqualTo(LocalDateTime value) {
+            addCriterion("va_expire_time =", value, "vaExpireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaExpireTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("va_expire_time <>", value, "vaExpireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaExpireTimeGreaterThan(LocalDateTime value) {
+            addCriterion("va_expire_time >", value, "vaExpireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaExpireTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("va_expire_time >=", value, "vaExpireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaExpireTimeLessThan(LocalDateTime value) {
+            addCriterion("va_expire_time <", value, "vaExpireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaExpireTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("va_expire_time <=", value, "vaExpireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaExpireTimeIn(List<LocalDateTime> values) {
+            addCriterion("va_expire_time in", values, "vaExpireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaExpireTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("va_expire_time not in", values, "vaExpireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaExpireTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("va_expire_time between", value1, value2, "vaExpireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaExpireTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("va_expire_time not between", value1, value2, "vaExpireTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNull() {
+            addCriterion("status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNotNull() {
+            addCriterion("status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusEqualTo(Byte value) {
+            addCriterion("status =", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotEqualTo(Byte value) {
+            addCriterion("status <>", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThan(Byte value) {
+            addCriterion("status >", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThanOrEqualTo(Byte value) {
+            addCriterion("status >=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThan(Byte value) {
+            addCriterion("status <", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThanOrEqualTo(Byte value) {
+            addCriterion("status <=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIn(List<Byte> values) {
+            addCriterion("status in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotIn(List<Byte> values) {
+            addCriterion("status not in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusBetween(Byte value1, Byte value2) {
+            addCriterion("status between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotBetween(Byte value1, Byte value2) {
+            addCriterion("status not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIsNull() {
+            addCriterion("create_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIsNotNull() {
+            addCriterion("create_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeEqualTo(LocalDateTime value) {
+            addCriterion("create_time =", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("create_time <>", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeGreaterThan(LocalDateTime value) {
+            addCriterion("create_time >", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("create_time >=", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeLessThan(LocalDateTime value) {
+            addCriterion("create_time <", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("create_time <=", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIn(List<LocalDateTime> values) {
+            addCriterion("create_time in", values, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("create_time not in", values, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("create_time between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("create_time not between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
         public Criteria andRemarkIsNull() {
             addCriterion("remark is null");
             return (Criteria) this;
@@ -548,6 +919,11 @@ public class UserTransactionRepayExample {
 
         public Criteria andRemarkNotBetween(String value1, String value2) {
             addCriterion("remark not between", value1, value2, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andPaymentIdLikeInsensitive(String value) {
+            addCriterion("upper(payment_id) like", value.toUpperCase(), "paymentId");
             return (Criteria) this;
         }
 

@@ -3,8 +3,10 @@
 <mapper namespace="com.hzed.easyget.persistence.auto.mapper.UserTransactionPicMapper">
   <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.UserTransactionPic">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="transaction_id" jdbcType="BIGINT" property="transactionId" />
+    <result column="bid_id" jdbcType="BIGINT" property="bidId" />
     <result column="evidence_pic_url" jdbcType="VARCHAR" property="evidencePicUrl" />
+    <result column="mode" jdbcType="VARCHAR" property="mode" />
+    <result column="va" jdbcType="CHAR" property="va" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -66,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, transaction_id, evidence_pic_url, create_time
+    id, bid_id, evidence_pic_url, mode, va, create_time
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTransactionPicExample" resultMap="BaseResultMap">
     select
@@ -131,10 +133,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionPic">
-    insert into t_loan_user_transaction_pic (id, transaction_id, evidence_pic_url, 
-      create_time)
-    values (#{id,jdbcType=BIGINT}, #{transactionId,jdbcType=BIGINT}, #{evidencePicUrl,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP})
+    insert into t_loan_user_transaction_pic (id, bid_id, evidence_pic_url, 
+      mode, va, create_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{bidId,jdbcType=BIGINT}, #{evidencePicUrl,jdbcType=VARCHAR}, 
+      #{mode,jdbcType=VARCHAR}, #{va,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionPic">
     insert into t_loan_user_transaction_pic
@@ -142,11 +146,17 @@
       <if test="id != null">
         id,
       </if>
-      <if test="transactionId != null">
-        transaction_id,
+      <if test="bidId != null">
+        bid_id,
       </if>
       <if test="evidencePicUrl != null">
         evidence_pic_url,
+      </if>
+      <if test="mode != null">
+        mode,
+      </if>
+      <if test="va != null">
+        va,
       </if>
       <if test="createTime != null">
         create_time,
@@ -156,11 +166,17 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="transactionId != null">
-        #{transactionId,jdbcType=BIGINT},
+      <if test="bidId != null">
+        #{bidId,jdbcType=BIGINT},
       </if>
       <if test="evidencePicUrl != null">
         #{evidencePicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mode != null">
+        #{mode,jdbcType=VARCHAR},
+      </if>
+      <if test="va != null">
+        #{va,jdbcType=CHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -179,11 +195,17 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.transactionId != null">
-        transaction_id = #{record.transactionId,jdbcType=BIGINT},
+      <if test="record.bidId != null">
+        bid_id = #{record.bidId,jdbcType=BIGINT},
       </if>
       <if test="record.evidencePicUrl != null">
         evidence_pic_url = #{record.evidencePicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mode != null">
+        mode = #{record.mode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.va != null">
+        va = #{record.va,jdbcType=CHAR},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -196,8 +218,10 @@
   <update id="updateByExample" parameterType="map">
     update t_loan_user_transaction_pic
     set id = #{record.id,jdbcType=BIGINT},
-      transaction_id = #{record.transactionId,jdbcType=BIGINT},
+      bid_id = #{record.bidId,jdbcType=BIGINT},
       evidence_pic_url = #{record.evidencePicUrl,jdbcType=VARCHAR},
+      mode = #{record.mode,jdbcType=VARCHAR},
+      va = #{record.va,jdbcType=CHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -206,11 +230,17 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionPic">
     update t_loan_user_transaction_pic
     <set>
-      <if test="transactionId != null">
-        transaction_id = #{transactionId,jdbcType=BIGINT},
+      <if test="bidId != null">
+        bid_id = #{bidId,jdbcType=BIGINT},
       </if>
       <if test="evidencePicUrl != null">
         evidence_pic_url = #{evidencePicUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="mode != null">
+        mode = #{mode,jdbcType=VARCHAR},
+      </if>
+      <if test="va != null">
+        va = #{va,jdbcType=CHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -220,8 +250,10 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionPic">
     update t_loan_user_transaction_pic
-    set transaction_id = #{transactionId,jdbcType=BIGINT},
+    set bid_id = #{bidId,jdbcType=BIGINT},
       evidence_pic_url = #{evidencePicUrl,jdbcType=VARCHAR},
+      mode = #{mode,jdbcType=VARCHAR},
+      va = #{va,jdbcType=CHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -253,11 +285,12 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_user_transaction_pic
-    (id, transaction_id, evidence_pic_url, create_time)
+    (id, bid_id, evidence_pic_url, mode, va, create_time)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.transactionId,jdbcType=BIGINT}, #{item.evidencePicUrl,jdbcType=VARCHAR}, 
-        #{item.createTime,jdbcType=TIMESTAMP})
+      (#{item.id,jdbcType=BIGINT}, #{item.bidId,jdbcType=BIGINT}, #{item.evidencePicUrl,jdbcType=VARCHAR}, 
+        #{item.mode,jdbcType=VARCHAR}, #{item.va,jdbcType=CHAR}, #{item.createTime,jdbcType=TIMESTAMP}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -273,11 +306,17 @@
         <if test="'id' == column.value">
           #{item.id,jdbcType=BIGINT}
         </if>
-        <if test="'transaction_id' == column.value">
-          #{item.transactionId,jdbcType=BIGINT}
+        <if test="'bid_id' == column.value">
+          #{item.bidId,jdbcType=BIGINT}
         </if>
         <if test="'evidence_pic_url' == column.value">
           #{item.evidencePicUrl,jdbcType=VARCHAR}
+        </if>
+        <if test="'mode' == column.value">
+          #{item.mode,jdbcType=VARCHAR}
+        </if>
+        <if test="'va' == column.value">
+          #{item.va,jdbcType=CHAR}
         </if>
         <if test="'create_time' == column.value">
           #{item.createTime,jdbcType=TIMESTAMP}

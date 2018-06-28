@@ -221,63 +221,63 @@ public class UserTransactionPicExample {
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdIsNull() {
-            addCriterion("transaction_id is null");
+        public Criteria andBidIdIsNull() {
+            addCriterion("bid_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdIsNotNull() {
-            addCriterion("transaction_id is not null");
+        public Criteria andBidIdIsNotNull() {
+            addCriterion("bid_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdEqualTo(Long value) {
-            addCriterion("transaction_id =", value, "transactionId");
+        public Criteria andBidIdEqualTo(Long value) {
+            addCriterion("bid_id =", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdNotEqualTo(Long value) {
-            addCriterion("transaction_id <>", value, "transactionId");
+        public Criteria andBidIdNotEqualTo(Long value) {
+            addCriterion("bid_id <>", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdGreaterThan(Long value) {
-            addCriterion("transaction_id >", value, "transactionId");
+        public Criteria andBidIdGreaterThan(Long value) {
+            addCriterion("bid_id >", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("transaction_id >=", value, "transactionId");
+        public Criteria andBidIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("bid_id >=", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdLessThan(Long value) {
-            addCriterion("transaction_id <", value, "transactionId");
+        public Criteria andBidIdLessThan(Long value) {
+            addCriterion("bid_id <", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdLessThanOrEqualTo(Long value) {
-            addCriterion("transaction_id <=", value, "transactionId");
+        public Criteria andBidIdLessThanOrEqualTo(Long value) {
+            addCriterion("bid_id <=", value, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdIn(List<Long> values) {
-            addCriterion("transaction_id in", values, "transactionId");
+        public Criteria andBidIdIn(List<Long> values) {
+            addCriterion("bid_id in", values, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdNotIn(List<Long> values) {
-            addCriterion("transaction_id not in", values, "transactionId");
+        public Criteria andBidIdNotIn(List<Long> values) {
+            addCriterion("bid_id not in", values, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdBetween(Long value1, Long value2) {
-            addCriterion("transaction_id between", value1, value2, "transactionId");
+        public Criteria andBidIdBetween(Long value1, Long value2) {
+            addCriterion("bid_id between", value1, value2, "bidId");
             return (Criteria) this;
         }
 
-        public Criteria andTransactionIdNotBetween(Long value1, Long value2) {
-            addCriterion("transaction_id not between", value1, value2, "transactionId");
+        public Criteria andBidIdNotBetween(Long value1, Long value2) {
+            addCriterion("bid_id not between", value1, value2, "bidId");
             return (Criteria) this;
         }
 
@@ -351,6 +351,146 @@ public class UserTransactionPicExample {
             return (Criteria) this;
         }
 
+        public Criteria andModeIsNull() {
+            addCriterion("mode is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeIsNotNull() {
+            addCriterion("mode is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeEqualTo(String value) {
+            addCriterion("mode =", value, "mode");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeNotEqualTo(String value) {
+            addCriterion("mode <>", value, "mode");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeGreaterThan(String value) {
+            addCriterion("mode >", value, "mode");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeGreaterThanOrEqualTo(String value) {
+            addCriterion("mode >=", value, "mode");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeLessThan(String value) {
+            addCriterion("mode <", value, "mode");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeLessThanOrEqualTo(String value) {
+            addCriterion("mode <=", value, "mode");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeLike(String value) {
+            addCriterion("mode like", value, "mode");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeNotLike(String value) {
+            addCriterion("mode not like", value, "mode");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeIn(List<String> values) {
+            addCriterion("mode in", values, "mode");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeNotIn(List<String> values) {
+            addCriterion("mode not in", values, "mode");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeBetween(String value1, String value2) {
+            addCriterion("mode between", value1, value2, "mode");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeNotBetween(String value1, String value2) {
+            addCriterion("mode not between", value1, value2, "mode");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaIsNull() {
+            addCriterion("va is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaIsNotNull() {
+            addCriterion("va is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaEqualTo(String value) {
+            addCriterion("va =", value, "va");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaNotEqualTo(String value) {
+            addCriterion("va <>", value, "va");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaGreaterThan(String value) {
+            addCriterion("va >", value, "va");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaGreaterThanOrEqualTo(String value) {
+            addCriterion("va >=", value, "va");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaLessThan(String value) {
+            addCriterion("va <", value, "va");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaLessThanOrEqualTo(String value) {
+            addCriterion("va <=", value, "va");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaLike(String value) {
+            addCriterion("va like", value, "va");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaNotLike(String value) {
+            addCriterion("va not like", value, "va");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaIn(List<String> values) {
+            addCriterion("va in", values, "va");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaNotIn(List<String> values) {
+            addCriterion("va not in", values, "va");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaBetween(String value1, String value2) {
+            addCriterion("va between", value1, value2, "va");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaNotBetween(String value1, String value2) {
+            addCriterion("va not between", value1, value2, "va");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;
@@ -413,6 +553,16 @@ public class UserTransactionPicExample {
 
         public Criteria andEvidencePicUrlLikeInsensitive(String value) {
             addCriterion("upper(evidence_pic_url) like", value.toUpperCase(), "evidencePicUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andModeLikeInsensitive(String value) {
+            addCriterion("upper(mode) like", value.toUpperCase(), "mode");
+            return (Criteria) this;
+        }
+
+        public Criteria andVaLikeInsensitive(String value) {
+            addCriterion("upper(va) like", value.toUpperCase(), "va");
             return (Criteria) this;
         }
     }

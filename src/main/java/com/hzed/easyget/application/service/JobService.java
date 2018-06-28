@@ -60,6 +60,8 @@ public class JobService {
     private SaService saService;
     @Autowired
     private RiskProp riskProp;
+    @Autowired
+    private BluePayService bluePayService;
 
     /**
      * 风控审核
@@ -171,7 +173,7 @@ public class JobService {
                     loan.setTransactionId(IdentifierGenerator.nextSeqNo());
                     //交易流水
                     loan.setRequestNo(tempId.toString());
-                    PayResponse response = transactionService.loanTransaction(loan);
+                    PayResponse response = bluePayService.loanTransaction(loan);
                     if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
                         transactionService.lendingCallback(bidId, tempId, loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
                     } else {

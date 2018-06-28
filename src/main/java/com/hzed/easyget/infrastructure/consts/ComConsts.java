@@ -24,6 +24,8 @@ public class ComConsts {
     public static final String RISK_OPERATOR_PARAMS_ERROR = "1";
     public static final String RISK_OPERATOR_HAVE_AUTH = "0000";
     public static final String H5 = "H5";
+    /**印尼身份证上的性别-女*/
+    public static final String FEMALE = "PEREMPUAN";
     /**
      * 短信发送渠道字典code
      */
@@ -55,5 +57,12 @@ public class ComConsts {
      * 交易方式OTC
      */
     public static final String OTC = "OTC";
-
+    /**
+     * 银行类型permata
+     */
+    public static final String PERMATA="permata";
+    /**
+     * 银行类型bni
+     */
+    public static final String BNI="bni";
 }

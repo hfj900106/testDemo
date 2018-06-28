@@ -792,66 +792,6 @@ public class UserTransactionExample {
             return (Criteria) this;
         }
 
-        public Criteria andConfirmTimeIsNull() {
-            addCriterion("confirm_time is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfirmTimeIsNotNull() {
-            addCriterion("confirm_time is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfirmTimeEqualTo(LocalDateTime value) {
-            addCriterion("confirm_time =", value, "confirmTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfirmTimeNotEqualTo(LocalDateTime value) {
-            addCriterion("confirm_time <>", value, "confirmTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfirmTimeGreaterThan(LocalDateTime value) {
-            addCriterion("confirm_time >", value, "confirmTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfirmTimeGreaterThanOrEqualTo(LocalDateTime value) {
-            addCriterion("confirm_time >=", value, "confirmTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfirmTimeLessThan(LocalDateTime value) {
-            addCriterion("confirm_time <", value, "confirmTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfirmTimeLessThanOrEqualTo(LocalDateTime value) {
-            addCriterion("confirm_time <=", value, "confirmTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfirmTimeIn(List<LocalDateTime> values) {
-            addCriterion("confirm_time in", values, "confirmTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfirmTimeNotIn(List<LocalDateTime> values) {
-            addCriterion("confirm_time not in", values, "confirmTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfirmTimeBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("confirm_time between", value1, value2, "confirmTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfirmTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("confirm_time not between", value1, value2, "confirmTime");
-            return (Criteria) this;
-        }
-
         public Criteria andCreateByIsNull() {
             addCriterion("create_by is null");
             return (Criteria) this;

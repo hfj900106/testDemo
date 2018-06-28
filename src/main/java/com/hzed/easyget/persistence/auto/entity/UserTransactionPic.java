@@ -9,16 +9,26 @@ public class UserTransactionPic implements Serializable {
     private Long id;
 
     /**
+     * 标ID
      */
-    private Long transactionId;
+    private Long bidId;
 
     /**
-     * 凭证地址
+     * 凭证图片地址
      */
     private String evidencePicUrl;
 
     /**
-     * 创建时间
+     * 交易方式 BNI ATM ;OTC
+     */
+    private String mode;
+
+    /**
+     * 还款码
+     */
+    private String va;
+
+    /**
      */
     private LocalDateTime createTime;
 
@@ -32,12 +42,12 @@ public class UserTransactionPic implements Serializable {
         this.id = id;
     }
 
-    public Long getTransactionId() {
-        return transactionId;
+    public Long getBidId() {
+        return bidId;
     }
 
-    public void setTransactionId(Long transactionId) {
-        this.transactionId = transactionId;
+    public void setBidId(Long bidId) {
+        this.bidId = bidId;
     }
 
     public String getEvidencePicUrl() {
@@ -46,6 +56,22 @@ public class UserTransactionPic implements Serializable {
 
     public void setEvidencePicUrl(String evidencePicUrl) {
         this.evidencePicUrl = evidencePicUrl == null ? null : evidencePicUrl.trim();
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode == null ? null : mode.trim();
+    }
+
+    public String getVa() {
+        return va;
+    }
+
+    public void setVa(String va) {
+        this.va = va == null ? null : va.trim();
     }
 
     public LocalDateTime getCreateTime() {
@@ -63,8 +89,10 @@ public class UserTransactionPic implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", transactionId=").append(transactionId);
+        sb.append(", bidId=").append(bidId);
         sb.append(", evidencePicUrl=").append(evidencePicUrl);
+        sb.append(", mode=").append(mode);
+        sb.append(", va=").append(va);
         sb.append(", createTime=").append(createTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
@@ -87,13 +115,23 @@ public class UserTransactionPic implements Serializable {
             return this;
         }
 
-        public Builder transactionId(Long transactionId) {
-            obj.setTransactionId(transactionId);
+        public Builder bidId(Long bidId) {
+            obj.setBidId(bidId);
             return this;
         }
 
         public Builder evidencePicUrl(String evidencePicUrl) {
             obj.setEvidencePicUrl(evidencePicUrl);
+            return this;
+        }
+
+        public Builder mode(String mode) {
+            obj.setMode(mode);
+            return this;
+        }
+
+        public Builder va(String va) {
+            obj.setVa(va);
             return this;
         }
 
@@ -109,8 +147,10 @@ public class UserTransactionPic implements Serializable {
 
     public enum Column {
         id("id"),
-        transactionId("transaction_id"),
+        bidId("bid_id"),
         evidencePicUrl("evidence_pic_url"),
+        mode("mode"),
+        va("va"),
         createTime("create_time");
 
         private final String column;

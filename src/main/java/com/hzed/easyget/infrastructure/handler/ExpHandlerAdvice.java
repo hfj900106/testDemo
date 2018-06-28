@@ -76,9 +76,11 @@ public class ExpHandlerAdvice {
         if (ex.toString().indexOf(requiredRequestBodyIsMissing) > 0) {
             resp.setCode(BizCodeEnum.ILLEGAL_PARAM.getCode());
             resp.setMessage(BizCodeEnum.ILLEGAL_PARAM.getMessage());
+            log.warn("其他异常：", ex);
+        } else {
+            log.error("其他异常：", ex);
         }
 
-        log.error("其他异常：", ex);
         resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
         return resp;
     }

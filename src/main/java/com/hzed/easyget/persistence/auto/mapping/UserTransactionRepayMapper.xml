@@ -3,10 +3,16 @@
 <mapper namespace="com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper">
   <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="transaction_id" jdbcType="BIGINT" property="transactionId" />
+    <result column="bid_id" jdbcType="BIGINT" property="bidId" />
+    <result column="payment_id" jdbcType="VARCHAR" property="paymentId" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="repayment_time" jdbcType="TIMESTAMP" property="repaymentTime" />
     <result column="mode" jdbcType="VARCHAR" property="mode" />
     <result column="va" jdbcType="VARCHAR" property="va" />
     <result column="va_create_time" jdbcType="TIMESTAMP" property="vaCreateTime" />
+    <result column="va_expire_time" jdbcType="TIMESTAMP" property="vaExpireTime" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -68,7 +74,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, transaction_id, mode, va, va_create_time, remark
+    id, bid_id, payment_id, amount, repayment_time, mode, va, va_create_time, va_expire_time, 
+    status, create_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample" resultMap="BaseResultMap">
     select
@@ -133,11 +140,15 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
-    insert into t_loan_user_transaction_repay (id, transaction_id, mode, 
-      va, va_create_time, remark
+    insert into t_loan_user_transaction_repay (id, bid_id, payment_id, 
+      amount, repayment_time, mode, 
+      va, va_create_time, va_expire_time, 
+      status, create_time, remark
       )
-    values (#{id,jdbcType=BIGINT}, #{transactionId,jdbcType=BIGINT}, #{mode,jdbcType=VARCHAR}, 
-      #{va,jdbcType=VARCHAR}, #{vaCreateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
+    values (#{id,jdbcType=BIGINT}, #{bidId,jdbcType=BIGINT}, #{paymentId,jdbcType=VARCHAR}, 
+      #{amount,jdbcType=DECIMAL}, #{repaymentTime,jdbcType=TIMESTAMP}, #{mode,jdbcType=VARCHAR}, 
+      #{va,jdbcType=VARCHAR}, #{vaCreateTime,jdbcType=TIMESTAMP}, #{vaExpireTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
@@ -146,8 +157,17 @@
       <if test="id != null">
         id,
       </if>
-      <if test="transactionId != null">
-        transaction_id,
+      <if test="bidId != null">
+        bid_id,
+      </if>
+      <if test="paymentId != null">
+        payment_id,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="repaymentTime != null">
+        repayment_time,
       </if>
       <if test="mode != null">
         mode,
@@ -158,6 +178,15 @@
       <if test="vaCreateTime != null">
         va_create_time,
       </if>
+      <if test="vaExpireTime != null">
+        va_expire_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
       <if test="remark != null">
         remark,
       </if>
@@ -166,8 +195,17 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="transactionId != null">
-        #{transactionId,jdbcType=BIGINT},
+      <if test="bidId != null">
+        #{bidId,jdbcType=BIGINT},
+      </if>
+      <if test="paymentId != null">
+        #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="repaymentTime != null">
+        #{repaymentTime,jdbcType=TIMESTAMP},
       </if>
       <if test="mode != null">
         #{mode,jdbcType=VARCHAR},
@@ -177,6 +215,15 @@
       </if>
       <if test="vaCreateTime != null">
         #{vaCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="vaExpireTime != null">
+        #{vaExpireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
@@ -195,8 +242,17 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.transactionId != null">
-        transaction_id = #{record.transactionId,jdbcType=BIGINT},
+      <if test="record.bidId != null">
+        bid_id = #{record.bidId,jdbcType=BIGINT},
+      </if>
+      <if test="record.paymentId != null">
+        payment_id = #{record.paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.amount != null">
+        amount = #{record.amount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repaymentTime != null">
+        repayment_time = #{record.repaymentTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.mode != null">
         mode = #{record.mode,jdbcType=VARCHAR},
@@ -206,6 +262,15 @@
       </if>
       <if test="record.vaCreateTime != null">
         va_create_time = #{record.vaCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.vaExpireTime != null">
+        va_expire_time = #{record.vaExpireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
@@ -218,10 +283,16 @@
   <update id="updateByExample" parameterType="map">
     update t_loan_user_transaction_repay
     set id = #{record.id,jdbcType=BIGINT},
-      transaction_id = #{record.transactionId,jdbcType=BIGINT},
+      bid_id = #{record.bidId,jdbcType=BIGINT},
+      payment_id = #{record.paymentId,jdbcType=VARCHAR},
+      amount = #{record.amount,jdbcType=DECIMAL},
+      repayment_time = #{record.repaymentTime,jdbcType=TIMESTAMP},
       mode = #{record.mode,jdbcType=VARCHAR},
       va = #{record.va,jdbcType=VARCHAR},
       va_create_time = #{record.vaCreateTime,jdbcType=TIMESTAMP},
+      va_expire_time = #{record.vaExpireTime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=TINYINT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
       remark = #{record.remark,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -230,8 +301,17 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
     update t_loan_user_transaction_repay
     <set>
-      <if test="transactionId != null">
-        transaction_id = #{transactionId,jdbcType=BIGINT},
+      <if test="bidId != null">
+        bid_id = #{bidId,jdbcType=BIGINT},
+      </if>
+      <if test="paymentId != null">
+        payment_id = #{paymentId,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="repaymentTime != null">
+        repayment_time = #{repaymentTime,jdbcType=TIMESTAMP},
       </if>
       <if test="mode != null">
         mode = #{mode,jdbcType=VARCHAR},
@@ -242,6 +322,15 @@
       <if test="vaCreateTime != null">
         va_create_time = #{vaCreateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="vaExpireTime != null">
+        va_expire_time = #{vaExpireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
@@ -250,10 +339,16 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserTransactionRepay">
     update t_loan_user_transaction_repay
-    set transaction_id = #{transactionId,jdbcType=BIGINT},
+    set bid_id = #{bidId,jdbcType=BIGINT},
+      payment_id = #{paymentId,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=DECIMAL},
+      repayment_time = #{repaymentTime,jdbcType=TIMESTAMP},
       mode = #{mode,jdbcType=VARCHAR},
       va = #{va,jdbcType=VARCHAR},
       va_create_time = #{vaCreateTime,jdbcType=TIMESTAMP},
+      va_expire_time = #{vaExpireTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -285,11 +380,14 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_user_transaction_repay
-    (id, transaction_id, mode, va, va_create_time, remark)
+    (id, bid_id, payment_id, amount, repayment_time, mode, va, va_create_time, va_expire_time, 
+      status, create_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.transactionId,jdbcType=BIGINT}, #{item.mode,jdbcType=VARCHAR}, 
-        #{item.va,jdbcType=VARCHAR}, #{item.vaCreateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
+      (#{item.id,jdbcType=BIGINT}, #{item.bidId,jdbcType=BIGINT}, #{item.paymentId,jdbcType=VARCHAR}, 
+        #{item.amount,jdbcType=DECIMAL}, #{item.repaymentTime,jdbcType=TIMESTAMP}, #{item.mode,jdbcType=VARCHAR}, 
+        #{item.va,jdbcType=VARCHAR}, #{item.vaCreateTime,jdbcType=TIMESTAMP}, #{item.vaExpireTime,jdbcType=TIMESTAMP}, 
+        #{item.status,jdbcType=TINYINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
         )
     </foreach>
   </insert>
@@ -306,8 +404,17 @@
         <if test="'id' == column.value">
           #{item.id,jdbcType=BIGINT}
         </if>
-        <if test="'transaction_id' == column.value">
-          #{item.transactionId,jdbcType=BIGINT}
+        <if test="'bid_id' == column.value">
+          #{item.bidId,jdbcType=BIGINT}
+        </if>
+        <if test="'payment_id' == column.value">
+          #{item.paymentId,jdbcType=VARCHAR}
+        </if>
+        <if test="'amount' == column.value">
+          #{item.amount,jdbcType=DECIMAL}
+        </if>
+        <if test="'repayment_time' == column.value">
+          #{item.repaymentTime,jdbcType=TIMESTAMP}
         </if>
         <if test="'mode' == column.value">
           #{item.mode,jdbcType=VARCHAR}
@@ -317,6 +424,15 @@
         </if>
         <if test="'va_create_time' == column.value">
           #{item.vaCreateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'va_expire_time' == column.value">
+          #{item.vaExpireTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'status' == column.value">
+          #{item.status,jdbcType=TINYINT}
+        </if>
+        <if test="'create_time' == column.value">
+          #{item.createTime,jdbcType=TIMESTAMP}
         </if>
         <if test="'remark' == column.value">
           #{item.remark,jdbcType=VARCHAR}

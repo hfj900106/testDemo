@@ -1,6 +1,5 @@
 package com.hzed.easyget.application.service;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.application.service.product.ProductEnum;
@@ -8,14 +7,12 @@ import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.ProductService;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.*;
-import com.hzed.easyget.infrastructure.config.PayProp;
-import com.hzed.easyget.infrastructure.config.rest.RestService;
-import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.PayResponse;
+import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.Arith;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -63,6 +60,8 @@ public class RepayService {
     private FileService fileService;
     @Autowired
     private UserTransactionRepayRepository userTransactionRepayRepository;
+    @Autowired
+    private UserTransactionPicRepository userTransactionPicRepository;
 
     private static final String TIMEOUT = "TIMEOUT";
     private static final List<String> LISTCODE = Arrays.asList(BizCodeEnum.PROCESS_LENDING.getCode(), BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.REPAYMENTS.getCode());
@@ -504,5 +503,23 @@ public class RepayService {
 
     public List<UserTransactionRepay> getVaHistory(VaHistoryRequest request) {
         return userTransactionRepayRepository.findVaHistoryBybId(request);
+    }
+
+    public Response uploadPicEvidence(PicEvidenceRequest request)  throws Exception{
+        if(request.getBase64Imgs().length != request.getPicSuffixs().length){
+            return Response.getFailResponse();
+        }
+        for (int i = 0 ; i < request.getBase64Imgs().length ; i++){
+            String picUrl = fileService.uploadBase64Img(request.getBase64Imgs()[i], request.getPicSuffixs()[i]);
+            //向凭证表添加
+            UserTransactionPic repayPicInsert = UserTransactionPic.builder()
+                    .evidencePicUrl(picUrl)
+                    .va(request.getVa())
+                    .bidId(request.getBId())
+                    .mode(request.getMode())
+                    .build();
+            userTransactionPicRepository.picinsertSelective(repayPicInsert);
+        }
+        return Response.getSuccessResponse();
     }
 }

@@ -1,0 +1,22 @@
+package com.hzed.easyget.infrastructure.repository;
+
+import com.hzed.easyget.persistence.auto.entity.UserTransactionPic;
+import com.hzed.easyget.persistence.auto.mapper.UserTransactionPicMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+/**
+ * @author dengzhenhao
+ * @since 2018/6/28 17:10
+ */
+@Repository
+public class UserTransactionPicRepository {
+
+    @Autowired
+    private UserTransactionPicMapper userTransactionPicMapper;
+
+
+    public void picinsertSelective(UserTransactionPic repayPicInsert) {
+        userTransactionPicMapper.insertSelective(repayPicInsert);
+    }
+}

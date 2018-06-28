@@ -14,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -56,10 +57,16 @@ public class RestService {
      * @return <T>T
      **/
     public <T> T postJson(String url, Object parameter, Class<T> clazz) {
+        //复杂构造函数的使用
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        // 设置超时
+//        requestFactory.setConnectTimeout(360000);
+        requestFactory.setReadTimeout(60000);
+        RestTemplate restTemplate1 = new RestTemplate(requestFactory);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         HttpEntity entity = new HttpEntity(parameter, headers);
-        ResponseEntity<T> responseEntity = restTemplate.postForEntity(url, entity, clazz);
+        ResponseEntity<T> responseEntity = restTemplate1.postForEntity(url, entity, clazz);
         return responseEntity.getBody();
     }
 
@@ -111,7 +118,7 @@ public class RestService {
                 httpPost.setEntity(new StringEntity(json, "utf-8"));
             }
             //设置请求和传输超时时间
-            RequestConfig requestConfig =  RequestConfig.custom().setConnectionRequestTimeout(8000).setSocketTimeout(8000).setConnectTimeout(8000).build();
+            RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(8000).setSocketTimeout(8000).setConnectTimeout(8000).build();
             httpPost.setConfig(requestConfig);
             CloseableHttpResponse response = http.execute(httpPost);
             if (response != null) {

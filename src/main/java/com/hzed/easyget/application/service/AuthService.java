@@ -5,8 +5,6 @@ import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.controller.model.*;
-import com.hzed.easyget.infrastructure.config.RiskProp;
-import com.hzed.easyget.infrastructure.config.SaProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
@@ -26,8 +24,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+
 import java.time.LocalDateTime;
 import java.util.List;
+
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalHead;
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 
@@ -56,10 +56,8 @@ public class AuthService {
     @Autowired
     FileService fileService;
     @Autowired
-    private RiskProp riskProp; 
-    @Autowired
     private SaService saService;
-	@Autowired
+    @Autowired
     private RiskService riskService;
 
     /**
@@ -217,8 +215,8 @@ public class AuthService {
      */
     public void faceRecognition(FaceRecognitionRequest request) {
         String faceBase64ImgStr = request.getFaceBase64ImgStr();
-        riskService.idCardRecognition(faceBase64ImgStr);
-        }
+        riskService.faceRecognition(faceBase64ImgStr);
+    }
 
     /**
      * 身份信息认证，信息分3个表存（用户表、身份信息认证表，认证状态表）

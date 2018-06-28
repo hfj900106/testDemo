@@ -50,6 +50,11 @@ public class UserTransactionRepay implements Serializable {
     private LocalDateTime vaExpireTime;
 
     /**
+     * 还款方式 2-全部结清 3-部分还款
+     */
+    private Byte repaymentType;
+
+    /**
      * 交易状态 1-初始状态 2-交易成功 3-交易失败
      */
     private Byte status;
@@ -137,6 +142,14 @@ public class UserTransactionRepay implements Serializable {
         this.vaExpireTime = vaExpireTime;
     }
 
+    public Byte getRepaymentType() {
+        return repaymentType;
+    }
+
+    public void setRepaymentType(Byte repaymentType) {
+        this.repaymentType = repaymentType;
+    }
+
     public Byte getStatus() {
         return status;
     }
@@ -176,6 +189,7 @@ public class UserTransactionRepay implements Serializable {
         sb.append(", va=").append(va);
         sb.append(", vaCreateTime=").append(vaCreateTime);
         sb.append(", vaExpireTime=").append(vaExpireTime);
+        sb.append(", repaymentType=").append(repaymentType);
         sb.append(", status=").append(status);
         sb.append(", createTime=").append(createTime);
         sb.append(", remark=").append(remark);
@@ -240,6 +254,11 @@ public class UserTransactionRepay implements Serializable {
             return this;
         }
 
+        public Builder repaymentType(Byte repaymentType) {
+            obj.setRepaymentType(repaymentType);
+            return this;
+        }
+
         public Builder status(Byte status) {
             obj.setStatus(status);
             return this;
@@ -270,6 +289,7 @@ public class UserTransactionRepay implements Serializable {
         va("va"),
         vaCreateTime("va_create_time"),
         vaExpireTime("va_expire_time"),
+        repaymentType("repayment_type"),
         status("status"),
         createTime("create_time"),
         remark("remark");

@@ -61,6 +61,8 @@ public class RepayService {
     private RepayRepository repayRepository;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private UserTransactionRepayRepository userTransactionRepayRepository;
 
     private static final String TIMEOUT = "TIMEOUT";
     private static final List<String> LISTCODE = Arrays.asList(BizCodeEnum.PROCESS_LENDING.getCode(), BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.REPAYMENTS.getCode());
@@ -498,5 +500,9 @@ public class RepayService {
         managResponse.setPayId(tranceQuery.getId());
         managResponse.setRepaymentTime(DateUtil.localDateTimeToTimestamp(repaymentTime));
         return managResponse;
+    }
+
+    public List<UserTransactionRepay> getVaHistory(VaHistoryRequest request) {
+        return userTransactionRepayRepository.findVaHistoryBybId(request);
     }
 }

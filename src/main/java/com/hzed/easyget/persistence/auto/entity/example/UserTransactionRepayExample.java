@@ -732,6 +732,66 @@ public class UserTransactionRepayExample {
             return (Criteria) this;
         }
 
+        public Criteria andRepaymentTypeIsNull() {
+            addCriterion("repayment_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTypeIsNotNull() {
+            addCriterion("repayment_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTypeEqualTo(Byte value) {
+            addCriterion("repayment_type =", value, "repaymentType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTypeNotEqualTo(Byte value) {
+            addCriterion("repayment_type <>", value, "repaymentType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTypeGreaterThan(Byte value) {
+            addCriterion("repayment_type >", value, "repaymentType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTypeGreaterThanOrEqualTo(Byte value) {
+            addCriterion("repayment_type >=", value, "repaymentType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTypeLessThan(Byte value) {
+            addCriterion("repayment_type <", value, "repaymentType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTypeLessThanOrEqualTo(Byte value) {
+            addCriterion("repayment_type <=", value, "repaymentType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTypeIn(List<Byte> values) {
+            addCriterion("repayment_type in", values, "repaymentType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTypeNotIn(List<Byte> values) {
+            addCriterion("repayment_type not in", values, "repaymentType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTypeBetween(Byte value1, Byte value2) {
+            addCriterion("repayment_type between", value1, value2, "repaymentType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepaymentTypeNotBetween(Byte value1, Byte value2) {
+            addCriterion("repayment_type not between", value1, value2, "repaymentType");
+            return (Criteria) this;
+        }
+
         public Criteria andStatusIsNull() {
             addCriterion("status is null");
             return (Criteria) this;

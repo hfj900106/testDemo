@@ -103,13 +103,13 @@ public class RepayController {
 
     @ModuleFunc("获取va码记录")
     @RequestMapping("/getVaHistory")
-    public List<UserTransactionRepay> getVaHistory(@Valid @RequestBody VaHistoryRequest request){
+    public List<VaHistoryResponse> getVaHistory(@Valid @RequestBody VaHistoryRequest request){
         return repayService.getVaHistory(request);
     }
 
     @ModuleFunc("提交图片凭证")
     @RequestMapping("/uploadPicEvidence")
-    public Response uploadPicEvidence(@Valid @RequestBody PicEvidenceRequest request) throws Exception {
-        return repayService.uploadPicEvidence(request);
+    public void uploadPicEvidence(@Valid @RequestBody PicEvidenceRequest request){
+        repayService.uploadPicEvidence(request);
     }
 }

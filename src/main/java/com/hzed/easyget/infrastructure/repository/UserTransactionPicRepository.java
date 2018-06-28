@@ -5,6 +5,8 @@ import com.hzed.easyget.persistence.auto.mapper.UserTransactionPicMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author dengzhenhao
  * @since 2018/6/28 17:10
@@ -15,8 +17,8 @@ public class UserTransactionPicRepository {
     @Autowired
     private UserTransactionPicMapper userTransactionPicMapper;
 
-
-    public void picinsertSelective(UserTransactionPic repayPicInsert) {
-        userTransactionPicMapper.insertSelective(repayPicInsert);
+    public void batchInsert(List<UserTransactionPic> userTransactionPicList) {
+        userTransactionPicMapper.batchInsertSelective(userTransactionPicList, UserTransactionPic.Column.evidencePicUrl, UserTransactionPic.Column.bidId,
+                UserTransactionPic.Column.va, UserTransactionPic.Column.mode);
     }
 }

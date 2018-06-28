@@ -9,18 +9,9 @@ import lombok.Data;
 @Data
 public class CheckRepaymentResponse {
 
-
+    /**
+     * 标的id
+     */
     private Long id;
-
-    /**
-     * code=2004 时还款状态
-     */
-    private Byte status;
-
-    /**
-     * 确认时间时间戳，用于倒计时,
-     */
-    private Long confirmTime;
-
 
 }

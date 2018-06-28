@@ -12,7 +12,6 @@ import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.PayResponse;
-import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.Arith;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -478,6 +477,7 @@ public class RepayService {
     /**
      * 查看还款信息
      * TODO 待改造
+     *
      * @param payId 交易流水id
      * @return 还款信息
      */
@@ -501,25 +501,36 @@ public class RepayService {
         return managResponse;
     }
 
-    public List<UserTransactionRepay> getVaHistory(VaHistoryRequest request) {
-        return userTransactionRepayRepository.findVaHistoryBybId(request);
+    public List<VaHistoryResponse> getVaHistory(VaHistoryRequest request) {
+        List<UserTransactionRepay> repays = userTransactionRepayRepository.findByBidId(request);
+        List<VaHistoryResponse> results = Lists.newArrayList();
+        repays.forEach(repay -> results.add(VaHistoryResponse.builder().mode(repay.getMode()).va(repay.getVa()).build()));
+        return results;
     }
 
-    public Response uploadPicEvidence(PicEvidenceRequest request)  throws Exception{
-        if(request.getBase64Imgs().length != request.getPicSuffixs().length){
-            return Response.getFailResponse();
+    public void uploadPicEvidence(UploadPicEvidenceRequest request) {
+        String[] base64Imgs = request.getBase64Imgs();
+        String[] picSuffixs = request.getPicSuffixs();
+        if (base64Imgs.length != picSuffixs.length) {
+            throw new ComBizException(BizCodeEnum.PIC_SIZE_ERROR);
         }
-        for (int i = 0 ; i < request.getBase64Imgs().length ; i++){
-            String picUrl = fileService.uploadBase64Img(request.getBase64Imgs()[i], request.getPicSuffixs()[i]);
-            //向凭证表添加
+        List<UserTransactionPic> userTransactionPicList = Lists.newArrayList();
+        for (int i = 0; i < base64Imgs.length; i++) {
+            String picUrl;
+            try {
+                picUrl = fileService.uploadBase64Img(base64Imgs[i], picSuffixs[i]);
+            } catch (Exception e) {
+                throw new ComBizException(BizCodeEnum.UPLOAD_PIC_FAIL);
+            }
             UserTransactionPic repayPicInsert = UserTransactionPic.builder()
                     .evidencePicUrl(picUrl)
                     .va(request.getVa())
-                    .bidId(request.getBId())
+                    .bidId(request.getBidId())
                     .mode(request.getMode())
                     .build();
-            userTransactionPicRepository.picinsertSelective(repayPicInsert);
+            userTransactionPicList.add(repayPicInsert);
         }
-        return Response.getSuccessResponse();
+        userTransactionPicRepository.batchInsert(userTransactionPicList);
+
     }
 }

@@ -19,9 +19,9 @@ public class UserTransactionRepayRepository {
     @Autowired
     private UserTransactionRepayMapper userTransactionRepayMapper;
 
-    public List<UserTransactionRepay> findVaHistoryBybId(VaHistoryRequest request) {
+    public List<UserTransactionRepay> findByBidId(VaHistoryRequest request) {
         UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
-        repayExample.createCriteria().andBidIdEqualTo(request.getBId());
+        repayExample.createCriteria().andBidIdEqualTo(request.getBidId());
         repayExample.orderBy(UserTransactionRepay.Column.createTime.desc());
         repayExample.page(request.getPage(),request.getPageSize());
         return userTransactionRepayMapper.selectByExampleSelective(repayExample, UserTransactionRepay.Column.mode, UserTransactionRepay.Column.va);

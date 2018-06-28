@@ -60,6 +60,7 @@ public class UserService {
         if(!ObjectUtils.isEmpty(listResponse)){
             list.forEach(userTransaction -> {
                 TransactionVO transactionVO = new TransactionVO();
+                transactionVO.setBidId(userTransaction.getBidId());
                 transactionVO.setAmount(userTransaction.getAmount());
                 transactionVO.setRemark(userTransaction.getRemark());
                 transactionVO.setStatus(userTransaction.getStatus());

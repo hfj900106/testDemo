@@ -1,4 +1,5 @@
 import com.hzed.BootApplication;
+import com.hzed.easyget.application.service.BluePayService;
 import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
@@ -6,6 +7,7 @@ import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayRepository;
 import com.hzed.easyget.infrastructure.repository.UserTransactionRepository;
+import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
@@ -37,6 +39,8 @@ public class JobServiceTest {
     private RepayRepository repayRepository;
     @Autowired
     private UserTransactionRepayMapper userTransactionRepayMapper;
+    @Autowired
+    private BluePayService bluePayService;
 
     @Test
     public void test() {
@@ -63,7 +67,7 @@ public class JobServiceTest {
     @Test
     public void test09() {
         RepayPartRequest request = new RepayPartRequest();
-        request.setBidId(104094428696027136L);
+        request.setBidId(123457L);
         PaymentIdResponse idResponse = repayService.findloanManagResponse(BigDecimal.valueOf(20000), request.getBidId(), false);
         System.out.println(idResponse);
     }
@@ -73,29 +77,26 @@ public class JobServiceTest {
      */
     @Test
     public void test05() {
-        UserTransactionRepay response = repayRepository.findVaTranc(108432325318418432L, ComConsts.OTC);
+        UserTransactionRepay response = repayRepository.findVaTranc(110952936213192704L, ComConsts.OTC);
         System.out.println(response);
     }
 
-    /**
-     * 获取va码接口
-     */
-    @Test
-    public void test06() {
-        TransactionVAResponse vaTranc = repayService.findVaTranc(108428379602427904L, ComConsts.ATM);
-        System.out.println(vaTranc);
-    }
 
     /**
      * 还款接口
      */
     @Test
-    public void test08() throws Exception {
-        RepaymentRequest request = new RepaymentRequest();
-        request.setPayId(108428379602427904L);
-        request.setMode(ComConsts.ATM);
-        request.setAmount(BigDecimal.valueOf(20000.00));
-        PayResponse vaTranc = repayService.testRepayment(request);
+    public void test08() {
+        RepaymentCompleRequest request = new RepaymentCompleRequest();
+        request.setBankType(ComConsts.PERMATA);
+        request.setPayType(ComConsts.ATM);
+        request.setCardNo("21934189228383587872");
+        request.setMsisdn("8615926633889");
+        request.setPaymentCode("8359180627376743");
+        request.setPrice(BigDecimal.valueOf(20000));
+        request.setRequestNo(IdentifierGenerator.nextSeqNo());
+        request.setTransactionId(IdentifierGenerator.nextSeqNo());
+        PayResponse vaTranc = bluePayService.testRepayment(request);
         System.out.println(vaTranc);
     }
 
@@ -103,7 +104,7 @@ public class JobServiceTest {
     public void test10() {
         UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
         repayExample.createCriteria()
-                .andTransactionIdEqualTo(108432517484650496L)
+//                .andTransactionIdEqualTo(108432517484650496L)
                 .example().orderBy("va_create_time desc").limit(1);
         List<UserTransactionRepay> repay = userTransactionRepayMapper.selectByExample(repayExample);
         System.out.println("----------------------->" + repay);

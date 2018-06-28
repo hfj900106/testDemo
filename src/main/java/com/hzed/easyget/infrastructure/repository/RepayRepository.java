@@ -6,6 +6,7 @@ import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionPic;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import com.hzed.easyget.persistence.auto.entity.example.BillExample;
+import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
 import com.hzed.easyget.persistence.auto.mapper.*;
 import com.hzed.easyget.persistence.ext.mapper.RepayExtMapper;
@@ -72,11 +73,14 @@ public class RepayRepository {
     /**
      * 获取所有的va码记录
      */
-    public List<UserTransactionRepay> findAllVaCodeByPermas(RepaymentRequest request) {
+    public List<UserTransactionRepay> findAllVaCodeByPermas(String tranactionId, String mode) {
+        UserTransactionExample transactionExample = new UserTransactionExample();
+        transactionExample.createCriteria().andPaymentIdEqualTo(tranactionId);
+        UserTransaction userTransaction = userTransactionMapper.selectOneByExample(transactionExample);
         UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
         repayExample.createCriteria()
-                .andTransactionIdEqualTo(request.getPayId())
-                .andModeEqualTo(request.getMode());
+//                .andTransactionIdEqualTo(userTransaction.getId())
+                .andModeEqualTo(mode);
         return repayMapper.selectByExample(repayExample);
     }
 
@@ -95,7 +99,7 @@ public class RepayRepository {
     /**
      * 修改交易信息
      */
-    public void updateConfirmTime(UserTransaction userTransaction) {
+    public void updateByPrimaryKey(UserTransaction userTransaction) {
         userTransactionMapper.updateByPrimaryKeySelective(userTransaction);
     }
 
@@ -104,7 +108,7 @@ public class RepayRepository {
      */
     public UserTransactionRepay getVaCode(Long id) {
         UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
-        repayExample.createCriteria().andTransactionIdEqualTo(id).example().orderBy("va_create_time desc").limit(1);
+//        repayExample.createCriteria().andTransactionIdEqualTo(id).example().orderBy("va_create_time desc").limit(1);
         return repayMapper.selectOneByExample(repayExample);
     }
 

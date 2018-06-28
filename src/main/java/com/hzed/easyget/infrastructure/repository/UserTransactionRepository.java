@@ -8,6 +8,7 @@ import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
 import com.hzed.easyget.persistence.auto.mapper.UserTransactionMapper;
 import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper;
+import com.hzed.easyget.persistence.ext.mapper.RepayExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +24,7 @@ public class UserTransactionRepository {
     @Autowired
     private UserTransactionMapper userTransactionMapper;
     @Autowired
-    private UserTransactionRepayMapper userTransactionRepayMapper;
+    private RepayExtMapper repayExtMapper;
 
     public void insert(UserTransaction userTransaction) {
         userTransactionMapper.insertSelective(userTransaction);
@@ -43,13 +44,7 @@ public class UserTransactionRepository {
      * 查询匹配的交易记录
      */
     public UserTransaction findOldTrance(Long bidId, byte type, byte status,byte repayMentType) {
-        UserTransactionExample userTransactionExample=new UserTransactionExample();
-        userTransactionExample.createCriteria()
-                .andBidIdEqualTo(bidId)
-                .andTypeEqualTo(type)
-                .andStatusEqualTo(status)
-                .andRepaymentTypeEqualTo(repayMentType);
-        return userTransactionMapper.selectOneByExample(userTransactionExample);
+        return repayExtMapper.selectOneByExample(bidId,type,status,repayMentType);
     }
 
     /**
@@ -67,13 +62,24 @@ public class UserTransactionRepository {
     }
 
     /**
-     * 查询交易信息
+     * 查询交易信息根据订单id 类型 状态
      */
-    public UserTransaction findOldTranceByExample(Long payId, byte type,Byte status) {
+    public UserTransaction findOldTranceByExample(String payMentId, byte type,Byte status) {
+        UserTransactionExample userTransactionExample = new UserTransactionExample();
+        userTransactionExample.createCriteria()
+                .andPaymentIdEqualTo(payMentId)
+                .andTypeEqualTo(type)
+                .andStatusEqualTo(status);
+        return userTransactionMapper.selectOneByExample(userTransactionExample);
+    }
+    /**
+     * 查询交易信息根据id 类型 状态
+     */
+    public UserTransaction findOldTrance(Long payId, byte type, byte status) {
         UserTransactionExample userTransactionExample = new UserTransactionExample();
         userTransactionExample.createCriteria()
                 .andIdEqualTo(payId)
-                .andTypeEqualTo(TransactionTypeEnum.OUT.getCode().byteValue())
+                .andTypeEqualTo(type)
                 .andStatusEqualTo(status);
         return userTransactionMapper.selectOneByExample(userTransactionExample);
     }

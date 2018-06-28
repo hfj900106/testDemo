@@ -57,5 +57,12 @@ public class ComConsts {
      * 交易方式OTC
      */
     public static final String OTC = "OTC";
-
+    /**
+     * 银行类型permata
+     */
+    public static final String PERMATA="permata";
+    /**
+     * 银行类型bni
+     */
+    public static final String BNI="bni";
 }

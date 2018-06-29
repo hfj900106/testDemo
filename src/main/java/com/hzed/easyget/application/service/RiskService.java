@@ -232,25 +232,33 @@ public class RiskService {
         Map<String, String> paramMap = Maps.newHashMap();
         paramMap.put("mobile", mobile);
         paramMap.put("imei", imei);
-        log.info("查询风控是否有贷款规则请求报文：{}", JSON.toJSONString(paramMap));
-        RiskResponse response = restService.postJson(riskProp.getAbsCheckRiskEnableBorrowUrl(), paramMap, RiskResponse.class);
+        String url = riskProp.getAbsCheckRiskEnableBorrowUrl();
+        log.info("查询风控是否有贷款规则请求URL：{},参数：{}", url, JSON.toJSONString(paramMap));
+        RiskResponse response = restService.postJson(url, paramMap, RiskResponse.class);
         log.info("查询风控是否有贷款规则返回报文：{}", JSON.toJSONString(response));
         return response;
 
     }
 
-    public void facebookAndIns(Long userId, String task_id, Integer source) {
+    public void facebookAndIns(Long userId, String taskId, Integer source) {
 
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = Maps.newHashMap();
         map.put("sign", AesUtil.aesEncode(userId, timeStamp));
         map.put("userId", userId);
         map.put("timeStamp", timeStamp);
-        map.put("task_id", task_id);
+        map.put("taskId", taskId);
         map.put("source", source);
-        //TODO
-        RiskResponse response = restService.postJson(riskProp.getFacebookAndInsUrl(), map, RiskResponse.class);
-
+        String url = riskProp.getFacebookAndInsUrl();
+        log.info("请求风控URL：{},参数：{}", url, JSON.toJSONString(map));
+        RiskResponse response = restService.postJson(url, map, RiskResponse.class);
+        log.info("风控返回数据：{}", JSON.toJSONString(response));
+        if (ObjectUtils.isEmpty(response)) {
+            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+        }
+        if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
+            throw new WarnException(BizCodeEnum.FAIL_AUTH);
+        }
     }
 
 }

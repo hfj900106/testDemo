@@ -200,13 +200,29 @@ public class AuthService {
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         RiskResponse response = riskService.idCardRecognition(idCardBase64ImgStr);
         if(ObjectUtils.isEmpty(response)){
-            throw new WarnException(BizCodeEnum.ERROR_IDCARD_RESULT);
+            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
+        if(ObjectUtils.isEmpty(response.getBody())){
+            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
+        }
+
         String bobyStr = response.getBody().toString();
-        JSONObject jsonObject = JSONObject.parseObject(bobyStr, JSONObject.class).getJSONObject("data");
-        String name = jsonObject.getString("name");
-        String gender = jsonObject.getString("gender");
-        String idNumber = jsonObject.getString("idNumber");
+        if(ObjectUtils.isEmpty(bobyStr)){
+            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
+        }
+
+        JSONObject obj = JSONObject.parseObject(bobyStr, JSONObject.class);
+        if(ObjectUtils.isEmpty(obj)){
+            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
+        }
+
+        JSONObject data = obj.getJSONObject("data");
+        if(ObjectUtils.isEmpty(data)){
+            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
+        }
+        String name = data.getString("name");
+        String gender = data.getString("gender");
+        String idNumber = data.getString("idNumber");
         recognitionResponse.setName(name);
         int genderInt = 1;
         if (!ObjectUtils.isEmpty(gender) && ComConsts.FEMALE.equalsIgnoreCase(gender)) {
@@ -346,12 +362,12 @@ public class AuthService {
     }
 
     /**
-     * ins认证-风控回调
+     * facebook和ins认证-风控回调
      *
      * @param request
      */
     public void facebookAndIns(FacebookInsRequest request) {
-        String task_id = request.getTask_id();
+        String task_id = request.getTaskId();
         int source = "android".equals(getGlobalHead().getPlatform()) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
         GlobalUser user = getGlobalUser();
         riskService.facebookAndIns(user.getUserId(),task_id,source);

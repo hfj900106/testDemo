@@ -13,9 +13,9 @@ import javax.validation.constraints.NotNull;
 @Data
 public class FacebookInsRequest {
     /**
-     * task_id
+     * taskId
      */
     @NotBlank
-    private String task_id ;
+    private String taskId ;
 
 }

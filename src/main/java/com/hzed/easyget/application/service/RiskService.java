@@ -135,6 +135,9 @@ public class RiskService {
         log.info("请求风控URL：{},参数：{}", url, ComUtil.subJsonString(JSON.toJSONString(map), 500));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
+        if (ObjectUtils.isEmpty(response)) {
+            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+        }
         if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_FREQ)) {
             //认证频繁，要等一分钟再认证
             saService.saOperator(user, false, BizCodeEnum.FREQUENTLY_AUTH_RISK.getMessage());
@@ -214,7 +217,7 @@ public class RiskService {
         log.info("请求风控URL：{},参数：{}", url, ComUtil.subJsonString(JSON.toJSONString(map), 500));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
-        if (null == response) {
+        if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {

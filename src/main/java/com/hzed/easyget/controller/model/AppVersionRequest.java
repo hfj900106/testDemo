@@ -11,6 +11,6 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class AppVersionRequest {
-    @NotBlank(message = "{param.home.oldVersion.isNotEmpty}")
-    private String oldVersion;
+    @NotBlank(message = "{param.home.channel.isNotEmpty}")
+    private String channel;
 }

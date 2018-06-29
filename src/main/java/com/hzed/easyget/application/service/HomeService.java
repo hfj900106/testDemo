@@ -1,5 +1,6 @@
 package com.hzed.easyget.application.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AppVersionEnum;
 import com.hzed.easyget.application.enums.ProductEnum;
@@ -20,7 +21,6 @@ import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.*;
-import com.hzed.easyget.persistence.ext.entity.TransactionExt;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,26 +77,16 @@ public class HomeService {
     public AppVersionResponse getAppVersion(AppVersionRequest request) {
 
         AppVersionResponse appVersionResponse = new AppVersionResponse();
-        String platform = RequestUtil.getGlobalHead().getPlatform();
-        String oldVersion = request.getOldVersion();
-        String verDicCode;
-        String updateDicCode;
-        if (AppVersionEnum.ANDROID.getCode().equals(platform)) {
-            verDicCode = AppVersionEnum.ANDROID_VERSION.getCode();
-            updateDicCode = AppVersionEnum.ANDROID_UPDATE.getCode();
-        } else if (AppVersionEnum.IOS.getCode().equals(platform)) {
-            verDicCode = AppVersionEnum.IOS_VERSION.getCode();
-            updateDicCode = AppVersionEnum.IOS_UPDATE.getCode();
-        } else {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM);
-        }
+        String oldVersion = RequestUtil.getGlobalHead().getVersion();
+        String channel = request.getChannel();
 
-        Dict verDict = dictService.getDictByCode(verDicCode);
-        Dict updateDict = dictService.getDictByCode(updateDicCode);
+        Dict verDict = dictService.getDictByCode(channel);
+        String dictLabelJson = verDict.getDicLabel();
+        JSONObject jsonObject = JSONObject.parseObject(dictLabelJson);
         appVersionResponse.setVersion(verDict.getDicValue());
-        appVersionResponse.setPath(verDict.getDicLabel());
+        appVersionResponse.setPath(jsonObject.getString("update_url"));
         appVersionResponse.setIsUpdate(checkIsUpdate(oldVersion, verDict.getDicValue()));
-        appVersionResponse.setIsForce(updateDict.getDicValue());
+        appVersionResponse.setIsForce(jsonObject.getString("force_update"));
         return appVersionResponse;
     }
 

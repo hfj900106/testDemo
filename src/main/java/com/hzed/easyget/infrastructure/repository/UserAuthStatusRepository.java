@@ -29,7 +29,7 @@ public class UserAuthStatusRepository {
     private AuthItemMapper authItemMapper;
 
 
-    public List<UserAuthStatus> getAuthStatusByUserId(Long userId) {
+    public List<UserAuthStatus> findAuthStatusByUserId(Long userId) {
         UserAuthStatusExample example = new UserAuthStatusExample();
         example.createCriteria().andUserIdEqualTo(userId);
         return userAuthStatusMapper.selectByExample(example);

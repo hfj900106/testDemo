@@ -17,6 +17,7 @@ import com.hzed.easyget.infrastructure.utils.ComUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -94,7 +95,7 @@ public class RiskService {
         log.info("请求风控URL：{},参数：{}",url,ComUtil.subJsonString(JSON.toJSONString(map), 500));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
-        if (null == response) {
+        if (ObjectUtils.isEmpty(response)) {
             saService.saOperator(user, false, BizCodeEnum.ERROR_RISK__RESULT.getMessage());
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
@@ -169,7 +170,7 @@ public class RiskService {
         log.info("请求风控URL：{},参数：{}",url,ComUtil.subJsonString(JSON.toJSONString(map), 500));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
-        if (null == response) {
+        if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
@@ -191,7 +192,7 @@ public class RiskService {
         log.info("请求风控URL：{},参数：{}",url,ComUtil.subJsonString(JSON.toJSONString(map), 500));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSONObject.toJSONString(response));
-        if (null == response) {
+        if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
@@ -230,6 +231,21 @@ public class RiskService {
         return response;
 
     }
+
+    public void facebookAndIns(Long userId,String task_id,Integer source) {
+
+        Long timeStamp = System.currentTimeMillis();
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("sign", AesUtil.aesEncode(userId, timeStamp));
+        map.put("userId", userId);
+        map.put("timeStamp", timeStamp);
+        map.put("task_id", task_id);
+        map.put("source", source);
+        //TODO
+        RiskResponse response = restService.postJson(riskProp.getFacebookAndInsUrl(), map, RiskResponse.class);
+
+    }
+
 }
 
 

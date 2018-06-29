@@ -24,6 +24,7 @@ public class RiskProp {
     private String operatorAuthUrl;
     private String identityInfoUrl;
     private String pushBidUrl;
+    private String facebookAndInsUrl;
 
     public String getAbsCheckRiskEnableBorrowUrl(){ return this.domain + this.checkRiskEnableBorrowUrl; }
     public String getIdCardRecognitionUrl(){ return this.domain + this.idCardRecognitionUrl; }
@@ -34,5 +35,6 @@ public class RiskProp {
     public String getOperatorAuthUrl(){ return this.domain + this.operatorAuthUrl; }
     public String getIdentityInfoUrl(){ return this.domain + this.identityInfoUrl; }
     public String getPushBidUrl(){ return this.domain + this.pushBidUrl; }
+    public String getFacebookAndInsUrl(){ return this.domain + this.facebookAndInsUrl; }
 
 }

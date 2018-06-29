@@ -19,7 +19,8 @@ import static ch.qos.logback.core.CoreConstants.LINE_SEPARATOR;
  */
 public class MyHTMLLayout extends HTMLLayoutBase<ILoggingEvent> {
 
-    private static final String LOG_MESSAGE = "Message";// 日志标识
+    /**日志标识*/
+    private static final String LOG_MESSAGE = "Message";
 
     /**
      * Default pattern string for log output.

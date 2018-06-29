@@ -104,4 +104,10 @@ public class AuthController {
         authService.insAuth(request);
     }
 
+    @ModuleFunc("facebook和ins认证时数据推风控")
+    @PostMapping("/facebookAndIns")
+    public void facebookAndIns(@Valid @RequestBody FacebookInsRequest request){
+        authService.facebookAndIns(request);
+    }
+
 }

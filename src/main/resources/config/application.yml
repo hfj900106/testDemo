@@ -59,7 +59,7 @@ thirdParty:
     operatorAuthUrl:          /api/riskOperator/sendSmsCode  # 运营商-输入验证码认证
     identityInfoUrl:          /api/risk/core/identity   # 身份信息认证
     pushBidUrl:               /api/risk/auto/antifraud  # 风控审核
-
+    facebookAndInsUrl:       /api/riskSocial/certificationNotify  #facebook和ins认证时数据推风控
 #======================================= 系统参数 开始 =======================================#
 system:
   imgUploadPath: c:/imgUpload # 上传图片文件目录
@@ -82,13 +82,13 @@ system:
     repayFail: false # 功能暂时不用
     repayFailCron: 0/5 * * * * ?
     # 神策进件
-    saInData: true
+    saInData: false
     saInDataCron:  0 */1 * * * ?
     # 神策借款成功
-    saLoanSuccess: true
+    saLoanSuccess: false
     saLoanSuccessCron:  0 */1 * * * ?
     # 神策还款
-    saRepaymentSuccess: true
+    saRepaymentSuccess: false
     saRepaymentSuccessCron: 0 */1 * * * ?
 
 

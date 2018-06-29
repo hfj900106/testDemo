@@ -61,7 +61,9 @@ public class RepayRepository {
         //插入还款定时任务
         repayInfoFlowJobMapper.insertSelective(repayInfoFlowJob);
         //修改va码信息
-        repayMapper.updateByPrimaryKey(repayUpdate);
+        UserTransactionRepayExample repayExample=new UserTransactionRepayExample();
+        repayExample.createCriteria().andPaymentIdEqualTo(repayUpdate.getPaymentId());
+        repayMapper.updateByExampleSelective(repayUpdate,repayExample);
     }
 
     /**

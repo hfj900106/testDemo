@@ -2,7 +2,6 @@ package com.hzed;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hzed.easyget.infrastructure.annotation.EnableRabbitMQ;
 import com.hzed.easyget.infrastructure.annotation.EnableRedis;
 import com.hzed.easyget.infrastructure.annotation.EnableRest;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
@@ -51,7 +50,7 @@ import javax.validation.Validator;
 @ServletComponentScan
 @EnableRedis
 @EnableRest
-@EnableRabbitMQ
+//@EnableRabbitMQ
 @EnableSwagger2
 public class BootApplication {
 

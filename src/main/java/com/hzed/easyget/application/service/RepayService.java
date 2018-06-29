@@ -400,15 +400,15 @@ public class RepayService {
     /**
      * 获取va码接口
      *
-     * @param request
+     * @param request 前端请求对象
      * @return va码构建对象
      */
-    public TransactionVAResponse findVaTranc(TransactionVARequest request) {
+    public TransactionVaResponse findVaTranc(TransactionVaRequest request) {
         // 查询标的信息
         Bid bid = bidRepository.findByIdWithExp(request.getBidId());
         // 先查询数据库 是否存在没过期的还款码
         UserTransactionRepay repayQuery = repayRepository.getVaCodeByParmers(request.getBidId(), request.getAmount(), request.isFlag() ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue(), request.getMode());
-        TransactionVAResponse vaResponse = new TransactionVAResponse();
+        TransactionVaResponse vaResponse = new TransactionVaResponse();
         if (!ObjectUtils.isEmpty(repayQuery)) {
             vaResponse.setExpireTime(DateUtil.localDateTimeToTimestamp(repayQuery.getVaExpireTime()));
             vaResponse.setVaCodel(repayQuery.getVa());
@@ -418,9 +418,6 @@ public class RepayService {
         // 交易单号
         String paymentId = IdentifierGenerator.nextSeqNo();
         PayResponse response = bluePayService.bluePaymentCode(bid, request.getMode(), request.getAmount(), paymentId);
-        if (!response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
-            throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR);
-        }
         // 解析返回信息
         String paymentCode = JSON.parseObject(response.getData()).getString("paymentCode");
         log.info("获取还款码，bluepay返回还款码：{}", paymentCode);
@@ -462,7 +459,6 @@ public class RepayService {
         // 插入还款定时任务
         RepayInfoFlowJob repayInfoFlowJobInsert = RepayInfoFlowJob.builder()
                 .id(IdentifierGenerator.nextId())
-                .createTime(LocalDateTime.now())
                 .transactionId(userTransaction.getId())
                 .bidId(userTransaction.getBidId())
                 .repaymentAmount(userTransaction.getAmount())
@@ -474,7 +470,7 @@ public class RepayService {
     }
 
     /**
-     * 根绝交易订单号查询va码记录
+     * 根据交易订单号查询va码记录
      *
      * @param paymentId 订单号
      * @return va码信息

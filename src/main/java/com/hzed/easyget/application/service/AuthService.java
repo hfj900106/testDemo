@@ -54,7 +54,7 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    FileService fileService;
+    private FileService fileService;
     @Autowired
     private SaService saService;
     @Autowired

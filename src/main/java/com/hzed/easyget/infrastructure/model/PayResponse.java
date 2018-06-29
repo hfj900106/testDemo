@@ -25,10 +25,4 @@ public class PayResponse {
     private boolean flag;
 
     private String data;
-
-    public static PayResponse getFailResponse() {
-        PayResponse response = new PayResponse(BizCodeEnum.UNKNOWN_EXCEPTION.getCode(), BizCodeEnum.UNKNOWN_EXCEPTION.getMessage(), false,"");
-        return response;
-    }
-
 }

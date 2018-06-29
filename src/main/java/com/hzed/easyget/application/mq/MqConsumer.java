@@ -70,7 +70,7 @@ public class MqConsumer implements ChannelAwareMessageListener {
             // 返回的状态
             String status = bluePayRequest.getStatus();
             // 交易ID
-            String paymentId = bluePayRequest.getT_id();
+            String paymentId = bluePayRequest.getT_id().trim();
             // 放还款类型
             String interfacetype = bluePayRequest.getInterfacetype();
             log.info("当前交易类型：{}", CASHOUT.equals(interfacetype) ? "放款" : (BANK.equals(interfacetype) ? "还款" : "其他"));
@@ -137,14 +137,14 @@ public class MqConsumer implements ChannelAwareMessageListener {
                 Long tempId = tempTableRepository.findTempTableByBidNoAndName(loanTransacQuery.getBidId(), ComConsts.PUSH_BANK_TASK);
                 // 修改交易信息
                 transactionService.loanSuccess(loanTransacQuery, tempId);
-                log.info("本地交易放款处理成功");
+                log.info("本地放款交易处理成功");
             }
             // 本地处理还款
             if (BANK.equals(interfacetype)) {
                 // 走信息流
                 UserTransactionRepay repay = UserTransactionRepay.builder().paymentId(paymentId).status(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue()).build();
                 repayService.repaymentSuccess(loanTransacQuery, repay);
-                log.info("本地交易处理成功");
+                log.info("本地还款交易处理成功");
             }
 
         } catch (Exception ex) {

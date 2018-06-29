@@ -21,11 +21,11 @@ import java.util.Random;
 public class PicUtil {
     private static String basePath = PicUtil.class.getResource("/").getPath();
 
-    static {
-        // 初始化存放目录
-        basePath += "tempImgs";
-        new File(basePath).mkdirs();
-    }
+//    static {
+//        // 初始化存放目录
+//        basePath += "tempImgs";
+//        new File(basePath).mkdirs();
+//    }
 
     /**
      * 将base64编码字符串转换为图片

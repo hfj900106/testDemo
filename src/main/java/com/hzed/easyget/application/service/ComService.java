@@ -7,9 +7,7 @@ import com.hzed.easyget.application.enums.BillStatusEnum;
 import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
-import com.hzed.easyget.infrastructure.config.RiskProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
-import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
@@ -53,11 +51,6 @@ public class ComService {
     private BidRepository bidRepository;
     @Autowired
     private BillLedgerRepository billLedgerRepository;
-    @Autowired
-    private RestService restService;
-    @Autowired
-    private RiskProp riskProp;
-
 
     /**
      * 校验token参数

@@ -36,11 +36,10 @@ public class ComUtil {
         JSONObject jsonObject;
         try {
             jsonObject = JSON.parseObject(json);
+            jsonObject.entrySet().forEach(obj -> mapResult.put(obj.getKey(), subString(obj.getValue().toString(), length)));
         } catch (Exception ex) {
             return subString(json, length);
         }
-
-        jsonObject.entrySet().forEach(obj -> mapResult.put(obj.getKey(), subString(obj.getValue().toString(), length)));
 
         return JSON.toJSONString(mapResult);
     }

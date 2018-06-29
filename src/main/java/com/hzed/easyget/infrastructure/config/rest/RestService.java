@@ -1,6 +1,5 @@
 package com.hzed.easyget.infrastructure.config.rest;
 
-import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -18,6 +17,7 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +31,15 @@ public class RestService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @PostConstruct
+    public void init() {
+        //复杂构造函数的使用
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        // 设置超时
+        requestFactory.setReadTimeout(120000);
+        restTemplate.setRequestFactory(requestFactory);
+    }
 
     /**
      * post form请求
@@ -57,16 +66,10 @@ public class RestService {
      * @return <T>T
      **/
     public <T> T postJson(String url, Object parameter, Class<T> clazz) {
-        //复杂构造函数的使用
-        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-        // 设置超时
-//        requestFactory.setConnectTimeout(360000);
-        requestFactory.setReadTimeout(60000);
-        RestTemplate restTemplate1 = new RestTemplate(requestFactory);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         HttpEntity entity = new HttpEntity(parameter, headers);
-        ResponseEntity<T> responseEntity = restTemplate1.postForEntity(url, entity, clazz);
+        ResponseEntity<T> responseEntity = restTemplate.postForEntity(url, entity, clazz);
         return responseEntity.getBody();
     }
 

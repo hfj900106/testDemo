@@ -292,7 +292,7 @@ public class AuthService {
     }
 
     private void afterResponse(RiskResponse response, Long userId, String code, String remark) {
-        if (null == response) {
+        if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {

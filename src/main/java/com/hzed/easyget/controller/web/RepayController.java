@@ -82,13 +82,13 @@ public class RepayController {
     }
 
     @ModuleFunc("获取va码记录")
-    @RequestMapping("/getVaHistory")
+    @PostMapping("/getVaHistory")
     public List<VaHistoryResponse> getVaHistory(@Valid @RequestBody VaHistoryRequest request) {
         return repayService.getVaHistory(request);
     }
 
     @ModuleFunc("提交图片凭证")
-    @RequestMapping("/uploadPicEvidence")
+    @PostMapping("/uploadPicEvidence")
     public void uploadPicEvidence(@Valid @RequestBody UploadPicEvidenceRequest request) {
         repayService.uploadPicEvidence(request);
     }

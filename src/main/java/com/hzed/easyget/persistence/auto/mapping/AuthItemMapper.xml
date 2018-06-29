@@ -3,7 +3,7 @@
 <mapper namespace="com.hzed.easyget.persistence.auto.mapper.AuthItemMapper">
   <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.AuthItem">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="code" jdbcType="CHAR" property="code" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="is_use" jdbcType="BIT" property="isUse" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
@@ -136,12 +136,14 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.AuthItem">
-    insert into t_loan_auth_item (id, code, name, is_use, 
-      create_by, create_time, update_by, 
-      update_time, remark)
-    values (#{id,jdbcType=BIGINT}, #{code,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{isUse,jdbcType=BIT}, 
-      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+    insert into t_loan_auth_item (id, code, name, 
+      is_use, create_by, create_time, 
+      update_by, update_time, remark
+      )
+    values (#{id,jdbcType=BIGINT}, #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{isUse,jdbcType=BIT}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.AuthItem">
     insert into t_loan_auth_item
@@ -179,7 +181,7 @@
         #{id,jdbcType=BIGINT},
       </if>
       <if test="code != null">
-        #{code,jdbcType=CHAR},
+        #{code,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -217,7 +219,7 @@
         id = #{record.id,jdbcType=BIGINT},
       </if>
       <if test="record.code != null">
-        code = #{record.code,jdbcType=CHAR},
+        code = #{record.code,jdbcType=VARCHAR},
       </if>
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
@@ -248,7 +250,7 @@
   <update id="updateByExample" parameterType="map">
     update t_loan_auth_item
     set id = #{record.id,jdbcType=BIGINT},
-      code = #{record.code,jdbcType=CHAR},
+      code = #{record.code,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       is_use = #{record.isUse,jdbcType=BIT},
       create_by = #{record.createBy,jdbcType=BIGINT},
@@ -264,7 +266,7 @@
     update t_loan_auth_item
     <set>
       <if test="code != null">
-        code = #{code,jdbcType=CHAR},
+        code = #{code,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
@@ -292,7 +294,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.AuthItem">
     update t_loan_auth_item
-    set code = #{code,jdbcType=CHAR},
+    set code = #{code,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
       is_use = #{isUse,jdbcType=BIT},
       create_by = #{createBy,jdbcType=BIGINT},
@@ -333,7 +335,7 @@
     (id, code, name, is_use, create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.code,jdbcType=CHAR}, #{item.name,jdbcType=VARCHAR}, 
+      (#{item.id,jdbcType=BIGINT}, #{item.code,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, 
         #{item.isUse,jdbcType=BIT}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
         #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
         )
@@ -353,7 +355,7 @@
           #{item.id,jdbcType=BIGINT}
         </if>
         <if test="'code' == column.value">
-          #{item.code,jdbcType=CHAR}
+          #{item.code,jdbcType=VARCHAR}
         </if>
         <if test="'name' == column.value">
           #{item.name,jdbcType=VARCHAR}

@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.UserAuthStatus">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="auth_code" jdbcType="CHAR" property="authCode" />
+    <result column="auth_code" jdbcType="VARCHAR" property="authCode" />
     <result column="auth_status" jdbcType="INTEGER" property="authStatus" />
     <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
@@ -142,7 +142,7 @@
       auth_status, expire_time, create_by, 
       create_time, update_by, update_time, 
       remark)
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{authCode,jdbcType=CHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{authCode,jdbcType=VARCHAR}, 
       #{authStatus,jdbcType=INTEGER}, #{expireTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=BIGINT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{remark,jdbcType=VARCHAR})
@@ -189,7 +189,7 @@
         #{userId,jdbcType=BIGINT},
       </if>
       <if test="authCode != null">
-        #{authCode,jdbcType=CHAR},
+        #{authCode,jdbcType=VARCHAR},
       </if>
       <if test="authStatus != null">
         #{authStatus,jdbcType=INTEGER},
@@ -230,7 +230,7 @@
         user_id = #{record.userId,jdbcType=BIGINT},
       </if>
       <if test="record.authCode != null">
-        auth_code = #{record.authCode,jdbcType=CHAR},
+        auth_code = #{record.authCode,jdbcType=VARCHAR},
       </if>
       <if test="record.authStatus != null">
         auth_status = #{record.authStatus,jdbcType=INTEGER},
@@ -262,7 +262,7 @@
     update t_loan_user_auth_status
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
-      auth_code = #{record.authCode,jdbcType=CHAR},
+      auth_code = #{record.authCode,jdbcType=VARCHAR},
       auth_status = #{record.authStatus,jdbcType=INTEGER},
       expire_time = #{record.expireTime,jdbcType=TIMESTAMP},
       create_by = #{record.createBy,jdbcType=BIGINT},
@@ -281,7 +281,7 @@
         user_id = #{userId,jdbcType=BIGINT},
       </if>
       <if test="authCode != null">
-        auth_code = #{authCode,jdbcType=CHAR},
+        auth_code = #{authCode,jdbcType=VARCHAR},
       </if>
       <if test="authStatus != null">
         auth_status = #{authStatus,jdbcType=INTEGER},
@@ -310,7 +310,7 @@
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserAuthStatus">
     update t_loan_user_auth_status
     set user_id = #{userId,jdbcType=BIGINT},
-      auth_code = #{authCode,jdbcType=CHAR},
+      auth_code = #{authCode,jdbcType=VARCHAR},
       auth_status = #{authStatus,jdbcType=INTEGER},
       expire_time = #{expireTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=BIGINT},
@@ -352,7 +352,7 @@
       update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.authCode,jdbcType=CHAR}, 
+      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.authCode,jdbcType=VARCHAR}, 
         #{item.authStatus,jdbcType=INTEGER}, #{item.expireTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=BIGINT}, 
         #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
         #{item.remark,jdbcType=VARCHAR})
@@ -375,7 +375,7 @@
           #{item.userId,jdbcType=BIGINT}
         </if>
         <if test="'auth_code' == column.value">
-          #{item.authCode,jdbcType=CHAR}
+          #{item.authCode,jdbcType=VARCHAR}
         </if>
         <if test="'auth_status' == column.value">
           #{item.authStatus,jdbcType=INTEGER}

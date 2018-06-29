@@ -220,7 +220,9 @@ public class RiskService {
         }
     }
 
-
+    /**
+     * 根据用户手机号，imei通过用户查询风控是否有贷款规则
+     */
     public RiskResponse checkRiskEnableBorrow(String mobile, String imei) {
         Map<String, String> paramMap = Maps.newHashMap();
         paramMap.put("mobile", mobile);

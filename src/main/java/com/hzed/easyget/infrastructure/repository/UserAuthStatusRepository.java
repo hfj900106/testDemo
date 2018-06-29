@@ -15,9 +15,9 @@ import java.util.List;
  * 暂无描述
  *
  * @author wuchengwu
- * @data 2018/5/23
-/**
  * @author hfj
+ * @data 2018/5/23
+ * /**
  * @date 2018/5/22
  */
 @Repository
@@ -25,9 +25,9 @@ public class UserAuthStatusRepository {
 
     @Autowired
     private UserAuthStatusMapper userAuthStatusMapper;
+
     @Autowired
     private AuthItemMapper authItemMapper;
-
 
     public List<UserAuthStatus> findAuthStatusByUserId(Long userId) {
         UserAuthStatusExample example = new UserAuthStatusExample();

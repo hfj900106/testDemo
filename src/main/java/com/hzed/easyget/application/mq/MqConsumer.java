@@ -78,38 +78,40 @@ public class MqConsumer implements ChannelAwareMessageListener {
             String interfacetype = bluePayRequest.getInterfacetype();
             log.info("当前交易类型：{}", CASHOUT.equals(interfacetype) ? "放款" : (BANK.equals(interfacetype) ? "还款" : "其他"));
 
-            //交易中 并且是还款的第一次回调需要在交易表插入一条
-            if(status.equals(BluePayStatusEnum.OK.getKey()) && BANK.equals(interfacetype)){
+            // 先判断是不是还款
+            if (BANK.equals(interfacetype)) {
                 //查询是否有对应的va码记录
-                UserTransactionRepay repayQuery=repayService.findReayInfoByPayMentId(paymentId);
-                if(ObjectUtils.isEmpty(repayQuery)){
-                    log.info("没有对应的va码记录，处理终止");
+                UserTransactionRepay repayQuery = repayService.findReayInfoByPayMentId(paymentId);
+                if (ObjectUtils.isEmpty(repayQuery)) {
+                    log.info("还款交易没有对应的va码记录，处理终止");
                     return;
                 }
-                //查询标的信息
-                Bid bid=bidRepository.findByIdWithExp(repayQuery.getBidId());
-                UserTransaction transactionInsert=UserTransaction.builder()
-                        .id(IdentifierGenerator.nextId())
-                        .status(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
-                        .paymentId(paymentId)
-                        .account(bid.getInAccount())
-                        .bank(bid.getInBank())
-                        .amount(BigDecimal.valueOf(bluePayRequest.getPrice()))
-                        .type(TransactionTypeEnum.OUT.getCode().byteValue())
-                        .repaymentType(repayQuery.getRepaymentType())
-                        .bidId(repayQuery.getBidId())
-                        .userId(bid.getUserId()).build();
-                repayService.insertUserTransaction(transactionInsert);
-
+                // 查询本地是否有还款交易记录
+                UserTransaction repayTransacQuery = transactionService.findUserTranByPaymentId(paymentId, TransactionTypeEnum.OUT.getCode().byteValue());
+                // 没有交易就要先插入一条
+                if (ObjectUtils.isEmpty(repayTransacQuery)) {
+                    //查询标的信息
+                    Bid bid = bidRepository.findByIdWithExp(repayQuery.getBidId());
+                    UserTransaction transactionInsert = UserTransaction.builder()
+                            .id(IdentifierGenerator.nextId())
+                            .status(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
+                            .paymentId(paymentId)
+                            .account(bid.getInAccount())
+                            .bank(bid.getInBank())
+                            .amount(BigDecimal.valueOf(bluePayRequest.getPrice()))
+                            .type(TransactionTypeEnum.OUT.getCode().byteValue())
+                            .repaymentType(repayQuery.getRepaymentType())
+                            .bidId(repayQuery.getBidId())
+                            .userId(bid.getUserId()).build();
+                    //交易表插入交易中记录
+                    repayService.insertUserTransaction(transactionInsert);
+                }
             }
-            //查询是否有交易记录
-            UserTransaction userTransaction = transactionService.findUserTranByPaymentId(paymentId,interfacetype.equals(BANK)?TransactionTypeEnum.OUT.getCode().byteValue():TransactionTypeEnum.IN.getCode().byteValue());
             // 过滤处理中
             if (status.equals(BluePayStatusEnum.OK.getKey())) {
                 log.info("MQ交易正在处理中，处理终止");
                 return;
             }
-
             // 过滤失败直接修改交易记录
             if (!status.equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())) {
                 transactionService.updateUserTranState(paymentId, TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
@@ -119,36 +121,35 @@ public class MqConsumer implements ChannelAwareMessageListener {
                 log.info("MQ交易处理失败：{}，处理终止", BluePayStatusEnum.getValueDesc(status));
                 return;
             }
-
             log.info("MQ交易处理成功，下面进行本地交易处理");
+            // 查询是否有交易记录
+            UserTransaction loanTransacQuery = transactionService.findUserTranByPaymentId(paymentId, interfacetype.equals(BANK) ? TransactionTypeEnum.OUT.getCode().byteValue() : TransactionTypeEnum.IN.getCode().byteValue());
             // 获取交易id 判断是否合法
-            if (ObjectUtils.isEmpty(userTransaction)) {
+            if (ObjectUtils.isEmpty(loanTransacQuery)) {
                 log.info("本地无此交易信息，paymentId：{}，处理终止", paymentId);
                 return;
             }
-
             // 判断这个交易是否是 交易中
-            if (userTransaction.getStatus().intValue() != TransactionTypeEnum.IN_RANSACTION.getCode().intValue()) {
-                log.info("本地当前交易状态：{}，不是交易中状态，处理终止", userTransaction.getStatus());
+            if (loanTransacQuery.getStatus().intValue() != TransactionTypeEnum.IN_RANSACTION.getCode().intValue()) {
+                log.info("本地当前交易状态：{}，不是交易中状态，处理终止", loanTransacQuery.getStatus());
                 return;
             }
-
-            // 放款
+            // 本地处理放款
             if (CASHOUT.equals(interfacetype)) {
                 // 查询相应的推送任务信息
-                Long tempId = tempTableRepository.findTempTableByBidNoAndName(userTransaction.getBidId(), ComConsts.PUSH_BANK_TASK);
+                Long tempId = tempTableRepository.findTempTableByBidNoAndName(loanTransacQuery.getBidId(), ComConsts.PUSH_BANK_TASK);
                 // 修改交易信息
-                transactionService.loanSuccess(userTransaction, tempId);
+                transactionService.loanSuccess(loanTransacQuery, tempId);
+                log.info("本地交易放款处理成功");
+            }
+            // 本地处理还款
+            if (BANK.equals(interfacetype)) {
+                // 走信息流
+                UserTransactionRepay repay = UserTransactionRepay.builder().paymentId(paymentId).status(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue()).build();
+                bluePayService.repaymentSuccess(loanTransacQuery, repay);
                 log.info("本地交易处理成功");
             }
 
-            // 还款
-            if (BANK.equals(interfacetype)) {
-                // 走信息流
-                UserTransactionRepay repay=UserTransactionRepay.builder().paymentId(paymentId).status(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue()).build();
-                bluePayService.repaymentSuccess(userTransaction,repay);
-                log.info("本地交易处理成功");
-            }
         } catch (Exception ex) {
             log.error("处理MQ回调交易信息过程出现异常，请及时人工处理", ex);
         } finally {

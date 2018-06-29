@@ -363,7 +363,7 @@ public class RepayService {
     }
 
     /**
-     * 还款页面标的信息
+     * 全部还款/部分还款
      *
      * @param amount 还款金额
      * @param bidId  标id

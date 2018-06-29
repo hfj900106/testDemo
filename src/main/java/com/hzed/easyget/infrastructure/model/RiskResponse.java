@@ -18,6 +18,7 @@ public class RiskResponse {
     private Object body;
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public class RiskHead {
         private String ver;
         private String status;

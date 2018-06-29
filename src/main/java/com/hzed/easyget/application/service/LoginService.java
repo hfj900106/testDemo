@@ -3,7 +3,6 @@ package com.hzed.easyget.application.service;
 import com.hzed.easyget.application.enums.BidEnum;
 import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.controller.model.*;
-import com.hzed.easyget.infrastructure.config.SaProp;
 import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
@@ -19,12 +18,12 @@ import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.*;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
-import com.sensorsdata.analytics.javasdk.SensorsAnalytics;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -100,19 +99,22 @@ public class LoginService {
             token = JwtUtil.createToken(newUserToken);
             //token统一校验时已经校验了过期时间（7天），所以这里不考虑过期
             UserToken userToken = userTokenRepository.findByUserIdAndImei(userId, imei);
-
-            if (userToken == null) {
-                //有用户但是tonken表没数据，正常情况下不存在这种情况
-                log.error("根据用户id：{}和用户imei：{}没有找到该用户的token", user.getId(), imei);
-                throw new WarnException(BizCodeEnum.SERVICE_EXCEPTION);
+            if (ObjectUtils.isEmpty(userToken)) {
+                //说明用户换了设备 新增token
+                //build UserToken
+                UserToken userToken2 = buildUserToken(IdentifierGenerator.nextId(), userId, token, imei);
+                userToken2.setCreateTime(LocalDateTime.now());
+                // UserLogin
+                UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
+                userRepository.insertTokenAndLogin(userToken2, userLogin);
+            }else{
+                // UserToken 老用户登录都要刷新token表，刷新过期时间
+                UserToken userTokenUpdate = buildUserToken(userToken.getId(), userId, token, imei);
+                userTokenUpdate.setUpdateTime(LocalDateTime.now());
+                // UserLogin
+                UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
+                userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
             }
-
-            // UserToken 老用户登录都要刷新token表，刷新过期时间
-            UserToken userTokenUpdate = buildUserToken(userToken.getId(), userId, token, imei);
-            userTokenUpdate.setUpdateTime(LocalDateTime.now());
-            // UserLogin
-            UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
-            userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
         }
         saService.saLogin(userId, anonymousId);
         //放入redis 3个小时

@@ -9,8 +9,6 @@ import com.hzed.easyget.persistence.auto.mapper.UserAuthStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * 暂无描述
  *
@@ -29,10 +27,10 @@ public class UserAuthStatusRepository {
     @Autowired
     private AuthItemMapper authItemMapper;
 
-    public List<UserAuthStatus> findAuthStatusByUserId(Long userId) {
+    public UserAuthStatus findAuthStatusByUserId(Long userId,String authCode) {
         UserAuthStatusExample example = new UserAuthStatusExample();
-        example.createCriteria().andUserIdEqualTo(userId);
-        return userAuthStatusMapper.selectByExample(example);
+        example.createCriteria().andUserIdEqualTo(userId).andAuthCodeEqualTo(authCode);
+        return userAuthStatusMapper.selectOneByExample(example);
     }
 
     public void insertSelective(UserAuthStatus userAuthStatus) {
@@ -41,7 +39,7 @@ public class UserAuthStatusRepository {
 
     public AuthItem findAuthByCode(String authCode) {
         AuthItemExample example = new AuthItemExample();
-        example.createCriteria().andCodeEqualTo(authCode);
+        example.createCriteria().andCodeEqualTo(authCode).andIsUseEqualTo(true);
         return authItemMapper.selectOneByExample(example);
     }
 }

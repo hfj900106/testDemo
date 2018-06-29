@@ -59,22 +59,26 @@ public class AuthService {
     private SaService saService;
     @Autowired
     private RiskService riskService;
+    @Autowired
+    private DictRepository dictRepository;
 
     /**
      * 获取用户认证状态
      */
-    public List<AuthStatusResponse> getAuthStatus() {
+    public List<AuthStatusResponse> getAuthStatus(AuthStatusRequest request) {
         List<AuthStatusResponse> authStatusList = Lists.newArrayList();
         Long userId = RequestUtil.getGlobalUser().getUserId();
-        List<UserAuthStatus> userAuthStatus = authStatusRepository.findAuthStatusByUserId(userId);
-        userAuthStatus.forEach(uas -> {
-            AuthItem auth = authStatusRepository.findAuthByCode(uas.getAuthCode());
+        String i18n = RequestUtil.getGlobalHead().getI18n();
+        List<Dict> dictList = dictRepository.findByModuleCodeAndLanguage(request.getCode(), i18n);
+        dictList.forEach(dict -> {
+            UserAuthStatus userAuthStatus = authStatusRepository.findAuthStatusByUserId(userId, dict.getDicCode());
             AuthStatusResponse authStatusResponse = new AuthStatusResponse();
-            authStatusResponse.setCode(uas.getAuthCode());
-            authStatusResponse.setStatus(String.valueOf(uas.getAuthStatus()));
-            authStatusResponse.setIsUse(auth.getIsUse());
+            authStatusResponse.setCode(userAuthStatus.getAuthCode());
+            authStatusResponse.setDicName(dict.getDicValue());
+            authStatusResponse.setStatus(String.valueOf(userAuthStatus.getAuthStatus()));
             authStatusList.add(authStatusResponse);
         });
+
         return authStatusList;
     }
 

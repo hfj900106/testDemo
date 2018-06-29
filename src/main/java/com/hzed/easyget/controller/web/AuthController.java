@@ -68,8 +68,8 @@ public class AuthController {
 
     @ModuleFunc("获取用户认证信息")
     @PostMapping("/getAuthStatus")
-    public List<AuthStatusResponse> getAuthStatus() {
-        return authService.getAuthStatus();
+    public List<AuthStatusResponse> getAuthStatus(@Valid @RequestBody AuthStatusRequest request) {
+        return authService.getAuthStatus(request);
     }
 
     @ModuleFunc("运营商认证-发送验证码")

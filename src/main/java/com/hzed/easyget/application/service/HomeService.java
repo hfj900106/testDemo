@@ -25,6 +25,7 @@ import com.hzed.easyget.persistence.ext.entity.UserExt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -84,7 +85,7 @@ public class HomeService {
         appVersionResponse.setVersion(verDict.getDicValue());
         appVersionResponse.setPath(jsonObject.getString("update_url"));
         appVersionResponse.setIsUpdate(checkIsUpdate(oldVersion, verDict.getDicValue()));
-        appVersionResponse.setIsForce(jsonObject.getString("force_update"));
+        appVersionResponse.setIsForce(jsonObject.getString("is_force"));
         return appVersionResponse;
     }
 
@@ -118,9 +119,11 @@ public class HomeService {
         String imei = RequestUtil.getGlobalHead().getImei();
         UserToken utk = userTokenRepository.findByUserIdAndImei(userId, imei);
         // 时间是今天，就不用更新token
-        LocalDateTime updateTime = utk.getUpdateTime();
-        if (updateTime != null && DateUtil.compareDay(updateTime)) {
-            return UpdateTokenResponse.builder().token(RequestUtil.getGlobalHead().getToken()).build();
+        if (!ObjectUtils.isEmpty(utk)) {
+            LocalDateTime updateTime = utk.getUpdateTime();
+            if (updateTime != null && DateUtil.compareDay(updateTime)) {
+                return UpdateTokenResponse.builder().token(RequestUtil.getGlobalHead().getToken()).build();
+            }
         }
 
         String newToken = JwtUtil.createToken(globalUser);

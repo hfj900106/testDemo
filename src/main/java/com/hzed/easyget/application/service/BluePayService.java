@@ -1,7 +1,6 @@
 package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.hzed.easyget.application.enums.RepayMentEnum;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
 import com.hzed.easyget.controller.model.PaymentCodeRequest;
@@ -31,6 +30,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class BluePayService {
+
     @Autowired
     private RestService restService;
     @Autowired
@@ -61,14 +61,14 @@ public class BluePayService {
         if (mode.equals(RepayMentEnum.OTC.getMode())) {
             paymentRequest.setBankType(null);
         }
-        log.info("获取还款码，bluepay请求地址{},参数：{}", prop.getAbsGetPaymentCodeUrl(), JSONObject.toJSONString(paymentRequest));
-        String result = restService.doPostJson(prop.getAbsGetPaymentCodeUrl(), JSONObject.toJSONString(paymentRequest));
+        log.info("获取还款码，bluepay请求地址{}，参数：{}", prop.getAbsGetPaymentCodeUrl(), JSON.toJSONString(paymentRequest));
+        String result = restService.doPostJson(prop.getAbsGetPaymentCodeUrl(), JSON.toJSONString(paymentRequest));
         log.info("获取还款码，bluepay返回数据：{}", result);
-        if (result.equals(TIMEOUT)) {
+        if (result.equalsIgnoreCase(TIMEOUT)) {
             throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR);
         }
-        PayResponse response = JSON.parseObject(result, PayResponse.class);
-        return response;
+
+        return JSON.parseObject(result, PayResponse.class);
     }
 
     /**
@@ -82,7 +82,7 @@ public class BluePayService {
         log.info("测试还款接口请求地址{},报文：{}", prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(request));
         log.info("测试还款接口返回报文：{}", result);
-        if (result.equals(TIMEOUT)) {
+        if (result.equalsIgnoreCase(TIMEOUT)) {
             throw new ComBizException(BizCodeEnum.RECEIVER_TRANSACTION_ERROR);
         }
         return JSON.parseObject(result, PayResponse.class);

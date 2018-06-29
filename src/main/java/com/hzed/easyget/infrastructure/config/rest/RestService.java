@@ -1,12 +1,17 @@
 package com.hzed.easyget.infrastructure.config.rest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ServiceUnavailableRetryStrategy;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -112,7 +117,6 @@ public class RestService {
      * @return
      */
     public String doPostJson(String url, String json) {
-        CloseableHttpClient http = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
         String result = null;
         try {
@@ -123,7 +127,7 @@ public class RestService {
             //设置请求和传输超时时间
             RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(8000).setSocketTimeout(8000).setConnectTimeout(8000).build();
             httpPost.setConfig(requestConfig);
-            CloseableHttpResponse response = http.execute(httpPost);
+            CloseableHttpResponse response = getHttpClient().execute(httpPost);
             if (response != null) {
                 org.apache.http.HttpEntity resEntity = response.getEntity();
                 if (resEntity != null) {
@@ -139,4 +143,39 @@ public class RestService {
         return result;
 
     }
+
+    /**
+     * 获得一个连接对象
+     * @return
+     */
+    public static CloseableHttpClient getHttpClient() {
+        ServiceUnavailableRetryStrategy strategy = new ServiceUnavailableRetryStrategy() {
+            /**
+             * retry逻辑 重试三次
+             */
+            @Override
+            public boolean retryRequest(HttpResponse response, int executionCount, HttpContext context) {
+                if (executionCount <= 3) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            /**
+             * retry间隔时间
+             */
+            @Override
+            public long getRetryInterval() {
+                return 100;
+            }
+        };
+        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+        cm.setMaxTotal(5);
+        cm.setDefaultMaxPerRoute(10);
+        CloseableHttpClient httpClient = HttpClients.custom().setRetryHandler(new DefaultHttpRequestRetryHandler())
+                .setConnectionManager(cm).build();
+        return httpClient;
+    }
+
+
 }

@@ -14,7 +14,5 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class MessagesRequest {
-
-    @NotNull(message = "{param.auth.message.isNotEmpty}")
     private Object message;
 }

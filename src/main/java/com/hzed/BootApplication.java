@@ -51,7 +51,7 @@ import javax.validation.Validator;
 @ServletComponentScan
 @EnableRedis
 @EnableRest
-//@EnableRabbitMQ
+@EnableRabbitMQ
 @EnableSwagger2
 public class BootApplication {
 

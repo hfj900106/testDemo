@@ -3,6 +3,7 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
@@ -43,6 +44,7 @@ public class RepaymentCompleRequest {
      * 交易金额
      */
     @NotNull(message = "交易金额不能为空")
+    @Min(value = 10000)
     private BigDecimal price;
     /**
      * 流水号

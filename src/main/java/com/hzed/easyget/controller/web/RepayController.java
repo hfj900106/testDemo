@@ -71,7 +71,7 @@ public class RepayController {
 
     @ModuleFunc("生成VA码")
     @PostMapping("/vaInfoDetail")
-    public TransactionVAResponse vaInfoDetail(@Valid @RequestBody TransactionVARequest request) {
+    public TransactionVaResponse vaInfoDetail(@Valid @RequestBody TransactionVaRequest request) {
         return repayService.findVaTranc(request);
     }
 

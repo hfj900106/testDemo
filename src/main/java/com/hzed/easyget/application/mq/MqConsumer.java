@@ -3,7 +3,6 @@ package com.hzed.easyget.application.mq;
 import com.alibaba.fastjson.JSONObject;
 import com.hzed.easyget.application.enums.BluePayStatusEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
-import com.hzed.easyget.application.service.BluePayService;
 import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.application.service.TransactionService;
 import com.hzed.easyget.controller.model.BluePayRequest;
@@ -41,8 +40,6 @@ public class MqConsumer implements ChannelAwareMessageListener {
     private TempTableRepository tempTableRepository;
     @Autowired
     private TransactionService transactionService;
-    @Autowired
-    private BluePayService bluePayService;
     @Autowired
     private RepayService repayService;
     @Autowired
@@ -146,7 +143,7 @@ public class MqConsumer implements ChannelAwareMessageListener {
             if (BANK.equals(interfacetype)) {
                 // 走信息流
                 UserTransactionRepay repay = UserTransactionRepay.builder().paymentId(paymentId).status(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue()).build();
-                bluePayService.repaymentSuccess(loanTransacQuery, repay);
+                repayService.repaymentSuccess(loanTransacQuery, repay);
                 log.info("本地交易处理成功");
             }
 

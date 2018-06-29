@@ -1,5 +1,6 @@
 package com.hzed.easyget.application.service;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.application.service.product.ProductEnum;
@@ -11,6 +12,7 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.Arith;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -59,6 +61,8 @@ public class RepayService {
     private UserTransactionRepayRepository userTransactionRepayRepository;
     @Autowired
     private UserTransactionPicRepository userTransactionPicRepository;
+    @Autowired
+    private BluePayService bluePayService;
 
     public RepayListResponse repaidList(RepayListRequest request) {
         RepayListResponse repayListResponse = new RepayListResponse();
@@ -371,14 +375,14 @@ public class RepayService {
      * @return
      */
     public PaymentIdResponse findloanManagResponse(BigDecimal amount, Long bidId, boolean flag) {
-        //查询标的信息
+        // 查询标的信息
         Bid bid = bidRepository.findByIdWithExp(bidId);
         //查询应还时间
         LocalDateTime repaymentTime = repayRepository.findRepaymentTime(bid.getId());
         if (ObjectUtils.isEmpty(repaymentTime)) {
             throw new ComBizException(BizCodeEnum.USERTRANSACTION_ERROR);
         }
-        //查询是否有没过期的还款码
+        // 查询是否有没过期的还款码
         UserTransactionRepay vaCode = repayRepository.getVaCode(bidId, amount, flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
         PaymentIdResponse response = new PaymentIdResponse();
         if (!ObjectUtils.isEmpty(vaCode)) {
@@ -393,6 +397,81 @@ public class RepayService {
         return response;
     }
 
+    /**
+     * 获取va码接口
+     *
+     * @param request
+     * @return va码构建对象
+     */
+    public TransactionVAResponse findVaTranc(TransactionVARequest request) {
+        // 查询标的信息
+        Bid bid = bidRepository.findByIdWithExp(request.getBidId());
+        // 先查询数据库 是否存在没过期的还款码
+        UserTransactionRepay repayQuery = repayRepository.getVaCodeByParmers(request.getBidId(), request.getAmount(), request.isFlag() ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue(), request.getMode());
+        TransactionVAResponse vaResponse = new TransactionVAResponse();
+        if (!ObjectUtils.isEmpty(repayQuery)) {
+            vaResponse.setExpireTime(DateUtil.localDateTimeToTimestamp(repayQuery.getVaExpireTime()));
+            vaResponse.setVaCodel(repayQuery.getVa());
+            vaResponse.setMode(repayQuery.getMode());
+            return vaResponse;
+        }
+        // 交易单号
+        String paymentId = IdentifierGenerator.nextSeqNo();
+        PayResponse response = bluePayService.bluePaymentCode(bid, request.getMode(), request.getAmount(), paymentId);
+        if (!response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
+            throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR);
+        }
+        // 解析返回信息
+        String paymentCode = JSON.parseObject(response.getData()).getString("paymentCode");
+        log.info("获取还款码，bluepay返回还款码：{}", paymentCode);
+        LocalDateTime createTime = LocalDateTime.now();
+        UserTransactionRepay repayInsert = UserTransactionRepay.builder()
+                .id(IdentifierGenerator.nextId())
+                .bidId(request.getBidId())
+                .paymentId(paymentId)
+                .amount(request.getAmount())
+                .repaymentTime(LocalDateTime.now())
+                .mode(request.getMode())
+                .va(paymentCode)
+                .vaCreateTime(createTime)
+                .vaExpireTime(createTime.plusHours(6))
+                .repaymentType(request.isFlag() ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue())
+                .status(TransactionTypeEnum.INIT_RANSACTION.getCode().byteValue())
+                .build();
+        //插入va码到数据库
+        repayRepository.insertSelective(repayInsert);
+        //组装返回信息
+        vaResponse.setExpireTime(DateUtil.localDateTimeToTimestamp(repayInsert.getVaExpireTime()));
+        vaResponse.setMode(request.getMode());
+        vaResponse.setVaCodel(paymentCode);
+        return vaResponse;
+    }
+
+    /**
+     * 还款成功信息流
+     *
+     * @param userTransaction 交易对象
+     * @param repayUpdate
+     */
+    public void repaymentSuccess(UserTransaction userTransaction, UserTransactionRepay repayUpdate) {
+        // 修改交易记录
+        UserTransaction userTransactionUpdate = UserTransaction.builder()
+                .id(userTransaction.getId())
+                .status(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue())
+                .updateTime(LocalDateTime.now()).build();
+        // 插入还款定时任务
+        RepayInfoFlowJob repayInfoFlowJobInsert = RepayInfoFlowJob.builder()
+                .id(IdentifierGenerator.nextId())
+                .createTime(LocalDateTime.now())
+                .transactionId(userTransaction.getId())
+                .bidId(userTransaction.getBidId())
+                .repaymentAmount(userTransaction.getAmount())
+                .realRepaymentTime(LocalDateTime.now())
+                .repaymentMode(RepayFlowJobEnum.UNDER_LINE.getCode().byteValue())
+                .repaymentType(userTransaction.getRepaymentType())
+                .build();
+        repayRepository.afterRepayment(userTransactionUpdate, repayInfoFlowJobInsert, repayUpdate);
+    }
 
     /**
      * 根绝交易订单号查询va码记录
@@ -407,7 +486,7 @@ public class RepayService {
     /**
      * 插入订单记录
      *
-     * @param transactionInsert
+     * @param transactionInsert 订单对象
      */
     public void insertUserTransaction(UserTransaction transactionInsert) {
         userTransactionRepository.insertSelective(transactionInsert);

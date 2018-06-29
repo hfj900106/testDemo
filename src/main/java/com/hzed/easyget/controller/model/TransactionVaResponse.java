@@ -3,10 +3,13 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 
 /**
- * 获取va码响应实体
+ * 还款码响应实体
+ *
+ * @author wuchengwu
+ * @date 2018/6/4
  */
 @Data
-public class TransactionVAResponse {
+public class TransactionVaResponse {
     /**
      * VA码
      */

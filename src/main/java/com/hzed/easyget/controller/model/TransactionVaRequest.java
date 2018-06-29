@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  * @time：2018/6/18-11:06
  **/
 @Data
-public class TransactionVARequest {
+public class TransactionVaRequest {
     /**
      * 标的id
      */

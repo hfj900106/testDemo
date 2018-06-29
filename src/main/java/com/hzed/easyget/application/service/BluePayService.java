@@ -2,7 +2,6 @@ package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hzed.easyget.application.enums.BankTypeEnum;
 import com.hzed.easyget.application.enums.RepayFlowJobEnum;
 import com.hzed.easyget.application.enums.RepayMentEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
@@ -14,7 +13,6 @@ import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.RepayRepository;
-import com.hzed.easyget.infrastructure.repository.UserTransactionRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
@@ -39,8 +37,6 @@ import java.util.List;
 @Slf4j
 public class BluePayService {
     @Autowired
-    private UserTransactionRepository userTransactionRepository;
-    @Autowired
     private RepayRepository repayRepository;
     @Autowired
     private RestService restService;
@@ -63,23 +59,26 @@ public class BluePayService {
         //查询标的信息
         Bid bid = bidRepository.findByIdWithExp(request.getBidId());
         //先查询数据库 是否存在没过期的还款码
-        UserTransactionRepay repayQuery = repayRepository.getVaCodeByParmers(request.getBidId(), request.getAmount(), request.isFlag() ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue(),request.getMode());
+        UserTransactionRepay repayQuery = repayRepository.getVaCodeByParmers(request.getBidId(), request.getAmount(), request.isFlag() ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue(), request.getMode());
         TransactionVAResponse vaResponse = new TransactionVAResponse();
-        if (!ObjectUtils.isEmpty(repayQuery) && repayQuery.getMode().equals(request.getMode())) {
+        if (!ObjectUtils.isEmpty(repayQuery)) {
             vaResponse.setExpireTime(DateUtil.localDateTimeToTimestamp(repayQuery.getVaExpireTime()));
             vaResponse.setVaCodel(repayQuery.getVa());
             vaResponse.setMode(repayQuery.getMode());
             return vaResponse;
         }
-        String payMentId = IdentifierGenerator.nextSeqNo();
+        // 获取新VA码
+        //
+        String paymentId = IdentifierGenerator.nextSeqNo();
         //组装请求信息
         PaymentCodeRequest paymentRequest = new PaymentCodeRequest();
         paymentRequest.setBankType(bid.getInBank().toLowerCase());
-        paymentRequest.setTransactionId(payMentId);
+        paymentRequest.setTransactionId(paymentId);
         paymentRequest.setCardNo(bid.getInAccount());
         paymentRequest.setPrice(request.getAmount());
         paymentRequest.setMsisdn(RequestUtil.getGlobalUser().getMobile());
         paymentRequest.setPayType(RepayMentEnum.getBlue(request.getMode()));
+        // OTC方式不可传银行类型，否则报错
         if (request.getMode().equals(RepayMentEnum.OTC.getMode())) {
             paymentRequest.setBankType(null);
         }
@@ -100,7 +99,7 @@ public class BluePayService {
         UserTransactionRepay repayInsert = UserTransactionRepay.builder()
                 .id(IdentifierGenerator.nextId())
                 .bidId(request.getBidId())
-                .paymentId(payMentId)
+                .paymentId(paymentId)
                 .amount(request.getAmount())
                 .repaymentTime(LocalDateTime.now())
                 .mode(request.getMode())
@@ -159,7 +158,7 @@ public class BluePayService {
                 .repaymentMode(RepayFlowJobEnum.UNDER_LINE.getCode().byteValue())
                 .repaymentType(userTransaction.getRepaymentType())
                 .build();
-        repayRepository.afterRepayment(userTransactionUpdate, repayInfoFlowJobInsert,repayUpdate);
+        repayRepository.afterRepayment(userTransactionUpdate, repayInfoFlowJobInsert, repayUpdate);
     }
 
     /**

@@ -11,6 +11,9 @@ import lombok.Getter;
 @Getter
 public enum RepayMentEnum {
 
+    /**
+     * 过规则
+     */
     OTC("otc", "OTC", "OTC还款方式"),
     ATM("atm", "BNI ATM", "ATM还款方式");
 
@@ -24,9 +27,10 @@ public enum RepayMentEnum {
         this.mode = mode;
         this.desc = desc;
     }
+
     public static String getBlue(String mode) {
-        for(RepayMentEnum v:RepayMentEnum.values()){
-            if(v.mode.equals(mode)){
+        for (RepayMentEnum v : RepayMentEnum.values()) {
+            if (v.mode.equals(mode)) {
                 return v.blue;
             }
         }

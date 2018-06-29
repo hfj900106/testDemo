@@ -4,7 +4,6 @@ import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.UserTransactionRepay;
 import com.hzed.easyget.persistence.auto.entity.example.BillExample;
-import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionRepayExample;
 import com.hzed.easyget.persistence.auto.mapper.BillMapper;
 import com.hzed.easyget.persistence.auto.mapper.RepayInfoFlowJobMapper;
@@ -13,7 +12,6 @@ import com.hzed.easyget.persistence.auto.mapper.UserTransactionRepayMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -85,7 +83,7 @@ public class RepayRepository {
                 .andRepaymentTypeEqualTo(repayMentType)
                 .andCreateTimeGreaterThanOrEqualTo(time)
                 .andVaExpireTimeLessThan(time)
-                .example().orderBy("create_time desc").limit(1);
+                .example().orderBy(UserTransactionRepay.Column.createTime.desc()).limit(1);
         return repayMapper.selectOneByExample(repayExample);
     }
 
@@ -115,7 +113,7 @@ public class RepayRepository {
                 .andModeEqualTo(mode)
                 .andCreateTimeGreaterThanOrEqualTo(time)
                 .andVaExpireTimeLessThan(time)
-                .example().orderBy("create_time desc").limit(1);
+                .example().orderBy(UserTransactionRepay.Column.createTime.desc()).limit(1);
         return repayMapper.selectOneByExample(repayExample);
     }
 

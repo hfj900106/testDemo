@@ -1,7 +1,6 @@
 package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.BillLedgerItemEnum;
 import com.hzed.easyget.application.enums.BillStatusEnum;
@@ -16,7 +15,6 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.BillLedgerRepository;
 import com.hzed.easyget.infrastructure.repository.BillRepository;
@@ -35,7 +33,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 一些公用的方法
@@ -60,8 +57,7 @@ public class ComService {
     private RestService restService;
     @Autowired
     private RiskProp riskProp;
-    @Autowired
-    private RiskService riskService;
+
 
     /**
      * 校验token参数
@@ -202,15 +198,6 @@ public class ComService {
             return true;
         }
         return false;
-    }
-
-    /**
-     * 根据用户手机号，imei通过用户查询风控是否有贷款规则
-     */
-
-    public RiskResponse checkRiskEnableBorrow(String mobile, String imei) {
-        return riskService.checkRiskEnableBorrow(mobile,imei);
-
     }
 
 

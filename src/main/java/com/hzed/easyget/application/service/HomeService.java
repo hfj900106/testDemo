@@ -20,7 +20,6 @@ import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.*;
-import com.hzed.easyget.persistence.ext.entity.TransactionExt;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,15 +48,13 @@ public class HomeService {
     @Autowired
     private NewsRepository newsRepository;
     @Autowired
-    private ComService comService;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private BidRepository bidRepository;
     @Autowired
     private UserLoanVisitRepository userLoanVisitRepository;
     @Autowired
-    private UserRepaymentVisitRepository userRepaymentVisitRepository;
+    private RiskService riskService;
 
     private static final String ANDROID_BOMB = "android_bomb";
     private static final String IOS_BOMB = "ios_bomb";
@@ -177,7 +174,7 @@ public class HomeService {
         }
 
         List<News> newList = newsRepository.getBombList(pageNo, pageSize);
-        for (News news: newList) {
+        for (News news : newList) {
             NewsResponse newsResponse = new NewsResponse();
             newsResponse.setNewsTitle(news.getTitle());
             newsResponse.setImgUrl(news.getImgUrl());
@@ -194,7 +191,7 @@ public class HomeService {
         String imei = RequestUtil.getGlobalHead().getImei();
         User user = userRepository.findById(userId);
 
-        RiskResponse response = comService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
+        RiskResponse response = riskService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
         String errorCode = response.getHead().getError_code();
 
         if (StringUtils.isNotBlank(errorCode)) {
@@ -218,7 +215,7 @@ public class HomeService {
             UserLoanVisit userVisitRecord = userLoanVisitRepository.findByUserIdAndBidId(userId, bid.getId());
             if (userVisitRecord == null) {
                 checkLoanResponse.setBid(bid.getId());
-                throw new WarnException(BizCodeEnum.NEED_JUMP,checkLoanResponse);
+                throw new WarnException(BizCodeEnum.NEED_JUMP, checkLoanResponse);
             }
         });
         return checkLoanResponse;

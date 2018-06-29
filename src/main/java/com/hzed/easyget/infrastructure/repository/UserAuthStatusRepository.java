@@ -29,18 +29,17 @@ public class UserAuthStatusRepository {
     private AuthItemMapper authItemMapper;
 
 
-    public List<UserAuthStatus> getAuthStatusByUserId(Long userId) {
+    public List<UserAuthStatus> findAuthStatusByUserId(Long userId) {
         UserAuthStatusExample example = new UserAuthStatusExample();
         example.createCriteria().andUserIdEqualTo(userId);
         return userAuthStatusMapper.selectByExample(example);
     }
+
     public void insertSelective(UserAuthStatus userAuthStatus) {
         userAuthStatusMapper.insertSelective(userAuthStatus);
     }
 
-
     public AuthItem findAuthByCode(String authCode) {
-
         AuthItemExample example = new AuthItemExample();
         example.createCriteria().andCodeEqualTo(authCode);
         return authItemMapper.selectOneByExample(example);

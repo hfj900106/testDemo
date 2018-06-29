@@ -66,7 +66,7 @@ public class AuthService {
     public List<AuthStatusResponse> getAuthStatus() {
         List<AuthStatusResponse> authStatusList = Lists.newArrayList();
         Long userId = RequestUtil.getGlobalUser().getUserId();
-        List<UserAuthStatus> userAuthStatus = authStatusRepository.getAuthStatusByUserId(userId);
+        List<UserAuthStatus> userAuthStatus = authStatusRepository.findAuthStatusByUserId(userId);
         userAuthStatus.forEach(uas -> {
             AuthItem auth = authStatusRepository.findAuthByCode(uas.getAuthCode());
             AuthStatusResponse authStatusResponse = new AuthStatusResponse();

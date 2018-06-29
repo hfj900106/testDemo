@@ -83,8 +83,8 @@ public class RepayRepository {
                 .andBidIdEqualTo(id)
                 .andAmountEqualTo(amount)
                 .andRepaymentTypeEqualTo(repayMentType)
-                .andCreateTimeGreaterThanOrEqualTo(time)
-                .andVaExpireTimeLessThan(time)
+                .andVaCreateTimeLessThanOrEqualTo(time)
+                .andVaExpireTimeGreaterThan(time)
                 .example().orderBy(UserTransactionRepay.Column.createTime.desc()).limit(1);
         return repayMapper.selectOneByExample(repayExample);
     }
@@ -113,8 +113,8 @@ public class RepayRepository {
                 .andAmountEqualTo(amount)
                 .andRepaymentTypeEqualTo(repayMentType)
                 .andModeEqualTo(mode)
-                .andCreateTimeGreaterThanOrEqualTo(time)
-                .andVaExpireTimeLessThan(time)
+                .andVaCreateTimeLessThanOrEqualTo(time)
+                .andVaExpireTimeGreaterThan(time)
                 .example().orderBy(UserTransactionRepay.Column.createTime.desc()).limit(1);
         return repayMapper.selectOneByExample(repayExample);
     }

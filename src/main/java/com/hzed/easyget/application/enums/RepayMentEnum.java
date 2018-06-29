@@ -14,18 +14,16 @@ public enum RepayMentEnum {
     /**
      * 过规则
      */
-    OTC("otc", "OTC", "OTC还款方式"),
-    ATM("atm", "BNI ATM", "ATM还款方式");
+    OTC("otc", "OTC"),
+    ATM("atm", "ATM");
 
     private String blue;
     private String mode;
-    private String desc;
 
 
-    RepayMentEnum(String blue, String mode, String desc) {
+    RepayMentEnum(String blue, String mode) {
         this.blue = blue;
         this.mode = mode;
-        this.desc = desc;
     }
 
     public static String getBlue(String mode) {

@@ -67,8 +67,11 @@ public class BluePayService {
         if (result.equalsIgnoreCase(TIMEOUT)) {
             throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR);
         }
-
-        return JSON.parseObject(result, PayResponse.class);
+        PayResponse response=JSON.parseObject(result, PayResponse.class);
+        if(!response.getCode().equals(BizCodeEnum.SUCCESS.getCode())){
+            throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR);
+        }
+        return response;
     }
 
     /**

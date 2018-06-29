@@ -417,6 +417,7 @@ public class RepayService {
         }
         // 交易单号
         String paymentId = IdentifierGenerator.nextSeqNo();
+        //bluepay接口调用
         PayResponse response = bluePayService.bluePaymentCode(bid, request.getMode(), request.getAmount(), paymentId);
         // 解析返回信息
         String paymentCode = JSON.parseObject(response.getData()).getString("paymentCode");
@@ -480,11 +481,27 @@ public class RepayService {
     }
 
     /**
-     * 插入订单记录
+     * 插入交易记录
      *
-     * @param transactionInsert 订单对象
+     * @param bidId          标的id
+     * @param paymentId      订单号
+     * @param price          交易金额
+     * @param reapaymentType 交易方式
      */
-    public void insertUserTransaction(UserTransaction transactionInsert) {
+    public void insertUserTransaction(long bidId, String paymentId, Integer price, Byte reapaymentType) {
+        //查询标的信息
+        Bid bid = bidRepository.findByIdWithExp(bidId);
+        UserTransaction transactionInsert = UserTransaction.builder()
+                .id(IdentifierGenerator.nextId())
+                .status(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
+                .paymentId(paymentId)
+                .account(bid.getInAccount())
+                .bank(bid.getInBank())
+                .amount(BigDecimal.valueOf(price))
+                .type(TransactionTypeEnum.OUT.getCode().byteValue())
+                .repaymentType(reapaymentType)
+                .bidId(bidId)
+                .userId(bid.getUserId()).build();
         userTransactionRepository.insertSelective(transactionInsert);
     }
 

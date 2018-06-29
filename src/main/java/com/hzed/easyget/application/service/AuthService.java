@@ -195,6 +195,9 @@ public class AuthService {
         IdCardRecognitionResponse recognitionResponse = new IdCardRecognitionResponse();
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         RiskResponse response = riskService.idCardRecognition(idCardBase64ImgStr);
+        if(ObjectUtils.isEmpty(response)){
+            throw new WarnException(BizCodeEnum.ERROR_IDCARD_RESULT);
+        }
         String bobyStr = response.getBody().toString();
         JSONObject jsonObject = JSONObject.parseObject(bobyStr, JSONObject.class).getJSONObject("data");
         String name = jsonObject.getString("name");
@@ -336,6 +339,18 @@ public class AuthService {
         }
         UserAuthStatus userAuthStatus = buildUserAuthStatus(request.getUserId(), AuthCodeEnum.INS.getCode(), "ins认证");
         authStatusRepository.insertSelective(userAuthStatus);
+    }
+
+    /**
+     * ins认证-风控回调
+     *
+     * @param request
+     */
+    public void facebookAndIns(FacebookInsRequest request) {
+        String task_id = request.getTask_id();
+        int source = "android".equals(getGlobalHead().getPlatform()) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
+        GlobalUser user = getGlobalUser();
+        riskService.facebookAndIns(user.getUserId(),task_id,source);
     }
 
 

@@ -127,7 +127,7 @@ public class MqConsumer implements ChannelAwareMessageListener {
                 return;
             }
             // 判断这个交易是否是 交易中
-            if (loanTransacQuery.getStatus().intValue() != TransactionTypeEnum.IN_RANSACTION.getCode().intValue()) {
+            if (loanTransacQuery.getStatus().intValue() != TransactionTypeEnum.IN_RANSACTION.getCode()) {
                 log.info("本地当前交易状态：{}，不是交易中状态，处理终止", loanTransacQuery.getStatus());
                 return;
             }

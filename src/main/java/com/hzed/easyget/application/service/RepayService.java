@@ -462,7 +462,6 @@ public class RepayService {
         // 插入还款定时任务
         RepayInfoFlowJob repayInfoFlowJobInsert = RepayInfoFlowJob.builder()
                 .id(IdentifierGenerator.nextId())
-                .createTime(LocalDateTime.now())
                 .transactionId(userTransaction.getId())
                 .bidId(userTransaction.getBidId())
                 .repaymentAmount(userTransaction.getAmount())
@@ -474,7 +473,7 @@ public class RepayService {
     }
 
     /**
-     * 根绝交易订单号查询va码记录
+     * 根据交易订单号查询va码记录
      *
      * @param paymentId 订单号
      * @return va码信息

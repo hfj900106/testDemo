@@ -73,10 +73,10 @@ public class AuthService {
         dictList.forEach(dict -> {
             UserAuthStatus userAuthStatus = authStatusRepository.findAuthStatusByUserId(userId, dict.getDicCode());
             AuthStatusResponse authStatusResponse = new AuthStatusResponse();
-            authStatusResponse.setCode(dict.getDicCode());
-            authStatusResponse.setDicName(dict.getDicValue());
+            authStatusResponse.setAuthCode(dict.getDicCode());
+            authStatusResponse.setAuthName(dict.getDicValue());
             if (!ObjectUtils.isEmpty(userAuthStatus)) {
-                authStatusResponse.setStatus(String.valueOf(userAuthStatus.getAuthStatus()));
+                authStatusResponse.setAuthStatus(String.valueOf(userAuthStatus.getAuthStatus()));
             }
             authStatusList.add(authStatusResponse);
         });

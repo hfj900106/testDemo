@@ -71,7 +71,7 @@ public class AuthService {
         String i18n = RequestUtil.getGlobalHead().getI18n();
         List<Dict> dictList = dictRepository.findEnableByModuleCodeAndLanguage(request.getCode(), i18n);
         dictList.forEach(dict -> {
-            UserAuthStatus userAuthStatus = authStatusRepository.findAuthStatusByUserId(userId, dict.getDicCode());
+            UserAuthStatus userAuthStatus = authStatusRepository.findEnableAuthStatusByUserId(userId, dict.getDicCode());
             AuthStatusResponse authStatusResponse = new AuthStatusResponse();
             authStatusResponse.setAuthCode(dict.getDicCode());
             authStatusResponse.setAuthName(dict.getDicValue());

@@ -291,52 +291,62 @@ public class WorkExample {
             return (Criteria) this;
         }
 
-        public Criteria andJobTypeEqualTo(Byte value) {
+        public Criteria andJobTypeEqualTo(String value) {
             addCriterion("job_type =", value, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andJobTypeNotEqualTo(Byte value) {
+        public Criteria andJobTypeNotEqualTo(String value) {
             addCriterion("job_type <>", value, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andJobTypeGreaterThan(Byte value) {
+        public Criteria andJobTypeGreaterThan(String value) {
             addCriterion("job_type >", value, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andJobTypeGreaterThanOrEqualTo(Byte value) {
+        public Criteria andJobTypeGreaterThanOrEqualTo(String value) {
             addCriterion("job_type >=", value, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andJobTypeLessThan(Byte value) {
+        public Criteria andJobTypeLessThan(String value) {
             addCriterion("job_type <", value, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andJobTypeLessThanOrEqualTo(Byte value) {
+        public Criteria andJobTypeLessThanOrEqualTo(String value) {
             addCriterion("job_type <=", value, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andJobTypeIn(List<Byte> values) {
+        public Criteria andJobTypeLike(String value) {
+            addCriterion("job_type like", value, "jobType");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobTypeNotLike(String value) {
+            addCriterion("job_type not like", value, "jobType");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobTypeIn(List<String> values) {
             addCriterion("job_type in", values, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andJobTypeNotIn(List<Byte> values) {
+        public Criteria andJobTypeNotIn(List<String> values) {
             addCriterion("job_type not in", values, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andJobTypeBetween(Byte value1, Byte value2) {
+        public Criteria andJobTypeBetween(String value1, String value2) {
             addCriterion("job_type between", value1, value2, "jobType");
             return (Criteria) this;
         }
 
-        public Criteria andJobTypeNotBetween(Byte value1, Byte value2) {
+        public Criteria andJobTypeNotBetween(String value1, String value2) {
             addCriterion("job_type not between", value1, value2, "jobType");
             return (Criteria) this;
         }
@@ -351,52 +361,62 @@ public class WorkExample {
             return (Criteria) this;
         }
 
-        public Criteria andMonthlyIncomeEqualTo(Byte value) {
+        public Criteria andMonthlyIncomeEqualTo(String value) {
             addCriterion("monthly_income =", value, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andMonthlyIncomeNotEqualTo(Byte value) {
+        public Criteria andMonthlyIncomeNotEqualTo(String value) {
             addCriterion("monthly_income <>", value, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andMonthlyIncomeGreaterThan(Byte value) {
+        public Criteria andMonthlyIncomeGreaterThan(String value) {
             addCriterion("monthly_income >", value, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andMonthlyIncomeGreaterThanOrEqualTo(Byte value) {
+        public Criteria andMonthlyIncomeGreaterThanOrEqualTo(String value) {
             addCriterion("monthly_income >=", value, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andMonthlyIncomeLessThan(Byte value) {
+        public Criteria andMonthlyIncomeLessThan(String value) {
             addCriterion("monthly_income <", value, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andMonthlyIncomeLessThanOrEqualTo(Byte value) {
+        public Criteria andMonthlyIncomeLessThanOrEqualTo(String value) {
             addCriterion("monthly_income <=", value, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andMonthlyIncomeIn(List<Byte> values) {
+        public Criteria andMonthlyIncomeLike(String value) {
+            addCriterion("monthly_income like", value, "monthlyIncome");
+            return (Criteria) this;
+        }
+
+        public Criteria andMonthlyIncomeNotLike(String value) {
+            addCriterion("monthly_income not like", value, "monthlyIncome");
+            return (Criteria) this;
+        }
+
+        public Criteria andMonthlyIncomeIn(List<String> values) {
             addCriterion("monthly_income in", values, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andMonthlyIncomeNotIn(List<Byte> values) {
+        public Criteria andMonthlyIncomeNotIn(List<String> values) {
             addCriterion("monthly_income not in", values, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andMonthlyIncomeBetween(Byte value1, Byte value2) {
+        public Criteria andMonthlyIncomeBetween(String value1, String value2) {
             addCriterion("monthly_income between", value1, value2, "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andMonthlyIncomeNotBetween(Byte value1, Byte value2) {
+        public Criteria andMonthlyIncomeNotBetween(String value1, String value2) {
             addCriterion("monthly_income not between", value1, value2, "monthlyIncome");
             return (Criteria) this;
         }
@@ -848,6 +868,16 @@ public class WorkExample {
 
         public Criteria andRemarkNotBetween(String value1, String value2) {
             addCriterion("remark not between", value1, value2, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andJobTypeLikeInsensitive(String value) {
+            addCriterion("upper(job_type) like", value.toUpperCase(), "jobType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMonthlyIncomeLikeInsensitive(String value) {
+            addCriterion("upper(monthly_income) like", value.toUpperCase(), "monthlyIncome");
             return (Criteria) this;
         }
 

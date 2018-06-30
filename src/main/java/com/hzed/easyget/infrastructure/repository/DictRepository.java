@@ -41,7 +41,7 @@ public class DictRepository {
 
     public List<Dict> findByModuleCodeWithExp(String moduleCode) {
         DictExample example = new DictExample();
-        example.setOrderByClause("orderby asc");
+        example.setOrderByClause(Dict.Column.orderby.asc());
         example.createCriteria().andModuleCodeEqualTo(moduleCode);
 
         List<Dict> dicts = dictMapper.selectByExample(example);
@@ -52,9 +52,17 @@ public class DictRepository {
 
     }
 
+    public List<Dict> findByModuleCodeAndLanguageAndDiclabel(String moduleCode, String language) {
+        DictExample example = new DictExample();
+        example.setOrderByClause(Dict.Column.orderby.asc());
+        example.createCriteria().andModuleCodeEqualTo(moduleCode).andLanguageEqualTo(language).andDicLabelEqualTo("1");
+
+        return dictMapper.selectByExample(example);
+    }
+
     public List<Dict> findByModuleCodeAndLanguage(String moduleCode, String language) {
         DictExample example = new DictExample();
-        example.setOrderByClause("orderby asc");
+        example.setOrderByClause(Dict.Column.orderby.asc());
         example.createCriteria().andModuleCodeEqualTo(moduleCode).andLanguageEqualTo(language);
 
         return dictMapper.selectByExample(example);

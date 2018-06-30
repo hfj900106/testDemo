@@ -449,9 +449,9 @@ public class RepayService {
      * 还款成功信息流
      *
      * @param userTransaction 交易对象
-     * @param repayUpdate
+     * @param paymentId       交易id
      */
-    public void repaymentSuccess(UserTransaction userTransaction, UserTransactionRepay repayUpdate) {
+    public void repaymentSuccess(UserTransaction userTransaction, String paymentId) {
         // 修改交易记录
         UserTransaction userTransactionUpdate = UserTransaction.builder()
                 .id(userTransaction.getId())
@@ -467,6 +467,7 @@ public class RepayService {
                 .repaymentMode(RepayFlowJobEnum.UNDER_LINE.getCode().byteValue())
                 .repaymentType(userTransaction.getRepaymentType())
                 .build();
+        UserTransactionRepay repayUpdate = UserTransactionRepay.builder().paymentId(paymentId).status(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue()).build();
         repayRepository.afterRepayment(userTransactionUpdate, repayInfoFlowJobInsert, repayUpdate);
     }
 
@@ -476,8 +477,8 @@ public class RepayService {
      * @param paymentId 订单号
      * @return va码信息
      */
-    public UserTransactionRepay findReayInfoByPayMentId(String paymentId) {
-        return repayRepository.findReayInfoByPayMentId(paymentId);
+    public UserTransactionRepay findRepayInfoByPaymentId(String paymentId) {
+        return repayRepository.findRepayInfoByPaymentId(paymentId);
     }
 
     /**

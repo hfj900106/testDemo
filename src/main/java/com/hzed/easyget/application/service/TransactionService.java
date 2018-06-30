@@ -1,6 +1,5 @@
 package com.hzed.easyget.application.service;
 
-import com.alibaba.fastjson.JSON;
 import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
@@ -8,13 +7,11 @@ import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.ProductService;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
-import com.hzed.easyget.controller.model.LoanTransactionRequest;
 import com.hzed.easyget.controller.model.ReceiverTransactionRequest;
 import com.hzed.easyget.infrastructure.config.PayProp;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
-import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
@@ -28,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -146,8 +142,8 @@ public class TransactionService {
      * @param paymnetId
      * @return 交易记录
      */
-    public UserTransaction findUserTranByPaymentId(String paymnetId,Byte type) {
-        return userTransactionRepository.findUserTranByPaymentId(paymnetId,type);
+    public UserTransaction findUserTranByPaymentId(String paymnetId, Byte type) {
+        return userTransactionRepository.findUserTranByPaymentId(paymnetId, type);
     }
 
     /**

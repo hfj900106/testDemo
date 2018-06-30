@@ -81,7 +81,7 @@ public class RepayController {
         return bluePayService.testRepayment(request);
     }
 
-    @ModuleFunc("获取va码记录")
+    @ModuleFunc("已生成va码列表")
     @PostMapping("/getVaHistory")
     public List<VaHistoryResponse> getVaHistory(@Valid @RequestBody VaHistoryRequest request) {
         return repayService.getVaHistory(request);

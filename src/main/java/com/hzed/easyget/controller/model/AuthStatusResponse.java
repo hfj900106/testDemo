@@ -10,7 +10,7 @@ import lombok.Data;
  */
 @Data
 public class AuthStatusResponse {
-    private String code;
-    private String status;
-    private String dicName;
+    private String authCode;
+    private String authStatus;
+    private String authName;
 }

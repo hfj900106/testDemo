@@ -69,7 +69,7 @@ public class AuthService {
         List<AuthStatusResponse> authStatusList = Lists.newArrayList();
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String i18n = RequestUtil.getGlobalHead().getI18n();
-        List<Dict> dictList = dictRepository.findByModuleCodeAndLanguageAndDiclabel(request.getCode(), i18n);
+        List<Dict> dictList = dictRepository.findEnableByModuleCodeAndLanguage(request.getCode(), i18n);
         dictList.forEach(dict -> {
             UserAuthStatus userAuthStatus = authStatusRepository.findAuthStatusByUserId(userId, dict.getDicCode());
             AuthStatusResponse authStatusResponse = new AuthStatusResponse();
@@ -369,10 +369,10 @@ public class AuthService {
      * @param request
      */
     public void facebookAndIns(FacebookInsRequest request) {
-        String task_id = request.getTaskId();
+        String taskId = request.getTaskId();
         int source = "android".equals(getGlobalHead().getPlatform()) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
         GlobalUser user = getGlobalUser();
-        riskService.facebookAndIns(user.getUserId(),task_id,source);
+        riskService.facebookAndIns(user.getUserId(),taskId,source);
     }
 
 

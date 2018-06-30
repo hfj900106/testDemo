@@ -52,7 +52,7 @@ public class DictRepository {
 
     }
 
-    public List<Dict> findByModuleCodeAndLanguageAndDiclabel(String moduleCode, String language) {
+    public List<Dict> findEnableByModuleCodeAndLanguage(String moduleCode, String language) {
         DictExample example = new DictExample();
         example.setOrderByClause(Dict.Column.orderby.asc());
         example.createCriteria().andModuleCodeEqualTo(moduleCode).andLanguageEqualTo(language).andDicLabelEqualTo("1");

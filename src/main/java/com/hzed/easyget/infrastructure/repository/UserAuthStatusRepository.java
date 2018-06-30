@@ -1,10 +1,7 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.persistence.auto.entity.AuthItem;
 import com.hzed.easyget.persistence.auto.entity.UserAuthStatus;
-import com.hzed.easyget.persistence.auto.entity.example.AuthItemExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserAuthStatusExample;
-import com.hzed.easyget.persistence.auto.mapper.AuthItemMapper;
 import com.hzed.easyget.persistence.auto.mapper.UserAuthStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,9 +21,6 @@ public class UserAuthStatusRepository {
     @Autowired
     private UserAuthStatusMapper userAuthStatusMapper;
 
-    @Autowired
-    private AuthItemMapper authItemMapper;
-
     public UserAuthStatus findAuthStatusByUserId(Long userId,String authCode) {
         UserAuthStatusExample example = new UserAuthStatusExample();
         example.createCriteria().andUserIdEqualTo(userId).andAuthCodeEqualTo(authCode);
@@ -37,9 +31,4 @@ public class UserAuthStatusRepository {
         userAuthStatusMapper.insertSelective(userAuthStatus);
     }
 
-    public AuthItem findAuthByCode(String authCode) {
-        AuthItemExample example = new AuthItemExample();
-        example.createCriteria().andCodeEqualTo(authCode).andIsUseEqualTo(true);
-        return authItemMapper.selectOneByExample(example);
-    }
 }

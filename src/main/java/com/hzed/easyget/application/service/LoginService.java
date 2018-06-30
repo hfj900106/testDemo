@@ -76,8 +76,10 @@ public class LoginService {
         User user = userRepository.findByMobile(mobile);
         Long userId;
         String token;
+        boolean isNew = false;
         //用户为空，那么该用户的token表数据肯定也为空
         if (user == null) {
+            isNew =true;
             userId = IdentifierGenerator.nextId();
             //build User
             user = User.builder().id(userId).mobileAccount(mobile).platform(platform).client(BidEnum.INDONESIA_APP.getCode()).imei(imei).build();
@@ -121,7 +123,7 @@ public class LoginService {
         redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, RedisConsts.THREE_HOUR);
         //验证SmsCode之后删除掉
         redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
-        return LoginByCodeResponse.builder().token(token).userId(userId).build();
+        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).build();
     }
 
 
@@ -136,6 +138,7 @@ public class LoginService {
         String mobile = request.getMobile();
         String smsCode = request.getSmsCode();
         String platform = globalHead.getPlatform();
+        String clinet = request.getFromCode();
         User user = userRepository.findByMobile(mobile);
         if (user != null) {
             throw new WarnException(BizCodeEnum.EXIST_USER);
@@ -149,7 +152,7 @@ public class LoginService {
         user.setId(userId);
         user.setMobileAccount(mobile);
         user.setPlatform(platform);
-        user.setClient(BidEnum.INDONESIA_APP.getCode());
+        user.setClient(clinet);
         user.setImei(RequestUtil.getGlobalHead().getImei());
         //UserStatus
         UserStatus userStatus = buildUserStatus(userId);

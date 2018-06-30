@@ -201,9 +201,7 @@ public class AuthService {
         IdCardRecognitionResponse recognitionResponse = new IdCardRecognitionResponse();
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         RiskResponse response = riskService.idCardRecognition(idCardBase64ImgStr);
-        if(ObjectUtils.isEmpty(response)){
-            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
-        }
+
         if(ObjectUtils.isEmpty(response.getBody())){
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
@@ -268,7 +266,6 @@ public class AuthService {
             userObj.setIdCardNo(idCardNo);
             userObj.setGender(gender.byteValue());
             userObj.setUpdateTime(LocalDateTime.now());
-            userObj.setUpdateBy(user.getUserId());
             //组装pic对象
             List<UserPic> list = Lists.newArrayList();
             list.add(UserPic.builder().id(IdentifierGenerator.nextId()).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
@@ -297,8 +294,6 @@ public class AuthService {
             work.setMonthlyIncome(request.getMonthlyIncome());
             work.setEmployeeCard(employeeCardPhotoPath);
             work.setWorkplace(workplacePhotoPath);
-            work.setCreateBy(user.getUserId());
-            work.setCreateTime(LocalDateTime.now());
             work.setRemark("专业信息认证");
             //获取UserAuthStatus对象
             UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.PROFESSIONAL.getCode(), "专业信息认证");

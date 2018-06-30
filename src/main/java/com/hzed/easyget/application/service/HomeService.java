@@ -121,7 +121,7 @@ public class HomeService {
         // 时间是今天，就不用更新token
         if (!ObjectUtils.isEmpty(utk)) {
             LocalDateTime updateTime = utk.getUpdateTime();
-            if (updateTime != null && DateUtil.compareDay(updateTime)) {
+            if (updateTime != null && DateUtil.isToday(updateTime)) {
                 return UpdateTokenResponse.builder().token(RequestUtil.getGlobalHead().getToken()).build();
             }
         }

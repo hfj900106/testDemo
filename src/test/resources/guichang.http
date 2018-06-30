@@ -14,8 +14,8 @@ version:1.0.0
 
 
 ### 用户登录
-POST http://localhost:8150/hzed/easy-get/api/login/loginByCode
-#POST http://10.10.30.92:8150/hzed/easy-get/api/login/loginByCode
+#POST http://localhost:8150/hzed/easy-get/api/login/loginByCode
+POST http://10.10.30.92:8150/hzed/easy-get/api/login/loginByCode
 Accept: application/json;charset=UTF-8
 Cache-Control: no-cache
 Content-Type: application/json
@@ -26,7 +26,7 @@ platform: android
 version: 1.1.0
 
 {
-	"device":"1231",
+	"device":"",
 	"mobile":"18721551111",
 	"smsCode":"0000",
 	"anonymousId":"123"

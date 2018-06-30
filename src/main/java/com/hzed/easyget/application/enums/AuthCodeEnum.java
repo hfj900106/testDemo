@@ -11,14 +11,14 @@ import lombok.Getter;
 @Getter
 public enum AuthCodeEnum {
     /** 过规则 */
-    ID_CARD("001", "身份证认证"),
-    CONTACTS("002", "通讯录授权"),
-    MESSAGE("003", "短信授权"),
-    PERSON_INFO("004", "个人信息认证"),
-    SMS("005", "运营商认证"),
-    FACEBOOK("006", "Facebook认证"),
-    INS("007", "ins认证"),
-    PROFESSIONAL("008", "专业信息认证");
+    ID_CARD("auth_code_01", "身份证认证"),
+    CONTACTS("auth_code_02", "通讯录授权"),
+    MESSAGE("auth_code_03", "短信授权"),
+    PERSON_INFO("auth_code_04", "个人信息认证"),
+    SMS("auth_code_05", "运营商认证"),
+    FACEBOOK("auth_code_06", "Facebook认证"),
+    INS("auth_code_07", "ins认证"),
+    PROFESSIONAL("auth_code_08", "专业信息认证");
 
     private String code;
     private String msg;

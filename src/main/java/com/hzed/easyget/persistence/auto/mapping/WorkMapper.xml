@@ -4,8 +4,8 @@
   <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.Work">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="job_type" jdbcType="TINYINT" property="jobType" />
-    <result column="monthly_income" jdbcType="TINYINT" property="monthlyIncome" />
+    <result column="job_type" jdbcType="VARCHAR" property="jobType" />
+    <result column="monthly_income" jdbcType="VARCHAR" property="monthlyIncome" />
     <result column="employee_card" jdbcType="VARCHAR" property="employeeCard" />
     <result column="workplace" jdbcType="VARCHAR" property="workplace" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
@@ -143,8 +143,8 @@
       monthly_income, employee_card, workplace, 
       create_by, create_time, update_by, 
       update_time, remark)
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{jobType,jdbcType=TINYINT}, 
-      #{monthlyIncome,jdbcType=TINYINT}, #{employeeCard,jdbcType=VARCHAR}, #{workplace,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{jobType,jdbcType=VARCHAR}, 
+      #{monthlyIncome,jdbcType=VARCHAR}, #{employeeCard,jdbcType=VARCHAR}, #{workplace,jdbcType=VARCHAR}, 
       #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
@@ -193,10 +193,10 @@
         #{userId,jdbcType=BIGINT},
       </if>
       <if test="jobType != null">
-        #{jobType,jdbcType=TINYINT},
+        #{jobType,jdbcType=VARCHAR},
       </if>
       <if test="monthlyIncome != null">
-        #{monthlyIncome,jdbcType=TINYINT},
+        #{monthlyIncome,jdbcType=VARCHAR},
       </if>
       <if test="employeeCard != null">
         #{employeeCard,jdbcType=VARCHAR},
@@ -237,10 +237,10 @@
         user_id = #{record.userId,jdbcType=BIGINT},
       </if>
       <if test="record.jobType != null">
-        job_type = #{record.jobType,jdbcType=TINYINT},
+        job_type = #{record.jobType,jdbcType=VARCHAR},
       </if>
       <if test="record.monthlyIncome != null">
-        monthly_income = #{record.monthlyIncome,jdbcType=TINYINT},
+        monthly_income = #{record.monthlyIncome,jdbcType=VARCHAR},
       </if>
       <if test="record.employeeCard != null">
         employee_card = #{record.employeeCard,jdbcType=VARCHAR},
@@ -272,8 +272,8 @@
     update t_loan_work
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
-      job_type = #{record.jobType,jdbcType=TINYINT},
-      monthly_income = #{record.monthlyIncome,jdbcType=TINYINT},
+      job_type = #{record.jobType,jdbcType=VARCHAR},
+      monthly_income = #{record.monthlyIncome,jdbcType=VARCHAR},
       employee_card = #{record.employeeCard,jdbcType=VARCHAR},
       workplace = #{record.workplace,jdbcType=VARCHAR},
       create_by = #{record.createBy,jdbcType=BIGINT},
@@ -292,10 +292,10 @@
         user_id = #{userId,jdbcType=BIGINT},
       </if>
       <if test="jobType != null">
-        job_type = #{jobType,jdbcType=TINYINT},
+        job_type = #{jobType,jdbcType=VARCHAR},
       </if>
       <if test="monthlyIncome != null">
-        monthly_income = #{monthlyIncome,jdbcType=TINYINT},
+        monthly_income = #{monthlyIncome,jdbcType=VARCHAR},
       </if>
       <if test="employeeCard != null">
         employee_card = #{employeeCard,jdbcType=VARCHAR},
@@ -324,8 +324,8 @@
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.Work">
     update t_loan_work
     set user_id = #{userId,jdbcType=BIGINT},
-      job_type = #{jobType,jdbcType=TINYINT},
-      monthly_income = #{monthlyIncome,jdbcType=TINYINT},
+      job_type = #{jobType,jdbcType=VARCHAR},
+      monthly_income = #{monthlyIncome,jdbcType=VARCHAR},
       employee_card = #{employeeCard,jdbcType=VARCHAR},
       workplace = #{workplace,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=BIGINT},
@@ -367,8 +367,8 @@
       update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.jobType,jdbcType=TINYINT}, 
-        #{item.monthlyIncome,jdbcType=TINYINT}, #{item.employeeCard,jdbcType=VARCHAR}, 
+      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.jobType,jdbcType=VARCHAR}, 
+        #{item.monthlyIncome,jdbcType=VARCHAR}, #{item.employeeCard,jdbcType=VARCHAR}, 
         #{item.workplace,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
         #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
         )
@@ -391,10 +391,10 @@
           #{item.userId,jdbcType=BIGINT}
         </if>
         <if test="'job_type' == column.value">
-          #{item.jobType,jdbcType=TINYINT}
+          #{item.jobType,jdbcType=VARCHAR}
         </if>
         <if test="'monthly_income' == column.value">
-          #{item.monthlyIncome,jdbcType=TINYINT}
+          #{item.monthlyIncome,jdbcType=VARCHAR}
         </if>
         <if test="'employee_card' == column.value">
           #{item.employeeCard,jdbcType=VARCHAR}

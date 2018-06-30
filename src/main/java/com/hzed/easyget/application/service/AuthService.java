@@ -291,8 +291,8 @@ public class AuthService {
             Work work = new Work();
             work.setId(IdentifierGenerator.nextId());
             work.setUserId(user.getUserId());
-            work.setJobType(request.getJobType().byteValue());
-            work.setMonthlyIncome(request.getMonthlyIncome().byteValue());
+            work.setJobType(request.getJobType());
+            work.setMonthlyIncome(request.getMonthlyIncome());
             work.setEmployeeCard(employeeCardPhotoPath);
             work.setWorkplace(workplacePhotoPath);
             work.setCreateBy(user.getUserId());

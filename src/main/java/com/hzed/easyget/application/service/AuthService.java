@@ -69,7 +69,7 @@ public class AuthService {
         List<AuthStatusResponse> authStatusList = Lists.newArrayList();
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String i18n = RequestUtil.getGlobalHead().getI18n();
-        List<Dict> dictList = dictRepository.findByModuleCodeAndLanguage(request.getCode(), i18n);
+        List<Dict> dictList = dictRepository.findByModuleCodeAndLanguageAndDiclabel(request.getCode(), i18n);
         dictList.forEach(dict -> {
             UserAuthStatus userAuthStatus = authStatusRepository.findAuthStatusByUserId(userId, dict.getDicCode());
             AuthStatusResponse authStatusResponse = new AuthStatusResponse();

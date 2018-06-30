@@ -7,7 +7,6 @@ import com.hzed.easyget.controller.model.IDAreaRequest;
 import com.hzed.easyget.controller.model.IDAreaResponse;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
-import com.hzed.easyget.infrastructure.repository.AuthItemRepository;
 import com.hzed.easyget.infrastructure.repository.DictRepository;
 import com.hzed.easyget.infrastructure.repository.IDAreaRepository;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
@@ -32,8 +31,6 @@ public class DictService {
     private DictRepository dictRepository;
     @Autowired
     private RedisService redisService;
-    @Autowired
-    private AuthItemRepository authItemRepository;
     @Autowired
     private IDAreaRepository idAreaRepository;
 

@@ -10,5 +10,5 @@ public class SaConsts {
     /**
      * 项目名称
      */
-    public static final String projectName = "印尼项目";
+    public static final String PROJEC_TNAME = "印尼项目";
 }

@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -107,12 +108,12 @@ public class ComService {
         boolean overdueFlag = false;
         for (BillLedger ledger : ledgers) {
             total = total.add(getBillItemNoRepayFee(ledger.getBillId(), ledger.getRepaymentItem().intValue(), realRepaymentTime));
-            if(BillLedgerItemEnum.OVERDUE_FEE.getCode().intValue() == ledger.getRepaymentItem().intValue()) {
+            if (BillLedgerItemEnum.OVERDUE_FEE.getCode().intValue() == ledger.getRepaymentItem().intValue()) {
                 overdueFlag = true;
             }
         }
         // 单独处理逾期费
-        if(!overdueFlag) {
+        if (!overdueFlag) {
             total = total.add(getBillItemNoRepayFee(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode(), realRepaymentTime));
         }
         return total;
@@ -183,11 +184,10 @@ public class ComService {
     /**
      * 根据bid状态判断用户是否有贷款资格
      */
-    @Deprecated
     public boolean isLoan(Long userId) {
         List<Bid> bidList = bidRepository.findByUserIdAndStatus(userId, Lists.newArrayList(BidStatusEnum.RISK_ING.getCode().byteValue(), BidStatusEnum.MANMADE_ING.getCode().byteValue(),
                 BidStatusEnum.AUDIT_PASS.getCode().byteValue(), BidStatusEnum.REPAYMENT.getCode().byteValue()));
-        if (bidList == null || bidList.isEmpty()) {
+        if (ObjectUtils.isEmpty(bidList)) {
             return true;
         }
         return false;

@@ -7,16 +7,9 @@ import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.ProductService;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
-import com.hzed.easyget.controller.model.ReceiverTransactionRequest;
-import com.hzed.easyget.infrastructure.config.PayProp;
-import com.hzed.easyget.infrastructure.config.rest.RestService;
-import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
-import com.hzed.easyget.infrastructure.exception.ComBizException;
-import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
 import com.hzed.easyget.infrastructure.repository.UserTransactionRepository;
-import com.hzed.easyget.infrastructure.utils.FaJsonUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
@@ -39,29 +32,11 @@ import java.util.List;
 public class TransactionService {
 
     @Autowired
-    private RestService restService;
-    @Autowired
-    private PayProp prop;
-    @Autowired
     private BidRepository bidRepository;
     @Autowired
     private UserTransactionRepository userTransactionRepository;
     @Autowired
     private TempTableRepository tempTableRepository;
-
-    /**
-     * 收款
-     */
-    public Response receiverTransaction(ReceiverTransactionRequest request) {
-        log.info("支付收款接口请求报文：{}", FaJsonUtil.objToString(request));
-        Response response = restService.postJson(prop.getReceiverTransactionUrl(), request, Response.class);
-        log.info("支付收款接口返回报文：{}", FaJsonUtil.objToString(response));
-        if (!BizCodeEnum.SUCCESS.equals(response.getCode())) {
-
-            throw new ComBizException(BizCodeEnum.RECEIVER_TRANSACTION_ERROR, response.getMessage());
-        }
-        return Response.getSuccessResponse();
-    }
 
     /**
      * 放款直接成功 改标的状态,砍头息、插入账单、台账、标进度、交易记录表，删除中间表数据

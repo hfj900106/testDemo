@@ -180,7 +180,7 @@ public class HomeService {
     }
 
     public void checkLoan() {
-        final String MK_02 = "MK02";
+        final String mk02 = "MK02";
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String imei = RequestUtil.getGlobalHead().getImei();
         User user = userRepository.findById(userId);
@@ -190,7 +190,7 @@ public class HomeService {
 
         if (StringUtils.isNotBlank(errorCode)) {
             //每日通过超过数量
-            if (MK_02.equals(errorCode)) {
+            if (mk02.equals(errorCode)) {
                 throw new WarnException(BizCodeEnum.INSUFFICIENT_QUOTA);
             } else {
                 throw new WarnException(BizCodeEnum.UN_LOAN_QUALIFICATION);

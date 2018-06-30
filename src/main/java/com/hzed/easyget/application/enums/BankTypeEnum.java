@@ -10,6 +10,9 @@ import lombok.Getter;
  */
 @Getter
 public enum BankTypeEnum {
+    /**
+     * 过规则
+     */
     PERMATA("permata"),
     BNI("bni");
 

@@ -17,7 +17,7 @@ public class ProductFactory {
     public static final Map<ProductEnum, ProductService> SERVICE_MAP = Maps.newHashMap();
 
     static {
-        SERVICE_MAP.put(ProductEnum.EasyGet, SpringContextUtil.getBean(EasyGetService.class));
+        SERVICE_MAP.put(ProductEnum.EasyGet, SpringContextUtil.getBean(EasyGetServiceImpl.class));
     }
 
     public static ProductService getProduct(ProductEnum pEnum) {

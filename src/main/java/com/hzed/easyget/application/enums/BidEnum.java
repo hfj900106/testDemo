@@ -9,7 +9,9 @@ import lombok.Getter;
  */
 @Getter
 public enum BidEnum {
-
+    /**
+     * 过规则
+     */
     INDONESIA_APP("Rupiah Get", "IndonesiaApp");
 
     private String code;

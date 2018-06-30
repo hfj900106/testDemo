@@ -30,7 +30,7 @@ import java.util.List;
  */
 
 @Service
-public class EasyGetService implements ProductService {
+public class EasyGetServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;

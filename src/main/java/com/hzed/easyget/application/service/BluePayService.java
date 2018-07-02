@@ -1,6 +1,8 @@
 package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
+import com.hzed.easyget.application.enums.EnvEnum;
+import com.hzed.easyget.application.enums.MobileEnum;
 import com.hzed.easyget.application.enums.RepayMentEnum;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
 import com.hzed.easyget.controller.model.PaymentCodeRequest;
@@ -55,7 +57,7 @@ public class BluePayService {
         paymentRequest.setTransactionId(paymentId);
         paymentRequest.setCardNo(bid.getInAccount());
         paymentRequest.setPrice(amount);
-        paymentRequest.setMsisdn(RequestUtil.getGlobalUser().getMobile());
+        paymentRequest.setMsisdn(EnvEnum.isTestEnv(EnvEnum.PROD.getEnv())? MobileEnum.IDR.getMobile()+RequestUtil.getGlobalUser().getMobile():MobileEnum.CHINA.getMobile()+RequestUtil.getGlobalUser().getMobile());
         paymentRequest.setPayType(RepayMentEnum.getBlue(mode));
         // OTC方式不可传银行类型，否则报错
         if (mode.equals(RepayMentEnum.OTC.getMode())) {
@@ -98,6 +100,7 @@ public class BluePayService {
      * @return 返回请求结果
      */
     public PayResponse loanTransaction(LoanTransactionRequest request) {
+        request.setPayeeMsisdn(EnvEnum.isTestEnv(EnvEnum.PROD.getEnv())? MobileEnum.IDR.getMobile()+request.getPayeeMsisdn():MobileEnum.CHINA.getMobile()+request.getPayeeMsisdn());
         log.info("请求地址{},请求报文：{}", prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
         log.info("请求地址{},返回报文：{}", prop.getAbsLoanTransactionUrl(), result);

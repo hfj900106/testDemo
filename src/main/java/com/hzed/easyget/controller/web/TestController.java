@@ -6,7 +6,6 @@ import com.hzed.easyget.controller.model.RepaymentCompleRequest;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.PayResponse;
-import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,15 +37,16 @@ public class TestController {
         return bluePayService.testRepayment(request);
     }
 
-    @ModuleFunc("放款/还款回调接口(测试环境专用)")
-    @PostMapping("/mqCallBackConsumer")
-    public void mqCallBackConsumer(String request) {
-        MdcUtil.putModuleName("人工处理MQ回调");
-        // 记录trace，方便日志追踪
-        MdcUtil.putTrace();
+    @ModuleFunc("人工处理MQ回调")
+    @PostMapping("/manMadeMqCallback")
+    public void manMadeMqCallback(String request) {
         log.info("============================= 人工处理MQ回调开始 =============================");
-        log.info("原始请求报文：{}",request);
-        repayService.mqCallBackConsumer(request);
-        log.info("============================= 人工处理MQ回调结束 =============================");
+        try {
+            repayService.mqCallback(request);
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            log.info("============================= 人工处理MQ回调结束 =============================");
+        }
     }
 }

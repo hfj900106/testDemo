@@ -31,12 +31,11 @@ public class MqConsumer implements ChannelAwareMessageListener {
         MdcUtil.putTrace();
         log.info("============================= MQ交易回调开始 =============================");
         try {
-            log.info("原始报文，message：{}，channel：{}", JSON.toJSONString(messageByte), JSON.toJSON(channel));
-            repayService.mqCallBackConsumer(new String(messageByte.getBody(), "UTF-8"));
+            log.info("原始报文，message：{}，channel：{}", JSON.toJSONString(messageByte), JSON.toJSONString(channel));
+            repayService.mqCallback(new String(messageByte.getBody(), "UTF-8"));
         } catch (Exception ex) {
             log.error("============================= MQ交易回调自动处理失败=============================");
         } finally {
-
             log.info("============================= MQ交易回调开始 =============================");
         }
 

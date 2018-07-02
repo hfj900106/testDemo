@@ -570,7 +570,7 @@ public class RepayService {
      * @param message mq回调报文
      */
     @Transactional(rollbackFor = Exception.class)
-    public void mqCallBackConsumer(String message) {
+    public void mqCallback(String message) {
         log.info("MQ交易 放款/还款 回调，详细返回信息{}", message);
         BluePayRequest bluePayRequest = JSONObject.parseObject(message, BluePayRequest.class);
 

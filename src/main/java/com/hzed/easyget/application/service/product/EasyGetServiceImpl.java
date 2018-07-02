@@ -52,16 +52,16 @@ public class EasyGetServiceImpl implements ProductService {
         bills.forEach(bill -> {
             // 台账公共参数
             BillLedger billLedger = new BillLedger();
-            billLedger.setId(IdentifierGenerator.nextId());
             billLedger.setBillId(bill.getId());
             billLedger.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), bid.getPeriod()));
-            billLedger.setCreateTime(LocalDateTime.now());
 
             // 本金台账
+            billLedger.setId(IdentifierGenerator.nextId());
             billLedger.setRepaymentAmount(bid.getLoanAmount());
             billLedger.setRepaymentItem(BillLedgerItemEnum.CORPUS.getCode().byteValue());
             lists.add(billLedger);
             // 尾款台账
+            billLedger.setId(IdentifierGenerator.nextId());
             billLedger.setRepaymentAmount(product.getTailFee());
             billLedger.setRepaymentItem(BillLedgerItemEnum.TAIL_FEE.getCode().byteValue());
             lists.add(billLedger);

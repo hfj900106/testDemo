@@ -109,7 +109,7 @@ public class JobService {
                     throw new ComBizException(BizCodeEnum.FAIL_PUSH_RISK);
                 }
             } catch (Exception ex) {
-                log.info("标ID：{}，推送失败", bidId);
+                log.info("标ID：{}，推送失败：{}", bidId,ex);
                 //更新中间表
                 TempTable tempUpdate = buildTempTableToUpdate(tempId, (byte) times, "推送失败");
                 tempTableRepository.updateTemp(tempUpdate);

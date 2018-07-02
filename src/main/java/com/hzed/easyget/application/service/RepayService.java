@@ -571,7 +571,7 @@ public class RepayService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void mqCallback(String message) {
-        log.info("详细返回信息{}", message);
+        log.info("详细返回信息：{}", message);
         BluePayRequest bluePayRequest = JSONObject.parseObject(message, BluePayRequest.class);
         // 参数校验
         ValidatorUtil.validateWithNull(bluePayRequest);

@@ -21,7 +21,6 @@ import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -49,9 +48,6 @@ public class LoginService {
     private SystemProp systemProp;
     @Autowired
     SaService saService;
-
-    @Value("${spring.profiles.active}")
-    private String env;
 
     /**
      * 用户登录注册
@@ -197,7 +193,7 @@ public class LoginService {
      */
     private void checkSmsCode(String mobile, String smsCode) {
 
-        if (EnvEnum.isTestEnv(env) && DEFAULT_SMS_CODE.equals(smsCode)) {
+        if (EnvEnum.isTestEnv(systemProp.getEnv()) && DEFAULT_SMS_CODE.equals(smsCode)) {
             return;
         }
 

@@ -29,9 +29,9 @@ public class CallbackController {
     @Autowired
     private CallbackService callbackService;
 
+    @IgnoreHeader
     @ModuleFunc(value = "风控审核回调", isCommonResponse = false)
     @PostMapping("/riskCallback/pushBidCallback")
-    @IgnoreHeader
     public PushBidCallbackResponse pushBidCallback(@Valid @RequestBody PushBidCallbackRequest request) {
         return callbackService.pushBidCallback(request);
     }

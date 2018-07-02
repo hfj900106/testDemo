@@ -44,7 +44,7 @@ public enum BizCodeEnum {
 
     ILLEGAL_SMSCODE("1007", "无效的验证码"),
     ERROR_SMS_RESULT("1008", "运营商认证发送验证码返回数据异常"),
-    ERROR_IDCARD_RESULT("1009", "身份证识别返回数据异常"),
+    USER_NOT_EXIST("1009", "用户不存在"),
     DICT_NOTEXISTS("1010", "字典不存在"),
     NO_USEFUL_PRODUCT("1011", "无可用产品"),
     TOKEN_EXPIRE("1012", "用户登录信息失效"),

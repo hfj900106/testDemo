@@ -15,13 +15,13 @@ public class ProfessionalRequest {
     /**
      * 工作类型
      */
-    @NotNull(message = "{param.auth.jobType.isNotEmpty}")
-    private Integer jobType ;
+    @NotBlank(message = "{param.auth.jobType.isNotEmpty}")
+    private String jobType ;
     /**
      * 月收入
      */
-    @NotNull(message = "{param.auth.monthlyIncome.isNotEmpty}")
-    private Integer monthlyIncome ;
+    @NotBlank(message = "{param.auth.monthlyIncome.isNotEmpty}")
+    private String monthlyIncome ;
     /**
      * 工作证
      */

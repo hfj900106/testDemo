@@ -35,8 +35,6 @@ public class RepayController {
     private RepayService repayService;
     @Autowired
     private ComService comService;
-    @Autowired
-    private BluePayService bluePayService;
 
     @ModuleFunc("还款列表")
     @PostMapping("/repaidList")
@@ -71,24 +69,19 @@ public class RepayController {
 
     @ModuleFunc("生成VA码")
     @PostMapping("/vaInfoDetail")
-    public TransactionVAResponse vaInfoDetail(@Valid @RequestBody TransactionVARequest request) {
+    public TransactionVaResponse vaInfoDetail(@Valid @RequestBody TransactionVaRequest request) {
         return repayService.findVaTranc(request);
     }
 
-    @ModuleFunc("还款接口(测试环境专用)")
-    @PostMapping("/testRepayment")
-    public PayResponse testRepayment(@Valid @RequestBody RepaymentCompleRequest request) {
-        return bluePayService.testRepayment(request);
-    }
 
-    @ModuleFunc("获取va码记录")
-    @RequestMapping("/getVaHistory")
+    @ModuleFunc("已生成va码列表")
+    @PostMapping("/getVaHistory")
     public List<VaHistoryResponse> getVaHistory(@Valid @RequestBody VaHistoryRequest request) {
         return repayService.getVaHistory(request);
     }
 
     @ModuleFunc("提交图片凭证")
-    @RequestMapping("/uploadPicEvidence")
+    @PostMapping("/uploadPicEvidence")
     public void uploadPicEvidence(@Valid @RequestBody UploadPicEvidenceRequest request) {
         repayService.uploadPicEvidence(request);
     }

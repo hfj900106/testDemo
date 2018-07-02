@@ -104,7 +104,7 @@ public class SaService {
         // EventResult	事件结果	字符串
         properties.put("EventResult", auditSuggest);
         // ProductType	产品名称	字符串
-        properties.put("ProductType", SaConsts.projectName);
+        properties.put("ProductType", SaConsts.PROJEC_TNAME);
         int loanTimes = calculateLoanTimes(info.getUserId());
         // LoanTimes	第几次借款	数值
         properties.put("LoanTimes", loanTimes);
@@ -189,7 +189,7 @@ public class SaService {
         // InDataID	     进件订单ID	字符串
         properties.put("InDataID", info.getBidId());
         // ProductType	产品名称	字符串    //1:立借、2:爱分期    ProductType	产品名称	字符串
-        properties.put("ProductType", SaConsts.projectName);
+        properties.put("ProductType", SaConsts.PROJEC_TNAME);
         // RepaymentTime 合约还款日期	日期
         properties.put("RepaymentTime", info.getRealRepaymentTime());
         int loanTimes = calculateLoanTimes(info.getUserId());
@@ -267,7 +267,7 @@ public class SaService {
         //    InDataID	进件订单ID	字符串
         properties.put("InDataID", info.getBidId());
         //    ProductType	产品名称	字符串
-        properties.put("ProductType", SaConsts.projectName);
+        properties.put("ProductType", SaConsts.PROJEC_TNAME);
         //    RepaymentMethod	还款方式	字符串  全额还款、部分还款
         properties.put("RepaymentMethod", isAlreadyRepayment(info));
         //    RepaymentTime	合约还款日期	日期

@@ -16,7 +16,9 @@ import lombok.Data;
  */
 @Data
 public class MyThrowableRenderer implements IThrowableRenderer<ILoggingEvent> {
-    // Message
+    /**
+     * Message
+     */
     private String message;
 
     static final String TRACE_PREFIX = "<br />&nbsp;&nbsp;&nbsp;&nbsp;";

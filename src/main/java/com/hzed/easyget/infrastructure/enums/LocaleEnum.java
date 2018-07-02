@@ -33,7 +33,7 @@ public enum LocaleEnum {
     public static Locale getLocale(String i18n) {
         if (StringUtils.isBlank(i18n)) {
             // 默认中文
-            return zh_CN.getLocale();
+            return Locale.getDefault();
         }
 
         for (LocaleEnum localeEnum : LocaleEnum.values()) {

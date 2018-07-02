@@ -240,7 +240,7 @@ public final class DateUtil {
      * @param localTime
      * @return
      */
-    public static boolean compareDay(LocalDateTime localTime){
+    public static boolean isToday(LocalDateTime localTime){
         LocalDateTime startTime = LocalDate.now().atTime(0, 0, 0);
         LocalDateTime endTime = LocalDate.now().atTime(23, 59, 59);
 

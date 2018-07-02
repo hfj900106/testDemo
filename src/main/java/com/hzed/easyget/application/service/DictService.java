@@ -1,18 +1,15 @@
 package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
-import com.hzed.easyget.application.enums.DictEnum;
 import com.hzed.easyget.controller.model.DictRequest;
 import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.controller.model.IDAreaRequest;
 import com.hzed.easyget.controller.model.IDAreaResponse;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
-import com.hzed.easyget.infrastructure.repository.AuthItemRepository;
 import com.hzed.easyget.infrastructure.repository.DictRepository;
 import com.hzed.easyget.infrastructure.repository.IDAreaRepository;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
-import com.hzed.easyget.persistence.auto.entity.AuthItem;
 import com.hzed.easyget.persistence.auto.entity.Dict;
 import com.hzed.easyget.persistence.auto.entity.IDArea;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +31,6 @@ public class DictService {
     private DictRepository dictRepository;
     @Autowired
     private RedisService redisService;
-    @Autowired
-    private AuthItemRepository authItemRepository;
     @Autowired
     private IDAreaRepository idAreaRepository;
 
@@ -64,21 +59,9 @@ public class DictService {
         List<Dict> dictList = dictRepository.findByModuleCodeAndLanguage(moduleCode, i18n);
         dictList.forEach(dict -> {
             DictResponse dictResponse = new DictResponse();
-            if (DictEnum.AUTH_MODULE_CODE.getCode().equals(dict.getModuleCode())) {
-                AuthItem authItem = authItemRepository.findByCode(dict.getDicCode());
-
-                if (authItem != null) {
-                    dictResponse.setDictCode(dict.getDicCode());
-                    dictResponse.setDictValue(dict.getDicValue());
-                    dictResponse.setDictName(dict.getDicName());
-
-                }
-
-            } else {
-                dictResponse.setDictCode(dict.getDicCode());
-                dictResponse.setDictValue(dict.getDicValue());
-                dictResponse.setDictName(dict.getDicName());
-            }
+            dictResponse.setDictCode(dict.getDicCode());
+            dictResponse.setDictValue(dict.getDicValue());
+            dictResponse.setDictName(dict.getDicName());
             dictResponseList.add(dictResponse);
         });
 

@@ -3,15 +3,17 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 
 /**
-*@description：完成还款求情bluepay实体
-*@author：[zhangruilin]
-*@time：2018/6/18-17:10
-**/
+ * 完成还款求情bluepay实体
+ *
+ * @author zhangruilin
+ * @date 2018/6/18
+ **/
 @Data
 public class RepaymentCompleRequest {
     /**
@@ -21,7 +23,6 @@ public class RepaymentCompleRequest {
     private String transactionId;
     /**
      * 支付方式
-     *
      */
     @Pattern(regexp = "^atm|otc$", message = "支付方式必须是atm或者otc")
     private String payType;
@@ -37,12 +38,13 @@ public class RepaymentCompleRequest {
     /**
      * 手机号
      */
-    @NotBlank(message ="手机号不能为空(国内：+86，印尼+62)")
+    @NotBlank(message = "手机号不能为空(国内：+86，印尼+62)")
     private String msisdn;
     /**
      * 交易金额
      */
     @NotNull(message = "交易金额不能为空")
+    @Min(value = 10000)
     private BigDecimal price;
     /**
      * 流水号

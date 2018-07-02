@@ -54,27 +54,33 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    FileService fileService;
+    private FileService fileService;
     @Autowired
     private SaService saService;
     @Autowired
     private RiskService riskService;
+    @Autowired
+    private DictRepository dictRepository;
 
     /**
      * 获取用户认证状态
      */
-    public List<AuthStatusResponse> getAuthStatus() {
+    public List<AuthStatusResponse> getAuthStatus(AuthStatusRequest request) {
         List<AuthStatusResponse> authStatusList = Lists.newArrayList();
         Long userId = RequestUtil.getGlobalUser().getUserId();
-        List<UserAuthStatus> userAuthStatus = authStatusRepository.getAuthStatusByUserId(userId);
-        userAuthStatus.forEach(uas -> {
-            AuthItem auth = authStatusRepository.findAuthByCode(uas.getAuthCode());
+        String i18n = RequestUtil.getGlobalHead().getI18n();
+        List<Dict> dictList = dictRepository.findEnableByModuleCodeAndLanguage(request.getCode(), i18n);
+        dictList.forEach(dict -> {
+            UserAuthStatus userAuthStatus = authStatusRepository.findEnableAuthStatusByUserId(userId, dict.getDicCode());
             AuthStatusResponse authStatusResponse = new AuthStatusResponse();
-            authStatusResponse.setCode(uas.getAuthCode());
-            authStatusResponse.setStatus(String.valueOf(uas.getAuthStatus()));
-            authStatusResponse.setIsUse(auth.getIsUse());
+            authStatusResponse.setAuthCode(dict.getDicCode());
+            authStatusResponse.setAuthName(dict.getDicValue());
+            if (!ObjectUtils.isEmpty(userAuthStatus)) {
+                authStatusResponse.setAuthStatus(String.valueOf(userAuthStatus.getAuthStatus()));
+            }
             authStatusList.add(authStatusResponse);
         });
+
         return authStatusList;
     }
 
@@ -195,11 +201,28 @@ public class AuthService {
         IdCardRecognitionResponse recognitionResponse = new IdCardRecognitionResponse();
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         RiskResponse response = riskService.idCardRecognition(idCardBase64ImgStr);
+
+        if(ObjectUtils.isEmpty(response.getBody())){
+            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
+        }
+
         String bobyStr = response.getBody().toString();
-        JSONObject jsonObject = JSONObject.parseObject(bobyStr, JSONObject.class).getJSONObject("data");
-        String name = jsonObject.getString("name");
-        String gender = jsonObject.getString("gender");
-        String idNumber = jsonObject.getString("idNumber");
+        if(ObjectUtils.isEmpty(bobyStr)){
+            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
+        }
+
+        JSONObject obj = JSONObject.parseObject(bobyStr, JSONObject.class);
+        if(ObjectUtils.isEmpty(obj)){
+            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
+        }
+
+        JSONObject data = obj.getJSONObject("data");
+        if(ObjectUtils.isEmpty(data)){
+            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
+        }
+        String name = data.getString("name");
+        String gender = data.getString("gender");
+        String idNumber = data.getString("idNumber");
         recognitionResponse.setName(name);
         int genderInt = 1;
         if (!ObjectUtils.isEmpty(gender) && ComConsts.FEMALE.equalsIgnoreCase(gender)) {
@@ -243,7 +266,6 @@ public class AuthService {
             userObj.setIdCardNo(idCardNo);
             userObj.setGender(gender.byteValue());
             userObj.setUpdateTime(LocalDateTime.now());
-            userObj.setUpdateBy(user.getUserId());
             //组装pic对象
             List<UserPic> list = Lists.newArrayList();
             list.add(UserPic.builder().id(IdentifierGenerator.nextId()).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
@@ -268,12 +290,10 @@ public class AuthService {
             Work work = new Work();
             work.setId(IdentifierGenerator.nextId());
             work.setUserId(user.getUserId());
-            work.setJobType(request.getJobType().byteValue());
-            work.setMonthlyIncome(request.getMonthlyIncome().byteValue());
+            work.setJobType(request.getJobType());
+            work.setMonthlyIncome(request.getMonthlyIncome());
             work.setEmployeeCard(employeeCardPhotoPath);
             work.setWorkplace(workplacePhotoPath);
-            work.setCreateBy(user.getUserId());
-            work.setCreateTime(LocalDateTime.now());
             work.setRemark("专业信息认证");
             //获取UserAuthStatus对象
             UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.PROFESSIONAL.getCode(), "专业信息认证");
@@ -285,7 +305,7 @@ public class AuthService {
     }
 
     private void afterResponse(RiskResponse response, Long userId, String code, String remark) {
-        if (null == response) {
+        if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
@@ -336,6 +356,18 @@ public class AuthService {
         }
         UserAuthStatus userAuthStatus = buildUserAuthStatus(request.getUserId(), AuthCodeEnum.INS.getCode(), "ins认证");
         authStatusRepository.insertSelective(userAuthStatus);
+    }
+
+    /**
+     * facebook和ins认证-风控回调
+     *
+     * @param request
+     */
+    public void facebookAndIns(FacebookInsRequest request) {
+        String taskId = request.getTaskId();
+        int source = "android".equals(getGlobalHead().getPlatform()) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
+        GlobalUser user = getGlobalUser();
+        riskService.facebookAndIns(user.getUserId(),taskId,source);
     }
 
 

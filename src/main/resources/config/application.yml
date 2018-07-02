@@ -59,7 +59,7 @@ thirdParty:
     operatorAuthUrl:          /api/riskOperator/sendSmsCode  # 运营商-输入验证码认证
     identityInfoUrl:          /api/risk/core/identity   # 身份信息认证
     pushBidUrl:               /api/risk/auto/antifraud  # 风控审核
-
+    facebookAndInsUrl:       /api/riskSocial/certificationNotify  #facebook和ins认证时数据推风控
 #======================================= 系统参数 开始 =======================================#
 system:
   imgUploadPath: c:/imgUpload # 上传图片文件目录

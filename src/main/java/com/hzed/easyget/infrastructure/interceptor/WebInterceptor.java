@@ -45,7 +45,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         if (moduleFunc != null) {
             // 设置模块名
             MdcUtil.putModuleName(moduleFunc.value());
-            String body = ComUtil.subString(request.getAttribute("body").toString(), moduleFunc.printParameterLength());
+            String body = ComUtil.subJsonString(request.getAttribute("body").toString(), moduleFunc.printParameterLength());
             log.info("请求报文：{}", StringUtils.isBlank(body) ? "无请求参数" : body);
         }
 

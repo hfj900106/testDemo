@@ -25,7 +25,7 @@ public class AdsService {
     private AdsProductRepository adsProductRepository;
 
     public List<AdsProductResponse> getAdsProductList(AdsProductListRequest request) {
-        ArrayList<AdsProductResponse> AdsProductResponseList = Lists.newArrayList();
+        ArrayList<AdsProductResponse> adsProductResponseList = Lists.newArrayList();
 
         Integer pageNo = request.getPageNo();
         Integer pageSize = request.getPageSize();
@@ -33,17 +33,17 @@ public class AdsService {
         List<AdsProduct> adsProductList = adsProductRepository.getAdsProductList(pageNo,pageSize);
 
         adsProductList.forEach(adsProduct -> {
-            AdsProductResponse AdsProductResponse = new AdsProductResponse();
-            AdsProductResponse.setTitle(adsProduct.getTitle());
-            AdsProductResponse.setImgUrl(adsProduct.getImgUrl());
-            AdsProductResponse.setLinkUrl(adsProduct.getLinkUrl());
-            AdsProductResponse.setAmountInterval(adsProduct.getAmountInterval());
-            AdsProductResponse.setWeights(adsProduct.getWeights());
-            AdsProductResponse.setUpTime(DateUtil.localDateTimeToStr2(adsProduct.getUpTime()));
-            AdsProductResponse.setDownTime(DateUtil.localDateTimeToStr2(adsProduct.getDownTime()));
-            AdsProductResponseList.add(AdsProductResponse);
+            AdsProductResponse adsProductResponse = new AdsProductResponse();
+            adsProductResponse.setTitle(adsProduct.getTitle());
+            adsProductResponse.setImgUrl(adsProduct.getImgUrl());
+            adsProductResponse.setLinkUrl(adsProduct.getLinkUrl());
+            adsProductResponse.setAmountInterval(adsProduct.getAmountInterval());
+            adsProductResponse.setWeights(adsProduct.getWeights());
+            adsProductResponse.setUpTime(DateUtil.localDateTimeToStr2(adsProduct.getUpTime()));
+            adsProductResponse.setDownTime(DateUtil.localDateTimeToStr2(adsProduct.getDownTime()));
+            adsProductResponseList.add(adsProductResponse);
         });
 
-        return AdsProductResponseList;
+        return adsProductResponseList;
     }
 }

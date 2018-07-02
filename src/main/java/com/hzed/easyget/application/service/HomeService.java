@@ -1,5 +1,6 @@
 package com.hzed.easyget.application.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AppVersionEnum;
 import com.hzed.easyget.application.enums.ProductEnum;
@@ -20,11 +21,11 @@ import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.*;
-import com.hzed.easyget.persistence.ext.entity.TransactionExt;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -49,15 +50,13 @@ public class HomeService {
     @Autowired
     private NewsRepository newsRepository;
     @Autowired
-    private ComService comService;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private BidRepository bidRepository;
     @Autowired
     private UserLoanVisitRepository userLoanVisitRepository;
     @Autowired
-    private UserRepaymentVisitRepository userRepaymentVisitRepository;
+    private RiskService riskService;
 
     private static final String ANDROID_BOMB = "android_bomb";
     private static final String IOS_BOMB = "ios_bomb";
@@ -77,26 +76,16 @@ public class HomeService {
     public AppVersionResponse getAppVersion(AppVersionRequest request) {
 
         AppVersionResponse appVersionResponse = new AppVersionResponse();
-        String platform = RequestUtil.getGlobalHead().getPlatform();
-        String oldVersion = request.getOldVersion();
-        String verDicCode;
-        String updateDicCode;
-        if (AppVersionEnum.ANDROID.getCode().equals(platform)) {
-            verDicCode = AppVersionEnum.ANDROID_VERSION.getCode();
-            updateDicCode = AppVersionEnum.ANDROID_UPDATE.getCode();
-        } else if (AppVersionEnum.IOS.getCode().equals(platform)) {
-            verDicCode = AppVersionEnum.IOS_VERSION.getCode();
-            updateDicCode = AppVersionEnum.IOS_UPDATE.getCode();
-        } else {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_PARAM);
-        }
+        String oldVersion = RequestUtil.getGlobalHead().getVersion();
+        String channel = request.getChannel();
 
-        Dict verDict = dictService.getDictByCode(verDicCode);
-        Dict updateDict = dictService.getDictByCode(updateDicCode);
+        Dict verDict = dictService.getDictByCode(channel);
+        String dictLabelJson = verDict.getDicLabel();
+        JSONObject jsonObject = JSONObject.parseObject(dictLabelJson);
         appVersionResponse.setVersion(verDict.getDicValue());
-        appVersionResponse.setPath(verDict.getDicLabel());
+        appVersionResponse.setPath(jsonObject.getString("update_url"));
         appVersionResponse.setIsUpdate(checkIsUpdate(oldVersion, verDict.getDicValue()));
-        appVersionResponse.setIsForce(updateDict.getDicValue());
+        appVersionResponse.setIsForce(jsonObject.getString("is_force"));
         return appVersionResponse;
     }
 
@@ -130,9 +119,11 @@ public class HomeService {
         String imei = RequestUtil.getGlobalHead().getImei();
         UserToken utk = userTokenRepository.findByUserIdAndImei(userId, imei);
         // 时间是今天，就不用更新token
-        LocalDateTime updateTime = utk.getUpdateTime();
-        if (updateTime != null && DateUtil.compareDay(updateTime)) {
-            return UpdateTokenResponse.builder().token(RequestUtil.getGlobalHead().getToken()).build();
+        if (!ObjectUtils.isEmpty(utk)) {
+            LocalDateTime updateTime = utk.getUpdateTime();
+            if (updateTime != null && DateUtil.isToday(updateTime)) {
+                return UpdateTokenResponse.builder().token(RequestUtil.getGlobalHead().getToken()).build();
+            }
         }
 
         String newToken = JwtUtil.createToken(globalUser);
@@ -177,7 +168,7 @@ public class HomeService {
         }
 
         List<News> newList = newsRepository.getBombList(pageNo, pageSize);
-        for (News news: newList) {
+        for (News news : newList) {
             NewsResponse newsResponse = new NewsResponse();
             newsResponse.setNewsTitle(news.getTitle());
             newsResponse.setImgUrl(news.getImgUrl());
@@ -189,17 +180,17 @@ public class HomeService {
     }
 
     public void checkLoan() {
-        final String MK_02 = "MK02";
+        final String mk02 = "MK02";
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String imei = RequestUtil.getGlobalHead().getImei();
         User user = userRepository.findById(userId);
 
-        RiskResponse response = comService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
+        RiskResponse response = riskService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
         String errorCode = response.getHead().getError_code();
 
         if (StringUtils.isNotBlank(errorCode)) {
             //每日通过超过数量
-            if (MK_02.equals(errorCode)) {
+            if (mk02.equals(errorCode)) {
                 throw new WarnException(BizCodeEnum.INSUFFICIENT_QUOTA);
             } else {
                 throw new WarnException(BizCodeEnum.UN_LOAN_QUALIFICATION);
@@ -218,7 +209,7 @@ public class HomeService {
             UserLoanVisit userVisitRecord = userLoanVisitRepository.findByUserIdAndBidId(userId, bid.getId());
             if (userVisitRecord == null) {
                 checkLoanResponse.setBid(bid.getId());
-                throw new WarnException(BizCodeEnum.NEED_JUMP,checkLoanResponse);
+                throw new WarnException(BizCodeEnum.NEED_JUMP, checkLoanResponse);
             }
         });
         return checkLoanResponse;

@@ -6,13 +6,16 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
- * 短信授权请求
- *
+ * facebook和ins认证时数据推风控请求参数
  * @author hfj
- * @date 2018/5/21
+ * @date 2018/6/18
  */
-
 @Data
-public class MessagesRequest {
-    private Object message;
+public class FacebookInsRequest {
+    /**
+     * taskId
+     */
+    @NotBlank
+    private String taskId ;
+
 }

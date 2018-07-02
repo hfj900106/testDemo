@@ -61,7 +61,9 @@ public class RepayRepository {
         //插入还款定时任务
         repayInfoFlowJobMapper.insertSelective(repayInfoFlowJob);
         //修改va码信息
-        repayMapper.updateByPrimaryKey(repayUpdate);
+        UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
+        repayExample.createCriteria().andPaymentIdEqualTo(repayUpdate.getPaymentId());
+        repayMapper.updateByExampleSelective(repayUpdate, repayExample);
     }
 
     /**
@@ -81,8 +83,8 @@ public class RepayRepository {
                 .andBidIdEqualTo(id)
                 .andAmountEqualTo(amount)
                 .andRepaymentTypeEqualTo(repayMentType)
-                .andCreateTimeGreaterThanOrEqualTo(time)
-                .andVaExpireTimeLessThan(time)
+                .andVaCreateTimeLessThanOrEqualTo(time)
+                .andVaExpireTimeGreaterThan(time)
                 .example().orderBy(UserTransactionRepay.Column.createTime.desc()).limit(1);
         return repayMapper.selectOneByExample(repayExample);
     }
@@ -93,10 +95,9 @@ public class RepayRepository {
      * @param paymentId 订单号
      * @return va码信息
      */
-    public UserTransactionRepay findReayInfoByPayMentId(String paymentId) {
+    public UserTransactionRepay findRepayInfoByPaymentId(String paymentId) {
         UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
-        repayExample.createCriteria()
-                .andPaymentIdEqualTo(paymentId);
+        repayExample.createCriteria().andPaymentIdEqualTo(paymentId);
         return repayMapper.selectOneByExample(repayExample);
     }
 
@@ -111,8 +112,8 @@ public class RepayRepository {
                 .andAmountEqualTo(amount)
                 .andRepaymentTypeEqualTo(repayMentType)
                 .andModeEqualTo(mode)
-                .andCreateTimeGreaterThanOrEqualTo(time)
-                .andVaExpireTimeLessThan(time)
+                .andVaCreateTimeLessThanOrEqualTo(time)
+                .andVaExpireTimeGreaterThan(time)
                 .example().orderBy(UserTransactionRepay.Column.createTime.desc()).limit(1);
         return repayMapper.selectOneByExample(repayExample);
     }

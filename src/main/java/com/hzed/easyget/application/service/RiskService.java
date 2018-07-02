@@ -17,6 +17,7 @@ import com.hzed.easyget.infrastructure.utils.ComUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -26,6 +27,7 @@ import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 
 /**
  * 与风控交互
+ *
  * @author hfj
  * @date 2018/6/28
  */
@@ -44,12 +46,13 @@ public class RiskService {
 
     /**
      * 通讯录认证
+     *
      * @param contacts
      * @param callRecord
      * @param source
      * @return
      */
-    public RiskResponse authContacts(Object contacts,Object callRecord,Integer source){
+    public RiskResponse authContacts(Object contacts, Object callRecord, Integer source) {
         GlobalUser user = getGlobalUser();
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
@@ -60,13 +63,13 @@ public class RiskService {
         map.put("callRecord", callRecord);
         map.put("source", source);
         String url = riskProp.getContactsUrl();
-        log.info("请求风控URL：{},参数：{}",url,ComUtil.subJsonString(JSON.toJSONString(map), 500));
+        log.info("请求风控URL：{},参数：{}", url, ComUtil.subJsonString(JSON.toJSONString(map), 500));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
+        log.info("风控返回数据：{}", JSONObject.toJSONString(response));
         return response;
     }
 
-    public RiskResponse authMessages(Object messages,Integer source){
+    public RiskResponse authMessages(Object messages, Integer source) {
         GlobalUser user = getGlobalUser();
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
@@ -76,13 +79,13 @@ public class RiskService {
         map.put("sms", messages);
         map.put("source", source);
         String url = riskProp.getMessagesUrl();
-        log.info("请求风控URL：{},参数：{}",url,ComUtil.subJsonString(JSON.toJSONString(map), 500));
+        log.info("请求风控URL：{},参数：{}", url, ComUtil.subJsonString(JSON.toJSONString(map), 500));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
+        log.info("风控返回数据：{}", JSONObject.toJSONString(response));
         return response;
     }
 
-    public void operatorSendSmsCode(Integer source){
+    public void operatorSendSmsCode(Integer source) {
         GlobalUser user = getGlobalUser();
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
@@ -91,10 +94,10 @@ public class RiskService {
         map.put("timeStamp", timeStamp);
         map.put("source", source);
         String url = riskProp.getOperatorSendSmsCodeUrl();
-        log.info("请求风控URL：{},参数：{}",url,ComUtil.subJsonString(JSON.toJSONString(map), 500));
+        log.info("请求风控URL：{},参数：{}", url, ComUtil.subJsonString(JSON.toJSONString(map), 500));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
-        if (null == response) {
+        log.info("风控返回数据：{}", JSONObject.toJSONString(response));
+        if (ObjectUtils.isEmpty(response)) {
             saService.saOperator(user, false, BizCodeEnum.ERROR_RISK__RESULT.getMessage());
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
@@ -120,7 +123,7 @@ public class RiskService {
     }
 
 
-    public RiskResponse operatorAuth(String smsCode){
+    public RiskResponse operatorAuth(String smsCode) {
         GlobalUser user = getGlobalUser();
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
@@ -129,9 +132,12 @@ public class RiskService {
         map.put("timeStamp", timeStamp);
         map.put("smsCode", smsCode);
         String url = riskProp.getOperatorAuthUrl();
-        log.info("请求风控URL：{},参数：{}",url,ComUtil.subJsonString(JSON.toJSONString(map), 500));
+        log.info("请求风控URL：{},参数：{}", url, ComUtil.subJsonString(JSON.toJSONString(map), 500));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
+        log.info("风控返回数据：{}", JSON.toJSONString(response));
+        if (ObjectUtils.isEmpty(response)) {
+            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+        }
         if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_FREQ)) {
             //认证频繁，要等一分钟再认证
             saService.saOperator(user, false, BizCodeEnum.FREQUENTLY_AUTH_RISK.getMessage());
@@ -156,7 +162,7 @@ public class RiskService {
         return response;
     }
 
-    public RiskResponse idCardRecognition(String idCardBase64ImgStr){
+    public RiskResponse idCardRecognition(String idCardBase64ImgStr) {
         GlobalUser user = getGlobalUser();
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
@@ -166,10 +172,10 @@ public class RiskService {
         map.put("imageFile", idCardBase64ImgStr);
 
         String url = riskProp.getIdCardRecognitionUrl();
-        log.info("请求风控URL：{},参数：{}",url,ComUtil.subJsonString(JSON.toJSONString(map), 500));
+        log.info("请求风控URL：{},参数：{}", url, ComUtil.subJsonString(JSON.toJSONString(map), 500));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
-        if (null == response) {
+        if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
@@ -178,7 +184,7 @@ public class RiskService {
         return response;
     }
 
-    public void faceRecognition(String faceBase64ImgStr){
+    public void faceRecognition(String faceBase64ImgStr) {
         GlobalUser user = getGlobalUser();
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
@@ -188,10 +194,10 @@ public class RiskService {
         map.put("imageFile", faceBase64ImgStr);
 
         String url = riskProp.getFaceRecognitionUrl();
-        log.info("请求风控URL：{},参数：{}",url,ComUtil.subJsonString(JSON.toJSONString(map), 500));
+        log.info("请求风控URL：{},参数：{}", url, ComUtil.subJsonString(JSON.toJSONString(map), 500));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}", JSONObject.toJSONString(response));
-        if (null == response) {
+        log.info("风控返回数据：{}", JSON.toJSONString(response));
+        if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
@@ -199,7 +205,7 @@ public class RiskService {
         }
     }
 
-    public void identityInfoAuth(){
+    public void identityInfoAuth() {
         GlobalUser user = getGlobalUser();
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
@@ -208,10 +214,10 @@ public class RiskService {
         map.put("timeStamp", timeStamp);
 
         String url = riskProp.getIdentityInfoUrl();
-        log.info("请求风控URL：{},参数：{}",url,ComUtil.subJsonString(JSON.toJSONString(map), 500));
+        log.info("请求风控URL：{},参数：{}", url, ComUtil.subJsonString(JSON.toJSONString(map), 500));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}" ,JSONObject.toJSONString(response));
-        if (null == response) {
+        log.info("风控返回数据：{}", JSON.toJSONString(response));
+        if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
@@ -219,17 +225,42 @@ public class RiskService {
         }
     }
 
-
+    /**
+     * 根据用户手机号，imei通过用户查询风控是否有贷款规则
+     */
     public RiskResponse checkRiskEnableBorrow(String mobile, String imei) {
         Map<String, String> paramMap = Maps.newHashMap();
         paramMap.put("mobile", mobile);
         paramMap.put("imei", imei);
-        log.info("查询风控是否有贷款规则请求报文：{}", paramMap);
-        RiskResponse response = restService.postJson(riskProp.getAbsCheckRiskEnableBorrowUrl(), paramMap, RiskResponse.class);
-        log.info("查询风控是否有贷款规则返回报文：{}", response);
+        String url = riskProp.getAbsCheckRiskEnableBorrowUrl();
+        log.info("查询风控是否有贷款规则请求URL：{},参数：{}", url, JSON.toJSONString(paramMap));
+        RiskResponse response = restService.postJson(url, paramMap, RiskResponse.class);
+        log.info("查询风控是否有贷款规则返回报文：{}", JSON.toJSONString(response));
         return response;
 
     }
+
+    public void facebookAndIns(Long userId, String taskId, Integer source) {
+
+        Long timeStamp = System.currentTimeMillis();
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("sign", AesUtil.aesEncode(userId, timeStamp));
+        map.put("userId", userId);
+        map.put("timeStamp", timeStamp);
+        map.put("taskId", taskId);
+        map.put("source", source);
+        String url = riskProp.getFacebookAndInsUrl();
+        log.info("请求风控URL：{},参数：{}", url, JSON.toJSONString(map));
+        RiskResponse response = restService.postJson(url, map, RiskResponse.class);
+        log.info("风控返回数据：{}", JSON.toJSONString(response));
+        if (ObjectUtils.isEmpty(response)) {
+            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+        }
+        if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
+            throw new WarnException(BizCodeEnum.FAIL_AUTH);
+        }
+    }
+
 }
 
 

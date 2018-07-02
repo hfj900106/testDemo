@@ -1,22 +1,18 @@
 package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.BillLedgerItemEnum;
 import com.hzed.easyget.application.enums.BillStatusEnum;
 import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
-import com.hzed.easyget.infrastructure.config.RiskProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
-import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.BillLedgerRepository;
 import com.hzed.easyget.infrastructure.repository.BillRepository;
@@ -31,11 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 一些公用的方法
@@ -56,12 +52,6 @@ public class ComService {
     private BidRepository bidRepository;
     @Autowired
     private BillLedgerRepository billLedgerRepository;
-    @Autowired
-    private RestService restService;
-    @Autowired
-    private RiskProp riskProp;
-    @Autowired
-    private RiskService riskService;
 
     /**
      * 校验token参数
@@ -118,12 +108,12 @@ public class ComService {
         boolean overdueFlag = false;
         for (BillLedger ledger : ledgers) {
             total = total.add(getBillItemNoRepayFee(ledger.getBillId(), ledger.getRepaymentItem().intValue(), realRepaymentTime));
-            if(BillLedgerItemEnum.OVERDUE_FEE.getCode().intValue() == ledger.getRepaymentItem().intValue()) {
+            if (BillLedgerItemEnum.OVERDUE_FEE.getCode().intValue() == ledger.getRepaymentItem().intValue()) {
                 overdueFlag = true;
             }
         }
         // 单独处理逾期费
-        if(!overdueFlag) {
+        if (!overdueFlag) {
             total = total.add(getBillItemNoRepayFee(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode(), realRepaymentTime));
         }
         return total;
@@ -194,23 +184,13 @@ public class ComService {
     /**
      * 根据bid状态判断用户是否有贷款资格
      */
-    @Deprecated
     public boolean isLoan(Long userId) {
         List<Bid> bidList = bidRepository.findByUserIdAndStatus(userId, Lists.newArrayList(BidStatusEnum.RISK_ING.getCode().byteValue(), BidStatusEnum.MANMADE_ING.getCode().byteValue(),
                 BidStatusEnum.AUDIT_PASS.getCode().byteValue(), BidStatusEnum.REPAYMENT.getCode().byteValue()));
-        if (bidList == null || bidList.isEmpty()) {
+        if (ObjectUtils.isEmpty(bidList)) {
             return true;
         }
         return false;
-    }
-
-    /**
-     * 根据用户手机号，imei通过用户查询风控是否有贷款规则
-     */
-
-    public RiskResponse checkRiskEnableBorrow(String mobile, String imei) {
-        return riskService.checkRiskEnableBorrow(mobile,imei);
-
     }
 
 

@@ -57,7 +57,7 @@
         <asynchronousSending>true</asynchronousSending>
         <!-- html格式-->
         <layout class="com.hzed.easyget.infrastructure.config.logback.MyHTMLLayout">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}%X{trace}%-5level%logger{50}%msg</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}%X{trace}%X{moduleName}%-5level%logger{50}%msg</pattern>
         </layout>
         <!-- 这里采用等级过滤器 指定等级相符才发送 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -78,13 +78,13 @@
 
     <!-- 环境输出日志类型 关联 spring.profiles.active-->
     <springProfile name="dev">
-        <root level="debug">
+        <root level="info">
             <appender-ref ref="STDOUT"/>
         </root>
     </springProfile>
 
     <springProfile name="test">
-        <root level="debug">
+        <root level="info">
             <appender-ref ref="FILE"/>
             <appender-ref ref="EMAIL"/>
         </root>

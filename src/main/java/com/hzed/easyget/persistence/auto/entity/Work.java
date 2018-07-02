@@ -15,14 +15,14 @@ public class Work implements Serializable {
     private Long userId;
 
     /**
-     * 工作类型，1  会计/财务官员，2  客户服务， 3  工程师，4  执行， 5  一般管理， 6  信息技术
+     * 工作类型
      */
-    private Byte jobType;
+    private String jobType;
 
     /**
-     * 每月收入，1 低于200万，2  200-400万，3  400-800万，4  800以上
+     * 月收入
      */
-    private Byte monthlyIncome;
+    private String monthlyIncome;
 
     /**
      * 工作证照片保存路径
@@ -72,20 +72,20 @@ public class Work implements Serializable {
         this.userId = userId;
     }
 
-    public Byte getJobType() {
+    public String getJobType() {
         return jobType;
     }
 
-    public void setJobType(Byte jobType) {
-        this.jobType = jobType;
+    public void setJobType(String jobType) {
+        this.jobType = jobType == null ? null : jobType.trim();
     }
 
-    public Byte getMonthlyIncome() {
+    public String getMonthlyIncome() {
         return monthlyIncome;
     }
 
-    public void setMonthlyIncome(Byte monthlyIncome) {
-        this.monthlyIncome = monthlyIncome;
+    public void setMonthlyIncome(String monthlyIncome) {
+        this.monthlyIncome = monthlyIncome == null ? null : monthlyIncome.trim();
     }
 
     public String getEmployeeCard() {
@@ -187,12 +187,12 @@ public class Work implements Serializable {
             return this;
         }
 
-        public Builder jobType(Byte jobType) {
+        public Builder jobType(String jobType) {
             obj.setJobType(jobType);
             return this;
         }
 
-        public Builder monthlyIncome(Byte monthlyIncome) {
+        public Builder monthlyIncome(String monthlyIncome) {
             obj.setMonthlyIncome(monthlyIncome);
             return this;
         }

@@ -20,6 +20,7 @@ spring:
     host: 10.10.30.37
     port: 3037
     password: masterpass
+  # 国际化配置
   messages:
     basename: i18n/messages
     encoding: utf-8
@@ -34,12 +35,12 @@ logging:
   envNameCN: 开发环境 # 环境中文名
   emailTo: guichang@hzed.com # 邮件接收者，多个用逗号隔开
 
-# 阿里云配置
-aliyun:
-  endpoint: http://oss-cn-shenzhen.aliyuncs.com
-  accessKeyId: LTAIxzelwCX3fyTQ
-  accessKeySecret: IwfH6vAH0rZWK3wL2aK3hTopsWVb6t
-  bucketName: hzed-ccard #存储空间目录
+# 阿里云配置 暂废弃
+#aliyun:
+#  endpoint: http://oss-cn-shenzhen.aliyuncs.com
+#  accessKeyId: LTAIxzelwCX3fyTQ
+#  accessKeySecret: IwfH6vAH0rZWK3wL2aK3hTopsWVb6t
+#  bucketName: hzed-ccard #存储空间目录
 
 # 第三方
 thirdParty:

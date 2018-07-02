@@ -35,7 +35,8 @@ public class JobAspect {
     public Object aroundTest(ProceedingJoinPoint pPoint, JobAnnotation jobAnnotation) throws Throwable {
         String methodName = ((MethodSignature) pPoint.getSignature()).getMethod().getName();
         // 定时任务名放入日志中
-        MdcUtil.putModuleName(jobAnnotation.value());
+        String jobName = jobAnnotation.value();
+        MdcUtil.putModuleName(jobName.indexOf("定时任务") > -1 ? jobName : ("定时任务 " + jobName));
         // 如果配置不执行或定时任务正在进行直接返回
         if (!getRunFlag(methodName)) {
             return null;

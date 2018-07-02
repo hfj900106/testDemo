@@ -2,8 +2,9 @@ package com.hzed.easyget.persistence.auto.mapper;
 
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.example.BidExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface BidMapper {
     long countByExample(BidExample example);

@@ -10,7 +10,7 @@
 
     <bean id="mqConsumer" class="com.hzed.easyget.application.mq.MqConsumer"/>
     <!-- 连接服务配置 -->
-    <rabbit:connection-factory id="rabbitConnFactory" host="10.10.30.114" port="32771" username="user" password="password" virtual-host="/"/>
+    <rabbit:connection-factory id="rabbitConnFactory" host="${spring.rabbitmq.host}" port="${spring.rabbitmq.port}" username="${spring.rabbitmq.username}" password="${spring.rabbitmq.password}" virtual-host="${spring.rabbitmq.virtual-host}"/>
 
     <rabbit:admin connection-factory="rabbitConnFactory"/>
 

@@ -25,6 +25,13 @@ spring:
     basename: i18n/messages
     encoding: utf-8
     cacheSeconds: 86400 # 24小时
+  # rabbitmq配置
+  rabbitmq:
+    host: 10.10.30.114
+    port: 32771
+    username: user
+    password: password
+    virtual-host: /
 
 # 日志文件配置
 logging:
@@ -45,7 +52,7 @@ logging:
 # 第三方
 thirdParty:
   pay:
-    domain:                   http://10.10.30.114:8081 # 请求架构组bulepay域名地址
+    domain:                   http://10.10.30.114:8082 # 请求架构组bulepay域名地址
     loanTransactionUrl:       /bluepay/transferBalance  # 放款接口链接
     receiverTransactionUrl:   /bluepay/gatherDr # 收款接口链接
     getPaymentCodeUrl:        /bluepay/getPaymentCode #获取还款码接口
@@ -91,7 +98,6 @@ system:
     # 神策还款
     saRepaymentSuccess: false
     saRepaymentSuccessCron: 0 */1 * * * ?
-
 
 
 #======================================= 系统参数 结束 =======================================#

@@ -590,11 +590,6 @@ public class RepayService {
             String interfacetype = bluePayRequest.getInterfacetype();
             log.info("当前交易类型：{}", CASHOUT.equals(interfacetype) ? "放款" : (BANK.equals(interfacetype) ? "还款" : "其他"));
 
-            // 过滤处理中
-            if (status.equals(BluePayStatusEnum.OK.getKey())) {
-                log.info("MQ交易正在处理中，处理终止");
-                return;
-            }
             // 先判断是不是还款
             if (BANK.equals(interfacetype)) {
                 // 查询是否有对应的va码记录
@@ -611,6 +606,11 @@ public class RepayService {
                     log.info("发现还款码，初始化处理中的还款记录");
                     this.insertUserTransaction(repayQuery.getBidId(), paymentId, bluePayRequest.getPrice(), repayQuery.getRepaymentType());
                 }
+            }
+            // 过滤处理中
+            if (status.equals(BluePayStatusEnum.OK.getKey())) {
+                log.info("MQ交易正在处理中，处理终止");
+                return;
             }
             // 过滤失败直接修改交易记录
             if (!status.equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())) {

@@ -41,7 +41,7 @@ public class TransactionService {
     /**
      * 放款直接成功 改标的状态,砍头息、插入账单、台账、标进度、交易记录表，删除中间表数据
      *
-     * @param bidNo     标的编号
+     * @param bidNo     标的id
      * @param tempId    推送放款记录的中间表id
      * @param paymentId 交易id
      */
@@ -53,10 +53,9 @@ public class TransactionService {
         ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
         List<Bill> bills = product.createBills(bidInfo);
         List<BillLedger> billLedgers = product.createBillLedger(bidInfo);
-        AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(bidInfo.getLoanAmount(), bidInfo.getPeriod());
         UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId, bidInfo.getInBank(), bidInfo.getInAccount(), states, overTime);
         tempTableRepository.afterBankLoan(
-                Bid.builder().id(bidNo).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(absProduct.getHeadFee()).updateTime(LocalDateTime.now()).build(),
+                Bid.builder().id(bidNo).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).updateTime(LocalDateTime.now()).build(),
                 BidProgress.builder().bidId(bidNo).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
                 bills.get(0),
                 billLedgers,
@@ -141,9 +140,8 @@ public class TransactionService {
         List<BillLedger> billLedgers = product.createBillLedger(bid);
 
         UserTransaction transaction = buildUserTransaction(bid.getUserId(), bidId, TransactionTypeEnum.IN.getCode().byteValue(), bid.getLoanAmount(), paymentId, bid.getInBank(), bid.getInAccount(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
-        AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(bid.getLoanAmount(), bid.getPeriod());
         tempTableRepository.afterBankLoan(
-                Bid.builder().id(bidId).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).auditFee(absProduct.getHeadFee()).updateTime(LocalDateTime.now()).build(),
+                Bid.builder().id(bidId).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).updateTime(LocalDateTime.now()).build(),
                 BidProgress.builder().bidId(bidId).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
                 bills.get(0),
                 billLedgers,

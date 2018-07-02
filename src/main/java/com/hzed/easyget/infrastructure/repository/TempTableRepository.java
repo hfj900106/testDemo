@@ -53,7 +53,7 @@ public class TempTableRepository {
 
     @Transactional(rollbackFor = Exception.class)
     public void afterBankLoan(Bid bid, BidProgress bidProgress, Bill bill, List<BillLedger> billLedgers, Long tempId, UserTransaction transaction, boolean flag) {
-        bidMapper.updateByPrimaryKeySelective(bid);
+        bidMapper.updateByPrimaryKey(bid);
         bidProgressMapper.insertSelective(bidProgress);
         billMapper.insertSelective(bill);
         billLedgerMapper.batchInsertSelective(billLedgers,BillLedger.Column.id,BillLedger.Column.billId,BillLedger.Column.repaymentTime,BillLedger.Column.createTime,

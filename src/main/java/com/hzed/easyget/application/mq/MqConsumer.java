@@ -34,8 +34,8 @@ public class MqConsumer implements ChannelAwareMessageListener {
         log.info("============================= MQ交易回调开始 =============================");
         try {
             log.info("原始报文，message：{}，channel：{}", JSON.toJSONString(messageByte), JSON.toJSONString(channel));
-            String msg=new String(messageByte.getBody(), "UTF-8");
-            BluePayRequest request=JSONObject.parseObject(msg, BluePayRequest.class);
+            String msg = new String(messageByte.getBody(), "UTF-8");
+            BluePayRequest request = JSONObject.parseObject(msg, BluePayRequest.class);
             repayService.mqCallback(request);
         } catch (Exception ex) {
             log.error("============================= 自动处理失败，请执行人工处理程序 =============================", ex);

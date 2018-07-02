@@ -1,6 +1,5 @@
 package com.hzed.easyget.controller.web;
 
-import com.alibaba.fastjson.JSON;
 import com.hzed.easyget.application.service.BluePayService;
 import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.controller.model.BluePayRequest;

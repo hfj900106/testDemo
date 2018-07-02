@@ -1,7 +1,6 @@
 package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.application.service.product.ProductEnum;
@@ -630,7 +629,7 @@ public class RepayService {
         // 本地处理放款
         if (CASHOUT.equals(interfacetype)) {
             // 查询相应的推送任务信息
-            Long tempId = tempTableRepository.findTempTableByBidNoAndName(loanTransacQuery.getBidId(), ComConsts.PUSH_BANK_TASK);
+            Long tempId = tempTableRepository.findTempTableByBidNoAndNameWithExp(loanTransacQuery.getBidId(), ComConsts.PUSH_BANK_TASK);
             // 修改交易信息
             transactionService.loanSuccess(loanTransacQuery, tempId);
             log.info("本地放款交易处理成功");

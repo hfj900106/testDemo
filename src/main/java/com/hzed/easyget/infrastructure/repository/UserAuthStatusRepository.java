@@ -6,8 +6,6 @@ import com.hzed.easyget.persistence.auto.mapper.UserAuthStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-
 /**
  * 暂无描述
  *
@@ -25,7 +23,7 @@ public class UserAuthStatusRepository {
 
     public UserAuthStatus findEnableAuthStatusByUserId(Long userId, String authCode) {
         UserAuthStatusExample example = new UserAuthStatusExample();
-        example.createCriteria().andUserIdEqualTo(userId).andAuthCodeEqualTo(authCode).andExpireTimeGreaterThan(LocalDateTime.now());
+        example.createCriteria().andUserIdEqualTo(userId).andAuthCodeEqualTo(authCode);
         return userAuthStatusMapper.selectOneByExample(example);
     }
 

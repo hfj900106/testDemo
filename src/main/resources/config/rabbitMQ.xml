@@ -28,8 +28,7 @@
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
-    <rabbit:direct-exchange name="BLUEPAY_ORDER_NOTIFICATION_EXCHANGE_DEAD"
-                            id="BLUEPAY_ORDER_NOTIFICATION_EXCHANGE_DEAD">
+    <rabbit:direct-exchange name="BLUEPAY_ORDER_NOTIFICATION_EXCHANGE_DEAD" id="BLUEPAY_ORDER_NOTIFICATION_EXCHANGE_DEAD">
         <rabbit:bindings>
             <rabbit:binding queue="BLUEPAY_ORDER_NOTIFICATION_QUEUE_DEAD" key="BLUEPAY_ORDER_NOTIFICATION_KEY_DEAD"/>
         </rabbit:bindings>

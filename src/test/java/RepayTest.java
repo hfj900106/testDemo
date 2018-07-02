@@ -78,6 +78,6 @@ public class RepayTest {
         String message="{\"bt_id\":\"1605042521530243112152QpUExC\",\"cmd\":\"CHG\",\"currency\":\"THB\",\"encrypt\":\"cce0de3187495bc2ae2f55e378018979\"," +
                 "\"interfacetype\":\"bank\",\"msisdn\":\"8615926633889\",\"operator\":\"atm\",\"paytype\":\"pre\",\"price\":20000,\"productid\":1605," +
                 "\"status\":\"201\",\"t_id\":\"111618361896869888hzed\"}\n";
-        repayService.mqCallBackConsumer(message,null);
+        repayService.mqCallBackConsumer(null);
     }
 }

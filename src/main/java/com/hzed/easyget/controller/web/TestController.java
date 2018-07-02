@@ -40,6 +40,9 @@ public class TestController {
     @ModuleFunc("放款/还款回调接口(测试环境专用)")
     @PostMapping("/mqCallBackConsumer")
     public void mqCallBackConsumer(String request) {
-        repayService.mqCallBackConsumer(request,null);
+
+        log.info("");
+        repayService.mqCallBackConsumer(null);
+        log.info("");
     }
 }

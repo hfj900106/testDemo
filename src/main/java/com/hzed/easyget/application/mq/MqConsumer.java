@@ -1,6 +1,8 @@
 package com.hzed.easyget.application.mq;
 
+import com.alibaba.fastjson.JSON;
 import com.hzed.easyget.application.service.RepayService;
+import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
@@ -23,7 +25,20 @@ public class MqConsumer implements ChannelAwareMessageListener {
     private RepayService repayService;
 
     @Override
-    public void onMessage(Message messageByte, Channel channel){
-        repayService.mqCallBackConsumer(null,messageByte);
+    public void onMessage(Message messageByte, Channel channel) {
+        MdcUtil.putModuleName("MQ回调");
+        // 记录trace，方便日志追踪
+        MdcUtil.putTrace();
+        log.info("============================= MQ交易回调开始 =============================");
+        try {
+            log.info("原始报文，message：{}，channel：{}", JSON.toJSONString(messageByte), JSON.toJSON(channel));
+            repayService.mqCallBackConsumer(new String(messageByte.getBody(), "UTF-8"));
+        } catch (Exception ex) {
+            log.error("");
+        } finally {
+
+            log.info("============================= MQ交易回调开始 =============================");
+        }
+
     }
 }

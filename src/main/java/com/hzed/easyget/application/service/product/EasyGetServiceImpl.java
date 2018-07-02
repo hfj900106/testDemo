@@ -50,21 +50,22 @@ public class EasyGetServiceImpl implements ProductService {
         List<BillLedger> lists = Lists.newArrayList();
         List<Bill> bills = createBills(bid);
         bills.forEach(bill -> {
-            // 台账公共参数
-            BillLedger billLedger = new BillLedger();
-            billLedger.setId(IdentifierGenerator.nextId());
-            billLedger.setBillId(bill.getId());
-            billLedger.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), bid.getPeriod()));
-            billLedger.setCreateTime(LocalDateTime.now());
-
             // 本金台账
-            billLedger.setRepaymentAmount(bid.getLoanAmount());
-            billLedger.setRepaymentItem(BillLedgerItemEnum.CORPUS.getCode().byteValue());
-            lists.add(billLedger);
+            BillLedger billLedger1 = new BillLedger();
+            billLedger1.setBillId(bill.getId());
+            billLedger1.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), bid.getPeriod()));
+            billLedger1.setId(IdentifierGenerator.nextId());
+            billLedger1.setRepaymentAmount(bid.getLoanAmount());
+            billLedger1.setRepaymentItem(BillLedgerItemEnum.CORPUS.getCode().byteValue());
+            lists.add(billLedger1);
             // 尾款台账
-            billLedger.setRepaymentAmount(product.getTailFee());
-            billLedger.setRepaymentItem(BillLedgerItemEnum.TAIL_FEE.getCode().byteValue());
-            lists.add(billLedger);
+            BillLedger billLedger2 = new BillLedger();
+            billLedger2.setBillId(bill.getId());
+            billLedger2.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), bid.getPeriod()));
+            billLedger2.setId(IdentifierGenerator.nextId());
+            billLedger2.setRepaymentAmount(product.getTailFee());
+            billLedger2.setRepaymentItem(BillLedgerItemEnum.TAIL_FEE.getCode().byteValue());
+            lists.add(billLedger2);
         });
         return lists;
     }

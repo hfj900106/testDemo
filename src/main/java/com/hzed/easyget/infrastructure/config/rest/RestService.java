@@ -169,7 +169,7 @@ public class RestService {
              */
             @Override
             public long getRetryInterval() {
-                return 100;
+                return 1000;
             }
         };
         PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();

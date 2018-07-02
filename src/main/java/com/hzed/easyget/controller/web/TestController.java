@@ -6,6 +6,7 @@ import com.hzed.easyget.controller.model.RepaymentCompleRequest;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.PayResponse;
+import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,9 +41,12 @@ public class TestController {
     @ModuleFunc("放款/还款回调接口(测试环境专用)")
     @PostMapping("/mqCallBackConsumer")
     public void mqCallBackConsumer(String request) {
-
-        log.info("");
-        repayService.mqCallBackConsumer(null);
-        log.info("");
+        MdcUtil.putModuleName("人工处理MQ回调");
+        // 记录trace，方便日志追踪
+        MdcUtil.putTrace();
+        log.info("============================= 人工处理MQ回调开始 =============================");
+        log.info("原始请求报文：{}",request);
+        repayService.mqCallBackConsumer(request);
+        log.info("============================= 人工处理MQ回调结束 =============================");
     }
 }

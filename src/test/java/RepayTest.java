@@ -34,8 +34,8 @@ public class RepayTest {
      */
     @Test
     public void partialRepayment(){
-        PaymentIdResponse response = repayService.findloanManagResponse(BigDecimal.valueOf(20000.00), 103779484452659200L, true);
-        System.out.println(response);
+        PaymentIdResponse response = repayService.findloanManagResponse(BigDecimal.valueOf(100_000), 110941225972277248L, false);
+        System.out.println("================================>"+response);
     }
     /**
      * 获取还款码接口
@@ -43,10 +43,10 @@ public class RepayTest {
     @Test
     public void vaInfoDetail(){
         TransactionVaRequest request=new TransactionVaRequest();
-        request.setAmount(BigDecimal.valueOf(20000.00));
+        request.setAmount(BigDecimal.valueOf(100_000));
         request.setBidId(110941225972277248L);
         request.setFlag(false);
-        request.setMode(RepayMentEnum.OTC.getMode());
+        request.setMode(RepayMentEnum.ATM.getMode());
         TransactionVaResponse vaTranc = repayService.findVaTranc(request);
         System.out.println(vaTranc);
 
@@ -68,5 +68,14 @@ public class RepayTest {
         request.setRequestNo(String.valueOf(IdentifierGenerator.nextId()));
         PayResponse response = bluePayService.testRepayment(request);
         System.out.println(response);
+    }
+
+    /**
+     * 测试mq
+     */
+    @Test
+    public void mqCallback(){
+        String message="{\"bt_id\":\"1605042521530243112152QpUExC\",\"cmd\":\"CHG\",\"currency\":\"THB\",\"encrypt\":\"cce0de3187495bc2ae2f55e378018979\",\"interfacetype\":\"bank\",\"msisdn\":\"8615926633889\",\"operator\":\"atm\",\"paytype\":\"pre\",\"price\":20000,\"productid\":1605,\"status\":\"201\",\"t_id\":\"111618361896869888hzed\"}\n";
+        repayService.mqCallBackConsumer(message,null);
     }
 }

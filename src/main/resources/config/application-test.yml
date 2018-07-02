@@ -21,22 +21,22 @@ system:
   # 定时任务 启动标志 周期
   job:
     # 风控审核
-    pushBid: false
+    pushBid: true
     pushBidCron: 0/5 * * * * ?
     # 放款
-    bankLoan: false
+    bankLoan: true
     bankLoanCron: 0/5 * * * * ?
     # 处理还款信息流
     repayInfoFlow: false
     repayInfoFlowCron: 0/5 * * * * ?
     # 神策进件
-    saInData: false
+    saInData: true
     saInDataCron: 0 */1 * * * ?
     # 神策借款成功
-    saLoanSuccess: false
+    saLoanSuccess: true
     saLoanSuccessCron: 0 */1 * * * ?
     # 神策还款
-    saRepaymentSuccess: false
+    saRepaymentSuccess: true
     saRepaymentSuccessCron: 0 */1 * * * ?
 #======================================= 系统参数 结束 =======================================#
 

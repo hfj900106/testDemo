@@ -146,9 +146,11 @@ public class RestService {
 
     /**
      * 获得一个连接对象
+     *
      * @return
      */
     public static CloseableHttpClient getHttpClient() {
+        // ServiceUnavailableRetryStrategy表示在服务暂时不可用时确定是否应该重试请求的响应策略
         ServiceUnavailableRetryStrategy strategy = new ServiceUnavailableRetryStrategy() {
             /**
              * retry逻辑 重试三次
@@ -161,6 +163,7 @@ public class RestService {
                     return false;
                 }
             }
+
             /**
              * retry间隔时间
              */
@@ -170,8 +173,9 @@ public class RestService {
             }
         };
         PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
-        cm.setMaxTotal(5);
-        cm.setDefaultMaxPerRoute(10);
+        cm.setMaxTotal(50);
+        cm.setDefaultMaxPerRoute(100);
+        // DefaultHttpRequestRetryHandler表示一种策略，用于确定在发生I/O错误（从服务器未收到HTTP响应）时请求是否可以安全重试。
         CloseableHttpClient httpClient = HttpClients.custom().setRetryHandler(new DefaultHttpRequestRetryHandler())
                 .setConnectionManager(cm).build();
         return httpClient;

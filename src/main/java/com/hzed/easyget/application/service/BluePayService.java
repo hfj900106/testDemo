@@ -55,7 +55,8 @@ public class BluePayService {
         paymentRequest.setTransactionId(paymentId);
         paymentRequest.setCardNo(bid.getInAccount());
         paymentRequest.setPrice(amount);
-        paymentRequest.setMsisdn(RequestUtil.getGlobalUser().getMobile());
+//        paymentRequest.setMsisdn(RequestUtil.getGlobalUser().getMobile());
+        paymentRequest.setMsisdn("8615926633889");
         paymentRequest.setPayType(RepayMentEnum.getBlue(mode));
         // OTC方式不可传银行类型，否则报错
         if (mode.equals(RepayMentEnum.OTC.getMode())) {

@@ -35,8 +35,6 @@ public class RepayController {
     private RepayService repayService;
     @Autowired
     private ComService comService;
-    @Autowired
-    private BluePayService bluePayService;
 
     @ModuleFunc("还款列表")
     @PostMapping("/repaidList")
@@ -75,11 +73,6 @@ public class RepayController {
         return repayService.findVaTranc(request);
     }
 
-    @ModuleFunc("还款接口(测试环境专用)")
-    @PostMapping("/testRepayment")
-    public PayResponse testRepayment(@Valid @RequestBody RepaymentCompleRequest request) {
-        return bluePayService.testRepayment(request);
-    }
 
     @ModuleFunc("已生成va码列表")
     @PostMapping("/getVaHistory")

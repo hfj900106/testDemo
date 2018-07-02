@@ -34,7 +34,7 @@ public class MqConsumer implements ChannelAwareMessageListener {
             log.info("原始报文，message：{}，channel：{}", JSON.toJSONString(messageByte), JSON.toJSONString(channel));
             repayService.mqCallback(new String(messageByte.getBody(), "UTF-8"));
         } catch (Exception ex) {
-            log.error("============================= MQ交易回调自动处理失败=============================");
+            log.error("============================= MQ交易回调自动处理失败，请执行人工处理程序 =============================");
         } finally {
             log.info("============================= MQ交易回调开始 =============================");
         }

@@ -567,12 +567,11 @@ public class RepayService {
     /**
      * mq处理放款/还款回调业务
      *
-     * @param message mq回调报文
+     * @param bluePayRequest mq回调报文
      */
     @Transactional(rollbackFor = Exception.class)
-    public void mqCallback(String message) {
-        log.info("详细返回信息：{}", message);
-        BluePayRequest bluePayRequest = JSONObject.parseObject(message, BluePayRequest.class);
+    public void mqCallback(BluePayRequest bluePayRequest) {
+        log.info("详细返回信息：{}",JSON.toJSONString(bluePayRequest));
         // 参数校验
         ValidatorUtil.validateWithNull(bluePayRequest);
         // 返回的状态

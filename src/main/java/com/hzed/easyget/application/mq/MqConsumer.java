@@ -1,7 +1,9 @@
 package com.hzed.easyget.application.mq;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hzed.easyget.application.service.RepayService;
+import com.hzed.easyget.controller.model.BluePayRequest;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +34,9 @@ public class MqConsumer implements ChannelAwareMessageListener {
         log.info("============================= MQ交易回调开始 =============================");
         try {
             log.info("原始报文，message：{}，channel：{}", JSON.toJSONString(messageByte), JSON.toJSONString(channel));
-            repayService.mqCallback(new String(messageByte.getBody(), "UTF-8"));
+            String msg=new String(messageByte.getBody(), "UTF-8");
+            BluePayRequest request=JSONObject.parseObject(msg, BluePayRequest.class);
+            repayService.mqCallback(request);
         } catch (Exception ex) {
             log.error("============================= 自动处理失败，请执行人工处理程序 =============================", ex);
         } finally {

@@ -68,4 +68,11 @@ public class DictRepository {
         return dictMapper.selectByExample(example);
     }
 
+    public List<Dict> findByModuleCode(String moduleCode) {
+        DictExample example = new DictExample();
+        example.setOrderByClause(Dict.Column.orderby.asc());
+        example.createCriteria().andModuleCodeEqualTo(moduleCode);
+
+        return dictMapper.selectByExample(example);
+    }
 }

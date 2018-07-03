@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class RepaymentResponse {
     /** 应还金额 */
-    private BigDecimal loanAmount;
+    private BigDecimal repayAmount;
     /** 实际还款时间 或 到期时间 -结清才会显示*/
     private Long repayTime;
     private Integer status;

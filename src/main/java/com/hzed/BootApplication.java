@@ -2,6 +2,7 @@ package com.hzed;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hzed.easyget.infrastructure.annotation.EnableRabbitMQ;
 import com.hzed.easyget.infrastructure.annotation.EnableRedis;
 import com.hzed.easyget.infrastructure.annotation.EnableRest;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
@@ -50,7 +51,7 @@ import javax.validation.Validator;
 @ServletComponentScan
 @EnableRedis
 @EnableRest
-//@EnableRabbitMQ
+@EnableRabbitMQ
 @EnableSwagger2
 public class BootApplication {
 
@@ -117,10 +118,7 @@ public class BootApplication {
         ApiInfo apiInfo = new ApiInfoBuilder()
                 .title("api文档")
                 .description("restfun 风格接口")
-                // 服务条款网址
-                //.termsOfServiceUrl("http://blog.csdn.net/forezp")
                 .version("1.0")
-                //.contact(new Contact("帅呆了", "url", "email"))
                 .build();
 
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
@@ -129,7 +127,6 @@ public class BootApplication {
                 .forCodeGeneration(false)
                 .apiInfo(apiInfo)
                 .select()
-                // 加入扫描
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ModuleFunc.class))
                 .paths(PathSelectors.any())
                 .build();

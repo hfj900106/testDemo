@@ -39,7 +39,7 @@ public class UserController {
 
     @ModuleFunc("交易记录")
     @PostMapping("/getTransactionRecord")
-    public TransactionRecordResponse getTransactionRecord(@Valid @RequestBody TransactionRecordRequest request) {
+    public TransactionRecordResponse getTransactionRecord(@RequestBody(required = false) TransactionRecordRequest request) {
         return userService.getTransactionRecord(request);
     }
 

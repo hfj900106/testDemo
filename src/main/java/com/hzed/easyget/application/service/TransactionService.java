@@ -52,7 +52,7 @@ public class TransactionService {
         ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
         List<Bill> bills = product.createBills(bidInfo);
         List<BillLedger> billLedgers = product.createBillLedger(bills,bidInfo.getLoanAmount(),bidInfo.getPeriod());
-        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidId, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), paymentId, bidInfo.getInBank(), bidInfo.getInAccount(), states, overTime);
+        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidId, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount().subtract(bidInfo.getAuditFee()), paymentId, bidInfo.getInBank(), bidInfo.getInAccount(), states, overTime);
         tempTableRepository.afterBankLoan(
                 Bid.builder().id(bidId).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).updateTime(LocalDateTime.now()).build(),
                 BidProgress.builder().bidId(bidId).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
@@ -105,7 +105,7 @@ public class TransactionService {
      */
     public void insertUsrTransactionInfo(Long bidNo, String transactionId, Byte states, LocalDateTime overTime) {
         Bid bidInfo = bidRepository.findById(bidNo);
-        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount(), transactionId, bidInfo.getInBank(), bidInfo.getInAccount(), states, overTime);
+        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount().subtract(bidInfo.getAuditFee()), transactionId, bidInfo.getInBank(), bidInfo.getInAccount(), states, overTime);
         userTransactionRepository.insertSelective(transaction);
     }
 
@@ -138,7 +138,7 @@ public class TransactionService {
         List<Bill> bills = product.createBills(bid);
         List<BillLedger> billLedgers = product.createBillLedger(bills,bid.getLoanAmount(),bid.getPeriod());
 
-        UserTransaction transaction = buildUserTransaction(bid.getUserId(), bidId, TransactionTypeEnum.IN.getCode().byteValue(), bid.getLoanAmount(), paymentId, bid.getInBank(), bid.getInAccount(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
+        UserTransaction transaction = buildUserTransaction(bid.getUserId(), bidId, TransactionTypeEnum.IN.getCode().byteValue(), bid.getLoanAmount().subtract(bid.getAuditFee()), paymentId, bid.getInBank(), bid.getInAccount(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
         tempTableRepository.afterBankLoan(
                 Bid.builder().id(bidId).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).updateTime(LocalDateTime.now()).build(),
                 BidProgress.builder().bidId(bidId).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),

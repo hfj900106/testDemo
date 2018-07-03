@@ -81,7 +81,7 @@ system:
     pushBid: false
     pushBidCron: 0/5 * * * * ?
     # 放款
-    bankLoan: false
+    bankLoan: true
     bankLoanCron: 0/5 * * * * ?
     # 处理还款信息流
     repayInfoFlow: false

@@ -58,8 +58,12 @@ public class TempTableRepository {
         bidMapper.updateByPrimaryKeySelective(bid);
         bidProgressMapper.insertSelective(bidProgress);
         billMapper.insertSelective(bill);
-        billLedgerMapper.batchInsertSelective(billLedgers, BillLedger.Column.id, BillLedger.Column.billId, BillLedger.Column.repaymentTime,
-                BillLedger.Column.realRepaymentAmount, BillLedger.Column.repaymentItem);
+        billLedgerMapper.batchInsertSelective(billLedgers,
+                BillLedger.Column.id,
+                BillLedger.Column.billId,
+                BillLedger.Column.repaymentTime,
+                BillLedger.Column.repaymentAmount,
+                BillLedger.Column.repaymentItem);
         tempMapper.deleteByPrimaryKey(tempId);
         if (flag) {
             transactionMapper.insertSelective(transaction);

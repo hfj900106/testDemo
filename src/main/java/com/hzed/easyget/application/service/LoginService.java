@@ -229,8 +229,11 @@ public class LoginService {
         String code = SmsUtils.getCode();
         String content = "您的注册验证码是：" + code + " ，两分钟内有效，欢迎使用本平台";
         Long smsId = IdentifierGenerator.nextId();
-        //发送短信
-        SmsUtils.sendSms(mobile,content,smsId);
+        SystemProp systemProp = SpringContextUtil.getBean(SystemProp.class);
+        if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
+            //非测试环境发送短信
+            SmsUtils.sendSms(mobile,content,smsId);
+        }
         // 保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();
         smsLog.setId(smsId);

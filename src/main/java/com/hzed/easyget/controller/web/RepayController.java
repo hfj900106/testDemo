@@ -1,12 +1,10 @@
 package com.hzed.easyget.controller.web;
 
-import com.hzed.easyget.application.service.BluePayService;
 import com.hzed.easyget.application.service.ComService;
 import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-import com.hzed.easyget.infrastructure.model.PayResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,7 +78,7 @@ public class RepayController {
         return repayService.getVaHistory(request);
     }
 
-    @ModuleFunc("提交图片凭证")
+    @ModuleFunc(value = "提交图片凭证", printParameterLength = 500)
     @PostMapping("/uploadPicEvidence")
     public void uploadPicEvidence(@Valid @RequestBody UploadPicEvidenceRequest request) {
         repayService.uploadPicEvidence(request);

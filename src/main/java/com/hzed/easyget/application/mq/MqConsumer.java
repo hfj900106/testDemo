@@ -1,6 +1,5 @@
 package com.hzed.easyget.application.mq;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.controller.model.BluePayRequest;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
@@ -11,9 +10,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 
 /**
  * 功能概要：放款、收款通知消费接收
- * <p>Title: OrderNotificationConsumer </p>
  *
- * @author madaijun
+ * @author zhangruilin
  * @date 2018年6月13日 下午6:10:40
  */
 @Slf4j
@@ -29,7 +27,6 @@ public class MqConsumer {
         MdcUtil.putTrace();
         log.info("============================= MQ交易回调开始 =============================");
         try {
-            log.info("原始报文，message：{}", JSONObject.toJSONString(request));
             repayService.mqCallback(request);
         } catch (Exception ex) {
             log.error("============================= 自动处理失败，请执行人工处理程序 =============================", ex);

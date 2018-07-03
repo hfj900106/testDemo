@@ -217,6 +217,7 @@ public class RepayService {
             bidRepository.update(bidUpdate);
         }
 
+        // 如果从定时任务进来则更新定时任务为处理成功
         if (job != null) {
             RepayInfoFlowJob jobUpdate = new RepayInfoFlowJob();
             jobUpdate.setId(job.getId());

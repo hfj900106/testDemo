@@ -73,7 +73,7 @@ public class EasyGetServiceImpl implements ProductService {
     @Override
     public void checkBid(Bid bid) {
         if (!bid.getProductCode().equals(ProductCodeEnum.INDONESIA.getCode())) {
-            throw new ComBizException(BizCodeEnum.NOT_INDONESIA_PRODUCT, new Object[]{bid.getId()});
+            throw new ComBizException(BizCodeEnum.NOT_INDONESIA_PRODUCT, new Object[]{String.valueOf(bid.getId())});
         }
     }
 
@@ -89,12 +89,6 @@ public class EasyGetServiceImpl implements ProductService {
 
         return product;
     }
-
-//    @Override
-//    public <EasyGetProduct> EasyGetProduct createProduct(EasyGetProduct clazz) {
-//        Product product = productRepository.findByCode(ProductEnum.PRODUCT_CODE.getCode());
-//        return null;
-//    }
 
     private Bill buildBill(Long bidId, BigDecimal repaymentAmount, Integer period) {
         Bill bill = new Bill();

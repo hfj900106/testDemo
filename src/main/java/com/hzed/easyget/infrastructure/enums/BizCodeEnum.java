@@ -29,7 +29,7 @@ public enum BizCodeEnum {
     PAYMENTCODE_ERROR("8005","获取还款码接口异常"),
     USERTRANSACTION_ERROR("8006","没有待交易的账单"),
     LOANVOUCHER_ERROR("8007","还款凭证错误"),
-    REPAYMENT_INFORMATION_ERROR("80008","必要信息错误"),
+    REPAYMENT_INFORMATION_ERROR("8008","必要信息错误"),
 
 
 

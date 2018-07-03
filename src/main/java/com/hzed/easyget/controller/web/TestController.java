@@ -34,7 +34,7 @@ public class TestController {
     private RepayService repayService;
 
     @IgnoreHeader
-    @ModuleFunc("还款接口(测试环境专用)")
+    @ModuleFunc("还款接口-测试环境专用")
     @PostMapping("/testRepayment")
     public PayResponse testRepayment(@Valid @RequestBody RepaymentCompleRequest request) {
         return bluePayService.testRepayment(request);

@@ -11,8 +11,6 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class TransactionRecordRequest {
-    @NotNull
     private Integer pageNo = 0;
-    @NotNull
     private Integer pageSize = 5;
 }

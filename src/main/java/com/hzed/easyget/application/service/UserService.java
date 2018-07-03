@@ -4,6 +4,9 @@ import com.hzed.easyget.controller.model.TransactionRecordRequest;
 import com.hzed.easyget.controller.model.TransactionRecordResponse;
 import com.hzed.easyget.controller.model.TransactionVO;
 import com.hzed.easyget.controller.model.UserResponse;
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -57,7 +60,7 @@ public class UserService {
         GlobalUser user = getGlobalUser();
         List<UserTransaction> list = queryTransactionRecordForApp(user.getUserId(),request.getPageNo(),request.getPageSize());
         List<TransactionVO> listResponse = new ArrayList<>();
-        if(!ObjectUtils.isEmpty(listResponse)){
+        if(!ObjectUtils.isEmpty(list)){
             list.forEach(userTransaction -> {
                 TransactionVO transactionVO = new TransactionVO();
                 transactionVO.setBidId(userTransaction.getBidId());

@@ -2,6 +2,8 @@ package com.hzed.easyget.infrastructure.repository;
 
 
 import com.hzed.easyget.infrastructure.consts.ComConsts;
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.auto.entity.example.TempTableExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
@@ -56,8 +58,8 @@ public class TempTableRepository {
         bidMapper.updateByPrimaryKeySelective(bid);
         bidProgressMapper.insertSelective(bidProgress);
         billMapper.insertSelective(bill);
-        billLedgerMapper.batchInsertSelective(billLedgers,BillLedger.Column.id,BillLedger.Column.billId,BillLedger.Column.repaymentTime,BillLedger.Column.createTime,
-                BillLedger.Column.realRepaymentAmount,BillLedger.Column.repaymentItem);
+        billLedgerMapper.batchInsertSelective(billLedgers, BillLedger.Column.id, BillLedger.Column.billId, BillLedger.Column.repaymentTime,
+                BillLedger.Column.realRepaymentAmount, BillLedger.Column.repaymentItem);
         tempMapper.deleteByPrimaryKey(tempId);
         if (flag) {
             transactionMapper.insertSelective(transaction);
@@ -68,12 +70,16 @@ public class TempTableRepository {
         }
     }
 
-    public Long findTempTableByBidNoAndName(Long bidId, String pushBankTask) {
+    public Long findTempTableByBidNoAndNameWithExp(Long bidId, String pushBankTask) {
         TempTableExample tempTableExample = new TempTableExample();
         tempTableExample.createCriteria()
                 .andRelaseIdEqualTo(bidId)
                 .andJobNameEqualTo(pushBankTask);
-        return tempTableMapper.selectOneByExample(tempTableExample).getId();
+        TempTable tempTable = tempTableMapper.selectOneByExample(tempTableExample);
+        if (tempTable == null) {
+            throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION);
+        }
+        return tempTable.getId();
     }
 
     public TempTable findTempTableByBidNoAndJobName(Long bidId, String pushBankTask) {

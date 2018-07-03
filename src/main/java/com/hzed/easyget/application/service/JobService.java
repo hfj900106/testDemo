@@ -173,7 +173,9 @@ public class JobService {
                     loan.setTransactionId(IdentifierGenerator.nextSeqNo());
                     //交易流水
                     loan.setRequestNo(tempId.toString());
-                    PayResponse response = bluePayService.loanTransaction(loan);
+                    // fixme 模拟放款成功
+//                    PayResponse response = bluePayService.loanTransaction(loan);
+                    PayResponse response = new PayResponse(BizCodeEnum.SUCCESS.getCode());
                     if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
                         transactionService.lendingCallback(bidId, tempId, loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
                     } else {

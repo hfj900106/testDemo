@@ -1,7 +1,6 @@
 package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.application.service.product.ProductEnum;
@@ -335,7 +334,7 @@ public class RepayService {
         // 其他台账做更新操作(本金+尾款)
         else {
             if (ledger == null) {
-                throw new ComBizException(BizCodeEnum.ILLEGAL_LEDGER_TYPE, new Object[]{billId, item});
+                throw new ComBizException(BizCodeEnum.ILLEGAL_LEDGER_TYPE, new Object[]{String.valueOf(billId), item});
             }
 
             BillLedger ledgerUpdate = new BillLedger();
@@ -567,12 +566,11 @@ public class RepayService {
     /**
      * mq处理放款/还款回调业务
      *
-     * @param message mq回调报文
+     * @param bluePayRequest mq回调报文
      */
     @Transactional(rollbackFor = Exception.class)
-    public void mqCallback(String message) {
-        log.info("详细返回信息：{}", message);
-        BluePayRequest bluePayRequest = JSONObject.parseObject(message, BluePayRequest.class);
+    public void mqCallback(BluePayRequest bluePayRequest) {
+        log.info("详细返回信息：{}",JSON.toJSONString(bluePayRequest));
         // 参数校验
         ValidatorUtil.validateWithNull(bluePayRequest);
         // 返回的状态
@@ -631,7 +629,7 @@ public class RepayService {
         // 本地处理放款
         if (CASHOUT.equals(interfacetype)) {
             // 查询相应的推送任务信息
-            Long tempId = tempTableRepository.findTempTableByBidNoAndName(loanTransacQuery.getBidId(), ComConsts.PUSH_BANK_TASK);
+            Long tempId = tempTableRepository.findTempTableByBidNoAndNameWithExp(loanTransacQuery.getBidId(), ComConsts.PUSH_BANK_TASK);
             // 修改交易信息
             transactionService.loanSuccess(loanTransacQuery, tempId);
             log.info("本地放款交易处理成功");

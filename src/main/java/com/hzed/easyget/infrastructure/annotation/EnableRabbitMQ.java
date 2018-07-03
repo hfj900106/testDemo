@@ -1,12 +1,14 @@
 package com.hzed.easyget.infrastructure.annotation;
 
-import org.springframework.context.annotation.ImportResource;
+import com.hzed.easyget.application.mq.MqConsumer;
+import com.hzed.easyget.infrastructure.config.rabbit.RabbitConfig;
+import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
-@ImportResource(locations= {"classpath:config/rabbitMQ.xml"})
+@Import({MqConsumer.class, RabbitConfig.class})
 public @interface EnableRabbitMQ {
 }

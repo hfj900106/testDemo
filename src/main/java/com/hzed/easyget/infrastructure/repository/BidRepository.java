@@ -56,7 +56,7 @@ public class BidRepository {
     public Bid findByIdWithExp(Long id) {
         Bid bid = findById(id);
         if (bid == null) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_BIDID, new Object[]{id});
+            throw new ComBizException(BizCodeEnum.ILLEGAL_BIDID, new Object[]{String.valueOf(id)});
         }
         return bid;
     }

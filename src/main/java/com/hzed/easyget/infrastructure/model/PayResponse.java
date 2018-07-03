@@ -1,7 +1,6 @@
 package com.hzed.easyget.infrastructure.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,4 +24,8 @@ public class PayResponse {
     private boolean flag;
 
     private String data;
+
+    public PayResponse(String code) {
+        this.code = code;
+    }
 }

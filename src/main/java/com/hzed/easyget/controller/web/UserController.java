@@ -5,15 +5,12 @@ import com.hzed.easyget.application.service.UserService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-import com.hzed.easyget.infrastructure.annotation.head.TokenIgnore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * 我的
@@ -40,7 +37,7 @@ public class UserController {
 
     @ModuleFunc("交易记录")
     @PostMapping("/getTransactionRecord")
-    public TransactionRecordResponse getTransactionRecord(@RequestBody TransactionRecordRequest request) {
+    public TransactionRecordResponse getTransactionRecord(@Valid @RequestBody TransactionRecordRequest request) {
         return userService.getTransactionRecord(request);
     }
 

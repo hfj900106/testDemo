@@ -1,7 +1,6 @@
 package com.hzed.easyget.controller.model;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
 
 import java.math.BigDecimal;
 
@@ -13,10 +12,6 @@ import java.math.BigDecimal;
  */
 @Data
 public class LoanTransactionRequest {
-    /**
-     * 固定值 MD5
-     */
-    private String encrypt = "MD5";
     /**
      * 交易id
      */
@@ -49,10 +44,6 @@ public class LoanTransactionRequest {
      * 放款金额
      */
     private BigDecimal amount;
-    /**
-     * 币种值,固定值 IDR
-     */
-    private String currency = "IDR";
     /**
      * 流水号
      */

@@ -38,30 +38,39 @@ public class EasyGetServiceImpl implements ProductService {
     @Override
     public List<Bill> createBills(Bid bid) {
         checkBid(bid);
-        List<Bill> lists = Lists.newArrayList();
-        lists.add(buildBill(bid.getId(), createProduct(bid.getLoanAmount(), bid.getPeriod()).getTotalRepaymentAmount(), bid.getPeriod()));
-        return lists;
+
+        Bill bill = new Bill();
+        bill.setId(IdentifierGenerator.nextId());
+        bill.setBidId(bid.getId());
+        bill.setIndexPeriods(1);
+        bill.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), bid.getPeriod()));
+        bill.setRepaymentAmount(createProduct(bid.getLoanAmount(), bid.getPeriod()).getTotalRepaymentAmount());
+        bill.setRealRepaymentAmount(new BigDecimal(0));
+        bill.setStatus(BillStatusEnum.WAIT_CLEAR.getCode().byteValue());
+        bill.setIsPartialRepayment(false);
+        bill.setCreateTime(LocalDateTime.now());
+
+        return Lists.newArrayList(bill);
     }
 
     @Override
-    public List<BillLedger> createBillLedger(Bid bid) {
-        AbstractProduct product = createProduct(bid.getLoanAmount(), bid.getPeriod());
+    public List<BillLedger> createBillLedger(List<Bill> bills, BigDecimal amount, Integer period) {
+        AbstractProduct product = createProduct(amount, period);
 
         List<BillLedger> lists = Lists.newArrayList();
-        List<Bill> bills = createBills(bid);
         bills.forEach(bill -> {
             // 本金台账
             BillLedger billLedger1 = new BillLedger();
             billLedger1.setBillId(bill.getId());
-            billLedger1.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), bid.getPeriod()));
+            billLedger1.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), period));
             billLedger1.setId(IdentifierGenerator.nextId());
-            billLedger1.setRepaymentAmount(bid.getLoanAmount());
+            billLedger1.setRepaymentAmount(amount);
             billLedger1.setRepaymentItem(BillLedgerItemEnum.CORPUS.getCode().byteValue());
             lists.add(billLedger1);
             // 尾款台账
             BillLedger billLedger2 = new BillLedger();
             billLedger2.setBillId(bill.getId());
-            billLedger2.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), bid.getPeriod()));
+            billLedger2.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), period));
             billLedger2.setId(IdentifierGenerator.nextId());
             billLedger2.setRepaymentAmount(product.getTailFee());
             billLedger2.setRepaymentItem(BillLedgerItemEnum.TAIL_FEE.getCode().byteValue());
@@ -90,19 +99,13 @@ public class EasyGetServiceImpl implements ProductService {
         return product;
     }
 
-    private Bill buildBill(Long bidId, BigDecimal repaymentAmount, Integer period) {
-        Bill bill = new Bill();
-        bill.setId(IdentifierGenerator.nextId());
-        bill.setBidId(bidId);
-        bill.setIndexPeriods(1);
-        bill.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), period));
-        bill.setRepaymentAmount(repaymentAmount);
-        bill.setRealRepaymentAmount(new BigDecimal(0));
-        bill.setStatus(BillStatusEnum.WAIT_CLEAR.getCode().byteValue());
-        bill.setIsPartialRepayment(false);
-        bill.setCreateTime(LocalDateTime.now());
-        return bill;
-    }
+//    @Override
+//    public <EasyGetProduct> EasyGetProduct createProduct(EasyGetProduct clazz) {
+//        Product product = productRepository.findByCode(ProductEnum.PRODUCT_CODE.getCode());
+//        return null;
+//    }
+
+
 
     @Override
     public BigDecimal getMinRepayAmount(AbstractProduct product) {

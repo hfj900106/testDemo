@@ -46,7 +46,7 @@ public class RepayTest {
         request.setAmount(BigDecimal.valueOf(100_000));
         request.setBidId(110941225972277248L);
         request.setFlag(false);
-        request.setMode(RepayMentEnum.ATM.getMode());
+        request.setMode(RepayMentEnum.OTC.getMode());
         TransactionVaResponse vaTranc = repayService.findVaTranc(request);
         System.out.println(vaTranc);
 

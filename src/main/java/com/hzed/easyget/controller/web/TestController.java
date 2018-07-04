@@ -58,14 +58,14 @@ public class TestController {
 
     @IgnoreHeader
     @ModuleFunc("人工跑定时任务")
-    @PostMapping("/manMadeJob/{jobName}")
+    @GetMapping("/manMadeJob/{jobName}")
     public void testRepayment(@PathVariable("jobName") String jobName) {
         try {
             JobService.class.getMethod(jobName).invoke(jobService);
         } catch (NoSuchMethodException e) {
             throw new NestedException(BizCodeEnum.SERVICE_EXCEPTION, "没有此定时任务");
         } catch (Exception e) {
-            throw new NestedException(BizCodeEnum.UNKNOWN_EXCEPTION,e.getMessage());
+            throw new NestedException(BizCodeEnum.UNKNOWN_EXCEPTION, e.getMessage());
         }
 
 

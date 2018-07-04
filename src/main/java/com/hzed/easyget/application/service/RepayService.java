@@ -29,6 +29,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -400,14 +401,7 @@ public class RepayService {
         if (ObjectUtils.isEmpty(repaymentTime)) {
             throw new ComBizException(BizCodeEnum.USERTRANSACTION_ERROR);
         }
-        // 查询是否有没过期的还款码
-        UserTransactionRepay vaCode = repayRepository.getVaCode(bidId, amount, flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
         PaymentIdResponse response = new PaymentIdResponse();
-        if (!ObjectUtils.isEmpty(vaCode)) {
-            response.setVaCode(vaCode.getVa());
-            response.setExpireTime(DateUtil.localDateTimeToTimestamp(vaCode.getVaExpireTime()));
-            response.setMode(vaCode.getMode());
-        }
         response.setBidId(bidId);
         response.setAmount(amount);
         response.setRepaymentTime(DateUtil.localDateTimeToTimestamp(repaymentTime));
@@ -425,7 +419,8 @@ public class RepayService {
         // 查询标的信息
         Bid bid = bidRepository.findByIdWithExp(request.getBidId());
         // 先查询数据库 是否存在没过期的还款码
-        UserTransactionRepay repayQuery = repayRepository.getVaCodeByParmers(request.getBidId(), request.getAmount(), request.isFlag() ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue(), request.getMode());
+        List<Byte> bytes=Arrays.asList(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(),TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
+        UserTransactionRepay repayQuery = repayRepository.getVaCodeByParmers(request.getBidId(), request.getAmount(),bytes, request.getMode());
         TransactionVaResponse vaResponse = new TransactionVaResponse();
         if (!ObjectUtils.isEmpty(repayQuery)) {
             vaResponse.setExpireTime(DateUtil.localDateTimeToTimestamp(repayQuery.getVaExpireTime()));

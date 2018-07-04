@@ -8,14 +8,14 @@ import com.hzed.easyget.controller.model.RepaymentCompleRequest;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.head.IgnoreHeader;
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.NestedException;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.lang.reflect.Method;
 
 /**
  * 放款/还款测试接口
@@ -58,14 +58,15 @@ public class TestController {
 
     @IgnoreHeader
     @ModuleFunc("人工跑定时任务")
-    @PostMapping("/manMadeJob/{jobName}") // manMadeJob/pushBid
-    public void testRepayment(@PathVariable("jobName") String jobName) throws Exception {
-        Class clazz = jobService.getClass();
-        Method declaredMethod = BeanUtils.findDeclaredMethod(clazz, jobName);
-        if(declaredMethod == null){
-            throw new RuntimeException("定时任务名称有误");
+    @PostMapping("/manMadeJob/{jobName}")
+    public void testRepayment(@PathVariable("jobName") String jobName) {
+        try {
+            JobService.class.getMethod(jobName).invoke(jobService);
+        } catch (NoSuchMethodException e) {
+            throw new NestedException(BizCodeEnum.SERVICE_EXCEPTION, "没有此定时任务");
+        } catch (Exception e) {
+            throw new NestedException(BizCodeEnum.UNKNOWN_EXCEPTION,e.getMessage());
         }
-        declaredMethod.invoke(jobService);
 
 
     }

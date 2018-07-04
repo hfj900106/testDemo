@@ -78,7 +78,7 @@ public class RepayController {
         return repayService.getVaHistory(request);
     }
 
-    @ModuleFunc(value = "提交图片凭证", printParameterLength = 500)
+    @ModuleFunc(value = "提交图片凭证", printParameterLength = 300)
     @PostMapping("/uploadPicEvidence")
     public void uploadPicEvidence(@Valid @RequestBody UploadPicEvidenceRequest request) {
         repayService.uploadPicEvidence(request);

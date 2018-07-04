@@ -194,7 +194,8 @@ public class RepayService {
 
         // 保存 t_loan_bid_progress 标的进度表
         BidProgress progressInsert = new BidProgress();
-        progressInsert.setId(IdentifierGenerator.nextId());
+        long progressId = IdentifierGenerator.nextId();
+        progressInsert.setId(progressId);
         progressInsert.setBidId(bidId);
         progressInsert.setType(BidProgressTypeEnum.REPAY.getCode().byteValue());
         progressInsert.setHandleTime(LocalDateTime.now());
@@ -216,6 +217,14 @@ public class RepayService {
             bidUpdate.setStatus(BidStatusEnum.CLEARED.getCode().byteValue());
             bidUpdate.setUpdateTime(LocalDateTime.now());
             bidRepository.update(bidUpdate);
+
+            // 更新上一步的进度为结清
+            BidProgress progressUpdate = new BidProgress();
+            progressUpdate.setId(progressId);
+            progressUpdate.setType(BidProgressTypeEnum.CLEAR.getCode().byteValue());
+            progressUpdate.setHandleResult("用户结清：" + repayAmount);
+            progressUpdate.setRemark("结清");
+            bidProgressRepository.update(progressUpdate);
         }
 
         // 如果从定时任务进来则更新定时任务为处理成功

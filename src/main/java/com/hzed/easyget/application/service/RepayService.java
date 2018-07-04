@@ -94,11 +94,12 @@ public class RepayService {
             if (BidStatusEnum.CLEARED.getCode().byteValue() == bid.getStatus().byteValue()) {
                 repaymentResponse.setRepayTime(DateUtil.localDateTimeToTimestamp(bidProgress.getHandleTime()));
                 repaymentResponse.setStatus(RepayStatusEnum.CLEAR_REPAY.getCode().intValue());
+                repayListResponse.setLoanAmount(BigDecimal.ZERO);
             }
             // 未结清
             else {
-                // 获取待还款标的的待还总额
-                repayListResponse.setTotalAmount(comService.getBidNoRepayFee(bidId, LocalDateTime.now()));
+                // 放款金额
+                repayListResponse.setLoanAmount(bid.getLoanAmount());
 
                 // 查询应还时间与当前时间对比，大于当前时间表示逾期，小于等于表示没到期
                 int days = DateUtil.getBetweenDays(bill.getRepaymentTime(), LocalDateTime.now());
@@ -116,7 +117,8 @@ public class RepayService {
                 }
             }
 
-            repaymentResponse.setLoanAmount(bid.getLoanAmount());
+            //应该总额
+            repaymentResponse.setRepayAmount(comService.getBidNoRepayFee(bidId, LocalDateTime.now()));
             repaymentResponse.setBid(bidId);
             repaymentResponseList.add(repaymentResponse);
         }
@@ -215,6 +217,7 @@ public class RepayService {
             bidRepository.update(bidUpdate);
         }
 
+        // 如果从定时任务进来则更新定时任务为处理成功
         if (job != null) {
             RepayInfoFlowJob jobUpdate = new RepayInfoFlowJob();
             jobUpdate.setId(job.getId());

@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RepayListResponse {
-    private BigDecimal totalAmount;
+    /** 审核金额 */
+    private BigDecimal loanAmount;
     private List<RepaymentResponse> repaymentInfo;
 }

@@ -18,7 +18,10 @@ public class UserTransactionPicRepository {
     private UserTransactionPicMapper userTransactionPicMapper;
 
     public void batchInsert(List<UserTransactionPic> userTransactionPicList) {
-        userTransactionPicMapper.batchInsertSelective(userTransactionPicList, UserTransactionPic.Column.evidencePicUrl, UserTransactionPic.Column.bidId,
-                UserTransactionPic.Column.va, UserTransactionPic.Column.mode);
+        userTransactionPicMapper.batchInsertSelective(userTransactionPicList,
+                UserTransactionPic.Column.evidencePicUrl,
+                UserTransactionPic.Column.bidId,
+                UserTransactionPic.Column.va,
+                UserTransactionPic.Column.mode);
     }
 }

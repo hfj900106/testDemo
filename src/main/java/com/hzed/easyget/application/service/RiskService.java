@@ -105,17 +105,23 @@ public class RiskService {
             saService.saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
+        Object bodyObj = response.getBody();
+        if(ObjectUtils.isEmpty(bodyObj)){
+            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
+        }
+
+        Object codeObj = ((LinkedHashMap) bodyObj).get(ComConsts.RISK_CODE);
+        if (codeObj.equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
             //已经认证过
             saService.saOperator(user, false, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
             throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
         }
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_PARAMS_ERROR)) {
+        if (codeObj.equals(ComConsts.RISK_OPERATOR_PARAMS_ERROR)) {
             //认证数据不正确，数据从数据库取，一般不出现
             saService.saOperator(user, false, BizCodeEnum.PARAMS_AUTH_RISK.getMessage());
             throw new WarnException(BizCodeEnum.PARAMS_AUTH_RISK);
         }
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_ERROR)) {
+        if (codeObj.equals(ComConsts.RISK_OPERATOR_ERROR)) {
             //认证失败
             saService.saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
@@ -138,23 +144,29 @@ public class RiskService {
         if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_FREQ)) {
+        Object bodyObj = response.getBody();
+        if(ObjectUtils.isEmpty(bodyObj)){
+            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
+        }
+
+        Object codeObj = ((LinkedHashMap) bodyObj).get(ComConsts.RISK_CODE);
+        if (codeObj.equals(ComConsts.RISK_OPERATOR_FREQ)) {
             //认证频繁，要等一分钟再认证
             saService.saOperator(user, false, BizCodeEnum.FREQUENTLY_AUTH_RISK.getMessage());
             throw new WarnException(BizCodeEnum.FREQUENTLY_AUTH_RISK);
         }
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_ERROR)) {
+        if (codeObj.equals(ComConsts.RISK_OPERATOR_ERROR)) {
             //认证失败，删除重发标志
             saService.saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
             redisService.clearCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_HAVE_SEND)) {
+        if (codeObj.equals(ComConsts.RISK_OPERATOR_HAVE_SEND)) {
             //验证码错误，需要输入验证码，后台自动让第三方接口重发验证码
             saService.saOperator(user, false, BizCodeEnum.NEED_SMS_AUTH_RISK.getMessage());
             throw new WarnException(BizCodeEnum.NEED_SMS_AUTH_RISK);
         }
-        if (((LinkedHashMap) response.getBody()).get(ComConsts.RISK_CODE).equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
+        if (codeObj.equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
             //已经认证过
             saService.saOperator(user, false, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
             throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);

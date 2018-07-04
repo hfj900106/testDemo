@@ -6,9 +6,10 @@ import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.controller.model.IDAreaRequest;
 import com.hzed.easyget.controller.model.IDAreaResponse;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
-import com.hzed.easyget.infrastructure.annotation.head.IgnoreHeader;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
+import com.hzed.easyget.infrastructure.annotation.head.IgnoreHeader;
 import com.hzed.easyget.infrastructure.annotation.head.TokenIgnore;
+import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -49,14 +50,14 @@ public class DictController {
     @TokenIgnore
     @ModuleFunc("通过module获取字典列表")
     @PostMapping("/getDictList")
-    public List<DictResponse> getDictList(@Valid @RequestBody DictRequest request){
-        return dictService.getDictByModule(request);
+    public List<DictResponse> getDictList(@Valid @RequestBody DictRequest request) {
+        return dictService.getDictByModuleCodeAndLanguage(request.getModuleCode(), RequestUtil.getGlobalHead().getI18n());
     }
 
     @TokenIgnore
     @ModuleFunc("获取印尼省市区")
     @PostMapping("/getIDAreaList")
-    public List<IDAreaResponse> getIDAreaList(@Valid @RequestBody IDAreaRequest request){
+    public List<IDAreaResponse> getIDAreaList(@Valid @RequestBody IDAreaRequest request) {
         return dictService.getIDAreaList(request);
     }
 

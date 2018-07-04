@@ -55,8 +55,8 @@ public class TestController {
     }
 
     @IgnoreHeader
-    @ModuleFunc("人工跑定时任务")
-    @PostMapping("/manMadeJob/{jobName}") // manMadeJob/pushBid
+    @ModuleFunc("人工触发定时任务")
+    @PostMapping("/manMadeJob/{jobName}")
     public void testRepayment(@PathVariable String jobName) {
 
 

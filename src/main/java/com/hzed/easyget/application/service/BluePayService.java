@@ -1,11 +1,14 @@
 package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
+import com.hzed.easyget.application.enums.EnvEnum;
+import com.hzed.easyget.application.enums.MobileEnum;
 import com.hzed.easyget.application.enums.RepayMentEnum;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
 import com.hzed.easyget.controller.model.PaymentCodeRequest;
 import com.hzed.easyget.controller.model.RepaymentCompleRequest;
 import com.hzed.easyget.infrastructure.config.PayProp;
+import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
@@ -35,6 +38,8 @@ public class BluePayService {
     private RestService restService;
     @Autowired
     private PayProp prop;
+    @Autowired
+    private SystemProp systemProp;
 
     private static final String TIMEOUT = "TIMEOUT";
     private static final List<String> LISTCODE = Arrays.asList(BizCodeEnum.PROCESS_LENDING.getCode(), BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.REPAYMENTS.getCode());
@@ -50,13 +55,14 @@ public class BluePayService {
      */
     public PayResponse bluePaymentCode(Bid bid, String mode, BigDecimal amount, String paymentId) {
         //组装请求信息
+        String env = systemProp.getEnv();
+        String payeeMsisdn = EnvEnum.isTestEnv(env) ? MobileEnum.CHINA.getMobile() + RequestUtil.getGlobalUser().getMobile() : MobileEnum.IDR.getMobile() + RequestUtil.getGlobalUser().getMobile();
         PaymentCodeRequest paymentRequest = new PaymentCodeRequest();
         paymentRequest.setBankType(bid.getInBank().toLowerCase());
         paymentRequest.setTransactionId(paymentId);
         paymentRequest.setCardNo(bid.getInAccount());
         paymentRequest.setPrice(amount);
-//        paymentRequest.setMsisdn(RequestUtil.getGlobalUser().getMobile());
-        paymentRequest.setMsisdn("8615926633889");
+        paymentRequest.setMsisdn(payeeMsisdn);
         paymentRequest.setPayType(RepayMentEnum.getBlue(mode));
         // OTC方式不可传银行类型，否则报错
         if (mode.equals(RepayMentEnum.OTC.getMode())) {
@@ -68,8 +74,8 @@ public class BluePayService {
         if (result.equalsIgnoreCase(TIMEOUT)) {
             throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR);
         }
-        PayResponse response=JSON.parseObject(result, PayResponse.class);
-        if(!response.getCode().equals(BizCodeEnum.SUCCESS.getCode())){
+        PayResponse response = JSON.parseObject(result, PayResponse.class);
+        if (!response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
             throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR);
         }
         return response;
@@ -99,6 +105,9 @@ public class BluePayService {
      * @return 返回请求结果
      */
     public PayResponse loanTransaction(LoanTransactionRequest request) {
+        String env = systemProp.getEnv();
+        String payeeMsisdn = EnvEnum.isTestEnv(env) ? MobileEnum.CHINA.getMobile() + request.getPayeeMsisdn() : MobileEnum.IDR.getMobile() + request.getPayeeMsisdn();
+        request.setPayeeMsisdn(payeeMsisdn);
         log.info("请求地址{},请求报文：{}", prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
         log.info("请求地址{},返回报文：{}", prop.getAbsLoanTransactionUrl(), result);

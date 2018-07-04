@@ -1,7 +1,6 @@
 package com.hzed.easyget.application.service;
 
 import com.google.common.collect.Lists;
-import com.hzed.easyget.controller.model.DictRequest;
 import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.controller.model.IDAreaRequest;
 import com.hzed.easyget.controller.model.IDAreaResponse;
@@ -9,7 +8,6 @@ import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.repository.DictRepository;
 import com.hzed.easyget.infrastructure.repository.IDAreaRepository;
-import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.Dict;
 import com.hzed.easyget.persistence.auto.entity.IDArea;
 import lombok.extern.slf4j.Slf4j;
@@ -46,10 +44,7 @@ public class DictService {
         return dict;
     }
 
-    public List<DictResponse> getDictByModule(DictRequest request) {
-        List<DictResponse> dictResponseList = Lists.newArrayList();
-        String moduleCode = request.getModuleCode();
-        String i18n = RequestUtil.getGlobalHead().getI18n();
+    public List<DictResponse> getDictByModuleCodeAndLanguage(String moduleCode, String i18n) {
         // 获取缓存数据,缓存没有，才查询数据库
         List<DictResponse> dictResponseListCache = redisService.getObjCache(dictKey + moduleCode + RedisConsts.SPLIT + i18n);
         if (!ObjectUtils.isEmpty(dictResponseListCache)) {
@@ -57,6 +52,37 @@ public class DictService {
         }
 
         List<Dict> dictList = dictRepository.findByModuleCodeAndLanguage(moduleCode, i18n);
+        List<DictResponse> dictResponseList = addDictResponseList(dictList);
+
+        // 放入缓存5小时
+        redisService.setObjCache(dictKey + moduleCode + RedisConsts.SPLIT + i18n, dictResponseList, 5 * 3600L);
+
+        return dictResponseList;
+    }
+
+    /**
+     * 不根据国际化查询的字典列表
+     * @param moduleCode
+     * @return
+     */
+    public List<DictResponse> getDictByModule(String moduleCode) {
+        // 获取缓存数据,缓存没有，才查询数据库
+        List<DictResponse> dictResponseListCache = redisService.getObjCache(dictKey + moduleCode);
+        if (!ObjectUtils.isEmpty(dictResponseListCache)) {
+            return dictResponseListCache;
+        }
+
+        List<Dict> dictList = dictRepository.findByModuleCode(moduleCode);
+        List<DictResponse> dictResponseList = addDictResponseList(dictList);
+
+        // 放入缓存5小时
+        redisService.setObjCache(dictKey + moduleCode, dictResponseList, 5 * 3600L);
+
+        return dictResponseList;
+    }
+
+    private List<DictResponse> addDictResponseList(List<Dict> dictList) {
+        List<DictResponse> dictResponseList = Lists.newArrayList();
         dictList.forEach(dict -> {
             DictResponse dictResponse = new DictResponse();
             dictResponse.setDictCode(dict.getDicCode());
@@ -64,10 +90,6 @@ public class DictService {
             dictResponse.setDictName(dict.getDicName());
             dictResponseList.add(dictResponse);
         });
-
-        // 放入缓存5小时
-        redisService.setObjCache(dictKey + moduleCode + RedisConsts.SPLIT + i18n, dictResponseList, 5 * 3600L);
-
         return dictResponseList;
     }
 
@@ -99,6 +121,6 @@ public class DictService {
 
     public void clearModuleAndI18nCache(String module, String i18n) {
 
-        redisService.clearCache(dictKey + module + i18n);
+        redisService.clearCache(dictKey + module + RedisConsts.SPLIT + i18n);
     }
 }

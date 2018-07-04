@@ -1,14 +1,17 @@
 package com.hzed.easyget.infrastructure.config.rest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ServiceUnavailableRetryStrategy;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpRequest;
+import org.apache.http.NoHttpResponseException;
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
@@ -23,6 +26,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import javax.net.ssl.SSLException;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -150,33 +156,33 @@ public class RestService {
      * @return
      */
     public static CloseableHttpClient getHttpClient() {
-        // ServiceUnavailableRetryStrategy表示在服务暂时不可用时确定是否应该重试请求的响应策略
-        ServiceUnavailableRetryStrategy strategy = new ServiceUnavailableRetryStrategy() {
-            /**
-             * retry逻辑 重试三次
-             */
+        HttpRequestRetryHandler handler = new HttpRequestRetryHandler() {
             @Override
-            public boolean retryRequest(HttpResponse response, int executionCount, HttpContext context) {
-                if (executionCount <= 3) {
-                    return true;
-                } else {
+            public boolean retryRequest(IOException ex, int retryTimes, HttpContext httpContext) {
+                if (retryTimes > 3) {
                     return false;
                 }
-            }
+                if (ex instanceof UnknownHostException || ex instanceof ConnectTimeoutException
+                        || !(ex instanceof SSLException) || ex instanceof NoHttpResponseException) {
+                    return true;
+                }
 
-            /**
-             * retry间隔时间
-             */
-            @Override
-            public long getRetryInterval() {
-                return 100;
+                HttpClientContext clientContext = HttpClientContext.adapt(httpContext);
+                HttpRequest request = clientContext.getRequest();
+                boolean idempotent = !(request instanceof HttpEntityEnclosingRequest);
+                if (idempotent) {
+                    // 如果请求被认为是幂等的，那么就重试。即重复执行不影响程序其他效果的
+                    return true;
+                }
+                return false;
             }
         };
+
         PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
         cm.setMaxTotal(50);
         cm.setDefaultMaxPerRoute(100);
         // DefaultHttpRequestRetryHandler表示一种策略，用于确定在发生I/O错误（从服务器未收到HTTP响应）时请求是否可以安全重试。
-        CloseableHttpClient httpClient = HttpClients.custom().setRetryHandler(new DefaultHttpRequestRetryHandler())
+        CloseableHttpClient httpClient = HttpClients.custom().setRetryHandler(handler)
                 .setConnectionManager(cm).build();
         return httpClient;
     }

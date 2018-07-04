@@ -177,4 +177,13 @@ POST http://10.10.30.55:28080/easy-get-admin/login
 
 ###
 
+POST http://10.10.30.92:8150/hzed/easy-get/api/test/manMadeMqCallback
+#POST http://localhost:8150/hzed/easy-get/api/test/manMadeMqCallback
+Accept: application/json;charset=UTF-8;
+Content-Type: application/json
+
+{"bt_id":"1605042141530530417608YMWasB","cmd":"CFM","currency":"IDR","encrypt":"9b223fb0ae1f40d6d93be7016ca945a5","interfacetype":"cashout","msisdn":"8613900139021","operator":"PERMATA","paytype":"pre","price":480000,"productid":1605,"status":"200","t_id":"112823616491888640hzed"}
+
+###
+
 

@@ -4,6 +4,13 @@ spring:
     url: jdbc:mysql://10.10.30.91:3306/easy-get-test?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
     username: ENC(djxDOCrXhNQN5FAfcpTPIw==) # 用户密文 明文用户：root
     password: ENC(piWM79kO6kiDDcjR2jhwAw==) # 密码密文 明文密码：123456
+  # rabbitmq配置
+  rabbitmq:
+    host: 10.10.30.112
+    port: 32999
+    username: user
+    password: password
+    virtual-host: /
 # 日志文件配置
 logging:
   logHome: /work/easy-get-8150/logs # 日志路径
@@ -21,10 +28,10 @@ system:
   # 定时任务 启动标志 周期
   job:
     # 风控审核
-    pushBid: true
+    pushBid: false
     pushBidCron: 0/5 * * * * ?
     # 放款
-    bankLoan: true
+    bankLoan: false
     bankLoanCron: 0/5 * * * * ?
     # 处理还款信息流
     repayInfoFlow: false

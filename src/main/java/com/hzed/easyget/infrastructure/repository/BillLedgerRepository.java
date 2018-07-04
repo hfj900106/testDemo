@@ -31,7 +31,7 @@ public class BillLedgerRepository {
     public BillLedger findBillLedgerItemByBillIdWithExp(Long billId, Byte item) {
         BillLedger billLedger = findBillLedgerItemByBillId(billId, item);
         if (billLedger == null) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_LEDGER_TYPE, new Object[]{billId, item});
+            throw new ComBizException(BizCodeEnum.ILLEGAL_LEDGER_TYPE, new Object[]{String.valueOf(billId), item});
         }
         return billLedger;
     }
@@ -45,7 +45,7 @@ public class BillLedgerRepository {
     public List<BillLedger> findAllBillLedgerByBillIdWithExp(Long billId) {
         List<BillLedger> list = findAllBillLedgerByBillId(billId);
         if (list == null || list.isEmpty()) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_LEDGER, new Object[]{billId});
+            throw new ComBizException(BizCodeEnum.ILLEGAL_LEDGER, new Object[]{String.valueOf(billId)});
         }
         return list;
     }

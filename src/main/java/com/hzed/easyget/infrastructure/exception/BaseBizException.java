@@ -1,7 +1,6 @@
 package com.hzed.easyget.infrastructure.exception;
 
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * 异常基本类
@@ -70,6 +69,6 @@ public class BaseBizException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return StringUtils.isBlank(this.extraMsg) ? this.errorMsg : this.errorMsg + "-" + this.extraMsg;
+        return this.errorMsg;
     }
 }

@@ -30,13 +30,13 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @ModuleFunc(value = "通讯录认证", printParameterLength = 500)
+    @ModuleFunc(value = "通讯录认证", printParameterLength = 300)
     @PostMapping("/contacts")
     public void contacts(@Valid @RequestBody ContactsRequest request) {
         authService.authContacts(request);
     }
 
-    @ModuleFunc(value = "短信认证", printParameterLength = 500)
+    @ModuleFunc(value = "短信认证", printParameterLength = 300)
     @PostMapping("/messages")
     public void messages(@Valid @RequestBody MessagesRequest request) {
         authService.authMessages(request);
@@ -48,19 +48,19 @@ public class AuthController {
         authService.authPersonInfo(request);
     }
 
-    @ModuleFunc(value = "身份证识别", printParameterLength = 500)
+    @ModuleFunc(value = "身份证识别", printParameterLength = 300)
     @PostMapping("/idCardRecognition")
     public IdCardRecognitionResponse idCardRecognition(@Valid @RequestBody IdCardRecognitionRequest request) {
         return authService.idCardRecognition(request);
     }
 
-    @ModuleFunc(value = "人脸识别", printParameterLength = 500)
+    @ModuleFunc(value = "人脸识别", printParameterLength = 300)
     @PostMapping("/faceRecognition")
     public void faceRecognition(@Valid @RequestBody FaceRecognitionRequest request) {
         authService.faceRecognition(request);
     }
 
-    @ModuleFunc(value = "身份信息认证", printParameterLength = 500)
+    @ModuleFunc(value = "身份信息认证", printParameterLength = 300)
     @PostMapping("/identityInfo")
     public void identityInformationAuth(@Valid @RequestBody IdentityInfoAuthRequest request) {
         authService.identityInfoAuth(request);
@@ -84,7 +84,7 @@ public class AuthController {
         authService.operatorAuth(request);
     }
 
-    @ModuleFunc(value = "专业信息认证", printParameterLength = 500)
+    @ModuleFunc(value = "专业信息认证", printParameterLength = 300)
     @PostMapping("/professional")
     public void professionalAuth(@Valid @RequestBody ProfessionalRequest request) {
         authService.professionalAuth(request);

@@ -25,10 +25,12 @@ public interface ProductService {
     /**
      * 根据标的创建台账
      *
-     * @param bid 标的
+     * @param bill 账单
+     * @param amount 借款金额
+     * @param period 期限
      * @return 台账列表
      */
-    List<BillLedger> createBillLedger(Bid bid);
+    List<BillLedger> createBillLedger(List<Bill> bills, BigDecimal amount, Integer period);
 
     /**
      * 校验标的是否为当前产品

@@ -7,6 +7,7 @@ import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.PushBidCallbackRequest;
 import com.hzed.easyget.controller.model.PushBidCallbackResponse;
+import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -37,7 +38,17 @@ public class CallbackService {
     public PushBidCallbackResponse pushBidCallback(PushBidCallbackRequest request) {
         Long bidId = request.getBidId();
         BigDecimal loanAmount = request.getLoanAmount();
-        byte status = "1".equals(request.getResultCode()) ? BidStatusEnum.AUDIT_PASS.getCode().byteValue() : BidStatusEnum.AUDIT_FAIL.getCode().byteValue();
+        byte status = (byte)0;
+             //通过
+        if(ComConsts.RISK_4.equals(request.getResultCode())){
+            status = BidStatusEnum.AUDIT_PASS.getCode().byteValue();
+            //失败
+        }else if(ComConsts.RISK_3.equals(request.getResultCode())){
+            status = BidStatusEnum.AUDIT_FAIL.getCode().byteValue();
+            //人审
+        }else if(ComConsts.RISK_2.equals(request.getResultCode())){
+            status = BidStatusEnum.MANMADE_ING.getCode().byteValue();
+        }
 
         LocalDateTime dateTime = DateUtil.timestampToLocalDateTimeTo(Long.parseLong(request.getHandleTime()));
         Bid bid = bidRepository.findById(bidId);

@@ -20,10 +20,18 @@ spring:
     host: 10.10.30.37
     port: 3037
     password: masterpass
+  # 国际化配置
   messages:
     basename: i18n/messages
     encoding: utf-8
     cacheSeconds: 86400 # 24小时
+  # rabbitmq配置
+  rabbitmq:
+    host: 10.10.30.114
+    port: 32771
+    username: user
+    password: password
+    virtual-host: /
 
 # 日志文件配置
 logging:
@@ -34,17 +42,17 @@ logging:
   envNameCN: 开发环境 # 环境中文名
   emailTo: guichang@hzed.com # 邮件接收者，多个用逗号隔开
 
-# 阿里云配置
-aliyun:
-  endpoint: http://oss-cn-shenzhen.aliyuncs.com
-  accessKeyId: LTAIxzelwCX3fyTQ
-  accessKeySecret: IwfH6vAH0rZWK3wL2aK3hTopsWVb6t
-  bucketName: hzed-ccard #存储空间目录
+# 阿里云配置 暂废弃
+#aliyun:
+#  endpoint: http://oss-cn-shenzhen.aliyuncs.com
+#  accessKeyId: LTAIxzelwCX3fyTQ
+#  accessKeySecret: IwfH6vAH0rZWK3wL2aK3hTopsWVb6t
+#  bucketName: hzed-ccard #存储空间目录
 
 # 第三方
 thirdParty:
   pay:
-    domain:                   http://10.10.30.114:8081 # 请求架构组bulepay域名地址
+    domain:                   http://10.10.30.114:8082 # 请求架构组bulepay域名地址
     loanTransactionUrl:       /bluepay/transferBalance  # 放款接口链接
     receiverTransactionUrl:   /bluepay/gatherDr # 收款接口链接
     getPaymentCodeUrl:        /bluepay/getPaymentCode #获取还款码接口
@@ -59,7 +67,7 @@ thirdParty:
     operatorAuthUrl:          /api/riskOperator/sendSmsCode  # 运营商-输入验证码认证
     identityInfoUrl:          /api/risk/core/identity   # 身份信息认证
     pushBidUrl:               /api/risk/auto/antifraud  # 风控审核
-    facebookAndInsUrl:       /api/riskSocial/certificationNotify  #facebook和ins认证时数据推风控
+    facebookAndInsUrl:        /api/riskSocial/certificationNotify  #facebook和ins认证时数据推风控
 #======================================= 系统参数 开始 =======================================#
 system:
   imgUploadPath: c:/imgUpload # 上传图片文件目录
@@ -90,7 +98,6 @@ system:
     # 神策还款
     saRepaymentSuccess: false
     saRepaymentSuccessCron: 0 */1 * * * ?
-
 
 
 #======================================= 系统参数 结束 =======================================#

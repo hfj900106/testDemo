@@ -9,6 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -117,10 +121,7 @@ public class BootApplication {
         ApiInfo apiInfo = new ApiInfoBuilder()
                 .title("api文档")
                 .description("restfun 风格接口")
-                // 服务条款网址
-                //.termsOfServiceUrl("http://blog.csdn.net/forezp")
                 .version("1.0")
-                //.contact(new Contact("帅呆了", "url", "email"))
                 .build();
 
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
@@ -129,7 +130,6 @@ public class BootApplication {
                 .forCodeGeneration(false)
                 .apiInfo(apiInfo)
                 .select()
-                // 加入扫描
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ModuleFunc.class))
                 .paths(PathSelectors.any())
                 .build();

@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -109,7 +108,7 @@ public class JobService {
                     throw new ComBizException(BizCodeEnum.FAIL_PUSH_RISK);
                 }
             } catch (Exception ex) {
-                log.info("标ID：{}，推送失败：{}", bidId,ex);
+                log.info("标ID：{}，推送失败：{}", bidId, ex);
                 //更新中间表
                 TempTable tempUpdate = buildTempTableToUpdate(tempId, (byte) times, "推送失败");
                 tempTableRepository.updateTemp(tempUpdate);
@@ -131,19 +130,16 @@ public class JobService {
             MdcUtil.putTrace();
             try {
                 // 走信息流
-                Long bidId = repayjob.getBidId();
-                BigDecimal repaymentAmount = repayjob.getRepaymentAmount();
-                LocalDateTime realRepaymentTime = repayjob.getRealRepaymentTime();
-                repayService.repayInformationFlow(bidId, repaymentAmount, realRepaymentTime, repayjob.getTransactionId(), repayjob);
-            } catch (Exception e) {
-                log.error("标的：{}走还款信息流失败", repayjob.getBidId());
+                repayService.repayInformationFlow(repayjob.getBidId(), repayjob.getRepaymentAmount(), repayjob.getRealRepaymentTime(), repayjob.getTransactionId(), repayjob);
+            } catch (Exception ex) {
+                log.error("标的：{}走还款信息流失败", repayjob.getBidId(), ex);
 
                 RepayInfoFlowJob jobUpdate = new RepayInfoFlowJob();
                 jobUpdate.setId(repayjob.getId());
                 jobUpdate.setStatus(JobStatusEnum.FALI.getCode().byteValue());
                 jobUpdate.setTimes((byte) (repayjob.getTimes().intValue() + 1));
                 jobUpdate.setUpdateTime(LocalDateTime.now());
-                jobUpdate.setRemark(e.getMessage());
+                jobUpdate.setRemark(ex.getMessage());
                 repayInfoFlowJobRepository.update(jobUpdate);
             }
         });
@@ -173,7 +169,9 @@ public class JobService {
                     loan.setTransactionId(IdentifierGenerator.nextSeqNo());
                     //交易流水
                     loan.setRequestNo(tempId.toString());
-                    PayResponse response = bluePayService.loanTransaction(loan);
+                    // fixme 模拟放款成功
+//                    PayResponse response = bluePayService.loanTransaction(loan);
+                    PayResponse response = new PayResponse(BizCodeEnum.SUCCESS.getCode());
                     if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
                         transactionService.lendingCallback(bidId, tempId, loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
                     } else {

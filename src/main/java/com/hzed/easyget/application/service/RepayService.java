@@ -405,7 +405,7 @@ public class RepayService {
         PaymentIdResponse response = new PaymentIdResponse();
         if (!ObjectUtils.isEmpty(vaCode)) {
             response.setVaCode(vaCode.getVa());
-            response.setExpireTime(DateUtil.localDateTimeToTimestamp(vaCode.getVaCreateTime()));
+            response.setExpireTime(DateUtil.localDateTimeToTimestamp(vaCode.getVaExpireTime()));
             response.setMode(vaCode.getMode());
         }
         response.setBidId(bidId);

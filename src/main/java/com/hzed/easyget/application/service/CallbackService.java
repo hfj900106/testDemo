@@ -50,15 +50,16 @@ public class CallbackService {
             status = BidStatusEnum.MANMADE_ING.getCode().byteValue();
         }
 
-        LocalDateTime dateTime = DateUtil.timestampToLocalDateTimeTo(Long.parseLong(request.getHandleTime()));
+        LocalDateTime dateTime = DateUtil.timestampToLocalDateTimeTo(request.getHandleTime());
         Bid bid = bidRepository.findById(bidId);
         if(ObjectUtils.isEmpty(bid)){
             log.error("回调处理的标ID：{}不存在标的表中",bidId);
         }else {
             AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
             tempTableRepository.pushBidCallback(
-                    Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(dateTime).auditFee(absProduct.getHeadFee()).status(status).build(),
-                    BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue()).build(),
+                    Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(LocalDateTime.now()).auditFee(absProduct.getHeadFee()).status(status).build(),
+                    BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue()).handleResult(request.getMessage())
+                            .handleTime(dateTime).build(),
                     bidId);
         }
 

@@ -65,7 +65,7 @@ public class ExpHandlerAdvice {
     @ExceptionHandler(NestedException.class)
     public Response handlerNestedException(NestedException ex) {
         log.warn("内部异常：{}", ex.getMessage());
-        return new Response(ex.getErrorCode(), i18nService.getBizCodeMessage(ex.getErrorCode()), ex.getData());
+        return new Response(ex.getErrorCode(), ex.getErrorCode());
     }
 
     @ExceptionHandler(Exception.class)

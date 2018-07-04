@@ -27,7 +27,7 @@ public class ComUtil {
         } else if (str.length() <= length) {
             return str;
         } else {
-            return str.substring(0, length);
+            return str.substring(0, length) + "...";
         }
     }
 

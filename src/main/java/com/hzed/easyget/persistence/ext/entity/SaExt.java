@@ -35,6 +35,8 @@ public class SaExt {
     private String telephone;
     /** 用户姓名 */
     private String userName;
+    /** 银行卡代号 */
+    private String inBank;
 
     /** 神策借款成功 */
     /** 应还时间 */

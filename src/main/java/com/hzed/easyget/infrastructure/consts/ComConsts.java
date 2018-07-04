@@ -24,6 +24,11 @@ public class ComConsts {
     public static final String RISK_OPERATOR_PARAMS_ERROR = "1";
     public static final String RISK_OPERATOR_HAVE_AUTH = "0000";
     public static final String H5 = "H5";
+     /** 风控审核回调code */
+     public static final String RISK_2 = "2";
+     public static final String RISK_3 = "3";
+     public static final String RISK_4 = "4";
+
     /**
      * 印尼身份证上的性别-女
      */

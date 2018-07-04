@@ -1,6 +1,7 @@
 package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.BluePayService;
+import com.hzed.easyget.application.service.JobService;
 import com.hzed.easyget.application.service.RepayService;
 import com.hzed.easyget.controller.model.BluePayRequest;
 import com.hzed.easyget.controller.model.RepaymentCompleRequest;
@@ -10,10 +11,7 @@ import com.hzed.easyget.infrastructure.annotation.head.IgnoreHeader;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -32,6 +30,8 @@ public class TestController {
     private BluePayService bluePayService;
     @Autowired
     private RepayService repayService;
+    @Autowired
+    private JobService jobService;
 
     @IgnoreHeader
     @ModuleFunc("还款接口-测试环境专用")
@@ -52,5 +52,14 @@ public class TestController {
         } finally {
             log.info("============================= 人工处理MQ回调结束 =============================");
         }
+    }
+
+    @IgnoreHeader
+    @ModuleFunc("人工触发定时任务")
+    @PostMapping("/manMadeJob/{jobName}")
+    public void testRepayment(@PathVariable String jobName) {
+
+
+
     }
 }

@@ -75,7 +75,7 @@ public class LoginService {
         boolean isNew = false;
         //用户为空，那么该用户的token表数据肯定也为空
         if (user == null) {
-            isNew =true;
+            isNew = true;
             userId = IdentifierGenerator.nextId();
             //build User
             user = User.builder().id(userId).mobileAccount(mobile).platform(platform).client(BidEnum.INDONESIA_APP.getCode()).imei(imei).build();
@@ -105,7 +105,7 @@ public class LoginService {
                 // UserLogin
                 UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
                 userRepository.insertTokenAndLogin(userToken2, userLogin);
-            }else{
+            } else {
                 // UserToken 老用户登录都要刷新token表，刷新过期时间
                 UserToken userTokenUpdate = buildUserToken(userToken.getId(), userId, token, imei);
                 userTokenUpdate.setUpdateTime(LocalDateTime.now());
@@ -121,7 +121,6 @@ public class LoginService {
         redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
         return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).build();
     }
-
 
 
     /**
@@ -210,7 +209,7 @@ public class LoginService {
         String mobile = request.getMobile();
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String isH5 = globalHead.getPlatform();
-        if(ComConsts.H5.equals(isH5)){
+        if (ComConsts.H5.equals(isH5)) {
             User user = userRepository.findByMobile(mobile);
             if (user != null) {
                 throw new WarnException(BizCodeEnum.EXIST_USER);
@@ -232,7 +231,7 @@ public class LoginService {
         SystemProp systemProp = SpringContextUtil.getBean(SystemProp.class);
         if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
             //非测试环境发送短信
-            SmsUtils.sendSms(mobile,content,smsId);
+            SmsUtils.sendSms(mobile, content, String.valueOf(smsId));
         }
         // 保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();

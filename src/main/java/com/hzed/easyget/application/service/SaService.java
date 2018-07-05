@@ -279,7 +279,7 @@ public class SaService {
         //    IsUnpaid	是否有未还金额	BOOL
         properties.put("IsUnpaid", isUnpaid(info));
         //    IsOverdue	是否逾期	BOOL
-        properties.put("IsUnpaid", isOverdue(info));
+        properties.put("IsOverdue", isOverdue(info));
 
         try {
             log.info("SensorsAnalytics repaymentSuccess track method begin, bidId:{}, userId:{}, bidStatus:{}" , info.getBidId(), info.getUserId(), info.getBidStatus());

@@ -87,7 +87,7 @@
     </update>
 
     <select id="repaymentSuccessList" resultType="com.hzed.easyget.persistence.ext.entity.SaExt">
-        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, bill.status as bill_status, bill.is_partial_repayment, date_add(bill.repayment_time, INTERVAL - 1 DAY) as real_repayment_time
+        SELECT DISTINCT bid.id as bid_id, bid.user_id, bid.status as bid_status, bill.status as bill_status, bill.is_partial_repayment, date_add(bill.repayment_time, INTERVAL - 1 DAY) as real_repayment_time
         FROM t_loan_bid bid
         LEFT JOIN t_loan_bill bill on bid.id = bill.bid_id
         LEFT JOIN t_loan_bill_ledger ledger on bill.id = ledger.bill_id
@@ -113,7 +113,7 @@
     </insert>
 
     <select id="pushRepaymentSuccessList" resultType="com.hzed.easyget.persistence.ext.entity.SaExt">
-        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, bill.status as bill_status, bill.is_partial_repayment, date_add(bill.repayment_time, INTERVAL - 1 DAY) as real_repayment_time
+        SELECT DISTINCT bid.id as bid_id, bid.user_id, bid.status as bid_status, bill.status as bill_status, bill.is_partial_repayment, date_add(bill.repayment_time, INTERVAL - 1 DAY) as real_repayment_time
         FROM t_loan_bid bid
         LEFT JOIN t_loan_bill bill on bid.id = bill.bid_id
         LEFT JOIN t_loan_bill_ledger ledger on bill.id = ledger.bill_id

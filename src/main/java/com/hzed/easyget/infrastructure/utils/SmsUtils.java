@@ -1,6 +1,7 @@
 package com.hzed.easyget.infrastructure.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.application.service.DictService;
 import com.hzed.easyget.infrastructure.config.SystemProp;
@@ -19,8 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -75,18 +74,12 @@ public class SmsUtils {
             BulkSmsDownRequest.MsgBody.Member member = new BulkSmsDownRequest.MsgBody.Member();
             //00加国家代码中国为0086
             member.setNumber(mobile);
-            List<BulkSmsDownRequest.MsgBody.Member> members = new ArrayList<>();
-            members.add(member);
             //设置短信接收列表
-            msgBody.setTo(members);
-
+            msgBody.setTo(Lists.newArrayList(member));
             //bulk短信下发请求消息
             BulkSmsDownRequest.Message message = new BulkSmsDownRequest.Message();
             //bulk短信下发请求消息body列表
-            List<BulkSmsDownRequest.MsgBody> msgBodyList = new ArrayList<>();
-            msgBodyList.add(msgBody);
-            //设置短信下发请求消息body列表
-            message.setMsg(msgBodyList);
+            message.setMsg(Lists.newArrayList(msgBody));
             smsDownRequest.setMessages(message);
             log.info("发送短信请求参数：{}", JSONObject.toJSONString(smsDownRequest));
             BulkSmsDownResponse smsDownResponse = BulkSmsUtil.smsSend(smsDownRequest);

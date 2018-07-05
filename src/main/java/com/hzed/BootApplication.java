@@ -2,6 +2,7 @@ package com.hzed;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hzed.easyget.infrastructure.annotation.EnableRabbitMQ;
 import com.hzed.easyget.infrastructure.annotation.EnableRedis;
 import com.hzed.easyget.infrastructure.annotation.EnableRest;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
@@ -9,10 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -54,7 +51,7 @@ import javax.validation.Validator;
 @ServletComponentScan
 @EnableRedis
 @EnableRest
-//@EnableRabbitMQ
+@EnableRabbitMQ
 @EnableSwagger2
 public class BootApplication {
 

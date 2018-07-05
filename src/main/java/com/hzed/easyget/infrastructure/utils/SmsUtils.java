@@ -6,7 +6,6 @@ import com.hzed.easyget.application.service.DictService;
 import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
-import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.persistence.auto.entity.Dict;
 import com.hzed.indonesia.sms.constants.SmsCodeEnum;
@@ -18,7 +17,6 @@ import com.hzed.indonesia.sms.utils.BulkSmsUtil;
 import com.hzed.indonesia.sms.utils.NxSmsUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -34,11 +32,10 @@ import java.util.Random;
 @Slf4j
 public class SmsUtils {
 
-    public static void sendSms(String mobile, String content, Long smsId) {
-        String smsIdStr = String.valueOf(smsId);
+    public static void sendSms(String mobile, String content, String smsIdStr) {
         DictService dictService = SpringContextUtil.getBean(DictService.class);
         Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
-        if(ObjectUtils.isEmpty(dictSms)){
+        if (ObjectUtils.isEmpty(dictSms)) {
             log.error("没有配置短信渠道");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
@@ -57,7 +54,7 @@ public class SmsUtils {
             log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
             //发送失败
             if (!SmsCodeEnum.OK.getKey().equals(smsDownResponse.getCode())) {
-                log.error("发送失败：{}",smsDownResponse.getInfo());
+                log.error("发送失败：{}", smsDownResponse.getInfo());
                 throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
             }
         } else {
@@ -68,7 +65,7 @@ public class SmsUtils {
             //短信来源
             msgBody.setFrom("easy-get");
             //消息标识id 短信表的id作为短信的唯一标识发给渠道商
-            msgBody.setReference(String.valueOf(smsId));
+            msgBody.setReference(smsIdStr);
             //短信内容实体
             BulkSmsDownRequest.MsgBody.SmsBody smsBody = new BulkSmsDownRequest.MsgBody.SmsBody();
             smsBody.setContent(content);
@@ -95,11 +92,10 @@ public class SmsUtils {
             BulkSmsDownResponse smsDownResponse = BulkSmsUtil.smsSend(smsDownRequest);
             log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
             if (ComConsts.BULK_SMS_OK != smsDownResponse.getErrorCode()) {
-                log.error("发送失败：{}",JSONObject.toJSONString(smsDownResponse.getMessages()));
+                log.error("发送失败：{}", JSONObject.toJSONString(smsDownResponse.getMessages()));
                 throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
             }
         }
-
     }
 
     public static String getCode() {

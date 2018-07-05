@@ -72,8 +72,8 @@ thirdParty:
 system:
   imgUploadPath: c:/imgUpload # 上传图片文件目录
   tokenExpire: 7 # token失效时间 7 天
-  expected_audit_time_interval: 1440 #预计审核时间间隔 单位分
-  expected_lending_time_interval: 60 #预计放款时间间隔 单位分
+  expected_audit_time_interval: 1440 # 预计审核时间间隔 单位分
+  expected_lending_time_interval: 60 # 预计放款时间间隔 单位分
 
   # 定时任务 启动标志 周期
   job:

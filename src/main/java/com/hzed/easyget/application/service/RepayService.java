@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -563,7 +564,7 @@ public class RepayService {
             }
             UserTransactionPic repayPicInsert = UserTransactionPic.builder()
                     .evidencePicUrl(picUrl)
-                    .va(request.getVa())
+                    .va(request.getVa().replace(" ",""))
                     .bidId(request.getBidId())
                     .mode(request.getMode())
                     .build();

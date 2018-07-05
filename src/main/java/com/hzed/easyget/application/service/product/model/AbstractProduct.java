@@ -22,7 +22,7 @@ public interface AbstractProduct {
      *
      * @return 利息
      */
-    BigDecimal getInerest();
+    BigDecimal getInterest();
 
     /**
      * 尾款
@@ -50,4 +50,9 @@ public interface AbstractProduct {
      * 最小还款金额
      */
     BigDecimal getMinRepayAmount();
+
+    /**
+     * 到账金额
+     */
+    BigDecimal getArrivalAmount();
 }

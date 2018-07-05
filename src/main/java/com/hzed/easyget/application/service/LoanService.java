@@ -3,6 +3,8 @@ package com.hzed.easyget.application.service;
 import com.hzed.easyget.application.enums.BidEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.ProductEnum;
+import com.hzed.easyget.application.service.product.ProductFactory;
+import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.LoanDetailRequest;
 import com.hzed.easyget.controller.model.LoanDetailResponse;
 import com.hzed.easyget.controller.model.SubmitLoanRequest;
@@ -45,7 +47,8 @@ public class LoanService {
         LoanDetailResponse loanDetailResponse = new LoanDetailResponse();
         Bid bid = bidRepository.findByIdWithExp(request.getBid());
         Byte status = bid.getStatus();
-        loanDetailResponse.setApplyAmount(bid.getApplyAmount().toString());
+        AbstractProduct product = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(bid.getLoanAmount(), bid.getPeriod());
+        loanDetailResponse.setApplyAmount(product.getArrivalAmount().toString());
         loanDetailResponse.setApplyTime(DateUtil.localDateTimeToStr2(bid.getCreateTime()));
         loanDetailResponse.setInBank(bid.getInBank());
         loanDetailResponse.setInAccount(bid.getInAccount());

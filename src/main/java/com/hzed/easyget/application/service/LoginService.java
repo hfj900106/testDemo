@@ -226,7 +226,7 @@ public class LoginService {
             throw new WarnException(BizCodeEnum.PIC_CODE_TO_CHECK);
         }
         String code = SmsUtils.getCode();
-        String content = "您的注册验证码是：" + code + " ，两分钟内有效，欢迎使用本平台";
+        String content = "【Rupiah Get】Kode verifikasi Anda adalah: " + code + ", berlaku selama 2 menit, selamat datang untuk menggunakan Rupiah Get";
         Long smsId = IdentifierGenerator.nextId();
         SystemProp systemProp = SpringContextUtil.getBean(SystemProp.class);
         if (!EnvEnum.isTestEnv(systemProp.getEnv())) {

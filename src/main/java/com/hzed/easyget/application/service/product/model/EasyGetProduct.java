@@ -47,7 +47,7 @@ public class EasyGetProduct implements AbstractProduct {
     }
 
     @Override
-    public BigDecimal getInerest() {
+    public BigDecimal getInterest() {
         return BigDecimal.ZERO;
     }
 
@@ -69,5 +69,10 @@ public class EasyGetProduct implements AbstractProduct {
     @Override
     public BigDecimal getMinRepayAmount() {
         return minRepayAmount;
+    }
+
+    @Override
+    public BigDecimal getArrivalAmount() {
+        return amount.subtract(getTailFee().setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 }

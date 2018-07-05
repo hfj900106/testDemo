@@ -96,9 +96,9 @@ public class SaService {
 
         Map<String, Object> properties = new HashMap<>(16);
         //  InDataID   进件订单ID(标的id)	 字符串
-        properties.put("InDataID", info.getBidId());
+        properties.put("InDataID", String.valueOf(info.getBidId()));
         // UserId	借款用户ID	字符串
-        properties.put("UserId", info.getUserId());
+        properties.put("UserId", String.valueOf(info.getUserId()));
         // IsSuccess	是否成功	BOOL
         properties.put("IsSuccess", isSuccess);
         // EventResult	事件结果	字符串
@@ -108,8 +108,10 @@ public class SaService {
         int loanTimes = calculateLoanTimes(info.getUserId());
         // LoanTimes	第几次借款	数值
         properties.put("LoanTimes", loanTimes);
-        // BankName	银行名称	字符串
+        // BankName	    银行名称	字符串
         properties.put("BankName", info.getInBank());
+        // LoanReason	贷款目的	字符串
+        properties.put("LoanReason", info.getPurposeCode());
 
         try {
             log.info("SensorsAnalytics inData track method begin, bidId:{}, userId:{}, bidStatus:{}" , info.getBidId(), info.getUserId(), info.getBidStatus());
@@ -189,7 +191,7 @@ public class SaService {
     public void pushLoanSuccess(SaExt info) {
         Map<String, Object> properties = new HashMap<>(16);
         // InDataID	     进件订单ID	字符串
-        properties.put("InDataID", info.getBidId());
+        properties.put("InDataID", String.valueOf(info.getBidId()));
         // ProductType	产品名称	字符串    //1:立借、2:爱分期    ProductType	产品名称	字符串
         properties.put("ProductType", SaConsts.PROJEC_TNAME);
         // RepaymentTime 合约还款日期	日期
@@ -267,7 +269,7 @@ public class SaService {
     public void pushRepaymentSuccess(SaExt info) {
         Map<String, Object> properties = new HashMap<>(16);
         //    InDataID	进件订单ID	字符串
-        properties.put("InDataID", info.getBidId());
+        properties.put("InDataID", String.valueOf(info.getBidId()));
         //    ProductType	产品名称	字符串
         properties.put("ProductType", SaConsts.PROJEC_TNAME);
         //    RepaymentMethod	还款方式	字符串  全额还款、部分还款
@@ -277,7 +279,7 @@ public class SaService {
         //    IsUnpaid	是否有未还金额	BOOL
         properties.put("IsUnpaid", isUnpaid(info));
         //    IsOverdue	是否逾期	BOOL
-        properties.put("IsUnpaid", isOverdue(info));
+        properties.put("IsOverdue", isOverdue(info));
 
         try {
             log.info("SensorsAnalytics repaymentSuccess track method begin, bidId:{}, userId:{}, bidStatus:{}" , info.getBidId(), info.getUserId(), info.getBidStatus());
@@ -296,7 +298,7 @@ public class SaService {
         saRepository.updateToDbRepaymentSuccessDetail(bidId, userId);
     }
 
-    public Object isOverdue(SaExt info) {
+    public boolean isOverdue(SaExt info) {
         boolean isOverdue = false;
         if (BillStatusEnum.OVERDUE_CLEAR.getCode().byteValue() == info.getBillStatus()) {
             isOverdue = true;

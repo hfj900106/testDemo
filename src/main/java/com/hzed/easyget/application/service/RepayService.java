@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -95,7 +96,9 @@ public class RepayService {
             if (BidStatusEnum.CLEARED.getCode().byteValue() == bid.getStatus().byteValue()) {
                 repaymentResponse.setRepayTime(DateUtil.localDateTimeToTimestamp(bidProgress.getHandleTime()));
                 repaymentResponse.setStatus(RepayStatusEnum.CLEAR_REPAY.getCode().intValue());
-                repayListResponse.setLoanAmount(BigDecimal.ZERO);
+                repayListResponse.setLoanAmount(bid.getLoanAmount());
+                //实还总额
+                repaymentResponse.setRepayAmount(bill.getRealRepaymentAmount());
             }
             // 未结清
             else {
@@ -116,10 +119,11 @@ public class RepayService {
                     int days1 = DateUtil.getBetweenDays(LocalDateTime.now(), bill.getRepaymentTime());
                     repaymentResponse.setDays(days1);
                 }
+
+                //应该总额
+                repaymentResponse.setRepayAmount(comService.getBidNoRepayFee(bidId, LocalDateTime.now()));
             }
 
-            //应该总额
-            repaymentResponse.setRepayAmount(comService.getBidNoRepayFee(bidId, LocalDateTime.now()));
             repaymentResponse.setBid(bidId);
             repaymentResponseList.add(repaymentResponse);
         }
@@ -560,7 +564,7 @@ public class RepayService {
             }
             UserTransactionPic repayPicInsert = UserTransactionPic.builder()
                     .evidencePicUrl(picUrl)
-                    .va(request.getVa())
+                    .va(request.getVa().replace(" ",""))
                     .bidId(request.getBidId())
                     .mode(request.getMode())
                     .build();

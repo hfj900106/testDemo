@@ -3,7 +3,7 @@
 <mapper namespace="com.hzed.easyget.persistence.ext.mapper.SaExtMapper">
 
     <select id="queryInDataInfo" resultType="com.hzed.easyget.persistence.ext.entity.SaExt">
-        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, pro.handle_time, pro.handle_result,users.mobile_account as telephone, users.nick_name as user_name, bid.in_bank
+        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, pro.handle_time, (CASE WHEN bid.status = 3 THEN '审核不通过' WHEN bid.status = 4 THEN '审核通过' ELSE '' END) as handle_result, users.mobile_account as telephone, users.nick_name as user_name, bid.in_bank, bid.purpose_code
         FROM t_loan_bid bid
         LEFT JOIN t_loan_bid_progress pro ON bid.id = pro.bid_id
         LEFT JOIN t_loan_user users ON bid.user_id = users.id
@@ -17,16 +17,16 @@
 
     <insert id="batchSaveInData" parameterType="java.util.List">
         INSERT INTO  t_sa_jinjian_order
-        (id, bid_id, bid_status, user_id, user_reality_name, user_mobile, status, audit_time, audit_suggest, create_time, update_time)
+        (id, bid_id, bid_status, user_id, user_reality_name, user_mobile, status, audit_time, audit_suggest, in_bank, purpose_code, create_time, update_time)
         VALUES
         <foreach collection="list" item="item" index="index" open=""
                  close="" separator=",">
-            (NULL, #{item.bidId}, #{item.bidStatus}, #{item.userId}, #{item.userName}, #{item.telephone}, 100, #{item.handleTime}, #{item.handleResult}, NOW(), NULL)
+            (NULL, #{item.bidId}, #{item.bidStatus}, #{item.userId}, #{item.userName}, #{item.telephone}, 100, #{item.handleTime}, #{item.handleResult}, #{item.inBank}, #{item.purposeCode}, NOW(), NULL)
         </foreach>
     </insert>
 
     <select id="pushInDataList" resultType="com.hzed.easyget.persistence.ext.entity.SaExt">
-        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, pro.handle_time, pro.handle_result, users.mobile_account as telephone, users.nick_name as user_name, bid.in_bank
+        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, pro.handle_time, (CASE WHEN bid.status = 3 THEN '审核不通过' WHEN bid.status = 4 THEN '审核通过' ELSE '' END) as handle_result, users.mobile_account as telephone, users.nick_name as user_name, bid.in_bank, bid.purpose_code
         FROM t_loan_bid bid
         LEFT JOIN t_loan_bid_progress pro ON bid.id = pro.bid_id
         LEFT JOIN t_loan_user users ON bid.user_id = users.id
@@ -87,7 +87,7 @@
     </update>
 
     <select id="repaymentSuccessList" resultType="com.hzed.easyget.persistence.ext.entity.SaExt">
-        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, bill.status as bill_status, bill.is_partial_repayment, date_add(bill.repayment_time, INTERVAL - 1 DAY) as real_repayment_time
+        SELECT DISTINCT bid.id as bid_id, bid.user_id, bid.status as bid_status, bill.status as bill_status, bill.is_partial_repayment, date_add(bill.repayment_time, INTERVAL - 1 DAY) as real_repayment_time
         FROM t_loan_bid bid
         LEFT JOIN t_loan_bill bill on bid.id = bill.bid_id
         LEFT JOIN t_loan_bill_ledger ledger on bill.id = ledger.bill_id
@@ -113,7 +113,7 @@
     </insert>
 
     <select id="pushRepaymentSuccessList" resultType="com.hzed.easyget.persistence.ext.entity.SaExt">
-        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, bill.status as bill_status, bill.is_partial_repayment, date_add(bill.repayment_time, INTERVAL - 1 DAY) as real_repayment_time
+        SELECT DISTINCT bid.id as bid_id, bid.user_id, bid.status as bid_status, bill.status as bill_status, bill.is_partial_repayment, date_add(bill.repayment_time, INTERVAL - 1 DAY) as real_repayment_time
         FROM t_loan_bid bid
         LEFT JOIN t_loan_bill bill on bid.id = bill.bid_id
         LEFT JOIN t_loan_bill_ledger ledger on bill.id = ledger.bill_id

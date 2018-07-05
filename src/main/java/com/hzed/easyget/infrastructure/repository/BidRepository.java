@@ -44,6 +44,7 @@ public class BidRepository {
     public List<Bid> findPageByUserIdAndStatus(Long userId, List<Byte> statuses, Integer pageNo, Integer pageSize) {
         BidExample example = new BidExample();
         example.createCriteria().andUserIdEqualTo(userId).andStatusIn(statuses);
+        example.setOrderByClause(Bid.Column.createTime.asc());
         example.page(pageNo, pageSize);
         return bidMapper.selectByExample(example);
     }

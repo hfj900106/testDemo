@@ -85,14 +85,6 @@ public class SaService {
 
     public void pushInData(SaExt info) {
         boolean isSuccess = false;
-        String auditSuggest = "";
-        if (BidStatusEnum.AUDIT_FAIL.equals(info.getBidStatus())){
-            isSuccess = false;
-            auditSuggest = "人工审核不通过";
-        } else if(BidStatusEnum.AUDIT_PASS.equals(info.getBidStatus())){
-            isSuccess = true;
-            auditSuggest = "审核通过";
-        }
 
         Map<String, Object> properties = new HashMap<>(16);
         //  InDataID   进件订单ID(标的id)	 字符串
@@ -102,7 +94,7 @@ public class SaService {
         // IsSuccess	是否成功	BOOL
         properties.put("IsSuccess", isSuccess);
         // EventResult	事件结果	字符串
-        properties.put("EventResult", auditSuggest);
+        properties.put("EventResult", info.getHandleResult());
         // ProductType	产品名称	字符串
         properties.put("ProductType", SaConsts.PROJEC_TNAME);
         int loanTimes = calculateLoanTimes(info.getUserId());

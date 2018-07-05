@@ -108,8 +108,10 @@ public class SaService {
         int loanTimes = calculateLoanTimes(info.getUserId());
         // LoanTimes	第几次借款	数值
         properties.put("LoanTimes", loanTimes);
-        // BankName	银行名称	字符串
+        // BankName	    银行名称	字符串
         properties.put("BankName", info.getInBank());
+        // LoanReason	贷款目的	字符串
+        properties.put("LoanReason", info.getPurposeCode());
 
         try {
             log.info("SensorsAnalytics inData track method begin, bidId:{}, userId:{}, bidStatus:{}" , info.getBidId(), info.getUserId(), info.getBidStatus());

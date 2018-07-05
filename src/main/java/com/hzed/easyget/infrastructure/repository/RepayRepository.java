@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 还款 仓储类
@@ -73,21 +74,6 @@ public class RepayRepository {
         userTransactionMapper.updateByPrimaryKeySelective(userTransaction);
     }
 
-    /**
-     * 根据bid 金额 还款类型 获取va码
-     */
-    public UserTransactionRepay getVaCode(Long id, BigDecimal amount, Byte repayMentType) {
-        LocalDateTime time = LocalDateTime.now();
-        UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
-        repayExample.createCriteria()
-                .andBidIdEqualTo(id)
-                .andAmountEqualTo(amount)
-                .andRepaymentTypeEqualTo(repayMentType)
-                .andVaCreateTimeLessThanOrEqualTo(time)
-                .andVaExpireTimeGreaterThan(time)
-                .example().orderBy(UserTransactionRepay.Column.createTime.desc()).limit(1);
-        return repayMapper.selectOneByExample(repayExample);
-    }
 
     /**
      * 根绝交易订单号查询va码记录
@@ -102,15 +88,15 @@ public class RepayRepository {
     }
 
     /**
-     * 根据交易id 金额 还款类型 交易方式 获取va码
+     * 根据交易id 金额 未使用状态 交易方式 获取va码
      */
-    public UserTransactionRepay getVaCodeByParmers(Long bidId, BigDecimal amount, byte repayMentType, String mode) {
+    public UserTransactionRepay getVaCodeByParmers(Long bidId, BigDecimal amount, List<Byte> status, String mode) {
         LocalDateTime time = LocalDateTime.now();
         UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
         repayExample.createCriteria()
                 .andBidIdEqualTo(bidId)
                 .andAmountEqualTo(amount)
-                .andRepaymentTypeEqualTo(repayMentType)
+                .andStatusNotIn(status)
                 .andModeEqualTo(mode)
                 .andVaCreateTimeLessThanOrEqualTo(time)
                 .andVaExpireTimeGreaterThan(time)

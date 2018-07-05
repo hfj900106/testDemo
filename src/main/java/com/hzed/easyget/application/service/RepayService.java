@@ -26,9 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -94,7 +96,9 @@ public class RepayService {
             if (BidStatusEnum.CLEARED.getCode().byteValue() == bid.getStatus().byteValue()) {
                 repaymentResponse.setRepayTime(DateUtil.localDateTimeToTimestamp(bidProgress.getHandleTime()));
                 repaymentResponse.setStatus(RepayStatusEnum.CLEAR_REPAY.getCode().intValue());
-                repayListResponse.setLoanAmount(BigDecimal.ZERO);
+                repayListResponse.setLoanAmount(bid.getLoanAmount());
+                //实还总额
+                repaymentResponse.setRepayAmount(bill.getRealRepaymentAmount());
             }
             // 未结清
             else {
@@ -115,10 +119,11 @@ public class RepayService {
                     int days1 = DateUtil.getBetweenDays(LocalDateTime.now(), bill.getRepaymentTime());
                     repaymentResponse.setDays(days1);
                 }
+
+                //应该总额
+                repaymentResponse.setRepayAmount(comService.getBidNoRepayFee(bidId, LocalDateTime.now()));
             }
 
-            //应该总额
-            repaymentResponse.setRepayAmount(comService.getBidNoRepayFee(bidId, LocalDateTime.now()));
             repaymentResponse.setBid(bidId);
             repaymentResponseList.add(repaymentResponse);
         }
@@ -193,7 +198,8 @@ public class RepayService {
 
         // 保存 t_loan_bid_progress 标的进度表
         BidProgress progressInsert = new BidProgress();
-        progressInsert.setId(IdentifierGenerator.nextId());
+        long progressId = IdentifierGenerator.nextId();
+        progressInsert.setId(progressId);
         progressInsert.setBidId(bidId);
         progressInsert.setType(BidProgressTypeEnum.REPAY.getCode().byteValue());
         progressInsert.setHandleTime(LocalDateTime.now());
@@ -215,6 +221,14 @@ public class RepayService {
             bidUpdate.setStatus(BidStatusEnum.CLEARED.getCode().byteValue());
             bidUpdate.setUpdateTime(LocalDateTime.now());
             bidRepository.update(bidUpdate);
+
+            // 更新上一步的进度为结清
+            BidProgress progressUpdate = new BidProgress();
+            progressUpdate.setId(progressId);
+            progressUpdate.setType(BidProgressTypeEnum.CLEAR.getCode().byteValue());
+            progressUpdate.setHandleResult("用户结清：" + repayAmount);
+            progressUpdate.setRemark("结清");
+            bidProgressRepository.update(progressUpdate);
         }
 
         // 如果从定时任务进来则更新定时任务为处理成功
@@ -400,14 +414,7 @@ public class RepayService {
         if (ObjectUtils.isEmpty(repaymentTime)) {
             throw new ComBizException(BizCodeEnum.USERTRANSACTION_ERROR);
         }
-        // 查询是否有没过期的还款码
-        UserTransactionRepay vaCode = repayRepository.getVaCode(bidId, amount, flag ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue());
         PaymentIdResponse response = new PaymentIdResponse();
-        if (!ObjectUtils.isEmpty(vaCode)) {
-            response.setVaCode(vaCode.getVa());
-            response.setExpireTime(DateUtil.localDateTimeToTimestamp(vaCode.getVaExpireTime()));
-            response.setMode(vaCode.getMode());
-        }
         response.setBidId(bidId);
         response.setAmount(amount);
         response.setRepaymentTime(DateUtil.localDateTimeToTimestamp(repaymentTime));
@@ -425,7 +432,8 @@ public class RepayService {
         // 查询标的信息
         Bid bid = bidRepository.findByIdWithExp(request.getBidId());
         // 先查询数据库 是否存在没过期的还款码
-        UserTransactionRepay repayQuery = repayRepository.getVaCodeByParmers(request.getBidId(), request.getAmount(), request.isFlag() ? TransactionTypeEnum.ALL_CLEAR.getCode().byteValue() : TransactionTypeEnum.PARTIAL_CLEARANCE.getCode().byteValue(), request.getMode());
+        List<Byte> bytes=Arrays.asList(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(),TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
+        UserTransactionRepay repayQuery = repayRepository.getVaCodeByParmers(request.getBidId(), request.getAmount(),bytes, request.getMode());
         TransactionVaResponse vaResponse = new TransactionVaResponse();
         if (!ObjectUtils.isEmpty(repayQuery)) {
             vaResponse.setExpireTime(DateUtil.localDateTimeToTimestamp(repayQuery.getVaExpireTime()));
@@ -556,7 +564,7 @@ public class RepayService {
             }
             UserTransactionPic repayPicInsert = UserTransactionPic.builder()
                     .evidencePicUrl(picUrl)
-                    .va(request.getVa())
+                    .va(request.getVa().replace(" ",""))
                     .bidId(request.getBidId())
                     .mode(request.getMode())
                     .build();

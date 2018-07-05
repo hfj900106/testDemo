@@ -73,6 +73,6 @@ public class EasyGetProduct implements AbstractProduct {
 
     @Override
     public BigDecimal getArrivalAmount() {
-        return amount.subtract(getTailFee().setScale(2, BigDecimal.ROUND_HALF_UP));
+        return amount.subtract(getHeadFee().setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 }

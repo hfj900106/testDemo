@@ -47,4 +47,9 @@ public class Response<T> {
         return response;
     }
 
+    public static <T> Response getFailResponse(T data,String errorCode,String errorMsg) {
+
+        return new Response(errorCode, errorMsg, data);
+    }
+
 }

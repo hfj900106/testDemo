@@ -47,7 +47,7 @@ public class LoanService {
         LoanDetailResponse loanDetailResponse = new LoanDetailResponse();
         Bid bid = bidRepository.findByIdWithExp(request.getBid());
         Byte status = bid.getStatus();
-        AbstractProduct product = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(bid.getLoanAmount(), bid.getPeriod());
+        AbstractProduct product = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(bid.getApplyAmount(), bid.getPeriod());
         loanDetailResponse.setApplyAmount(product.getArrivalAmount().toString());
         loanDetailResponse.setApplyTime(DateUtil.localDateTimeToStr2(bid.getCreateTime()));
         loanDetailResponse.setInBank(bid.getInBank());

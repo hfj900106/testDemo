@@ -15,6 +15,7 @@ import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -22,6 +23,7 @@ import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,7 @@ import java.util.Objects;
  * @author wuchengwu
  * @data 2018/5/22
  */
+@Slf4j
 @Service
 public class HomeService {
 
@@ -179,28 +182,43 @@ public class HomeService {
         return newsResponseList;
     }
 
-    public void checkLoan() {
-        final String mk02 = "MK02";
+    public Response<List<CheckLoanResponse>> checkLoan() {
+        final String mk02 = "1100011";
+        final String mk06 = "1100014";
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String imei = RequestUtil.getGlobalHead().getImei();
         User user = userRepository.findById(userId);
-
+        List<Bid> bidList = bidRepository.findByUserId(userId);
+        List<CheckLoanResponse> checkLoanResponseList = Lists.newArrayList();
+        bidList.forEach(bid->{
+            CheckLoanResponse checkLoanResponse = new CheckLoanResponse();
+            checkLoanResponse.setBidStatus(bid.getStatus().toString());
+            checkLoanResponseList.add(checkLoanResponse);
+        });
         RiskResponse response = riskService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
         String errorCode = response.getHead().getError_code();
-
+        log.info("查询风控是否有贷款资格，风控返回信息:{}，用户id:{}",response.getHead().getError_msg(),userId);
+        String code = "";
+        String msg = "";
         if (StringUtils.isNotBlank(errorCode)) {
             //每日通过超过数量
             if (mk02.equals(errorCode)) {
-                throw new WarnException(BizCodeEnum.INSUFFICIENT_QUOTA);
+                code = BizCodeEnum.INSUFFICIENT_QUOTA.getCode();
+                msg = BizCodeEnum.INSUFFICIENT_QUOTA.getMessage();
+            } else if (mk06.equals(errorCode)) {
+                code = BizCodeEnum.BID_EXISTS.getCode();
+                msg = BizCodeEnum.BID_EXISTS.getMessage();
             } else {
-                throw new WarnException(BizCodeEnum.UN_LOAN_QUALIFICATION);
+                code = BizCodeEnum.UN_LOAN_QUALIFICATION.getCode();
+                msg = BizCodeEnum.UN_LOAN_QUALIFICATION.getMessage();
             }
         }
+        return Response.getFailResponse(checkLoanResponseList,code,msg);
 
     }
 
-    public CheckLoanResponse checkLoanJump() {
-        CheckLoanResponse checkLoanResponse = new CheckLoanResponse();
+    public CheckLoanJumpResponse checkLoanJump() {
+        CheckLoanJumpResponse checkLoanJumpResponse = new CheckLoanJumpResponse();
         Long userId = RequestUtil.getGlobalUser().getUserId();
         //bid为空或访问记录表不为空无需跳转，0000为无需跳转，其他需跳转
         List<Bid> bidList = bidRepository.findByUserId(userId);
@@ -208,11 +226,11 @@ public class HomeService {
             //首页检测跳转，访问记录表为空需跳转，不为空无需跳转
             UserLoanVisit userVisitRecord = userLoanVisitRepository.findByUserIdAndBidId(userId, bid.getId());
             if (userVisitRecord == null) {
-                checkLoanResponse.setBid(bid.getId());
-                throw new WarnException(BizCodeEnum.NEED_JUMP, checkLoanResponse);
+                checkLoanJumpResponse.setBid(bid.getId());
+                throw new WarnException(BizCodeEnum.NEED_JUMP, checkLoanJumpResponse);
             }
         });
-        return checkLoanResponse;
+        return checkLoanJumpResponse;
     }
 
     public CheckRepaymentResponse checkRepayment() {

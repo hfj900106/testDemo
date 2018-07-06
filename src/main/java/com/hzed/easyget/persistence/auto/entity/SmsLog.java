@@ -39,6 +39,16 @@ public class SmsLog implements Serializable {
      */
     private String remark;
 
+    /**
+     * 状态 1-处理中 2-发送成功 3-发送失败
+     */
+    private Byte status;
+
+    /**
+     * 短信发送商
+     */
+    private String sendBy;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -105,6 +115,22 @@ public class SmsLog implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
+    public Byte getStatus() {
+        return status;
+    }
+
+    public void setStatus(Byte status) {
+        this.status = status;
+    }
+
+    public String getSendBy() {
+        return sendBy;
+    }
+
+    public void setSendBy(String sendBy) {
+        this.sendBy = sendBy == null ? null : sendBy.trim();
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -119,6 +145,8 @@ public class SmsLog implements Serializable {
         sb.append(", updateBy=").append(updateBy);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", remark=").append(remark);
+        sb.append(", status=").append(status);
+        sb.append(", sendBy=").append(sendBy);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
@@ -175,6 +203,16 @@ public class SmsLog implements Serializable {
             return this;
         }
 
+        public Builder status(Byte status) {
+            obj.setStatus(status);
+            return this;
+        }
+
+        public Builder sendBy(String sendBy) {
+            obj.setSendBy(sendBy);
+            return this;
+        }
+
         public SmsLog build() {
             return this.obj;
         }
@@ -188,7 +226,9 @@ public class SmsLog implements Serializable {
         createTime("create_time"),
         updateBy("update_by"),
         updateTime("update_time"),
-        remark("remark");
+        remark("remark"),
+        status("status"),
+        sendBy("send_by");
 
         private final String column;
 

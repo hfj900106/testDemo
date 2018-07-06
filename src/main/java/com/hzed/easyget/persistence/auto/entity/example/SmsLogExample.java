@@ -671,6 +671,136 @@ public class SmsLogExample {
             return (Criteria) this;
         }
 
+        public Criteria andStatusIsNull() {
+            addCriterion("status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNotNull() {
+            addCriterion("status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusEqualTo(Byte value) {
+            addCriterion("status =", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotEqualTo(Byte value) {
+            addCriterion("status <>", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThan(Byte value) {
+            addCriterion("status >", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThanOrEqualTo(Byte value) {
+            addCriterion("status >=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThan(Byte value) {
+            addCriterion("status <", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThanOrEqualTo(Byte value) {
+            addCriterion("status <=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIn(List<Byte> values) {
+            addCriterion("status in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotIn(List<Byte> values) {
+            addCriterion("status not in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusBetween(Byte value1, Byte value2) {
+            addCriterion("status between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotBetween(Byte value1, Byte value2) {
+            addCriterion("status not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByIsNull() {
+            addCriterion("send_by is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByIsNotNull() {
+            addCriterion("send_by is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByEqualTo(String value) {
+            addCriterion("send_by =", value, "sendBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByNotEqualTo(String value) {
+            addCriterion("send_by <>", value, "sendBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByGreaterThan(String value) {
+            addCriterion("send_by >", value, "sendBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByGreaterThanOrEqualTo(String value) {
+            addCriterion("send_by >=", value, "sendBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByLessThan(String value) {
+            addCriterion("send_by <", value, "sendBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByLessThanOrEqualTo(String value) {
+            addCriterion("send_by <=", value, "sendBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByLike(String value) {
+            addCriterion("send_by like", value, "sendBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByNotLike(String value) {
+            addCriterion("send_by not like", value, "sendBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByIn(List<String> values) {
+            addCriterion("send_by in", values, "sendBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByNotIn(List<String> values) {
+            addCriterion("send_by not in", values, "sendBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByBetween(String value1, String value2) {
+            addCriterion("send_by between", value1, value2, "sendBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByNotBetween(String value1, String value2) {
+            addCriterion("send_by not between", value1, value2, "sendBy");
+            return (Criteria) this;
+        }
+
         public Criteria andMobileLikeInsensitive(String value) {
             addCriterion("upper(mobile) like", value.toUpperCase(), "mobile");
             return (Criteria) this;
@@ -683,6 +813,11 @@ public class SmsLogExample {
 
         public Criteria andRemarkLikeInsensitive(String value) {
             addCriterion("upper(remark) like", value.toUpperCase(), "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andSendByLikeInsensitive(String value) {
+            addCriterion("upper(send_by) like", value.toUpperCase(), "sendBy");
             return (Criteria) this;
         }
     }

@@ -29,7 +29,7 @@ logging:
 # 第三方
 thirdParty:
   pay.domain:   http://10.10.30.114:8082 # 请求架构组bulepay域名地址
-  risk.domain:  http://10.10.20.198:9611 # 请求风控域名地址
+  risk.domain:  http://172.31.242.17:9611 # 请求风控域名地址
 #======================================= 系统参数 开始 =======================================#
 system:
   imgUploadPath: /data/imgUpload # 上传图片文件目录

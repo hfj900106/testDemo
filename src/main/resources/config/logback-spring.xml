@@ -52,7 +52,7 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [${envNameCN} ${port}] [%X{trace}] [%X{moduleName}] - %-5level - %logger{50} - %msg%n</pattern>
         </encoder>
         <filter class="com.hzed.easyget.infrastructure.config.logback.MyLogFilter">
-            <matchingFlag>定时任务</matchingFlag>
+            <matchingmoduleName>定时任务</matchingmoduleName>
         </filter>
     </appender>
 

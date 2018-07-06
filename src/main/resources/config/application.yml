@@ -84,7 +84,7 @@ system:
   # 定时任务 启动标志 周期
   job:
     # 风控审核
-    pushBid: true
+    pushBid: false
     pushBidCron: 0/5 * * * * ?
     # 放款
     bankLoan: false

@@ -16,9 +16,7 @@ import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.AesUtil;
-import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
-import com.hzed.easyget.infrastructure.utils.SmsUtils;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
@@ -55,15 +53,9 @@ public class JobService {
     @Autowired
     private RestService restService;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserTransactionRepository transactionRepository;
-    @Autowired
     private SaService saService;
     @Autowired
     private RiskProp riskProp;
-    @Autowired
-    private BluePayService bluePayService;
     @Autowired
     private SystemProp systemProp;
     @Autowired
@@ -71,10 +63,9 @@ public class JobService {
     @Autowired
     private DictRepository dictRepository;
     @Autowired
-    private SmsLogRepository smsLogRepository;
-    @Autowired
     private DictService dictService;
-
+    @Autowired
+    private SmsService smsService;
     /**
      * 风控审核
      */
@@ -248,21 +239,13 @@ public class JobService {
                 try {
                     if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
                         // 非测试环境发送短信
-                        SmsUtils.sendSms(mobile, msg, String.valueOf(smsId));
+                        smsService.sendSms(mobile, msg, String.valueOf(smsId));
+                        log.info("发送催账短信-成功，手机号码{}",mobile);
                     }
-                    log.info("发送催账短信-成功，手机号码{}", mobile);
-                    // 保存到数据库短信记录表
-                    SmsLog smsLog = new SmsLog();
-                    smsLog.setId(smsId);
-                    smsLog.setCreateTime(LocalDateTime.now());
-                    smsLog.setContent(msg);
-                    smsLog.setMobile(mobile);
-                    smsLog.setStatus((byte) 2);
-                    smsLog.setSendBy(sendBy);
-                    smsLog.setRemark("短信催账");
-                    smsLogRepository.insertSelective(smsLog);
-                } catch (Exception ex) {
-                    log.info("发送催账短信-失败，手机号码{}", mobile);
+                    // 保存短信记录
+                    smsService.saveSmsLog(smsId,msg,mobile,(byte)2,"短信催账");
+                }catch (Exception ex){
+                    log.info("发送催账短信-失败，手机号码{}",mobile);
                 }
             }
         }

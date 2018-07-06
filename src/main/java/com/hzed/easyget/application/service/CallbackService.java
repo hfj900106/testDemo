@@ -85,7 +85,7 @@ public class CallbackService {
                     bidId);
         }
         // 发送短信
-        sendSmsOfPushResult(bidId, isPass);
+//        sendSmsOfPushResult(bidId, isPass);
 
         // 成功或者失败都返回
         return PushBidCallbackResponse.getSuccessResponse();
@@ -115,11 +115,11 @@ public class CallbackService {
         List<DictResponse> smsContent;
         // 通过审核
         if (isPass) {
-            smsContent = dictService.getDictByModuleCodeAndLanguage(ComConsts.SMS_CONTENT_3, systemProp.getLocal());
+            smsContent = dictService.getDictByDicCodeAndLanguage(ComConsts.SMS_CONTENT_3, systemProp.getLocal());
         }
         // 不通过
         else {
-            smsContent = dictService.getDictByModuleCodeAndLanguage(ComConsts.SMS_CONTENT_2, systemProp.getLocal());
+            smsContent = dictService.getDictByDicCodeAndLanguage(ComConsts.SMS_CONTENT_2, systemProp.getLocal());
         }
         if (ObjectUtils.isEmpty(smsContent)) {
             log.error("没有配置短信模板");

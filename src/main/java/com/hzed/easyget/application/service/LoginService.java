@@ -231,7 +231,7 @@ public class LoginService {
         String code = SmsUtils.getCode();
 
         DictService dictService = SpringContextUtil.getBean(DictService.class);
-        List<DictResponse> smsContent1 = dictService.getDictByModuleCodeAndLanguage(ComConsts.SMS_CONTENT_1, systemProp.getLocal());
+        List<DictResponse> smsContent1 = dictService.getDictByDicCodeAndLanguage(ComConsts.SMS_CONTENT_1, systemProp.getLocal());
         if (ObjectUtils.isEmpty(smsContent1)) {
             log.error("没有配置短信模板1");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);

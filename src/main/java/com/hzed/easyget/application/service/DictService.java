@@ -60,6 +60,22 @@ public class DictService {
         return dictResponseList;
     }
 
+    public List<DictResponse> getDictByDicCodeAndLanguage(String dicCode, String local) {
+        // 获取缓存数据,缓存没有，才查询数据库
+        List<DictResponse> dictResponseListCache = redisService.getObjCache(dictKey + dicCode + RedisConsts.SPLIT + local);
+        if (!ObjectUtils.isEmpty(dictResponseListCache)) {
+            return dictResponseListCache;
+        }
+
+        List<Dict> dictList = dictRepository.findByDicCodeAndLanguage(dicCode, local);
+        List<DictResponse> dictResponseList = addDictResponseList(dictList);
+
+        // 放入缓存5小时
+        redisService.setObjCache(dictKey + dicCode + RedisConsts.SPLIT + local, dictResponseList, 5 * 3600L);
+
+        return dictResponseList;
+    }
+
     /**
      * 不根据国际化查询的字典列表
      * @param moduleCode

@@ -68,6 +68,15 @@ public class DictRepository {
         return dictMapper.selectByExample(example);
     }
 
+    public List<Dict> findByDicCodeAndLanguage(String dicCode, String language) {
+        DictExample example = new DictExample();
+        example.setOrderByClause(Dict.Column.orderby.asc());
+        example.createCriteria().andDicCodeEqualTo(dicCode).andLanguageEqualTo(language);
+        return dictMapper.selectByExample(example);
+    }
+
+
+
     public List<Dict> findByModuleCode(String moduleCode) {
         DictExample example = new DictExample();
         example.setOrderByClause(Dict.Column.orderby.asc());

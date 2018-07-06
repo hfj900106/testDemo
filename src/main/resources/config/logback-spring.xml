@@ -33,11 +33,15 @@
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [${envNameCN} ${port}] [%X{trace}] [%X{moduleName}] - %-5level - %logger{50} - %msg%n</pattern>
         </encoder>
+        <filter class="com.hzed.easyget.infrastructure.config.logback.MyLogFilter">
+            <match>false</match>
+            <moduleName>定时任务</moduleName>
+        </filter>
     </appender>
 
     <appender name="FILE_CRON" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!--最新日志文件输出的文件名-->
-        <file>${logHome}/${appName}_cron.log</file>
+        <file>${logHome}/${appName}.cron.log</file>
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>${logHome}/%d{yyyy-MM-dd}/%i.cron.log</fileNamePattern>
@@ -52,7 +56,8 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [${envNameCN} ${port}] [%X{trace}] [%X{moduleName}] - %-5level - %logger{50} - %msg%n</pattern>
         </encoder>
         <filter class="com.hzed.easyget.infrastructure.config.logback.MyLogFilter">
-            <matchingmoduleName>定时任务</matchingmoduleName>
+            <match>true</match>
+            <moduleName>定时任务</moduleName>
         </filter>
     </appender>
 
@@ -102,12 +107,14 @@
         <root level="debug">
             <appender-ref ref="STDOUT"/>
             <!--<appender-ref ref="FILE_CRON"/>-->
+            <!--<appender-ref ref="FILE"/>-->
         </root>
     </springProfile>
 
     <springProfile name="test">
         <root level="debug">
             <appender-ref ref="FILE"/>
+            <appender-ref ref="FILE_CRON"/>
             <appender-ref ref="EMAIL"/>
         </root>
     </springProfile>

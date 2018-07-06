@@ -29,16 +29,26 @@ import java.util.Map;
  */
 @Data
 public class MyLogFilter extends Filter<ILoggingEvent> {
-
-    private String matchingmoduleName;
+    /**
+     * 需拦截的moduleName
+     */
+    private String moduleName;
+    /**
+     * 过滤标志
+     */
+    private boolean match = true;
 
     @Override
     public FilterReply decide(ILoggingEvent event) {
         Map<String, String> mdcPropertyMap = event.getMDCPropertyMap();
-        if (!ObjectUtils.isEmpty(mdcPropertyMap) && mdcPropertyMap.get(MdcUtil.MODULENAME).indexOf(matchingmoduleName) > -1) {
+        boolean isModuleName = !ObjectUtils.isEmpty(mdcPropertyMap) && mdcPropertyMap.get(MdcUtil.MODULENAME).indexOf(moduleName) > -1;
+        if (match && isModuleName) {
+            return FilterReply.ACCEPT;
+        } else if(!match && !isModuleName) {
             return FilterReply.ACCEPT;
         } else {
             return FilterReply.DENY;
         }
     }
+
 }

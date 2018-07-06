@@ -21,6 +21,7 @@ logging:
 thirdParty:
   pay.domain: http://10.10.30.114:8081 # 请求bulepay域名地址
   risk.domain: http://10.10.30.92:9611 # 请求风控域名地址
+
 #======================================= 系统参数 开始 =======================================#
 system:
   imgUploadPath: /work/easy-get-8150/imgUpload # 上传图片文件目录
@@ -28,25 +29,25 @@ system:
   # 定时任务 启动标志 周期
   job:
     # 风控审核
-    pushBid: false
+    pushBid: true
     pushBidCron: 0/5 * * * * ?
     # 放款
-    bankLoan: false
+    bankLoan: true
     bankLoanCron: 0/5 * * * * ?
     # 处理还款信息流
-    repayInfoFlow: false
+    repayInfoFlow: true
     repayInfoFlowCron: 0/5 * * * * ?
     # 神策进件
-    saInData: false
+    saInData: true
     saInDataCron: 0 */1 * * * ?
     # 神策借款成功
-    saLoanSuccess: false
+    saLoanSuccess: true
     saLoanSuccessCron: 0 */1 * * * ?
     # 神策还款
-    saRepaymentSuccess: false
+    saRepaymentSuccess: true
     saRepaymentSuccessCron: 0 */1 * * * ?
-    #短信催账
-    checkBill: false
+    # 催账短信
+    checkBill: true
     checkBillCron: 0 0 15 * * ?
 #======================================= 系统参数 结束 =======================================#
 

@@ -21,10 +21,7 @@ import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.SmsUtils;
 import com.hzed.easyget.infrastructure.utils.SpringContextUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.Bid;
-import com.hzed.easyget.persistence.auto.entity.BidProgress;
-import com.hzed.easyget.persistence.auto.entity.SmsLog;
-import com.hzed.easyget.persistence.auto.entity.User;
+import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +31,6 @@ import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -141,12 +137,20 @@ public class CallbackService {
             // 非测试环境发送短信
             SmsUtils.sendSms(mobile, content, String.valueOf(smsId));
         }
+        Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
+        if (ObjectUtils.isEmpty(dictSms)) {
+            log.error("没有配置短信渠道");
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
         // 保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();
         smsLog.setId(smsId);
         smsLog.setCreateTime(LocalDateTime.now());
         smsLog.setContent(content);
         smsLog.setMobile(mobile);
+        // 发送成功
+        smsLog.setStatus((byte) 2);
+        smsLog.setSendBy(dictSms.getDicValue());
         smsLog.setRemark("审核结果短信通知用户");
         smsLogRepository.insertSelective(smsLog);
 

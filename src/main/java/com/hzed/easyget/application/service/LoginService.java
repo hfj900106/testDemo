@@ -245,12 +245,20 @@ public class LoginService {
             //非测试环境发送短信
             SmsUtils.sendSms(mobile, content, String.valueOf(smsId));
         }
+        Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
+        if (ObjectUtils.isEmpty(dictSms)) {
+            log.error("没有配置短信渠道");
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
         // 保存到数据库短信记录表
         SmsLog smsLog = new SmsLog();
         smsLog.setId(smsId);
         smsLog.setCreateTime(LocalDateTime.now());
         smsLog.setContent(content);
         smsLog.setMobile(mobile);
+        // 发送成功
+        smsLog.setStatus((byte) 2);
+        smsLog.setSendBy(dictSms.getDicValue());
         smsLog.setRemark("短信验证码");
         smsLogRepository.insertSelective(smsLog);
         //保存到Redis，手机验证码30分钟有效

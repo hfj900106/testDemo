@@ -19,4 +19,9 @@ public class SystemProp {
     private Integer tokenExpire;
     private Long expectedAuditTimeInterval;
     private Long expectedLendingTimeInterval;
+    @Value("${system.local}")
+    private String local;
+    @Value("${system.daysInAdvance}")
+    private Integer daysInAdvance;
+
 }

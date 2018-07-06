@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -206,6 +207,7 @@ public class LoginService {
     }
 
     public void sendSmsCode(SmsCodeRequest request) {
+        SystemProp systemProp = SpringContextUtil.getBean(SystemProp.class);
         String mobile = request.getMobile();
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String isH5 = globalHead.getPlatform();
@@ -226,9 +228,18 @@ public class LoginService {
             throw new WarnException(BizCodeEnum.PIC_CODE_TO_CHECK);
         }
         String code = SmsUtils.getCode();
-        String content = "【Rupiah Get】Kode verifikasi Anda adalah: " + code + ", berlaku selama 2 menit, selamat datang untuk menggunakan Rupiah Get";
+
+        DictService dictService = SpringContextUtil.getBean(DictService.class);
+        List<DictResponse> smsContent1 = dictService.getDictByModuleCodeAndLanguage(ComConsts.SMS_CONTENT_1, systemProp.getLocal());
+        if (ObjectUtils.isEmpty(smsContent1)) {
+            log.error("没有配置短信模板1");
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
+        String dicValue = smsContent1.get(0).getDictValue();
+        //替换验证码
+        String content = StringUtils.replace(dicValue, "{1}", code);
         Long smsId = IdentifierGenerator.nextId();
-        SystemProp systemProp = SpringContextUtil.getBean(SystemProp.class);
+
         if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
             //非测试环境发送短信
             SmsUtils.sendSms(mobile, content, String.valueOf(smsId));

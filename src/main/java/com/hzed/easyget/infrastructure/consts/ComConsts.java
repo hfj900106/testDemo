@@ -38,6 +38,17 @@ public class ComConsts {
      */
     public static final String SMS_DICT_CODE = "sms_01";
     /**
+     * 短信模板code
+     */
+    public static final String SMS_CONTENT_1 = "sms_templete_1";
+    public static final String SMS_CONTENT_2 = "sms_templete_2";
+    public static final String SMS_CONTENT_3 = "sms_templete_3";
+    public static final String SMS_CONTENT_4 = "sms_templete_4";
+    public static final String SMS_CONTENT_5 = "sms_templete_5";
+    public static final String SMS_CONTENT_6 = "sms_templete_6";
+
+
+    /**
      * 牛信
      */
     public static final String NX = "NX";

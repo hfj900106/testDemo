@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -96,7 +95,7 @@ public class RepayService {
             if (BidStatusEnum.CLEARED.getCode().byteValue() == bid.getStatus().byteValue()) {
                 repaymentResponse.setRepayTime(DateUtil.localDateTimeToTimestamp(bidProgress.getHandleTime()));
                 repaymentResponse.setStatus(RepayStatusEnum.CLEAR_REPAY.getCode().intValue());
-                repayListResponse.setLoanAmount(bid.getLoanAmount());
+                repayListResponse.setLoanAmount(bidList.get(0).getLoanAmount());
                 //实还总额
                 repaymentResponse.setRepayAmount(bill.getRealRepaymentAmount());
             }

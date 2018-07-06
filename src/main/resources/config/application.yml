@@ -2,7 +2,7 @@
 server.port: 8150
 # 默认根路径
 server.context-path: /hzed/easy-get
-# 加盐
+# 加密
 jasypt.encryptor.password: sdfhfw09GDS20403
 
 spring:
@@ -49,6 +49,8 @@ logging:
 #  accessKeySecret: IwfH6vAH0rZWK3wL2aK3hTopsWVb6t
 #  bucketName: hzed-ccard #存储空间目录
 
+
+
 # 第三方
 thirdParty:
   pay:
@@ -74,6 +76,10 @@ system:
   tokenExpire: 7 # token失效时间 7 天
   expected_audit_time_interval: 1440 # 预计审核时间间隔 单位分
   expected_lending_time_interval: 60 # 预计放款时间间隔 单位分
+  # 地区
+  local: id-ID
+  # 短信催账提前天数
+  daysInAdvance: 3
 
   # 定时任务 启动标志 周期
   job:

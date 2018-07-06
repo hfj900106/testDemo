@@ -230,26 +230,27 @@ public class JobService {
         saService.saRepaymentSuccess();
     }
 
-    public void checkBill(){
-        List<BillExt> billExts = billRepository.findUnRepayBillExt();
+    public void checkBill() {
+        Integer daysInAdvance = systemProp.getDaysInAdvance();
+        List<BillExt> billExts = billRepository.findUnRepayBillExt(daysInAdvance);
         if (ObjectUtils.isEmpty(billExts)) {
             return;
         }
-        String template = dictRepository.findByCodeAndLanguage(ComConsts.SMS_CONTENT_4,systemProp.getLocal()).getDicValue();
+        String template = dictRepository.findByCodeAndLanguage(ComConsts.SMS_CONTENT_4, systemProp.getLocal()).getDicValue();
         //短信发送渠道
         String sendBy = dictService.getDictByCode(ComConsts.SMS_DICT_CODE).getDicValue();
         for (BillExt billExt : billExts) {
-            int days = DateUtil.getBetweenDays( LocalDateTime.now(),billExt.getRepaymentTime());
-            if(days >= 0 && days < systemProp.getDaysInAdvance()){
-                String msg = StringUtils.replace(template, "{1}", String.valueOf(days));
+            Integer day = billExt.getDay();
+            if (day != null) {
+                String msg = StringUtils.replace(template, "{1}", String.valueOf(day));
                 Long smsId = IdentifierGenerator.nextId();
                 String mobile = billExt.getMobile();
                 try {
                     if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
                         // 非测试环境发送短信
-                         SmsUtils.sendSms(mobile,msg,String.valueOf(smsId));
+                        SmsUtils.sendSms(mobile, msg, String.valueOf(smsId));
                     }
-                    log.info("发送催账短信-成功，手机号码{}",mobile);
+                    log.info("发送催账短信-成功，手机号码{}", mobile);
                     // 保存到数据库短信记录表
                     SmsLog smsLog = new SmsLog();
                     smsLog.setId(smsId);
@@ -260,8 +261,8 @@ public class JobService {
                     smsLog.setSendBy(sendBy);
                     smsLog.setRemark("短信催账");
                     smsLogRepository.insertSelective(smsLog);
-                }catch (Exception ex){
-                    log.info("发送催账短信-失败，手机号码{}",mobile);
+                } catch (Exception ex) {
+                    log.info("发送催账短信-失败，手机号码{}", mobile);
                 }
             }
         }

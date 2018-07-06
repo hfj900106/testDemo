@@ -62,7 +62,7 @@ public class BillRepository {
         billMapper.updateByPrimaryKeySelective(bill);
     }
 
-    public List<BillExt> findUnRepayBillExt(){
-        return billExtMapper.findUnRepayBillExt();
+    public List<BillExt> findUnRepayBillExt(Integer daysInAdvance){
+        return billExtMapper.findUnRepayBillExt(daysInAdvance);
     }
 }

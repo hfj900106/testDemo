@@ -47,8 +47,6 @@ public class SmsService {
     @Autowired
     private ComService comService;
     @Autowired
-    private SmsService smsService;
-    @Autowired
     private SmsLogRepository smsLogRepository;
 
     /**
@@ -80,9 +78,9 @@ public class SmsService {
                 .replace("{3}", balance.toString());
         Long smsId = IdentifierGenerator.nextId();
         // 发送短信
-        smsService.sendSms(mobile, content, String.valueOf(smsId));
+        this.sendSms(mobile, content, String.valueOf(smsId));
         // 保存短信记录
-        smsService.saveSmsLog(smsId, content, mobile, (byte) 2, "用户还款短信通知");
+        this.saveSmsLog(smsId, content, mobile, (byte) 2, "用户还款短信通知");
         log.info("用户还款短信通知，手机号码：{},短信类容：{}", mobile, content);
     }
 

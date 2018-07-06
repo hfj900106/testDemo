@@ -57,7 +57,7 @@ public class TestController {
     }
 
     @IgnoreHeader
-    @ModuleFunc("人工跑定时任务")
+    @ModuleFunc("手动执行任务")
     @GetMapping("/manMadeJob/{jobName}")
     public void testRepayment(@PathVariable("jobName") String jobName) {
         try {

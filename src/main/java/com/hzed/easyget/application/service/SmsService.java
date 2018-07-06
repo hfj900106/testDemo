@@ -70,19 +70,23 @@ public class SmsService {
             // 获取剩余代还总额
             balance = comService.getBidNoRepayFee(bidId, LocalDateTime.now());
         }
-        String content = dictRepository.findByCodeAndLoacl(local, smsCode).getDicValue()
-                .replace("{1}", DateUtil.localDateTimeToStr(LocalDateTime.now(), DateUtil.FORMAT6))
+        String content = dictRepository.findByCodeAndLoacl(local, smsCode).getDicValue();
+        if (StringUtils.isBlank(content)) {
+            log.info("没有配置短信模板");
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
+        content.replace("{1}", DateUtil.localDateTimeToStr(LocalDateTime.now(), DateUtil.FORMAT6))
                 .replace("{2}", repaymentAmount.toString())
                 .replace("{3}", balance.toString());
         Long smsId = IdentifierGenerator.nextId();
         // 发送短信
         smsService.sendSms(mobile, content, String.valueOf(smsId));
         // 保存短信记录
-        smsService.saveSmsLog(smsId,content,mobile,(byte)2,"用户还款短信通知");
+        smsService.saveSmsLog(smsId, content, mobile, (byte) 2, "用户还款短信通知");
         log.info("用户还款短信通知，手机号码：{},短信类容：{}", mobile, content);
     }
 
-    public  void sendSms(String mobile, String content, String smsIdStr) {
+    public void sendSms(String mobile, String content, String smsIdStr) {
         DictService dictService = SpringContextUtil.getBean(DictService.class);
         Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
         if (ObjectUtils.isEmpty(dictSms)) {
@@ -144,13 +148,14 @@ public class SmsService {
 
     /**
      * 保存短信记录
+     *
      * @param id
      * @param content
      * @param mobile
      * @param status
      * @param remark
      */
-    public void saveSmsLog(Long id,String content,String mobile,byte status,String remark){
+    public void saveSmsLog(Long id, String content, String mobile, byte status, String remark) {
         DictService dictService = SpringContextUtil.getBean(DictService.class);
         Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
         if (ObjectUtils.isEmpty(dictSms)) {
@@ -172,9 +177,10 @@ public class SmsService {
 
     /**
      * 获取验证码
+     *
      * @return
      */
-    public  String getCode() {
+    public String getCode() {
         SystemProp systemProp = SpringContextUtil.getBean(SystemProp.class);
         if (EnvEnum.isTestEnv(systemProp.getEnv())) {
             return "0000";

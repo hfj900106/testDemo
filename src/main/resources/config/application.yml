@@ -37,7 +37,7 @@ spring:
 logging:
   config: classpath:config/logback-spring.xml # 配置文件路径
   logHome: D:/logs/easy-get # 日志路径
-  saLogPath: ${logging.logHome}/sa.log    # 神策测试环境和生产环境LogAgent日志目录
+  saLogPath: ${logging.logHome}/sa/sa.log    # 神策测试环境和生产环境LogAgent日志目录
   appNameCN: 印尼借贷项目 # 应用中文名
   envNameCN: 开发环境 # 环境中文名
   emailTo: guichang@hzed.com # 邮件接收者，多个用逗号隔开

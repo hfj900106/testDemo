@@ -92,9 +92,6 @@ system:
     # 处理还款信息流
     repayInfoFlow: false
     repayInfoFlowCron: 0/5 * * * * ?
-    # 还款失败
-    repayFail: false # 功能暂时不用
-    repayFailCron: 0/5 * * * * ?
     # 神策进件
     saInData: false
     saInDataCron:  0 */1 * * * ?

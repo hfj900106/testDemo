@@ -201,52 +201,6 @@ public class JobService {
 
     }
 
-
-    /**
-     * 处理还款失败
-     */
-    public void repayFail() {
-        //找到要处理的数据
-        List<UserTransaction> transactionList = userRepository.findUserTransToUpdateRepayFail(DateUtil.addHour(LocalDateTime.now(), -2));
-        if (ObjectUtils.isEmpty(transactionList)) {
-            return;
-        }
-        transactionList.forEach(userTransaction -> {
-            MdcUtil.putTrace();
-            log.info("标的：{}还款失败处理", userTransaction.getBidId());
-            long bidId = userTransaction.getBidId();
-            long tempId = IdentifierGenerator.nextId();
-            int times = 1;
-            try {
-                TempTable tempTable = tempTableRepository.findTempTableByBidNoAndJobName(bidId, ComConsts.PUSH_RISK_TASK);
-                if (ObjectUtils.isEmpty(tempTable)) {
-                    //插入中间表
-                    TempTable tempInsert = buildTempTableToInsert(tempId, ComConsts.REPAY_DAIL_TASK, bidId, "还款失败处理-待处理");
-                    tempTableRepository.insertJob(tempInsert);
-                } else {
-                    tempId = tempTable.getId();
-                    times = tempTable.getReRunTimes().intValue() + 1;
-                    //更新中间表
-                    TempTable tempUpdate = buildTempTableToUpdate(tempId, (byte) times, "还款失败处理-待处理");
-                    tempTableRepository.updateTemp(tempUpdate);
-                }
-                userTransaction.setStatus((byte) 3);
-                userTransaction.setUpdateTime(LocalDateTime.now());
-                transactionRepository.transactionUpdateByKey(userTransaction);
-
-                //处理成功后删除temp表
-                tempTableRepository.deleteById(tempId);
-            } catch (Exception ex) {
-                log.info("标的：{}还款失败处理-失败", userTransaction.getBidId());
-                //更新中间表
-                TempTable tempUpdate = buildTempTableToUpdate(tempId, (byte) times, "还款失败处理-失败");
-                tempTableRepository.updateTemp(tempUpdate);
-            }
-
-
-        });
-    }
-
     private TempTable buildTempTableToInsert(Long tempId, String jobName, Long bidId, String remark) {
         return TempTable.builder().id(tempId).jobName(jobName).relaseId(bidId).remark(remark).reRunTimes((byte) 1).createTime(LocalDateTime.now()).build();
     }

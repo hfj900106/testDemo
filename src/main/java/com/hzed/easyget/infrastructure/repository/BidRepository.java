@@ -97,4 +97,9 @@ public class BidRepository {
         transaction.createCriteria().andPaymentIdEqualTo(userTransaction.getPaymentId());
         userTransactionMapper.updateByExampleSelective(userTransaction, transaction);
     }
+
+    public Bid getUserIdByBidId(Long bidId){
+        return bidMapper.selectByPrimaryKey(bidId);
+    }
+
 }

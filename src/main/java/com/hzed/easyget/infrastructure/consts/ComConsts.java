@@ -36,7 +36,7 @@ public class ComConsts {
     /**
      * 短信发送渠道字典code
      */
-    public static final String SMS_DICT_CODE = "sms_01";
+    public static final String SMS_DICT_CODE = "sms_channel";
     /**
      * 短信模板code
      */

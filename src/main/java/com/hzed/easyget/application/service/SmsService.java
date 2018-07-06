@@ -10,6 +10,7 @@ import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.repository.DictRepository;
 import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
+import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.hzed.easyget.infrastructure.utils.SpringContextUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.Dict;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -58,6 +60,8 @@ public class SmsService {
      */
     @Async
     public void repaymentNotice(BigDecimal repaymentAmount, String mobile, Long bidId) {
+        MdcUtil.putTrace();
+        MdcUtil.putModuleName("还款短信通知");
         String local = systemProp.getLocal();
         // 默认全部结清
         String smsCode = ComConsts.SMS_CONTENT_5;
@@ -73,9 +77,7 @@ public class SmsService {
             log.error("没有配置短信模板");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
-        content.replace("{1}", DateUtil.localDateTimeToStr(LocalDateTime.now(), DateUtil.FORMAT6))
-                .replace("{2}", repaymentAmount.toString())
-                .replace("{3}", balance.toString());
+        content=MessageFormat.format(content, DateUtil.localDateTimeToStr(LocalDateTime.now(), DateUtil.FORMAT6),repaymentAmount.toString(),balance.toString());
         Long smsId = IdentifierGenerator.nextId();
         // 发送短信
         this.sendSms(mobile, content, String.valueOf(smsId));

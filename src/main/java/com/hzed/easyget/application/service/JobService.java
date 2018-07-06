@@ -230,7 +230,7 @@ public class JobService {
         }
         String template = dictRepository.findByCodeAndLanguage(ComConsts.SMS_CONTENT_4, systemProp.getLocal()).getDicValue();
         if(template == null){
-            log.info("没有配置短信模板");
+            log.error("没有配置短信模板");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
         //短信发送渠道

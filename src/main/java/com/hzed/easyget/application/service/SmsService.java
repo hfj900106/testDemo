@@ -72,7 +72,7 @@ public class SmsService {
         }
         String content = dictRepository.findByCodeAndLoacl(local, smsCode).getDicValue();
         if (StringUtils.isBlank(content)) {
-            log.info("没有配置短信模板");
+            log.error("没有配置短信模板");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
         content.replace("{1}", DateUtil.localDateTimeToStr(LocalDateTime.now(), DateUtil.FORMAT6))
@@ -95,45 +95,45 @@ public class SmsService {
         }
         String dicValue = dictSms.getDicValue();
         if (!ObjectUtils.isEmpty(dicValue) && ComConsts.NX.equalsIgnoreCase(dicValue)) {
-            //使用牛信发送短信
+            // 使用牛信发送短信
             NxSmsDownRequest smsDownRequest = new NxSmsDownRequest();
             smsDownRequest.setPhone(mobile);
             smsDownRequest.setTimestamp(String.valueOf(System.currentTimeMillis()));
-            //拆分短信表的id作为短信的唯一标识发给渠道商
+            // 拆分短信表的id作为短信的唯一标识发给渠道商
             smsDownRequest.setSourceadd(smsIdStr.substring(0, 10));
             smsDownRequest.setExtno(Integer.valueOf(smsIdStr.substring(10, 18)));
             smsDownRequest.setContent(content);
             log.info("发送短信请求参数：{}", JSONObject.toJSONString(smsDownRequest));
             NxSmsDownResponse smsDownResponse = NxSmsUtil.smsSend(smsDownRequest);
             log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
-            //发送失败
+            // 发送失败
             if (!SmsCodeEnum.OK.getKey().equals(smsDownResponse.getCode())) {
                 log.error("发送失败：{}", smsDownResponse.getInfo());
                 throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
             }
         } else {
-            //bulk短信下发请求bean
+            // bulk短信下发请求bean
             BulkSmsDownRequest smsDownRequest = new BulkSmsDownRequest();
-            //短信请求body
+            // 短信请求body
             BulkSmsDownRequest.MsgBody msgBody = new BulkSmsDownRequest.MsgBody();
-            //短信来源
+            // 短信来源
             msgBody.setFrom("easy-get");
-            //消息标识id 短信表的id作为短信的唯一标识发给渠道商
+            // 消息标识id 短信表的id作为短信的唯一标识发给渠道商
             msgBody.setReference(smsIdStr);
-            //短信内容实体
+            // 短信内容实体
             BulkSmsDownRequest.MsgBody.SmsBody smsBody = new BulkSmsDownRequest.MsgBody.SmsBody();
             smsBody.setContent(content);
-            //设置短信内容实体
+            // 设置短信内容实体
             msgBody.setBody(smsBody);
-            //短信接收者
+            // 短信接收者
             BulkSmsDownRequest.MsgBody.Member member = new BulkSmsDownRequest.MsgBody.Member();
-            //00加国家代码中国为0086
+            // 00加国家代码中国为0086
             member.setNumber(mobile);
             //设置短信接收列表
             msgBody.setTo(Lists.newArrayList(member));
-            //bulk短信下发请求消息
+            // bulk短信下发请求消息
             BulkSmsDownRequest.Message message = new BulkSmsDownRequest.Message();
-            //bulk短信下发请求消息body列表
+            // bulk短信下发请求消息body列表
             message.setMsg(Lists.newArrayList(msgBody));
             smsDownRequest.setMessages(message);
             log.info("发送短信请求参数：{}", JSONObject.toJSONString(smsDownRequest));

@@ -19,12 +19,13 @@ import com.hzed.easyget.infrastructure.utils.*;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -202,10 +203,12 @@ public class LoginService {
         if (StringUtils.isBlank(cacheSmsCode) || !cacheSmsCode.equals(smsCode)) {
             throw new WarnException(BizCodeEnum.ILLEGAL_SMSCODE);
         }
-
+        // 验证成功清除缓存数据
+        redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
     }
 
     public void sendSmsCode(SmsCodeRequest request) {
+        SystemProp systemProp = SpringContextUtil.getBean(SystemProp.class);
         String mobile = request.getMobile();
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String isH5 = globalHead.getPlatform();
@@ -226,9 +229,18 @@ public class LoginService {
             throw new WarnException(BizCodeEnum.PIC_CODE_TO_CHECK);
         }
         String code = SmsUtils.getCode();
-        String content = "【Rupiah Get】Kode verifikasi Anda adalah: " + code + ", berlaku selama 2 menit, selamat datang untuk menggunakan Rupiah Get";
+
+        DictService dictService = SpringContextUtil.getBean(DictService.class);
+        List<DictResponse> smsContent1 = dictService.getDictByModuleCodeAndLanguage(ComConsts.SMS_CONTENT_1, systemProp.getLocal());
+        if (ObjectUtils.isEmpty(smsContent1)) {
+            log.error("没有配置短信模板1");
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
+        String dicValue = smsContent1.get(0).getDictValue();
+        //替换验证码
+        String content = StringUtils.replace(dicValue, "{1}", code);
         Long smsId = IdentifierGenerator.nextId();
-        SystemProp systemProp = SpringContextUtil.getBean(SystemProp.class);
+
         if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
             //非测试环境发送短信
             SmsUtils.sendSms(mobile, content, String.valueOf(smsId));
@@ -241,8 +253,8 @@ public class LoginService {
         smsLog.setMobile(mobile);
         smsLog.setRemark("短信验证码");
         smsLogRepository.insertSelective(smsLog);
-        //保存到Redis，手机验证码2分钟有效
-        redisService.setCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile, code, 120L);
+        //保存到Redis，手机验证码30分钟有效
+        redisService.setCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile, code, 1800L);
         //60秒后可以重发
         redisService.setCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile, mobile, 60L);
         //10分钟内重发需要验证码

@@ -38,23 +38,25 @@ public class CallbackService {
     public PushBidCallbackResponse pushBidCallback(PushBidCallbackRequest request) {
         Long bidId = request.getBidId();
         BigDecimal loanAmount = request.getLoanAmount();
-        byte status = (byte)0;
-             //通过
-        if(ComConsts.RISK_4.equals(request.getResultCode())){
+        byte status = (byte) 0;
+        // 通过
+        if (ComConsts.RISK_4.equals(request.getResultCode())) {
             status = BidStatusEnum.AUDIT_PASS.getCode().byteValue();
-            //失败
-        }else if(ComConsts.RISK_3.equals(request.getResultCode())){
+        }
+        // 失败
+        else if (ComConsts.RISK_3.equals(request.getResultCode())) {
             status = BidStatusEnum.AUDIT_FAIL.getCode().byteValue();
-            //人审
-        }else if(ComConsts.RISK_2.equals(request.getResultCode())){
+        }
+        // 人审
+        else if (ComConsts.RISK_2.equals(request.getResultCode())) {
             status = BidStatusEnum.MANMADE_ING.getCode().byteValue();
         }
 
         LocalDateTime dateTime = DateUtil.timestampToLocalDateTimeTo(request.getHandleTime());
         Bid bid = bidRepository.findById(bidId);
-        if(ObjectUtils.isEmpty(bid)){
-            log.error("回调处理的标ID：{}不存在标的表中",bidId);
-        }else {
+        if (ObjectUtils.isEmpty(bid)) {
+            log.error("回调处理的标ID：{}不存在标的表中", bidId);
+        } else {
             AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
             tempTableRepository.pushBidCallback(
                     Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(LocalDateTime.now()).auditFee(absProduct.getHeadFee()).status(status).build(),

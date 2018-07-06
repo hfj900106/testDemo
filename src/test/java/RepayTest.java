@@ -3,6 +3,7 @@ import com.hzed.easyget.application.enums.BankTypeEnum;
 import com.hzed.easyget.application.enums.RepayMentEnum;
 import com.hzed.easyget.application.service.BluePayService;
 import com.hzed.easyget.application.service.RepayService;
+import com.hzed.easyget.application.service.SmsService;
 import com.hzed.easyget.controller.model.PaymentIdResponse;
 import com.hzed.easyget.controller.model.RepaymentCompleRequest;
 import com.hzed.easyget.controller.model.TransactionVaRequest;
@@ -27,6 +28,8 @@ public class RepayTest {
     private RepayService repayService;
     @Autowired
     private BluePayService bluePayService;
+    @Autowired
+    private SmsService smsService;
 
 
     /**
@@ -70,4 +73,11 @@ public class RepayTest {
         System.out.println(response);
     }
 
+    /**
+     * 测试短信通知
+     */
+    @Test
+    public void smsTenst(){
+        smsService.repaymentNotice(BigDecimal.valueOf(100000),"15926633889",null);
+    }
 }

@@ -70,6 +70,10 @@ public class RepayService {
     private TempTableRepository tempTableRepository;
     @Autowired
     private TransactionService transactionService;
+    @Autowired
+    private SmsService smsService;
+    @Autowired
+    private UserRepository userRepository;
 
     public RepayListResponse repaidList(RepayListRequest request) {
         RepayListResponse repayListResponse = new RepayListResponse();
@@ -209,7 +213,9 @@ public class RepayService {
         Bill billBefore = billRepository.findAllBillByBidIdWithExp(bidId).get(0);
         // 还账单操作
         repayBill(billBefore, repayAmount, transactionId, LocalDateTime.now());
-
+        // 查询用户手机
+        Bid bid = bidRepository.findByIdWithExp(bidId);
+        User user = userRepository.findById(bid.getUserId());
         // 保存 t_loan_bid 标的表（主要是更新结清操作，部分还款不用更新）
         Bill billAfter = billRepository.findAllBillByBidIdWithExp(bidId).get(0);
         if (BillStatusEnum.NORMAL_CLEAR.getCode().intValue() == billAfter.getStatus().intValue()
@@ -228,6 +234,11 @@ public class RepayService {
             progressUpdate.setHandleResult("用户结清：" + repayAmount);
             progressUpdate.setRemark("结清");
             bidProgressRepository.update(progressUpdate);
+            // 全部结清 短信通知
+            smsService.repaymentNotice(repayAmount, user.getMobileAccount(), null);
+        } else {
+            // 部分结清 短信通知
+            smsService.repaymentNotice(repayAmount, user.getMobileAccount(), bidId);
         }
 
         // 如果从定时任务进来则更新定时任务为处理成功
@@ -431,8 +442,8 @@ public class RepayService {
         // 查询标的信息
         Bid bid = bidRepository.findByIdWithExp(request.getBidId());
         // 先查询数据库 是否存在没过期的还款码
-        List<Byte> bytes=Arrays.asList(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(),TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
-        UserTransactionRepay repayQuery = repayRepository.getVaCodeByParmers(request.getBidId(), request.getAmount(),bytes, request.getMode());
+        List<Byte> bytes = Arrays.asList(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
+        UserTransactionRepay repayQuery = repayRepository.getVaCodeByParmers(request.getBidId(), request.getAmount(), bytes, request.getMode());
         TransactionVaResponse vaResponse = new TransactionVaResponse();
         if (!ObjectUtils.isEmpty(repayQuery)) {
             vaResponse.setExpireTime(DateUtil.localDateTimeToTimestamp(repayQuery.getVaExpireTime()));
@@ -563,7 +574,7 @@ public class RepayService {
             }
             UserTransactionPic repayPicInsert = UserTransactionPic.builder()
                     .evidencePicUrl(picUrl)
-                    .va(request.getVa().replace(" ",""))
+                    .va(request.getVa().replace(" ", ""))
                     .bidId(request.getBidId())
                     .mode(request.getMode())
                     .build();
@@ -580,7 +591,7 @@ public class RepayService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void mqCallback(BluePayRequest bluePayRequest) {
-        log.info("详细返回信息：{}",JSON.toJSONString(bluePayRequest));
+        log.info("详细返回信息：{}", JSON.toJSONString(bluePayRequest));
         // 参数校验
         ValidatorUtil.validateWithNull(bluePayRequest);
         // 返回的状态

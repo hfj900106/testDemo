@@ -119,4 +119,12 @@
         </root>
     </springProfile>
 
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="FILE_CRON"/>
+            <appender-ref ref="EMAIL"/>
+        </root>
+    </springProfile>
+
 </configuration>

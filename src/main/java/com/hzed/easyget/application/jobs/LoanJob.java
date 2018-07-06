@@ -67,6 +67,7 @@ public class LoanJob {
     }
 
     @JobAnnotation("短信催账")
+    @Scheduled(cron = "${system.job.checkBillCron}")
     public void checkBill(){
         jobService.checkBill();
     }

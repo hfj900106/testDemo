@@ -294,18 +294,18 @@ public class JobService {
                     if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
                         // 非测试环境发送短信
                          SmsUtils.sendSms(mobile,msg,String.valueOf(smsId));
-                        log.info("发送催账短信-成功，手机号码{}",mobile);
-                            // 保存到数据库短信记录表
-                            SmsLog smsLog = new SmsLog();
-                            smsLog.setId(smsId);
-                            smsLog.setCreateTime(LocalDateTime.now());
-                            smsLog.setContent(msg);
-                            smsLog.setMobile(mobile);
-                            smsLog.setStatus((byte) 2);
-                            smsLog.setSendBy(sendBy);
-                            smsLog.setRemark("短信催账");
-                            smsLogRepository.insertSelective(smsLog);
                     }
+                    log.info("发送催账短信-成功，手机号码{}",mobile);
+                    // 保存到数据库短信记录表
+                    SmsLog smsLog = new SmsLog();
+                    smsLog.setId(smsId);
+                    smsLog.setCreateTime(LocalDateTime.now());
+                    smsLog.setContent(msg);
+                    smsLog.setMobile(mobile);
+                    smsLog.setStatus((byte) 2);
+                    smsLog.setSendBy(sendBy);
+                    smsLog.setRemark("短信催账");
+                    smsLogRepository.insertSelective(smsLog);
                 }catch (Exception ex){
                     log.info("发送催账短信-失败，手机号码{}",mobile);
                 }

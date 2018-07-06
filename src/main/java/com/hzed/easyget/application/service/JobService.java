@@ -12,6 +12,7 @@ import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
@@ -228,6 +229,10 @@ public class JobService {
             return;
         }
         String template = dictRepository.findByCodeAndLanguage(ComConsts.SMS_CONTENT_4, systemProp.getLocal()).getDicValue();
+        if(template == null){
+            log.info("没有配置短信模板");
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
         //短信发送渠道
         String sendBy = dictService.getDictByCode(ComConsts.SMS_DICT_CODE).getDicValue();
         for (BillExt billExt : billExts) {

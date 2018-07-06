@@ -35,6 +35,27 @@
         </encoder>
     </appender>
 
+    <appender name="FILE_CRON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--最新日志文件输出的文件名-->
+        <file>${logHome}/${appName}_cron.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logHome}/%d{yyyy-MM-dd}/%i.cron.log</fileNamePattern>
+            <!-- 单文件最大大小 -->
+            <maxFileSize>30MB</maxFileSize>
+            <!-- 日志文件保存周期 -->
+            <maxHistory>30</maxHistory>
+            <!-- 日志文件存储内存空间 -->
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [${envNameCN} ${port}] [%X{trace}] [%X{moduleName}] - %-5level - %logger{50} - %msg%n</pattern>
+        </encoder>
+        <filter class="com.hzed.easyget.infrastructure.config.logback.MyLogFilter">
+            <matchingFlag>定时任务</matchingFlag>
+        </filter>
+    </appender>
+
     <!-- ERROR邮件发送配置 -->
     <appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
         <!-- SMTP server的地址，必需指定。 -->
@@ -80,6 +101,7 @@
     <springProfile name="dev">
         <root level="debug">
             <appender-ref ref="STDOUT"/>
+            <!--<appender-ref ref="FILE_CRON"/>-->
         </root>
     </springProfile>
 

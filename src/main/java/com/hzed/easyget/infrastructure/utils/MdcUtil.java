@@ -10,15 +10,18 @@ import java.util.UUID;
  */
 public class MdcUtil {
 
+    public static final String MODULENAME = "moduleName";
+    public static final String TRACE = "trace";
+
     private MdcUtil() {
     }
 
     public static void putTrace() {
-        MDC.put("trace", UUID.randomUUID().toString().replaceAll("-", "").substring(3, 20));
+        MDC.put(TRACE, UUID.randomUUID().toString().replaceAll("-", "").substring(3, 20));
     }
 
     public static void putModuleName(String moduleName) {
-        MDC.put("moduleName", moduleName);
+        MDC.put(MODULENAME, moduleName);
     }
 
     public static void clear() {

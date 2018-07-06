@@ -61,11 +61,10 @@ public class RepayTest {
     @Test
     public void testRepayment() {
         RepaymentCompleRequest request=new RepaymentCompleRequest();
-        request.setPayType(RepayMentEnum.ATM.getBlue());
-        request.setTransactionId("111622125617815552hzed");
-        request.setBankType(BankTypeEnum.PERMATA.getBank());
-        request.setPaymentCode("8359180629620392");
-        request.setPrice(BigDecimal.valueOf(20000));
+        request.setPayType(RepayMentEnum.OTC.getBlue());
+        request.setTransactionId("114194023249747968hzed");
+        request.setPaymentCode("8888859300920641");
+        request.setPrice(BigDecimal.valueOf(10000));
         request.setCardNo("21934189228383587872");
         request.setMsisdn("8615926633889");
         request.setRequestNo(String.valueOf(IdentifierGenerator.nextId()));

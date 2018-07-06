@@ -128,7 +128,7 @@ public class CallbackService {
         // 获取验证码
         String code = smsService.getCode();
         // 替换验证码
-        String content = StringUtils.replace(dicValue, "{1}", code);
+        String content = StringUtils.replace(dicValue, "{0}", code);
         // 短信标识
         Long smsId = IdentifierGenerator.nextId();
 

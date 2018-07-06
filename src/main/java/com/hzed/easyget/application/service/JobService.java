@@ -238,7 +238,7 @@ public class JobService {
         for (BillExt billExt : billExts) {
             Integer day = billExt.getDay();
             if (day != null) {
-                String msg = StringUtils.replace(template, "{1}", String.valueOf(day));
+                String msg = StringUtils.replace(template, "{0}", String.valueOf(day));
                 Long smsId = IdentifierGenerator.nextId();
                 String mobile = billExt.getMobile();
                 try {

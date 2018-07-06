@@ -239,7 +239,7 @@ public class LoginService {
         }
         String dicValue = smsContent1.get(0).getDictValue();
         //替换验证码
-        String content = StringUtils.replace(dicValue, "{1}", code);
+        String content = StringUtils.replace(dicValue, "{0}", code);
         Long smsId = IdentifierGenerator.nextId();
 
         if (!EnvEnum.isTestEnv(systemProp.getEnv())) {

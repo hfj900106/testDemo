@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzed.easyget.persistence.ext.mapper.BillExtMapper">
+
+
+    <select id="findUnRepayBillExt" resultType="com.hzed.easyget.persistence.ext.entity.BillExt">
+        SELECT
+            user.mobile_account AS mobile,
+            bill.repayment_time AS repaymentTime,
+            bill.id AS billId
+        FROM t_loan_bill bill
+        LEFT JOIN t_loan_bid bid ON bid.id = bill.bid_id
+        LEFT JOIN t_loan_user user ON user.id = bid.user_id
+        WHERE bid.status = 5 AND bill.status = 1
+    </select>
+
+
+</mapper>
+

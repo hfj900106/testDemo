@@ -5,6 +5,8 @@ import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.persistence.auto.entity.Bill;
 import com.hzed.easyget.persistence.auto.entity.example.BillExample;
 import com.hzed.easyget.persistence.auto.mapper.BillMapper;
+import com.hzed.easyget.persistence.ext.entity.BillExt;
+import com.hzed.easyget.persistence.ext.mapper.BillExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +23,8 @@ public class BillRepository {
 
     @Autowired
     private BillMapper billMapper;
+    @Autowired
+    private BillExtMapper billExtMapper;
 
     public Bill findByBid(Long bid) {
         BillExample example = new BillExample();
@@ -56,5 +60,9 @@ public class BillRepository {
 
     public void update(Bill bill) {
         billMapper.updateByPrimaryKeySelective(bill);
+    }
+
+    public List<BillExt> findUnRepayBillExt(){
+        return billExtMapper.findUnRepayBillExt();
     }
 }

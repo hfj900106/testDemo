@@ -104,6 +104,8 @@ system:
     # 神策还款
     saRepaymentSuccess: false
     saRepaymentSuccessCron: 0 */1 * * * ?
-
+    #短信催账
+    checkBill: false
+    checkBillCron: 0 0 15 * * ?
 
 #======================================= 系统参数 结束 =======================================#

@@ -92,4 +92,10 @@ public class DictRepository {
                 .andDicCodeEqualTo(smsCode);
         return dictMapper.selectOneByExample(example);
     }
+
+    public Dict findByCodeAndLanguage(String dicCode,String language) {
+        DictExample example = new DictExample();
+        example.createCriteria().andDicCodeEqualTo(dicCode).andLanguageEqualTo(language);
+        return dictMapper.selectOneByExample(example);
+    }
 }

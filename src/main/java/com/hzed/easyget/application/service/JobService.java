@@ -2,10 +2,12 @@ package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.application.enums.JobStatusEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
 import com.hzed.easyget.infrastructure.config.RiskProp;
+import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
@@ -16,12 +18,13 @@ import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.AesUtil;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
+import com.hzed.easyget.infrastructure.utils.SmsUtils;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
-import com.hzed.easyget.persistence.auto.entity.TempTable;
-import com.hzed.easyget.persistence.auto.entity.UserTransaction;
+import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
+import com.hzed.easyget.persistence.ext.entity.BillExt;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -61,6 +64,16 @@ public class JobService {
     private RiskProp riskProp;
     @Autowired
     private BluePayService bluePayService;
+    @Autowired
+    private SystemProp systemProp;
+    @Autowired
+    private BillRepository billRepository;
+    @Autowired
+    private DictRepository dictRepository;
+    @Autowired
+    private SmsLogRepository smsLogRepository;
+    @Autowired
+    private DictService dictService;
 
     /**
      * 风控审核
@@ -261,5 +274,42 @@ public class JobService {
      */
     public void saRepaymentSuccess() {
         saService.saRepaymentSuccess();
+    }
+
+    public void checkBill(){
+        List<BillExt> billExts = billRepository.findUnRepayBillExt();
+        if (ObjectUtils.isEmpty(billExts)) {
+            return;
+        }
+        String template = dictRepository.findByCodeAndLanguage(ComConsts.SMS_CONTENT_4,systemProp.getLocal()).getDicValue();
+        //短信发送渠道
+        String sendBy = dictService.getDictByCode(ComConsts.SMS_DICT_CODE).getDicValue();
+        for (BillExt billExt : billExts) {
+            int days = DateUtil.getBetweenDays( LocalDateTime.now(),billExt.getRepaymentTime());
+            if(days >= 0 && days < systemProp.getDaysInAdvance()){
+                String msg = StringUtils.replace(template, "{1}", String.valueOf(days));
+                Long smsId = IdentifierGenerator.nextId();
+                String mobile = billExt.getMobile();
+                try {
+                    if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
+                        // 非测试环境发送短信
+                         SmsUtils.sendSms(mobile,msg,String.valueOf(smsId));
+                        log.info("发送催账短信-成功，手机号码{}",mobile);
+                            // 保存到数据库短信记录表
+                            SmsLog smsLog = new SmsLog();
+                            smsLog.setId(smsId);
+                            smsLog.setCreateTime(LocalDateTime.now());
+                            smsLog.setContent(msg);
+                            smsLog.setMobile(mobile);
+                            smsLog.setStatus((byte) 2);
+                            smsLog.setSendBy(sendBy);
+                            smsLog.setRemark("短信催账");
+                            smsLogRepository.insertSelective(smsLog);
+                    }
+                }catch (Exception ex){
+                    log.info("发送催账短信-失败，手机号码{}",mobile);
+                }
+            }
+        }
     }
 }

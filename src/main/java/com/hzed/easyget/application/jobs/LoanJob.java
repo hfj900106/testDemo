@@ -65,4 +65,9 @@ public class LoanJob {
     public void saRepaymentSuccess() {
         jobService.saRepaymentSuccess();
     }
+
+    @JobAnnotation("短信催账")
+    public void checkBill(){
+        jobService.checkBill();
+    }
 }

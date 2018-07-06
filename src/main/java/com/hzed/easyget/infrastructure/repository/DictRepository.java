@@ -75,4 +75,12 @@ public class DictRepository {
 
         return dictMapper.selectByExample(example);
     }
+
+    public Dict findByCodeAndLoacl(String local, String smsCode) {
+        DictExample example = new DictExample();
+        example.createCriteria()
+                .andLanguageEqualTo(local)
+                .andDicCodeEqualTo(smsCode);
+        return dictMapper.selectOneByExample(example);
+    }
 }

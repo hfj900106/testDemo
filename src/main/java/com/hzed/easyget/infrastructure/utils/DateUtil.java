@@ -28,6 +28,8 @@ public final class DateUtil {
 
     public static final DateTimeFormatter FORMAT5 = DateTimeFormatter.ofPattern("HH:mm:ss");
 
+    public static final DateTimeFormatter FORMAT6 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     private DateUtil() {
     }
 

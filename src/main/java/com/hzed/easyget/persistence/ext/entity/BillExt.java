@@ -24,4 +24,6 @@ public class BillExt {
      *  应还时间
      */
     private LocalDateTime repaymentTime;
+
+    private Integer day;
 }

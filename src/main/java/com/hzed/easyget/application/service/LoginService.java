@@ -49,7 +49,8 @@ public class LoginService {
     private SystemProp systemProp;
     @Autowired
     SaService saService;
-
+    @Autowired
+    private SmsService smsService;
     /**
      * 用户登录注册
      *
@@ -228,12 +229,12 @@ public class LoginService {
             //10分钟内重发需要验证码
             throw new WarnException(BizCodeEnum.PIC_CODE_TO_CHECK);
         }
-        String code = SmsUtils.getCode();
+        String code = smsService.getCode();
 
         DictService dictService = SpringContextUtil.getBean(DictService.class);
         List<DictResponse> smsContent1 = dictService.getDictByDicCodeAndLanguage(ComConsts.SMS_CONTENT_1, systemProp.getLocal());
         if (ObjectUtils.isEmpty(smsContent1)) {
-            log.error("没有配置短信模板1");
+            log.error("没有配置短信模板");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
         String dicValue = smsContent1.get(0).getDictValue();
@@ -243,24 +244,12 @@ public class LoginService {
 
         if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
             //非测试环境发送短信
-            SmsUtils.sendSms(mobile, content, String.valueOf(smsId));
+            smsService.sendSms(mobile, content, String.valueOf(smsId));
         }
-        Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
-        if (ObjectUtils.isEmpty(dictSms)) {
-            log.error("没有配置短信渠道");
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
-        }
-        // 保存到数据库短信记录表
-        SmsLog smsLog = new SmsLog();
-        smsLog.setId(smsId);
-        smsLog.setCreateTime(LocalDateTime.now());
-        smsLog.setContent(content);
-        smsLog.setMobile(mobile);
-        // 发送成功
-        smsLog.setStatus((byte) 2);
-        smsLog.setSendBy(dictSms.getDicValue());
-        smsLog.setRemark("短信验证码");
-        smsLogRepository.insertSelective(smsLog);
+
+        // 保存短信记录
+        smsService.saveSmsLog(smsId,content,mobile,(byte)2,"短信验证码");
+
         //保存到Redis，手机验证码30分钟有效
         redisService.setCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile, code, 1800L);
         //60秒后可以重发

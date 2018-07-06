@@ -18,7 +18,6 @@ import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
-import com.hzed.easyget.infrastructure.utils.SmsUtils;
 import com.hzed.easyget.infrastructure.utils.SpringContextUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
@@ -48,7 +47,7 @@ public class CallbackService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private SmsLogRepository smsLogRepository;
+    private SmsService smsService;
 
     public PushBidCallbackResponse pushBidCallback(PushBidCallbackRequest request) {
         Long bidId = request.getBidId();
@@ -85,7 +84,7 @@ public class CallbackService {
                     bidId);
         }
         // 发送短信
-//        sendSmsOfPushResult(bidId, isPass);
+        sendSmsOfPushResult(bidId, isPass);
 
         // 成功或者失败都返回
         return PushBidCallbackResponse.getSuccessResponse();
@@ -127,7 +126,7 @@ public class CallbackService {
         }
         String dicValue = smsContent.get(0).getDictValue();
         // 获取验证码
-        String code = SmsUtils.getCode();
+        String code = smsService.getCode();
         // 替换验证码
         String content = StringUtils.replace(dicValue, "{1}", code);
         // 短信标识
@@ -135,24 +134,10 @@ public class CallbackService {
 
         if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
             // 非测试环境发送短信
-            SmsUtils.sendSms(mobile, content, String.valueOf(smsId));
+            smsService.sendSms(mobile, content, String.valueOf(smsId));
         }
-        Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
-        if (ObjectUtils.isEmpty(dictSms)) {
-            log.error("没有配置短信渠道");
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
-        }
-        // 保存到数据库短信记录表
-        SmsLog smsLog = new SmsLog();
-        smsLog.setId(smsId);
-        smsLog.setCreateTime(LocalDateTime.now());
-        smsLog.setContent(content);
-        smsLog.setMobile(mobile);
-        // 发送成功
-        smsLog.setStatus((byte) 2);
-        smsLog.setSendBy(dictSms.getDicValue());
-        smsLog.setRemark("审核结果短信通知用户");
-        smsLogRepository.insertSelective(smsLog);
+        // 保存短信记录
+        smsService.saveSmsLog(smsId,content,mobile,(byte)2,"审核结果短信通知用户");
 
     }
 

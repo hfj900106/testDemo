@@ -79,7 +79,7 @@ public class BootTest {
     @Test
     public void passwordTest() {
         // java -cp jasypt-1.9.2.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI input=原文 password=123456 algorithm=PBEWithMD5AndDES
-        String decrypt = stringEncryptor.encrypt("root");
+        String decrypt = stringEncryptor.encrypt("12321");
         System.out.println(decrypt);
     }
 

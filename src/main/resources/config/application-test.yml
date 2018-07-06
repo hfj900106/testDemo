@@ -15,7 +15,7 @@ spring:
 logging:
   logHome: /work/easy-get-8150/logs # 日志路径
   envNameCN: 测试环境 # 环境中文名
-  emailTo: guichang@hzed.com,wuchengwu@hzed.com,huangfengjing@hzed.com,dengzhenhao@hzed.com,zhangruilin@hzed.com # 邮件接收者，多个用逗号隔开
+  emailTo: guichang@hzed.com,wuchengwu@hzed.com,huangfengjing@hzed.com,dengzhenhao@hzed.com,zhangruilin@hzed.com,wenhuaping@hzed.com # 邮件接收者，多个用逗号隔开
 
 # 第三方
 thirdParty:

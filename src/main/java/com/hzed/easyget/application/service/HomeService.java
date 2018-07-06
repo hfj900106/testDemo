@@ -197,7 +197,7 @@ public class HomeService {
         });
         RiskResponse response = riskService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
         String errorCode = response.getHead().getError_code();
-        log.info("查询风控是否有贷款资格，风控返回信息:{}，用户id:{}",response.getHead().getError_msg(),userId);
+        log.info("查询风控是否有贷款资格，风控返回被拒原因:{}，用户id:{}",response.getHead().getError_msg(),userId);
         String code = "";
         String msg = "";
         if (StringUtils.isNotBlank(errorCode)) {
@@ -205,15 +205,18 @@ public class HomeService {
             if (mk02.equals(errorCode)) {
                 code = BizCodeEnum.INSUFFICIENT_QUOTA.getCode();
                 msg = BizCodeEnum.INSUFFICIENT_QUOTA.getMessage();
+                return Response.getFailResponse(checkLoanResponseList,code,msg);
             } else if (mk06.equals(errorCode)) {
                 code = BizCodeEnum.BID_EXISTS.getCode();
                 msg = BizCodeEnum.BID_EXISTS.getMessage();
+                return Response.getFailResponse(checkLoanResponseList,code,msg);
             } else {
                 code = BizCodeEnum.UN_LOAN_QUALIFICATION.getCode();
                 msg = BizCodeEnum.UN_LOAN_QUALIFICATION.getMessage();
+                return Response.getFailResponse(checkLoanResponseList,code,msg);
             }
         }
-        return Response.getFailResponse(checkLoanResponseList,code,msg);
+        return Response.getSuccessResponse(checkLoanResponseList);
 
     }
 

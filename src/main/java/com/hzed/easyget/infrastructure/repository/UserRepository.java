@@ -43,6 +43,13 @@ public class UserRepository {
         return userMapper.selectOneByExample(example);
     }
 
+    public User findByIdCardNo(String idCardNo) {
+        UserExample example = new UserExample();
+        example.createCriteria().andIdCardNoEqualTo(idCardNo);
+        return userMapper.selectOneByExample(example);
+    }
+
+
     public void updateLastLoginTime(User user) {
         userMapper.updateByPrimaryKeySelective(user);
     }

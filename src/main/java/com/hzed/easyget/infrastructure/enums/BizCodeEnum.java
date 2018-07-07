@@ -82,6 +82,7 @@ public enum BizCodeEnum {
     SUCCESS_AUTH("1043", "运营商认证成功"),
     UPLOAD_PIC_FAIL("1044","图片上传失败"),
     PIC_SIZE_ERROR("1045","图片后缀长度不匹配"),
+    IDCARD_EXIST("1046","该身份证已经被使用过了，认证失败"),
 
     // 首页还款检测
     MSG_BID_OVERDUE_TODAY("2001","您的借款于今天到期，请尽快还款，以免逾期"),

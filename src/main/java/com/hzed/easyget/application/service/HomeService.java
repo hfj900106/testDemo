@@ -88,7 +88,7 @@ public class HomeService {
         appVersionResponse.setVersion(verDict.getDicValue());
         appVersionResponse.setPath(jsonObject.getString("update_url"));
         appVersionResponse.setIsUpdate(checkIsUpdate(oldVersion, verDict.getDicValue()));
-        appVersionResponse.setIsForce(jsonObject.getString("is_force"));
+        appVersionResponse.setIsForce(jsonObject.getString("force_update"));
         return appVersionResponse;
     }
 

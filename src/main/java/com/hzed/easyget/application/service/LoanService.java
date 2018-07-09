@@ -57,7 +57,7 @@ public class LoanService {
         loanDetailResponse.setAuditTime(DateUtil.localDateTimeToStr2(auditTime));
         loanDetailResponse.setLoanTime(DateUtil.localDateTimeToStr2(DateUtil.addMins(auditTime,systemProp.getExpectedLendingTimeInterval().intValue())));
 
-        if (BidStatusEnum.AUDIT_FAIL.equals(status) || BidStatusEnum.AUDIT_PASS.equals(status) || BidStatusEnum.REPAYMENT.equals(status)) {
+        if (BidStatusEnum.AUDIT_FAIL.getCode().equals(Integer.valueOf(status)) || BidStatusEnum.AUDIT_PASS.getCode().equals(Integer.valueOf(status)) || BidStatusEnum.REPAYMENT.getCode().equals(Integer.valueOf(status))) {
             UserLoanVisit userLoanVisit = new UserLoanVisit();
             userLoanVisit.setId(IdentifierGenerator.nextId());
             userLoanVisit.setUserId(RequestUtil.getGlobalUser().getUserId());

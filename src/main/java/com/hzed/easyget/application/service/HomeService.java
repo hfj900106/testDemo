@@ -87,16 +87,21 @@ public class HomeService {
         JSONObject jsonObject = JSONObject.parseObject(dictLabelJson);
         appVersionResponse.setVersion(verDict.getDicValue());
         appVersionResponse.setPath(jsonObject.getString("update_url"));
-        appVersionResponse.setIsUpdate(checkIsUpdate(oldVersion, verDict.getDicValue()));
-        appVersionResponse.setIsForce(jsonObject.getString("force_update"));
+        checkIsUpdate(oldVersion, verDict.getDicValue(),appVersionResponse,jsonObject);
         return appVersionResponse;
     }
 
-    private String checkIsUpdate(String oldVersion, String newVersion) {
+    private void checkIsUpdate(String oldVersion, String newVersion,AppVersionResponse appVersionResponse,JSONObject jsonObject) {
         if (oldVersion.equals(newVersion)) {
-            return AppVersionEnum.NOT_UPDATE.getCode();
+            appVersionResponse.setIsUpdate(AppVersionEnum.NOT_UPDATE.getCode());
+            appVersionResponse.setIsForce("1");
         } else {
-            return AppVersionEnum.HAS_UPDATE.getCode();
+            appVersionResponse.setIsUpdate(AppVersionEnum.HAS_UPDATE.getCode());
+            appVersionResponse.setIsForce(jsonObject.getString("force_update"));
+            Integer minimumVersion = Integer.valueOf(jsonObject.getString("minimum_version"));
+            if(1<minimumVersion){
+                appVersionResponse.setIsForce("0");
+            }
         }
     }
 

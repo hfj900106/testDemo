@@ -88,7 +88,7 @@ system:
     pushBidCron: 0/5 * * * * ?
     # 放款
     bankLoan: false
-    bankLoanCron: 0/5 * * * * ?
+    bankLoanCron: 0 */2 * * * ?
     # 处理还款信息流
     repayInfoFlow: false
     repayInfoFlowCron: 0/5 * * * * ?
@@ -101,7 +101,7 @@ system:
     # 神策还款
     saRepaymentSuccess: false
     saRepaymentSuccessCron: 0 */1 * * * ?
-    #短信催账
+    # 短信催账
     checkBill: false
     checkBillCron: 0 0 15 * * ?
 

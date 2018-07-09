@@ -33,7 +33,7 @@ system:
     pushBidCron: 0/5 * * * * ?
     # 放款
     bankLoan: true
-    bankLoanCron: 0/5 * * * * ?
+    bankLoanCron: 0 */2 * * * ?
     # 处理还款信息流
     repayInfoFlow: true
     repayInfoFlowCron: 0/5 * * * * ?

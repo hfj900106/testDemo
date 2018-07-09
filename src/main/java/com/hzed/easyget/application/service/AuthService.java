@@ -223,6 +223,11 @@ public class AuthService {
         String name = data.getString("name");
         String gender = data.getString("gender");
         String idNumber = data.getString("idNumber");
+        String birthPlaceBirthday = data.getString("birthPlaceBirthday");
+        if(!StringUtils.isBlank(birthPlaceBirthday)){
+            // 注意有空格
+            recognitionResponse.setBirthday(birthPlaceBirthday.split(". ")[1]);
+        }
         recognitionResponse.setName(name);
         int genderInt = 1;
         if (!ObjectUtils.isEmpty(gender) && ComConsts.FEMALE.equalsIgnoreCase(gender)) {

@@ -6,6 +6,7 @@
     <result column="parent" jdbcType="VARCHAR" property="parent" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="district" jdbcType="VARCHAR" property="district" />
+    <result column="weight" jdbcType="INTEGER" property="weight" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, parent, name, district
+    id, parent, name, district, weight
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.IDAreaExample" resultMap="BaseResultMap">
     select
@@ -132,9 +133,9 @@
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.IDArea">
     insert into t_loan_id_area (id, parent, name, 
-      district)
+      district, weight)
     values (#{id,jdbcType=BIGINT}, #{parent,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{district,jdbcType=VARCHAR})
+      #{district,jdbcType=VARCHAR}, #{weight,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.IDArea">
     insert into t_loan_id_area
@@ -151,6 +152,9 @@
       <if test="district != null">
         district,
       </if>
+      <if test="weight != null">
+        weight,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -164,6 +168,9 @@
       </if>
       <if test="district != null">
         #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null">
+        #{weight,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -188,6 +195,9 @@
       <if test="record.district != null">
         district = #{record.district,jdbcType=VARCHAR},
       </if>
+      <if test="record.weight != null">
+        weight = #{record.weight,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -198,7 +208,8 @@
     set id = #{record.id,jdbcType=BIGINT},
       parent = #{record.parent,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
-      district = #{record.district,jdbcType=VARCHAR}
+      district = #{record.district,jdbcType=VARCHAR},
+      weight = #{record.weight,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -215,6 +226,9 @@
       <if test="district != null">
         district = #{district,jdbcType=VARCHAR},
       </if>
+      <if test="weight != null">
+        weight = #{weight,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -222,7 +236,8 @@
     update t_loan_id_area
     set parent = #{parent,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
-      district = #{district,jdbcType=VARCHAR}
+      district = #{district,jdbcType=VARCHAR},
+      weight = #{weight,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.IDAreaExample" resultMap="BaseResultMap">
@@ -253,11 +268,11 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_id_area
-    (id, parent, name, district)
+    (id, parent, name, district, weight)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.parent,jdbcType=VARCHAR}, #{item.name,jdbcType=VARCHAR}, 
-        #{item.district,jdbcType=VARCHAR})
+        #{item.district,jdbcType=VARCHAR}, #{item.weight,jdbcType=INTEGER})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -281,6 +296,9 @@
         </if>
         <if test="'district' == column.value">
           #{item.district,jdbcType=VARCHAR}
+        </if>
+        <if test="'weight' == column.value">
+          #{item.weight,jdbcType=INTEGER}
         </if>
       </foreach>
       )

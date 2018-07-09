@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -39,6 +41,11 @@ public class SaExt {
     private String inBank;
     /** 贷款目的编码 */
     private String purposeCode;
+    /** 借款金额 */
+    private BigDecimal applyAmount;
+    /** 借款期限 */
+    private Integer period;
+
 
     /** 神策借款成功 */
     /** 应还时间 */

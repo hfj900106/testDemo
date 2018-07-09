@@ -19,9 +19,11 @@ public class IDAreaRepository {
 
     @Autowired
     private IDAreaMapper idAreaMapper;
+
     public List<IDArea> findByParent(String parent) {
         IDAreaExample example = new IDAreaExample();
         example.createCriteria().andParentEqualTo(parent);
+        example.setOrderByClause(IDArea.Column.weight.asc() + "," + IDArea.Column.name.asc());
         return idAreaMapper.selectByExample(example);
     }
 }

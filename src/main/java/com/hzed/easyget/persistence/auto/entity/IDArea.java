@@ -22,6 +22,11 @@ public class IDArea implements Serializable {
      */
     private String district;
 
+    /**
+     * 权重
+     */
+    private Integer weight;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -56,6 +61,14 @@ public class IDArea implements Serializable {
         this.district = district == null ? null : district.trim();
     }
 
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -66,6 +79,7 @@ public class IDArea implements Serializable {
         sb.append(", parent=").append(parent);
         sb.append(", name=").append(name);
         sb.append(", district=").append(district);
+        sb.append(", weight=").append(weight);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
@@ -102,6 +116,11 @@ public class IDArea implements Serializable {
             return this;
         }
 
+        public Builder weight(Integer weight) {
+            obj.setWeight(weight);
+            return this;
+        }
+
         public IDArea build() {
             return this.obj;
         }
@@ -111,7 +130,8 @@ public class IDArea implements Serializable {
         id("id"),
         parent("parent"),
         name("name"),
-        district("district");
+        district("district"),
+        weight("weight");
 
         private final String column;
 

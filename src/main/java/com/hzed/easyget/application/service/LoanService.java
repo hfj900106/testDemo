@@ -49,13 +49,13 @@ public class LoanService {
         Byte status = bid.getStatus();
         AbstractProduct product = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(bid.getApplyAmount(), bid.getPeriod());
         loanDetailResponse.setApplyAmount(product.getArrivalAmount().toString());
-        loanDetailResponse.setApplyTime(DateUtil.localDateTimeToStr2(bid.getCreateTime()));
+        loanDetailResponse.setApplyTime(DateUtil.localDateTimeToStr1(bid.getCreateTime()));
         loanDetailResponse.setInBank(bid.getInBank());
         loanDetailResponse.setInAccount(bid.getInAccount());
         loanDetailResponse.setStatus(status);
         LocalDateTime auditTime = DateUtil.addMins(bid.getCreateTime(), systemProp.getExpectedAuditTimeInterval().intValue());
-        loanDetailResponse.setAuditTime(DateUtil.localDateTimeToStr2(auditTime));
-        loanDetailResponse.setLoanTime(DateUtil.localDateTimeToStr2(DateUtil.addMins(auditTime,systemProp.getExpectedLendingTimeInterval().intValue())));
+        loanDetailResponse.setAuditTime(DateUtil.localDateTimeToStr1(auditTime));
+        loanDetailResponse.setLoanTime(DateUtil.localDateTimeToStr1(DateUtil.addMins(auditTime,systemProp.getExpectedLendingTimeInterval().intValue())));
 
         if (BidStatusEnum.AUDIT_FAIL.getCode().equals(Integer.valueOf(status)) || BidStatusEnum.AUDIT_PASS.getCode().equals(Integer.valueOf(status)) || BidStatusEnum.REPAYMENT.getCode().equals(Integer.valueOf(status))) {
             UserLoanVisit userLoanVisit = new UserLoanVisit();

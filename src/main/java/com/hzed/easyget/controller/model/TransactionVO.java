@@ -28,7 +28,11 @@ public class TransactionVO {
      */
     private Long updateTime;
     /**
-     * 交易备注
+     * 银行卡后四位
      */
-    private String remark;
+    private String bankAccount;
+    /**
+     * 交易类型 1-入账 2-出账 3-其他
+     */
+    private Byte type;
 }

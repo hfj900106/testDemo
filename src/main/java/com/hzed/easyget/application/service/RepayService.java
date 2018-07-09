@@ -89,17 +89,18 @@ public class RepayService {
             return repayListResponse;
         }
         List<RepaymentResponse> repaymentResponseList = Lists.newArrayList();
+        repayListResponse.setLoanAmount(BigDecimal.ZERO);
         for (Bid bid : bidList) {
             RepaymentResponse repaymentResponse = new RepaymentResponse();
             Long bidId = bid.getId();
             BidProgress bidProgress = bidProgressRepository.findByBidIdAndType(bidId, BidProgressTypeEnum.CLEAR.getCode().byteValue());
             Bill bill = billRepository.findByBid(bidId);
 
+
             // 已结清
             if (BidStatusEnum.CLEARED.getCode().byteValue() == bid.getStatus().byteValue()) {
                 repaymentResponse.setRepayTime(DateUtil.localDateTimeToTimestamp(bidProgress.getHandleTime()));
                 repaymentResponse.setStatus(RepayStatusEnum.CLEAR_REPAY.getCode().intValue());
-                repayListResponse.setLoanAmount(bidList.get(0).getLoanAmount());
                 //实还总额
                 repaymentResponse.setRepayAmount(bill.getRealRepaymentAmount());
             }

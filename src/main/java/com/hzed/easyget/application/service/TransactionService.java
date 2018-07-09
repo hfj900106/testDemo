@@ -84,6 +84,7 @@ public class TransactionService {
         transaction.setUserId(userId);
         transaction.setBidId(bidId);
         transaction.setType(type);
+        transaction.setRepaymentType(TransactionTypeEnum.IN.getCode().byteValue());
         transaction.setAmount(amount);
         transaction.setPaymentId(paymentId);
         transaction.setStatus(states);

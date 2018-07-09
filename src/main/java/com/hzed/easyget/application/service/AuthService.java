@@ -249,7 +249,12 @@ public class AuthService {
         String realName = request.getRealName();
         String idCardNo = request.getIdCardNo();
         Integer gender = request.getGender();
-        //调风控身份认证接口，认证通过记录表数据
+        // 查询身份证是否已存在
+        User user1 = userRepository.findByIdCardNo(idCardNo);
+        if(!ObjectUtils.isEmpty(user1)){
+            throw new WarnException(BizCodeEnum.IDCARD_EXIST);
+        }
+        // 调风控身份认证接口，认证通过记录表数据
         riskService.identityInfoAuth();
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         String faceBase64ImgStr = request.getFaceBase64ImgStr();

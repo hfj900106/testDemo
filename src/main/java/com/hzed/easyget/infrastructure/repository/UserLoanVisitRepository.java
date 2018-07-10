@@ -22,9 +22,9 @@ public class UserLoanVisitRepository {
         return userLoanVisitMapper.insertSelective(userLoanVisit);
     }
 
-    public UserLoanVisit findByUserIdAndBidId(Long userId, Long bidId) {
+    public UserLoanVisit findByUserIdAndBidIdAndStatus(Long userId, Long bidId, Byte status) {
         UserLoanVisitExample example = new UserLoanVisitExample();
-        example.createCriteria().andUserIdEqualTo(userId).andBidIdEqualTo(bidId);
+        example.createCriteria().andUserIdEqualTo(userId).andBidIdEqualTo(bidId).andBidStatusEqualTo(status);
         return userLoanVisitMapper.selectOneByExample(example);
     }
 }

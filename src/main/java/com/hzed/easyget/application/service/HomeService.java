@@ -3,6 +3,7 @@ package com.hzed.easyget.application.service;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AppVersionEnum;
+import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
@@ -116,11 +117,13 @@ public class HomeService {
         BigDecimal loanAmount = request.getLoanAmount();
         Integer period = request.getPeriod();
 
-        /*List<UserBank> userBankList = userBankRepository.findByUserId(userId);
-        Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank(),RequestUtil.getGlobalHead().getI18n());
-        loanCalculateResponse.setBankCode(dict.getDicCode());
-        loanCalculateResponse.setBankName(dict.getDicValue());
-        loanCalculateResponse.setInAccount(userBankList.get(0).getInAccount());*/
+        List<UserBank> userBankList = userBankRepository.findByUserId(userId);
+        if (!ObjectUtils.isEmpty(userBankList)) {
+            Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank(), RequestUtil.getGlobalHead().getI18n());
+            loanCalculateResponse.setBankCode(dict.getDicCode());
+            loanCalculateResponse.setBankName(dict.getDicValue());
+            loanCalculateResponse.setInAccount(userBankList.get(0).getInAccount());
+        }
         AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
 
         loanCalculateResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());
@@ -240,10 +243,11 @@ public class HomeService {
         CheckLoanJumpResponse checkLoanJumpResponse = new CheckLoanJumpResponse();
         Long userId = RequestUtil.getGlobalUser().getUserId();
         //bid为空或访问记录表不为空无需跳转，0000为无需跳转，其他需跳转
-        List<Bid> bidList = bidRepository.findByUserId(userId);
+        List<Bid> bidList = bidRepository.findByUserIdAndStatus(userId,Lists.newArrayList(BidStatusEnum.AUDIT_FAIL.getCode().byteValue(),
+                BidStatusEnum.AUDIT_PASS.getCode().byteValue(),BidStatusEnum.REPAYMENT.getCode().byteValue()));
         bidList.forEach(bid -> {
             //首页检测跳转，访问记录表为空需跳转，不为空无需跳转
-            UserLoanVisit userVisitRecord = userLoanVisitRepository.findByUserIdAndBidId(userId, bid.getId());
+            UserLoanVisit userVisitRecord = userLoanVisitRepository.findByUserIdAndBidIdAndStatus(userId, bid.getId(),bid.getStatus());
             if (userVisitRecord == null) {
                 checkLoanJumpResponse.setBid(bid.getId());
                 throw new WarnException(BizCodeEnum.NEED_JUMP, checkLoanJumpResponse);

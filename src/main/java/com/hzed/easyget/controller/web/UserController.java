@@ -5,7 +5,7 @@ import com.hzed.easyget.application.service.UserService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
-import com.hzed.easyget.infrastructure.annotation.head.TokenIgnore;
+import com.hzed.easyget.infrastructure.annotation.head.IgnoreH5;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +45,7 @@ public class UserController {
         return userService.getTransactionRecord(request);
     }
 
-    @TokenIgnore
+    @IgnoreH5
     @ModuleFunc("联系客服")
     @PostMapping("/getCustomerService")
     public List<DictResponse> getCustomerService(@Valid @RequestBody DictRequest request){

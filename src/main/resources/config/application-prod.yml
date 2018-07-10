@@ -16,7 +16,7 @@ spring:
   # rabbitmq配置
   rabbitmq:
     host: 172.31.242.14
-    port: 56572
+    port: 5672
     username: hzed_mq
     password: Hzed#_2018
     virtual-host: /

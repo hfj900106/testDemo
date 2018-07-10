@@ -67,6 +67,9 @@ public class JobService {
     private DictService dictService;
     @Autowired
     private SmsService smsService;
+    @Autowired
+    private BluePayService bluePayService;
+
     /**
      * 风控审核
      */
@@ -174,9 +177,9 @@ public class JobService {
                     loan.setTransactionId(IdentifierGenerator.nextSeqNo());
                     //交易流水
                     loan.setRequestNo(tempId.toString());
-                    // fixme 模拟放款成功
-//                    PayResponse response = bluePayService.loanTransaction(loan);
-                    PayResponse response = new PayResponse(BizCodeEnum.SUCCESS.getCode());
+                    PayResponse response = bluePayService.loanTransaction(loan);
+                    /// 模拟放款成功
+                    /// PayResponse response = new PayResponse(BizCodeEnum.SUCCESS.getCode());
                     if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
                         transactionService.lendingCallback(bidId, tempId, loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
                     } else {
@@ -229,12 +232,10 @@ public class JobService {
             return;
         }
         String template = dictRepository.findByCodeAndLanguage(ComConsts.SMS_CONTENT_4, systemProp.getLocal()).getDicValue();
-        if(template == null){
+        if (template == null) {
             log.error("没有配置短信模板");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
-        //短信发送渠道
-        String sendBy = dictService.getDictByCode(ComConsts.SMS_DICT_CODE).getDicValue();
         for (BillExt billExt : billExts) {
             Integer day = billExt.getDay();
             if (day != null) {
@@ -245,12 +246,12 @@ public class JobService {
                     if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
                         // 非测试环境发送短信
                         smsService.sendSms(mobile, msg, String.valueOf(smsId));
-                        log.info("发送催账短信-成功，手机号码{}",mobile);
+                        log.info("发送催账短信-成功，手机号码{}", mobile);
                     }
                     // 保存短信记录
-                    smsService.saveSmsLog(smsId,msg,mobile,(byte)2,"短信催账");
-                }catch (Exception ex){
-                    log.info("发送催账短信-失败，手机号码{}",mobile);
+                    smsService.saveSmsLog(smsId, msg, mobile, (byte) 2, "短信催账");
+                } catch (Exception ex) {
+                    log.info("发送催账短信-失败，手机号码{}", mobile);
                 }
             }
         }

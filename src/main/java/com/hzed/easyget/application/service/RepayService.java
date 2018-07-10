@@ -144,7 +144,7 @@ public class RepayService {
      */
     public RepayDetailResponse repayDetail(RepayDetailRequest request) {
         RepayDetailResponse repayDetailResponse = new RepayDetailResponse();
-
+        BigDecimal totalRepayAmount;
         Long bidId = request.getBidId();
         Bid bid = bidRepository.findById(bidId);
         // 账单
@@ -163,14 +163,16 @@ public class RepayService {
         // 还款状态
         if ((BidStatusEnum.CLEARED.getCode().toString()).equals(bid.getStatus().toString())) {
             repayDetailResponse.setStatus(RepayStatusEnum.CLEAR_REPAY.getCode());
+            totalRepayAmount = bill.getRealRepaymentAmount();
         } else {
             int days = DateUtil.getBetweenDays(bill.getRepaymentTime(), LocalDateTime.now());
             repayDetailResponse.setStatus(days > 0 ? RepayStatusEnum.OVDUE_UN_REPAY.getCode() : RepayStatusEnum.UN_REPAY.getCode());
+            // 标的待还总费用
+            totalRepayAmount = comService.getBidNoRepayFee(bidId, LocalDateTime.now());
 
         }
 
-        // 标的待还总费用
-        BigDecimal totalRepayAmount = comService.getBidNoRepayFee(bidId, LocalDateTime.now());
+
 
         repayDetailResponse.setTotalRepayAmount(totalRepayAmount);
         repayDetailResponse.setPeriod(bid.getPeriod());

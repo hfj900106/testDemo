@@ -5,6 +5,7 @@ import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.Response;
@@ -54,7 +55,7 @@ public class RequestUtil {
         GlobalHead globalHead = getGlobalHead();
         GlobalUser globalUser = JwtUtil.verify(globalHead.getToken(), GlobalUser.class);
         if (globalUser == null) {
-            throw new ComBizException(BizCodeEnum.ILLEGAL_TOKEN);
+            throw new WarnException(BizCodeEnum.ILLEGAL_TOKEN);
         }
         return globalUser;
     }

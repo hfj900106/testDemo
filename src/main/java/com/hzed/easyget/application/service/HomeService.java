@@ -116,11 +116,11 @@ public class HomeService {
         BigDecimal loanAmount = request.getLoanAmount();
         Integer period = request.getPeriod();
 
-        List<UserBank> userBankList = userBankRepository.findByUserId(userId);
+        /*List<UserBank> userBankList = userBankRepository.findByUserId(userId);
         Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank(),RequestUtil.getGlobalHead().getI18n());
         loanCalculateResponse.setBankCode(dict.getDicCode());
         loanCalculateResponse.setBankName(dict.getDicValue());
-        loanCalculateResponse.setInAccount(userBankList.get(0).getInAccount());
+        loanCalculateResponse.setInAccount(userBankList.get(0).getInAccount());*/
         AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
 
         loanCalculateResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());

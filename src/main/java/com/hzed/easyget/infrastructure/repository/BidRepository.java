@@ -79,6 +79,7 @@ public class BidRepository {
     public List<Bid> findByUserId(Long userId) {
         BidExample example = new BidExample();
         example.createCriteria().andUserIdEqualTo(userId);
+        example.setOrderByClause(Bid.Column.createTime.desc());
         return bidMapper.selectByExample(example);
     }
 

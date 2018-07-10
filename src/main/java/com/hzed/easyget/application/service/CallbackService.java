@@ -14,13 +14,14 @@ import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
-import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.SpringContextUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.auto.entity.Bid;
+import com.hzed.easyget.persistence.auto.entity.BidProgress;
+import com.hzed.easyget.persistence.auto.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class CallbackService {
         Long bidId = request.getBidId();
         BigDecimal loanAmount = request.getLoanAmount();
         byte status = (byte) 0;
-        boolean isPass ;
+        boolean isPass;
         //通过
         if (ComConsts.RISK_4.equals(request.getResultCode())) {
             isPass = true;
@@ -79,7 +80,7 @@ public class CallbackService {
         LocalDateTime dateTime = DateUtil.timestampToLocalDateTimeTo(request.getHandleTime());
         Bid bid = bidRepository.findById(bidId);
         if (ObjectUtils.isEmpty(bid)) {
-            log.error("回调处理的标ID：{}不存在标的表中", bidId);
+            log.error("回调处理的标ID：{} 不存在标的表中", bidId);
         } else {
             AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
             tempTableRepository.pushBidCallback(
@@ -139,7 +140,7 @@ public class CallbackService {
             smsService.sendSms(mobile, content, String.valueOf(smsId));
         }
         // 保存短信记录
-        smsService.saveSmsLog(smsId,content,mobile,(byte)2,"审核结果短信通知用户");
+        smsService.saveSmsLog(smsId, content, mobile, (byte) 2, "审核结果短信通知用户");
 
     }
 

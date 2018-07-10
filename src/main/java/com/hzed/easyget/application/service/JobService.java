@@ -2,6 +2,7 @@ package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.application.enums.JobStatusEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
@@ -63,8 +64,6 @@ public class JobService {
     private BillRepository billRepository;
     @Autowired
     private DictRepository dictRepository;
-    @Autowired
-    private DictService dictService;
     @Autowired
     private SmsService smsService;
     @Autowired
@@ -157,8 +156,8 @@ public class JobService {
      * 银行放款
      */
     public void bankLoan() {
-        //关联中间表查出要放款的标的
-        List<BidExt> bidList = bidRepository.selectBidsToPushOrBankLoan((byte) 4, (byte) 1, ComConsts.PUSH_BANK_TASK);
+        // 关联中间表查出要放款的标的
+        List<BidExt> bidList = bidRepository.selectBidsToPushOrBankLoan(BidStatusEnum.AUDIT_PASS.getCode().byteValue(), (byte) 1, ComConsts.PUSH_BANK_TASK);
         if (ObjectUtils.isEmpty(bidList)) {
             log.info("没有需要放款的记录");
             return;
@@ -169,13 +168,13 @@ public class JobService {
             log.info("开始处理标ID：{}", bidId);
             Long tempId = IdentifierGenerator.nextId();
             try {
-                //插入中间表
+                // 插入中间表
                 tempTableRepository.insertJob(TempTable.builder().id(tempId).jobName(ComConsts.PUSH_BANK_TASK).relaseId(bidId).remark("放款").reRunTimes((byte) 1).build());
                 LoanTransactionRequest loan = bidRepository.findLoanTransaction(bidId);
                 if (!ObjectUtils.isEmpty(loan)) {
-                    //交易编号
+                    // 交易编号
                     loan.setTransactionId(IdentifierGenerator.nextSeqNo());
-                    //交易流水
+                    // 交易流水
                     loan.setRequestNo(tempId.toString());
                     PayResponse response = bluePayService.loanTransaction(loan);
                     /// 模拟放款成功

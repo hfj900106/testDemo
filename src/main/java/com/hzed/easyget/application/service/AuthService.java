@@ -202,29 +202,29 @@ public class AuthService {
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         RiskResponse response = riskService.idCardRecognition(idCardBase64ImgStr);
 
-        if(ObjectUtils.isEmpty(response.getBody())){
+        if (ObjectUtils.isEmpty(response.getBody())) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
 
         String bobyStr = response.getBody().toString();
-        if(ObjectUtils.isEmpty(bobyStr)){
+        if (ObjectUtils.isEmpty(bobyStr)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
 
         JSONObject obj = JSONObject.parseObject(bobyStr, JSONObject.class);
-        if(ObjectUtils.isEmpty(obj)){
+        if (ObjectUtils.isEmpty(obj)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
 
         JSONObject data = obj.getJSONObject("data");
-        if(ObjectUtils.isEmpty(data)){
+        if (ObjectUtils.isEmpty(data)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
         String name = data.getString("name");
         String gender = data.getString("gender");
         String idNumber = data.getString("idNumber");
         String birthPlaceBirthday = data.getString("birthPlaceBirthday");
-        if(!StringUtils.isBlank(birthPlaceBirthday)){
+        if (!StringUtils.isBlank(birthPlaceBirthday)) {
             // 注意有空格
             recognitionResponse.setBirthday(birthPlaceBirthday.split(". ")[1]);
         }
@@ -256,7 +256,7 @@ public class AuthService {
         Integer gender = request.getGender();
         // 查询身份证是否已存在
         User user1 = userRepository.findByIdCardNo(idCardNo);
-        if(!ObjectUtils.isEmpty(user1)){
+        if (!ObjectUtils.isEmpty(user1)) {
             throw new WarnException(BizCodeEnum.IDCARD_EXIST);
         }
         // 调风控身份认证接口，认证通过记录表数据
@@ -377,7 +377,7 @@ public class AuthService {
         String taskId = request.getTaskId();
         int source = "android".equals(getGlobalHead().getPlatform()) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
         GlobalUser user = getGlobalUser();
-        riskService.facebookAndIns(user.getUserId(),taskId,source);
+        riskService.facebookAndIns(user.getUserId(), taskId, source);
     }
 
 

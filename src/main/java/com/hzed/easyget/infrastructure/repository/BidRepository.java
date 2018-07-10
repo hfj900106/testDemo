@@ -72,8 +72,8 @@ public class BidRepository {
         userBankMapper.insertSelective(userBank);
     }
 
-    public List<BidExt> selectBidsToPushOrBankLoan(Byte status, Byte times,String jobName) {
-        return bidExtMapper.selectBidsToPushOrBankLoan( status,  times, jobName);
+    public List<BidExt> selectBidsToPushOrBankLoan(Byte status, Byte times, String jobName) {
+        return bidExtMapper.selectBidsToPushOrBankLoan(status, times, jobName);
     }
 
     public List<Bid> findByUserId(Long userId) {
@@ -98,7 +98,7 @@ public class BidRepository {
         userTransactionMapper.updateByExampleSelective(userTransaction, transaction);
     }
 
-    public Bid getUserIdByBidId(Long bidId){
+    public Bid getUserIdByBidId(Long bidId) {
         return bidMapper.selectByPrimaryKey(bidId);
     }
 

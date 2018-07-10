@@ -5,7 +5,6 @@ import com.hzed.easyget.controller.model.TransactionRecordResponse;
 import com.hzed.easyget.controller.model.TransactionVO;
 import com.hzed.easyget.controller.model.UserResponse;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
@@ -33,8 +32,6 @@ import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private BidRepository bidRepository;
 
     /**
      * 我的

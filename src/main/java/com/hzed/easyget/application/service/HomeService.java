@@ -60,6 +60,10 @@ public class HomeService {
     private UserLoanVisitRepository userLoanVisitRepository;
     @Autowired
     private RiskService riskService;
+    @Autowired
+    private UserBankRepository userBankRepository;
+    @Autowired
+    private DictRepository dictRepository;
 
     private static final String ANDROID_BOMB = "android_bomb";
     private static final String IOS_BOMB = "ios_bomb";
@@ -79,19 +83,20 @@ public class HomeService {
     public AppVersionResponse getAppVersion(AppVersionRequest request) {
 
         AppVersionResponse appVersionResponse = new AppVersionResponse();
-        String oldVersion = RequestUtil.getGlobalHead().getVersion();
-        String channel = request.getChannel();
 
+        String channel = request.getChannel();
+        Integer versionCode = request.getVersionCode();
         Dict verDict = dictService.getDictByCode(channel);
         String dictLabelJson = verDict.getDicLabel();
         JSONObject jsonObject = JSONObject.parseObject(dictLabelJson);
         appVersionResponse.setVersion(verDict.getDicValue());
         appVersionResponse.setPath(jsonObject.getString("update_url"));
-        checkIsUpdate(oldVersion, verDict.getDicValue(),appVersionResponse,jsonObject);
+        checkIsUpdate(verDict.getDicValue(),appVersionResponse,jsonObject,versionCode);
         return appVersionResponse;
     }
 
-    private void checkIsUpdate(String oldVersion, String newVersion,AppVersionResponse appVersionResponse,JSONObject jsonObject) {
+    private void checkIsUpdate( String newVersion, AppVersionResponse appVersionResponse, JSONObject jsonObject, Integer versionCode) {
+        String oldVersion = RequestUtil.getGlobalHead().getVersion();
         if (oldVersion.equals(newVersion)) {
             appVersionResponse.setIsUpdate(AppVersionEnum.NOT_UPDATE.getCode());
             appVersionResponse.setIsForce("1");
@@ -99,7 +104,7 @@ public class HomeService {
             appVersionResponse.setIsUpdate(AppVersionEnum.HAS_UPDATE.getCode());
             appVersionResponse.setIsForce(jsonObject.getString("force_update"));
             Integer minimumVersion = Integer.valueOf(jsonObject.getString("minimum_version"));
-            if(1<minimumVersion){
+            if (versionCode < minimumVersion) {
                 appVersionResponse.setIsForce("0");
             }
         }
@@ -107,9 +112,15 @@ public class HomeService {
 
     public LoanCalculateResponse loanCalculate(LoanCalculateRequest request) {
         LoanCalculateResponse loanCalculateResponse = new LoanCalculateResponse();
+        Long userId = RequestUtil.getGlobalUser().getUserId();
         BigDecimal loanAmount = request.getLoanAmount();
         Integer period = request.getPeriod();
 
+        List<UserBank> userBankList = userBankRepository.findByUserId(userId);
+        Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank(),RequestUtil.getGlobalHead().getI18n());
+        loanCalculateResponse.setBankCode(dict.getDicCode());
+        loanCalculateResponse.setBankName(dict.getDicValue());
+        loanCalculateResponse.setInAccount(userBankList.get(0).getInAccount());
         AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
 
         loanCalculateResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());

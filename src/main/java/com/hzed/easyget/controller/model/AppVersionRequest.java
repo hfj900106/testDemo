@@ -3,6 +3,8 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 版本更新请求参数
  *
@@ -13,4 +15,6 @@ import org.hibernate.validator.constraints.NotBlank;
 public class AppVersionRequest {
     @NotBlank(message = "{param.home.channel.isNotEmpty}")
     private String channel;
+    @NotNull(message = "{param.home.versionCode.isNotEmpty}")
+    private Integer versionCode;
 }

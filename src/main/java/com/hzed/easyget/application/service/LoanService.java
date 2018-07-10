@@ -91,6 +91,7 @@ public class LoanService {
 
         UserBank userBank = new UserBank();
         userBank.setId(IdentifierGenerator.nextId());
+        userBank.setUserId(userId);
         userBank.setInBank(request.getInBank());
         userBank.setInAccount(request.getInAccount());
         bidRepository.insertBidAndUserBank(bid, userBank);

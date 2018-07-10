@@ -17,4 +17,7 @@ public class LoanCalculateResponse {
     private Integer period;
     private BigDecimal cost;
     private BigDecimal receiveAmount;
+    private String bankCode;
+    private String bankName;
+    private String inAccount;
 }

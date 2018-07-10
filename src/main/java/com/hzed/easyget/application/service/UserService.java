@@ -8,12 +8,15 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
+import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -35,7 +38,8 @@ import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private BidRepository bidRepository;
 
     /**
      * 我的
@@ -58,15 +62,20 @@ public class UserService {
     public TransactionRecordResponse getTransactionRecord(TransactionRecordRequest request) {
         TransactionRecordResponse response = new TransactionRecordResponse();
         GlobalUser user = getGlobalUser();
-        List<UserTransaction> list = queryTransactionRecordForApp(user.getUserId(),request.getPageNo(),request.getPageSize());
+        List<UserTransaction> list = queryTransactionRecordForApp(user.getUserId(), request.getPageNo(), request.getPageSize());
         List<TransactionVO> listResponse = new ArrayList<>();
-        if(!ObjectUtils.isEmpty(list)){
+        if (!ObjectUtils.isEmpty(list)) {
             list.forEach(userTransaction -> {
+                String account = userTransaction.getAccount();
+                if (!StringUtils.isBlank(account)) {
+                    account = account.substring(account.length() - 4, account.length());
+                }
                 TransactionVO transactionVO = new TransactionVO();
                 transactionVO.setBidId(userTransaction.getBidId());
                 transactionVO.setAmount(userTransaction.getAmount());
-                transactionVO.setRemark(userTransaction.getRemark());
+                transactionVO.setType(userTransaction.getType());
                 transactionVO.setStatus(userTransaction.getStatus());
+                transactionVO.setBankAccount(account);
                 transactionVO.setUpdateTime(DateUtil.localDateTimeToTimestamp(userTransaction.getUpdateTime()));
                 listResponse.add(transactionVO);
             });
@@ -79,8 +88,8 @@ public class UserService {
      * 查询交易记录app
      */
 
-    public  List<UserTransaction> queryTransactionRecordForApp(Long userId,Integer pageNo,Integer pageSize) {
-        return userRepository.findTransactionRecordBySelect(userId,pageNo,pageSize);
+    public List<UserTransaction> queryTransactionRecordForApp(Long userId, Integer pageNo, Integer pageSize) {
+        return userRepository.findTransactionRecordBySelect(userId, pageNo, pageSize);
     }
 
 

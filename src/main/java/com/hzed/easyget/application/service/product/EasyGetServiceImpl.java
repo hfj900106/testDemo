@@ -99,17 +99,4 @@ public class EasyGetServiceImpl implements ProductService {
         return product;
     }
 
-//    @Override
-//    public <EasyGetProduct> EasyGetProduct createProduct(EasyGetProduct clazz) {
-//        Product product = productRepository.findByCode(ProductEnum.PRODUCT_CODE.getCode());
-//        return null;
-//    }
-
-
-
-    @Override
-    public BigDecimal getMinRepayAmount(AbstractProduct product) {
-        return product.getMinRepayAmount();
-    }
-
 }

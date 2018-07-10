@@ -4,15 +4,11 @@ import com.hzed.easyget.controller.model.TransactionRecordRequest;
 import com.hzed.easyget.controller.model.TransactionRecordResponse;
 import com.hzed.easyget.controller.model.TransactionVO;
 import com.hzed.easyget.controller.model.UserResponse;
-import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
-import com.hzed.easyget.infrastructure.exception.ComBizException;
-import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
-import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +57,7 @@ public class UserService {
     public TransactionRecordResponse getTransactionRecord(TransactionRecordRequest request) {
         TransactionRecordResponse response = new TransactionRecordResponse();
         GlobalUser user = getGlobalUser();
-        List<UserTransaction> list = queryTransactionRecordForApp(user.getUserId(), request.getPageNo(), request.getPageSize());
+        List<UserTransaction> list = userRepository.findTransactionRecordByUserId(user.getUserId(), request.getPageNo(), request.getPageSize());
         List<TransactionVO> listResponse = new ArrayList<>();
         if (!ObjectUtils.isEmpty(list)) {
             list.forEach(userTransaction -> {
@@ -82,14 +77,6 @@ public class UserService {
         }
         response.setList(listResponse);
         return response;
-    }
-
-    /**
-     * 查询交易记录app
-     */
-
-    public List<UserTransaction> queryTransactionRecordForApp(Long userId, Integer pageNo, Integer pageSize) {
-        return userRepository.findTransactionRecordBySelect(userId, pageNo, pageSize);
     }
 
 

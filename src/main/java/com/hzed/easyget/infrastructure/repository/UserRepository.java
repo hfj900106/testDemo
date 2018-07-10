@@ -67,9 +67,10 @@ public class UserRepository {
         return userMapper.selectByPrimaryKey(id);
     }
 
-    public List<UserTransaction> findTransactionRecordBySelect(Long userId,Integer pageNo,Integer pageSize) {
+    public List<UserTransaction> findTransactionRecordByUserId(Long userId, Integer pageNo, Integer pageSize) {
         UserTransactionExample example = new UserTransactionExample();
         example.createCriteria().andUserIdEqualTo(userId).andStatusEqualTo((byte) 2);
+        example.setOrderByClause(UserTransaction.Column.createTime.desc());
         example.page(pageNo,pageSize);
         List<UserTransaction> transactionRecords = userTransactionMapper.selectByExample(example);
         return transactionRecords;

@@ -92,11 +92,11 @@ public class HomeService {
         JSONObject jsonObject = JSONObject.parseObject(dictLabelJson);
         appVersionResponse.setVersion(verDict.getDicValue());
         appVersionResponse.setPath(jsonObject.getString("update_url"));
-        checkIsUpdate(verDict.getDicValue(),appVersionResponse,jsonObject,versionCode);
+        checkIsUpdate(verDict.getDicValue(), appVersionResponse, jsonObject, versionCode);
         return appVersionResponse;
     }
 
-    private void checkIsUpdate( String newVersion, AppVersionResponse appVersionResponse, JSONObject jsonObject, Integer versionCode) {
+    private void checkIsUpdate(String newVersion, AppVersionResponse appVersionResponse, JSONObject jsonObject, Integer versionCode) {
         String oldVersion = RequestUtil.getGlobalHead().getVersion();
         if (oldVersion.equals(newVersion)) {
             appVersionResponse.setIsUpdate(AppVersionEnum.NOT_UPDATE.getCode());
@@ -209,14 +209,14 @@ public class HomeService {
         User user = userRepository.findById(userId);
         List<Bid> bidList = bidRepository.findByUserId(userId);
         List<CheckLoanResponse> checkLoanResponseList = Lists.newArrayList();
-        bidList.forEach(bid->{
+        bidList.forEach(bid -> {
             CheckLoanResponse checkLoanResponse = new CheckLoanResponse();
             checkLoanResponse.setBidStatus(bid.getStatus().toString());
             checkLoanResponseList.add(checkLoanResponse);
         });
         RiskResponse response = riskService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
         String errorCode = response.getHead().getError_code();
-        log.info("查询风控是否有贷款资格，风控返回被拒原因:{}，用户id:{}",response.getHead().getError_msg(),userId);
+        log.info("查询风控是否有贷款资格，风控返回被拒原因:{}，用户id:{}", response.getHead().getError_msg(), userId);
         String code = "";
         String msg = "";
         if (StringUtils.isNotBlank(errorCode)) {
@@ -224,15 +224,15 @@ public class HomeService {
             if (mk02.equals(errorCode)) {
                 code = BizCodeEnum.INSUFFICIENT_QUOTA.getCode();
                 msg = BizCodeEnum.INSUFFICIENT_QUOTA.getMessage();
-                return Response.getFailResponse(checkLoanResponseList,code,msg);
+                return Response.getFailResponse(checkLoanResponseList, code, msg);
             } else if (mk06.equals(errorCode)) {
                 code = BizCodeEnum.BID_EXISTS.getCode();
                 msg = BizCodeEnum.BID_EXISTS.getMessage();
-                return Response.getFailResponse(checkLoanResponseList,code,msg);
+                return Response.getFailResponse(checkLoanResponseList, code, msg);
             } else {
                 code = BizCodeEnum.UN_LOAN_QUALIFICATION.getCode();
                 msg = BizCodeEnum.UN_LOAN_QUALIFICATION.getMessage();
-                return Response.getFailResponse(checkLoanResponseList,code,msg);
+                return Response.getFailResponse(checkLoanResponseList, code, msg);
             }
         }
         return Response.getSuccessResponse(checkLoanResponseList);
@@ -243,11 +243,11 @@ public class HomeService {
         CheckLoanJumpResponse checkLoanJumpResponse = new CheckLoanJumpResponse();
         Long userId = RequestUtil.getGlobalUser().getUserId();
         //bid为空或访问记录表不为空无需跳转，0000为无需跳转，其他需跳转
-        List<Bid> bidList = bidRepository.findByUserIdAndStatus(userId,Lists.newArrayList(BidStatusEnum.AUDIT_FAIL.getCode().byteValue(),
-                BidStatusEnum.AUDIT_PASS.getCode().byteValue(),BidStatusEnum.REPAYMENT.getCode().byteValue()));
+        List<Bid> bidList = bidRepository.findByUserIdAndStatus(userId, Lists.newArrayList(BidStatusEnum.AUDIT_FAIL.getCode().byteValue(),
+                BidStatusEnum.AUDIT_PASS.getCode().byteValue(), BidStatusEnum.REPAYMENT.getCode().byteValue()));
         bidList.forEach(bid -> {
             //首页检测跳转，访问记录表为空需跳转，不为空无需跳转
-            UserLoanVisit userVisitRecord = userLoanVisitRepository.findByUserIdAndBidIdAndStatus(userId, bid.getId(),bid.getStatus());
+            UserLoanVisit userVisitRecord = userLoanVisitRepository.findByUserIdAndBidIdAndStatus(userId, bid.getId(), bid.getStatus());
             if (userVisitRecord == null) {
                 checkLoanJumpResponse.setBid(bid.getId());
                 throw new WarnException(BizCodeEnum.NEED_JUMP, checkLoanJumpResponse);

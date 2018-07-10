@@ -5,8 +5,6 @@ import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
-import com.hzed.easyget.application.service.product.ProductService;
-import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
@@ -385,9 +383,7 @@ public class RepayService {
         //获取产品最小还款值
         Bid bid = bidRepository.findByIdWithExp(bidId);
         // 相关账单
-        ProductService productService = ProductFactory.getProduct(ProductEnum.EasyGet);
-        AbstractProduct product = productService.createProduct(bid.getLoanAmount(), bid.getPeriod());
-        BigDecimal minRepayAmount = productService.getMinRepayAmount(product);
+        BigDecimal minRepayAmount = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(bid.getLoanAmount(), bid.getPeriod()).getMinRepayAmount();
         if (ObjectUtils.isEmpty(minRepayAmount)) {
             log.error("找不到产品的最小还款金额");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
@@ -399,15 +395,6 @@ public class RepayService {
         }
         return RepayPartDetailResponse.builder().totalAmount(String.valueOf(bidNoRepay)).minRepayAmount(String.valueOf(minRepayAmount)).inAccount(bid.getInAccount()).build();
     }
-
-    /**
-     * 放款标识
-     */
-    private static final String CASHOUT = "cashout";
-    /**
-     * 还款标识
-     */
-    private static final String BANK = "bank";
 
     /**
      * 全部还款/部分还款
@@ -592,6 +579,14 @@ public class RepayService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void mqCallback(BluePayRequest bluePayRequest) {
+        /**
+         * 放款标识
+         */
+        String CASHOUT = "cashout";
+        /**
+         * 还款标识
+         */
+        String BANK = "bank";
         log.info("详细返回信息：{}", JSON.toJSONString(bluePayRequest));
         // 参数校验
         ValidatorUtil.validateWithNull(bluePayRequest);

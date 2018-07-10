@@ -48,11 +48,13 @@ public interface AbstractProduct {
 
     /**
      * 最小还款金额
+     * @return 最小还款金额
      */
     BigDecimal getMinRepayAmount();
 
     /**
      * 到账金额
+     * @return 到账金额
      */
     BigDecimal getArrivalAmount();
 }

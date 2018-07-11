@@ -139,7 +139,7 @@ public class JobService {
                 // 走信息流
                 repayService.repayInformationFlow(repayjob.getBidId(), repayjob.getRepaymentAmount(), repayjob.getRealRepaymentTime(), repayjob.getTransactionId(), repayjob);
             } catch (Exception ex) {
-                log.error("标的：{}走还款信息流失败", repayjob.getBidId(), ex);
+                log.error("标的：{} 走还款信息流失败", repayjob.getBidId(), ex);
 
                 RepayInfoFlowJob jobUpdate = new RepayInfoFlowJob();
                 jobUpdate.setId(repayjob.getId());

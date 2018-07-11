@@ -33,10 +33,11 @@ public class JobAspect {
      */
     @Around("@annotation(jobAnnotation)")
     public Object aroundTest(ProceedingJoinPoint pPoint, JobAnnotation jobAnnotation) throws Throwable {
-        String methodName = ((MethodSignature) pPoint.getSignature()).getMethod().getName();
         // 定时任务名放入日志中
         String jobName = jobAnnotation.value();
         MdcUtil.putModuleName(jobName.indexOf("定时任务") > -1 ? jobName : ("定时任务 " + jobName));
+
+        String methodName = ((MethodSignature) pPoint.getSignature()).getMethod().getName();
         // 如果配置不执行或定时任务正在进行直接返回
         if (!getRunFlag(methodName)) {
             return null;
@@ -50,6 +51,8 @@ public class JobAspect {
         log.info("=====定时任务 结束 =====");
         // 设置运行标志-true
         setRunFlag(methodName, true);
+        // 清除所有线程标记
+        MdcUtil.clear();
         return result;
     }
 

@@ -115,17 +115,23 @@ public class HomeService {
 
     public LoanCalculateResponse loanCalculate(LoanCalculateRequest request) {
         LoanCalculateResponse loanCalculateResponse = new LoanCalculateResponse();
-        Long userId = RequestUtil.getGlobalUser().getUserId();
+
         BigDecimal loanAmount = request.getLoanAmount();
         Integer period = request.getPeriod();
 
-        List<UserBank> userBankList = userBankRepository.findByUserId(userId);
-        if (!ObjectUtils.isEmpty(userBankList)) {
-            Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
-            loanCalculateResponse.setBankCode(dict.getDicCode());
-            loanCalculateResponse.setBankName(dict.getDicValue());
-            loanCalculateResponse.setInAccount(userBankList.get(0).getInAccount());
+        try {
+            Long userId = RequestUtil.getGlobalUser().getUserId();
+            List<UserBank> userBankList = userBankRepository.findByUserId(userId);
+            if (!ObjectUtils.isEmpty(userBankList)) {
+                Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
+                loanCalculateResponse.setBankCode(dict.getDicCode());
+                loanCalculateResponse.setBankName(dict.getDicValue());
+                loanCalculateResponse.setInAccount(userBankList.get(0).getInAccount());
+            }
+        } catch(Exception e) {
+
         }
+
         AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
 
         loanCalculateResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());

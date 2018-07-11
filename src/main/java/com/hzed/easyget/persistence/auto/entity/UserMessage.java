@@ -12,7 +12,7 @@ public class UserMessage implements Serializable {
     /**
      * 用户id
      */
-    private Byte userId;
+    private Long userId;
 
     /**
      * 标题
@@ -25,14 +25,39 @@ public class UserMessage implements Serializable {
     private String message;
 
     /**
+     * 是否已读
+     */
+    private Boolean read;
+
+    /**
+     * 跳转链接
+     */
+    private String toUrl;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;
 
     /**
-     * 是否已读
+     * 创建者
      */
-    private Boolean read;
+    private Long createBy;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
+
+    /**
+     * 更新者
+     */
+    private Long updateBy;
+
+    /**
+     * 备注
+     */
+    private String remark;
 
     private static final long serialVersionUID = 1L;
 
@@ -44,11 +69,11 @@ public class UserMessage implements Serializable {
         this.id = id;
     }
 
-    public Byte getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Byte userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -68,6 +93,22 @@ public class UserMessage implements Serializable {
         this.message = message == null ? null : message.trim();
     }
 
+    public Boolean getRead() {
+        return read;
+    }
+
+    public void setRead(Boolean read) {
+        this.read = read;
+    }
+
+    public String getToUrl() {
+        return toUrl;
+    }
+
+    public void setToUrl(String toUrl) {
+        this.toUrl = toUrl == null ? null : toUrl.trim();
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
     }
@@ -76,12 +117,36 @@ public class UserMessage implements Serializable {
         this.createTime = createTime;
     }
 
-    public Boolean getRead() {
-        return read;
+    public Long getCreateBy() {
+        return createBy;
     }
 
-    public void setRead(Boolean read) {
-        this.read = read;
+    public void setCreateBy(Long createBy) {
+        this.createBy = createBy;
+    }
+
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Long getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(Long updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
     }
 
     @Override
@@ -94,8 +159,13 @@ public class UserMessage implements Serializable {
         sb.append(", userId=").append(userId);
         sb.append(", title=").append(title);
         sb.append(", message=").append(message);
-        sb.append(", createTime=").append(createTime);
         sb.append(", read=").append(read);
+        sb.append(", toUrl=").append(toUrl);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", createBy=").append(createBy);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append(", updateBy=").append(updateBy);
+        sb.append(", remark=").append(remark);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
@@ -117,7 +187,7 @@ public class UserMessage implements Serializable {
             return this;
         }
 
-        public Builder userId(Byte userId) {
+        public Builder userId(Long userId) {
             obj.setUserId(userId);
             return this;
         }
@@ -132,13 +202,38 @@ public class UserMessage implements Serializable {
             return this;
         }
 
+        public Builder read(Boolean read) {
+            obj.setRead(read);
+            return this;
+        }
+
+        public Builder toUrl(String toUrl) {
+            obj.setToUrl(toUrl);
+            return this;
+        }
+
         public Builder createTime(LocalDateTime createTime) {
             obj.setCreateTime(createTime);
             return this;
         }
 
-        public Builder read(Boolean read) {
-            obj.setRead(read);
+        public Builder createBy(Long createBy) {
+            obj.setCreateBy(createBy);
+            return this;
+        }
+
+        public Builder updateTime(LocalDateTime updateTime) {
+            obj.setUpdateTime(updateTime);
+            return this;
+        }
+
+        public Builder updateBy(Long updateBy) {
+            obj.setUpdateBy(updateBy);
+            return this;
+        }
+
+        public Builder remark(String remark) {
+            obj.setRemark(remark);
             return this;
         }
 
@@ -152,8 +247,13 @@ public class UserMessage implements Serializable {
         userId("user_id"),
         title("title"),
         message("message"),
+        read("read"),
+        toUrl("to_url"),
         createTime("create_time"),
-        read("read");
+        createBy("create_by"),
+        updateTime("update_time"),
+        updateBy("update_by"),
+        remark("remark");
 
         private final String column;
 

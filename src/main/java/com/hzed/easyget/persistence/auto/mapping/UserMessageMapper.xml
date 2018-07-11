@@ -3,11 +3,16 @@
 <mapper namespace="com.hzed.easyget.persistence.auto.mapper.UserMessageMapper">
   <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.UserMessage">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="user_id" jdbcType="TINYINT" property="userId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="message" jdbcType="VARCHAR" property="message" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="read" jdbcType="BIT" property="read" />
+    <result column="to_url" jdbcType="VARCHAR" property="toUrl" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="BIGINT" property="createBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="BIGINT" property="updateBy" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +73,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, title, message, create_time, read
+    id, user_id, title, message, read, to_url, create_time, create_by, update_time, update_by, 
+    remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserMessageExample" resultMap="BaseResultMap">
     select
@@ -134,11 +140,13 @@
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserMessage">
     insert into t_loan_user_message (id, user_id, title, 
-      message, create_time, read
-      )
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=TINYINT}, #{title,jdbcType=VARCHAR}, 
-      #{message,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{read,jdbcType=BIT}
-      )
+      message, read, to_url, create_time, 
+      create_by, update_time, update_by, 
+      remark)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
+      #{message,jdbcType=VARCHAR}, #{read,jdbcType=BIT}, #{toUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserMessage">
     insert into t_loan_user_message
@@ -155,11 +163,26 @@
       <if test="message != null">
         message,
       </if>
+      <if test="read != null">
+        read,
+      </if>
+      <if test="toUrl != null">
+        to_url,
+      </if>
       <if test="createTime != null">
         create_time,
       </if>
-      <if test="read != null">
-        read,
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="remark != null">
+        remark,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -167,7 +190,7 @@
         #{id,jdbcType=BIGINT},
       </if>
       <if test="userId != null">
-        #{userId,jdbcType=TINYINT},
+        #{userId,jdbcType=BIGINT},
       </if>
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
@@ -175,11 +198,26 @@
       <if test="message != null">
         #{message,jdbcType=VARCHAR},
       </if>
+      <if test="read != null">
+        #{read,jdbcType=BIT},
+      </if>
+      <if test="toUrl != null">
+        #{toUrl,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="read != null">
-        #{read,jdbcType=BIT},
+      <if test="createBy != null">
+        #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=BIGINT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -196,7 +234,7 @@
         id = #{record.id,jdbcType=BIGINT},
       </if>
       <if test="record.userId != null">
-        user_id = #{record.userId,jdbcType=TINYINT},
+        user_id = #{record.userId,jdbcType=BIGINT},
       </if>
       <if test="record.title != null">
         title = #{record.title,jdbcType=VARCHAR},
@@ -204,11 +242,26 @@
       <if test="record.message != null">
         message = #{record.message,jdbcType=VARCHAR},
       </if>
+      <if test="record.read != null">
+        read = #{record.read,jdbcType=BIT},
+      </if>
+      <if test="record.toUrl != null">
+        to_url = #{record.toUrl,jdbcType=VARCHAR},
+      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.read != null">
-        read = #{record.read,jdbcType=BIT},
+      <if test="record.createBy != null">
+        create_by = #{record.createBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateBy != null">
+        update_by = #{record.updateBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -218,11 +271,16 @@
   <update id="updateByExample" parameterType="map">
     update t_loan_user_message
     set id = #{record.id,jdbcType=BIGINT},
-      user_id = #{record.userId,jdbcType=TINYINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
       title = #{record.title,jdbcType=VARCHAR},
       message = #{record.message,jdbcType=VARCHAR},
+      read = #{record.read,jdbcType=BIT},
+      to_url = #{record.toUrl,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      read = #{record.read,jdbcType=BIT}
+      create_by = #{record.createBy,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=BIGINT},
+      remark = #{record.remark,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -231,7 +289,7 @@
     update t_loan_user_message
     <set>
       <if test="userId != null">
-        user_id = #{userId,jdbcType=TINYINT},
+        user_id = #{userId,jdbcType=BIGINT},
       </if>
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
@@ -239,22 +297,42 @@
       <if test="message != null">
         message = #{message,jdbcType=VARCHAR},
       </if>
+      <if test="read != null">
+        read = #{read,jdbcType=BIT},
+      </if>
+      <if test="toUrl != null">
+        to_url = #{toUrl,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="read != null">
-        read = #{read,jdbcType=BIT},
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=BIGINT},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserMessage">
     update t_loan_user_message
-    set user_id = #{userId,jdbcType=TINYINT},
+    set user_id = #{userId,jdbcType=BIGINT},
       title = #{title,jdbcType=VARCHAR},
       message = #{message,jdbcType=VARCHAR},
+      read = #{read,jdbcType=BIT},
+      to_url = #{toUrl,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      read = #{read,jdbcType=BIT}
+      create_by = #{createBy,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=BIGINT},
+      remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserMessageExample" resultMap="BaseResultMap">
@@ -285,12 +363,14 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_user_message
-    (id, user_id, title, message, create_time, read)
+    (id, user_id, title, message, read, to_url, create_time, create_by, update_time, 
+      update_by, remark)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=TINYINT}, #{item.title,jdbcType=VARCHAR}, 
-        #{item.message,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.read,jdbcType=BIT}
-        )
+      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.title,jdbcType=VARCHAR}, 
+        #{item.message,jdbcType=VARCHAR}, #{item.read,jdbcType=BIT}, #{item.toUrl,jdbcType=VARCHAR}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.updateBy,jdbcType=BIGINT}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -307,7 +387,7 @@
           #{item.id,jdbcType=BIGINT}
         </if>
         <if test="'user_id' == column.value">
-          #{item.userId,jdbcType=TINYINT}
+          #{item.userId,jdbcType=BIGINT}
         </if>
         <if test="'title' == column.value">
           #{item.title,jdbcType=VARCHAR}
@@ -315,11 +395,26 @@
         <if test="'message' == column.value">
           #{item.message,jdbcType=VARCHAR}
         </if>
+        <if test="'read' == column.value">
+          #{item.read,jdbcType=BIT}
+        </if>
+        <if test="'to_url' == column.value">
+          #{item.toUrl,jdbcType=VARCHAR}
+        </if>
         <if test="'create_time' == column.value">
           #{item.createTime,jdbcType=TIMESTAMP}
         </if>
-        <if test="'read' == column.value">
-          #{item.read,jdbcType=BIT}
+        <if test="'create_by' == column.value">
+          #{item.createBy,jdbcType=BIGINT}
+        </if>
+        <if test="'update_time' == column.value">
+          #{item.updateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="'update_by' == column.value">
+          #{item.updateBy,jdbcType=BIGINT}
+        </if>
+        <if test="'remark' == column.value">
+          #{item.remark,jdbcType=VARCHAR}
         </if>
       </foreach>
       )

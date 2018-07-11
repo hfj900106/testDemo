@@ -181,10 +181,10 @@ public final class DateUtil {
      * @param smdate 较小的时间
      * @param bdate  较大的时间
      */
-   /* public static int daysBetween(LocalDateTime smdate, LocalDateTime bdate) {
+    public static int daysBetween(LocalDateTime smdate, LocalDateTime bdate) {
         Duration duration = Duration.between(smdate, bdate);
         return (int) duration.toDays();
-    }*/
+    }
 
     /**
      * 判断大小

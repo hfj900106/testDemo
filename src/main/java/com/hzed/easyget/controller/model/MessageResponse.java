@@ -21,4 +21,5 @@ public class MessageResponse {
     private String message;
     private String toUrl;
     private Long createTime;
+    private Long id;
 }

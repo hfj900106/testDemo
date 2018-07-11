@@ -8,6 +8,7 @@ import com.hzed.easyget.application.enums.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.*;
+import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
@@ -51,7 +52,7 @@ public class HomeService {
     @Autowired
     private RedisService redisService;
     @Autowired
-    private NewsRepository newsRepository;
+    private UserMessageRepository userMessageRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -64,6 +65,8 @@ public class HomeService {
     private UserBankRepository userBankRepository;
     @Autowired
     private DictRepository dictRepository;
+    @Autowired
+    private SystemProp systemProp;
 
     private static final String ANDROID_BOMB = "android_bomb";
     private static final String IOS_BOMB = "ios_bomb";
@@ -164,13 +167,18 @@ public class HomeService {
     public List<MessageResponse> getMessage() {
         List<MessageResponse> newsResponseList = Lists.newArrayList();
 
-        List<News> newList = newsRepository.getBombList();
-        News news = newList.get(0);
+        UserMessage userMessage = userMessageRepository.findOne();
+        // 如果不在30天内，直接返回
+        int day = DateUtil.daysBetween(userMessage.getCreateTime(), LocalDateTime.now());
+        if (day > systemProp.getExpiredDay()) {
+            return newsResponseList;
+        }
         MessageResponse newsResponse = new MessageResponse();
-        newsResponse.setMessageTitle(news.getTitle());
-    //    newsResponse.setMessage(news.get);内容
-        newsResponse.setToUrl(news.getToUrl());
-        newsResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(news.getUpTime()));
+        newsResponse.setMessageTitle(userMessage.getTitle());
+        newsResponse.setMessage(userMessage.getMessage());
+        newsResponse.setToUrl(userMessage.getToUrl());
+        newsResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
+        newsResponse.setId(userMessage.getId());
         newsResponseList.add(newsResponse);
 
         return newsResponseList;

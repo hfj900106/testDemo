@@ -21,5 +21,6 @@ public class SystemProp {
     private Long expectedLendingTimeInterval;
     private String local;
     private Integer daysInAdvance;
+    private Integer expiredDay;
 
 }

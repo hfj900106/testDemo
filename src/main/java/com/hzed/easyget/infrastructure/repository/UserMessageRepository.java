@@ -46,7 +46,6 @@ public class UserMessageRepository {
         userMessage.setTitle(title);
         userMessage.setMessage(message);
         userMessage.setHasRead(false);
-        userMessage.setCreateTime(LocalDateTime.now());
         userMessage.setRemark(remark);
         userMessageMapper.insertSelective(userMessage);
     }

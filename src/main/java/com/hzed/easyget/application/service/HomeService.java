@@ -248,7 +248,7 @@ public class HomeService {
         if (userExt != null && userExt.getRepaymentTime() != null) {
             LocalDateTime repaymentTime = userExt.getRepaymentTime();
             LocalDateTime now = LocalDateTime.now();
-            int days = DateUtil.getBetweenDays(repaymentTime, now);
+            int days = DateUtil.daysBetweenNoHMS(repaymentTime, now);
             // 有未结清的标,且离逾期天数小于等于两天。days = 今天日期 - 应还日期
             if (days < -2) {
                 return result;

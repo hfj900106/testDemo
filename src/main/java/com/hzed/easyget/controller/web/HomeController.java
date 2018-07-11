@@ -55,9 +55,9 @@ public class HomeController {
 
     @TokenIgnore
     @ModuleFunc("获取公告列表")
-    @PostMapping("/getNewsList")
-    public List<NewsResponse> getNewsList(@Valid @RequestBody NewsListRequest request) {
-        return homeService.getNewsList(request);
+    @PostMapping("/getNews")
+    public List<MessageResponse> getMessage() {
+        return homeService.getMessage();
     }
 
     @ModuleFunc("发起借款校验")

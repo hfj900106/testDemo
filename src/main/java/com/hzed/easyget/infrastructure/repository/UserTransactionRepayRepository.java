@@ -24,6 +24,6 @@ public class UserTransactionRepayRepository {
         repayExample.createCriteria().andBidIdEqualTo(request.getBidId());
         repayExample.orderBy(UserTransactionRepay.Column.createTime.desc());
         repayExample.page(request.getPage(),request.getPageSize());
-        return userTransactionRepayMapper.selectByExampleSelective(repayExample, UserTransactionRepay.Column.mode, UserTransactionRepay.Column.va);
+        return userTransactionRepayMapper.selectByExample(repayExample);
     }
 }

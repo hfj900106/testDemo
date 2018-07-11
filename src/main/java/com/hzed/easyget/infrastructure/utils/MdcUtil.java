@@ -17,6 +17,7 @@ public class MdcUtil {
     }
 
     public static void putTrace() {
+        MDC.remove(TRACE);
         MDC.put(TRACE, UUID.randomUUID().toString().replaceAll("-", "").substring(3, 20));
     }
 

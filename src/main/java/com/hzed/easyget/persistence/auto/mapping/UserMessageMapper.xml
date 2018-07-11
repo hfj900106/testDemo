@@ -6,7 +6,7 @@
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="message" jdbcType="VARCHAR" property="message" />
-    <result column="read" jdbcType="BIT" property="read" />
+    <result column="has_read" jdbcType="BIT" property="hasRead" />
     <result column="to_url" jdbcType="VARCHAR" property="toUrl" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
@@ -73,8 +73,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, title, message, read, to_url, create_time, create_by, update_time, update_by, 
-    remark
+    id, user_id, title, message, has_read, to_url, create_time, create_by, update_time, 
+    update_by, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserMessageExample" resultMap="BaseResultMap">
     select
@@ -140,13 +140,13 @@
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserMessage">
     insert into t_loan_user_message (id, user_id, title, 
-      message, read, to_url, create_time, 
-      create_by, update_time, update_by, 
-      remark)
+      message, has_read, to_url, 
+      create_time, create_by, update_time, 
+      update_by, remark)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
-      #{message,jdbcType=VARCHAR}, #{read,jdbcType=BIT}, #{toUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
-      #{remark,jdbcType=VARCHAR})
+      #{message,jdbcType=VARCHAR}, #{hasRead,jdbcType=BIT}, #{toUrl,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=BIGINT}, #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserMessage">
     insert into t_loan_user_message
@@ -163,8 +163,8 @@
       <if test="message != null">
         message,
       </if>
-      <if test="read != null">
-        read,
+      <if test="hasRead != null">
+        has_read,
       </if>
       <if test="toUrl != null">
         to_url,
@@ -198,8 +198,8 @@
       <if test="message != null">
         #{message,jdbcType=VARCHAR},
       </if>
-      <if test="read != null">
-        #{read,jdbcType=BIT},
+      <if test="hasRead != null">
+        #{hasRead,jdbcType=BIT},
       </if>
       <if test="toUrl != null">
         #{toUrl,jdbcType=VARCHAR},
@@ -242,8 +242,8 @@
       <if test="record.message != null">
         message = #{record.message,jdbcType=VARCHAR},
       </if>
-      <if test="record.read != null">
-        read = #{record.read,jdbcType=BIT},
+      <if test="record.hasRead != null">
+        has_read = #{record.hasRead,jdbcType=BIT},
       </if>
       <if test="record.toUrl != null">
         to_url = #{record.toUrl,jdbcType=VARCHAR},
@@ -274,7 +274,7 @@
       user_id = #{record.userId,jdbcType=BIGINT},
       title = #{record.title,jdbcType=VARCHAR},
       message = #{record.message,jdbcType=VARCHAR},
-      read = #{record.read,jdbcType=BIT},
+      has_read = #{record.hasRead,jdbcType=BIT},
       to_url = #{record.toUrl,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_by = #{record.createBy,jdbcType=BIGINT},
@@ -297,8 +297,8 @@
       <if test="message != null">
         message = #{message,jdbcType=VARCHAR},
       </if>
-      <if test="read != null">
-        read = #{read,jdbcType=BIT},
+      <if test="hasRead != null">
+        has_read = #{hasRead,jdbcType=BIT},
       </if>
       <if test="toUrl != null">
         to_url = #{toUrl,jdbcType=VARCHAR},
@@ -326,7 +326,7 @@
     set user_id = #{userId,jdbcType=BIGINT},
       title = #{title,jdbcType=VARCHAR},
       message = #{message,jdbcType=VARCHAR},
-      read = #{read,jdbcType=BIT},
+      has_read = #{hasRead,jdbcType=BIT},
       to_url = #{toUrl,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=BIGINT},
@@ -363,12 +363,12 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_user_message
-    (id, user_id, title, message, read, to_url, create_time, create_by, update_time, 
+    (id, user_id, title, message, has_read, to_url, create_time, create_by, update_time, 
       update_by, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.title,jdbcType=VARCHAR}, 
-        #{item.message,jdbcType=VARCHAR}, #{item.read,jdbcType=BIT}, #{item.toUrl,jdbcType=VARCHAR}, 
+        #{item.message,jdbcType=VARCHAR}, #{item.hasRead,jdbcType=BIT}, #{item.toUrl,jdbcType=VARCHAR}, 
         #{item.createTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
         #{item.updateBy,jdbcType=BIGINT}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
@@ -395,8 +395,8 @@
         <if test="'message' == column.value">
           #{item.message,jdbcType=VARCHAR}
         </if>
-        <if test="'read' == column.value">
-          #{item.read,jdbcType=BIT}
+        <if test="'has_read' == column.value">
+          #{item.hasRead,jdbcType=BIT}
         </if>
         <if test="'to_url' == column.value">
           #{item.toUrl,jdbcType=VARCHAR}

@@ -27,7 +27,7 @@ public class UserMessage implements Serializable {
     /**
      * 是否已读
      */
-    private Boolean read;
+    private Boolean hasRead;
 
     /**
      * 跳转链接
@@ -93,12 +93,12 @@ public class UserMessage implements Serializable {
         this.message = message == null ? null : message.trim();
     }
 
-    public Boolean getRead() {
-        return read;
+    public Boolean getHasRead() {
+        return hasRead;
     }
 
-    public void setRead(Boolean read) {
-        this.read = read;
+    public void setHasRead(Boolean hasRead) {
+        this.hasRead = hasRead;
     }
 
     public String getToUrl() {
@@ -159,7 +159,7 @@ public class UserMessage implements Serializable {
         sb.append(", userId=").append(userId);
         sb.append(", title=").append(title);
         sb.append(", message=").append(message);
-        sb.append(", read=").append(read);
+        sb.append(", hasRead=").append(hasRead);
         sb.append(", toUrl=").append(toUrl);
         sb.append(", createTime=").append(createTime);
         sb.append(", createBy=").append(createBy);
@@ -202,8 +202,8 @@ public class UserMessage implements Serializable {
             return this;
         }
 
-        public Builder read(Boolean read) {
-            obj.setRead(read);
+        public Builder hasRead(Boolean hasRead) {
+            obj.setHasRead(hasRead);
             return this;
         }
 
@@ -247,7 +247,7 @@ public class UserMessage implements Serializable {
         userId("user_id"),
         title("title"),
         message("message"),
-        read("read"),
+        hasRead("has_read"),
         toUrl("to_url"),
         createTime("create_time"),
         createBy("create_by"),

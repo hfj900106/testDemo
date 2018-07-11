@@ -119,25 +119,9 @@ public class HomeService {
         BigDecimal loanAmount = request.getLoanAmount();
         Integer period = request.getPeriod();
 
-        try {
-            Long userId = RequestUtil.getGlobalUser().getUserId();
-            List<UserBank> userBankList = userBankRepository.findByUserId(userId);
-            if (!ObjectUtils.isEmpty(userBankList)) {
-                Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
-                loanCalculateResponse.setBankCode(dict.getDicCode());
-                loanCalculateResponse.setBankName(dict.getDicValue());
-                loanCalculateResponse.setInAccount(userBankList.get(0).getInAccount());
-            }
-        } catch(Exception e) {
-
-        }
-
         AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
-
         loanCalculateResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());
-        BigDecimal headFee = productInfo.getHeadFee();
-        loanCalculateResponse.setCost(headFee);
-        loanCalculateResponse.setReceiveAmount(loanAmount.subtract(headFee));
+
         loanCalculateResponse.setPeriod(period);
         loanCalculateResponse.setLoanAmount(loanAmount);
         return loanCalculateResponse;
@@ -178,11 +162,13 @@ public class HomeService {
         if (day > systemProp.getExpiredDay()) {
             return messageResponse;
         }
-        messageResponse.setMessageTitle(userMessage.getTitle());
-        messageResponse.setMessage(userMessage.getMessage());
-        messageResponse.setToUrl(userMessage.getToUrl());
-        messageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
-        messageResponse.setId(userMessage.getId());
+        if (!ObjectUtils.isEmpty(userMessage)) {
+            messageResponse.setMessageTitle(userMessage.getTitle());
+            messageResponse.setMessage(userMessage.getMessage());
+            messageResponse.setToUrl(userMessage.getToUrl());
+            messageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
+            messageResponse.setId(userMessage.getId());
+        }
 
         return messageResponse;
     }

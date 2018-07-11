@@ -1,10 +1,7 @@
 package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.LoanService;
-import com.hzed.easyget.controller.model.LoanDetailRequest;
-import com.hzed.easyget.controller.model.LoanDetailResponse;
-import com.hzed.easyget.controller.model.SubmitLoanRequest;
-import com.hzed.easyget.controller.model.SubmitLoanResponse;
+import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +32,12 @@ public class LoanController {
         return loanService.loanDetail(request);
     }
 
+
+    @ModuleFunc("预申请贷款")
+    @PostMapping("/preSubmitLoan")
+    public PreSubmitLoanResponse preSubmitLoan(@Valid @RequestBody PreSubmitLoanRequest request){
+        return loanService.preSubmitLoan(request);
+    }
     @ModuleFunc("申请借款")
     @PostMapping("/submitLoan")
     public SubmitLoanResponse submitLoan(@Valid @RequestBody SubmitLoanRequest request) {

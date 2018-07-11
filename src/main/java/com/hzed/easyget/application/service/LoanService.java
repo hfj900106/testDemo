@@ -5,25 +5,28 @@ import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
-import com.hzed.easyget.controller.model.LoanDetailRequest;
-import com.hzed.easyget.controller.model.LoanDetailResponse;
-import com.hzed.easyget.controller.model.SubmitLoanRequest;
-import com.hzed.easyget.controller.model.SubmitLoanResponse;
+import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
+import com.hzed.easyget.infrastructure.repository.DictRepository;
+import com.hzed.easyget.infrastructure.repository.UserBankRepository;
 import com.hzed.easyget.infrastructure.repository.UserLoanVisitRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.Bid;
+import com.hzed.easyget.persistence.auto.entity.Dict;
 import com.hzed.easyget.persistence.auto.entity.UserBank;
 import com.hzed.easyget.persistence.auto.entity.UserLoanVisit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 借款相关接口
@@ -42,6 +45,10 @@ public class LoanService {
     private ComService comService;
     @Autowired
     private UserLoanVisitRepository userVisitRecordRepository;
+    @Autowired
+    private UserBankRepository userBankRepository;
+    @Autowired
+    private DictRepository dictRepository;
 
     public LoanDetailResponse loanDetail(LoanDetailRequest request) {
         LoanDetailResponse loanDetailResponse = new LoanDetailResponse();
@@ -97,5 +104,32 @@ public class LoanService {
         bidRepository.insertBidAndUserBank(bid, userBank);
 
         return SubmitLoanResponse.builder().bid(bidId).build();
+    }
+
+    public PreSubmitLoanResponse preSubmitLoan(PreSubmitLoanRequest request) {
+        PreSubmitLoanResponse subLoanResponse = new PreSubmitLoanResponse();
+
+        BigDecimal loanAmount = request.getLoanAmount();
+        Integer period = request.getPeriod();
+
+        Long userId = RequestUtil.getGlobalUser().getUserId();
+        List<UserBank> userBankList = userBankRepository.findByUserId(userId);
+        if (!ObjectUtils.isEmpty(userBankList)) {
+            Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
+            subLoanResponse.setBankCode(dict.getDicCode());
+            subLoanResponse.setBankName(dict.getDicValue());
+            subLoanResponse.setInAccount(userBankList.get(0).getInAccount());
+        }
+
+
+        AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
+
+        subLoanResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());
+        BigDecimal headFee = productInfo.getHeadFee();
+        subLoanResponse.setCost(headFee);
+        subLoanResponse.setReceiveAmount(loanAmount.subtract(headFee));
+        subLoanResponse.setPeriod(period);
+        subLoanResponse.setLoanAmount(loanAmount);
+        return subLoanResponse;
     }
 }

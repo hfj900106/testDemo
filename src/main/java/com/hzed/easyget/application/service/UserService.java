@@ -86,14 +86,20 @@ public class UserService {
         Integer pageNo = request.getPageNo();
         Integer pageSize = request.getPageSize();
         List<UserMessage> list = userMessageRepository.findList(userId, pageNo, pageSize);
+        if (ObjectUtils.isEmpty(list)) {
+            return messageResponseList;
+        }
         list.forEach(userMessage -> {
             MessageResponse messageResponse = new MessageResponse();
             messageResponse.setMessageTitle(userMessage.getTitle());
             messageResponse.setMessage(userMessage.getMessage());
-            messageResponse.setHasRead(userMessage.getHasRead());
+            if (userMessage.getHasRead() != null) {
+                messageResponse.setHasRead(userMessage.getHasRead());
+            }
             messageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
             messageResponseList.add(messageResponse);
         });
+
         return messageResponseList;
     }
 }

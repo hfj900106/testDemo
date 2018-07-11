@@ -14,7 +14,6 @@ import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
-import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
@@ -162,42 +161,18 @@ public class HomeService {
         return UpdateTokenResponse.builder().token(newToken).build();
     }
 
-    public List<NewsResponse> getNewsList(NewsListRequest request) {
-        List<NewsResponse> newsResponseList = Lists.newArrayList();
+    public List<MessageResponse> getMessage() {
+        List<MessageResponse> newsResponseList = Lists.newArrayList();
 
-        Integer pageNo = request.getPageNo();
-        Integer pageSize = request.getPageSize();
+        List<News> newList = newsRepository.getBombList();
+        News news = newList.get(0);
+        MessageResponse newsResponse = new MessageResponse();
+        newsResponse.setMessageTitle(news.getTitle());
+    //    newsResponse.setMessage(news.get);内容
+        newsResponse.setToUrl(news.getToUrl());
+        newsResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(news.getUpTime()));
+        newsResponseList.add(newsResponse);
 
-        GlobalHead globalHead = RequestUtil.getGlobalHead();
-        String platform = globalHead.getPlatform();
-        String version = globalHead.getVersion();
-        // 安卓是否要弹窗
-        if (AppVersionEnum.ANDROID.getCode().equals(platform)) {
-            Dict dictBomb = dictService.getDictByCode(ANDROID_BOMB);
-            String dicValue = dictBomb.getDicValue();
-            if (StringUtils.isBlank(dicValue) || version.equals(dicValue)) {
-
-                return newsResponseList;
-            }
-        }
-        // 苹果是否要弹窗
-        if (AppVersionEnum.IOS_VERSION.getCode().equals(platform)) {
-            Dict dictBomb = dictService.getDictByCode(IOS_BOMB);
-            String dicValue = dictBomb.getDicValue();
-            if (StringUtils.isBlank(dicValue) || version.equals(dicValue)) {
-                return newsResponseList;
-            }
-        }
-
-        List<News> newList = newsRepository.getBombList(pageNo, pageSize);
-        for (News news : newList) {
-            NewsResponse newsResponse = new NewsResponse();
-            newsResponse.setNewsTitle(news.getTitle());
-            newsResponse.setImgUrl(news.getImgUrl());
-            newsResponse.setToUrl(news.getToUrl());
-            newsResponse.setUpTime(DateUtil.localDateTimeToTimestamp(news.getUpTime()));
-            newsResponseList.add(newsResponse);
-        }
         return newsResponseList;
     }
 

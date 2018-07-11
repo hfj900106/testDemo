@@ -9,16 +9,16 @@ import lombok.NoArgsConstructor;
  * 弹窗返回参数
  *
  * @author wuchengwu
- * @data 2018/5/25
+ * @date 2018/5/25
  */
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewsResponse {
+public class MessageResponse {
 
-    private String newsTitle;
-    private String imgUrl;
+    private String messageTitle;
+    private String message;
     private String toUrl;
-    private Long upTime;
+    private Long createTime;
 }

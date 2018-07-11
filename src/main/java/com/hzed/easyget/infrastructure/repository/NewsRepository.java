@@ -19,11 +19,10 @@ public class NewsRepository {
     @Autowired
     private NewsMapper newsMapper;
 
-    public List<News> getBombList(Integer pageNo,Integer pageSize) {
+    public List<News> getBombList() {
         NewsExample example = new NewsExample();
-        example.setOrderByClause(News.Column.upTime.desc());
+        example.setOrderByClause(News.Column.createTime.desc());
         example.createCriteria().andIsUseEqualTo(true);
-        example.page(pageNo, pageSize);
         return newsMapper.selectByExample(example);
     }
 }

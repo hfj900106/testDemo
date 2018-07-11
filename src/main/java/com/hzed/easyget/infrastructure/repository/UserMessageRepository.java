@@ -1,5 +1,6 @@
 package com.hzed.easyget.infrastructure.repository;
 
+import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.UserMessage;
 import com.hzed.easyget.persistence.auto.entity.example.UserMessageExample;
 import com.hzed.easyget.persistence.auto.mapper.UserMessageMapper;
@@ -21,7 +22,6 @@ public class UserMessageRepository {
 
 
     public List<UserMessage> findList(Long userId, Integer pageNo, Integer pageSize) {
-    public List<UserMessage> findList() {
         UserMessageExample example = new UserMessageExample();
 
         UserMessageExample.Criteria criteria1 = example.createCriteria();

@@ -119,7 +119,7 @@ public class HomeService {
 
         List<UserBank> userBankList = userBankRepository.findByUserId(userId);
         if (!ObjectUtils.isEmpty(userBankList)) {
-            Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank(), RequestUtil.getGlobalHead().getI18n());
+            Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
             loanCalculateResponse.setBankCode(dict.getDicCode());
             loanCalculateResponse.setBankName(dict.getDicValue());
             loanCalculateResponse.setInAccount(userBankList.get(0).getInAccount());

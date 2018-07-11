@@ -20,14 +20,23 @@ public class UserMessageRepository {
     private UserMessageMapper userMessageMapper;
 
 
-    public List<UserMessage> findList() {
+    public List<UserMessage> findList(Long userId, Integer pageNo, Integer pageSize) {
         UserMessageExample example = new UserMessageExample();
+
+        UserMessageExample.Criteria criteria1 = example.createCriteria();
+        criteria1.andUserIdEqualTo(userId);
+        UserMessageExample.Criteria criteria2 = example.createCriteria();
+        criteria2.andUserIdIsNull();
+        example.or(criteria2);
         example.setOrderByClause(UserMessage.Column.createTime.desc());
+        example.page(pageNo, pageSize);
+
         return userMessageMapper.selectByExample(example);
     }
 
     public UserMessage findOne() {
         UserMessageExample example = new UserMessageExample();
+        example.createCriteria().andUserIdIsNull();
         example.setOrderByClause(UserMessage.Column.createTime.desc());
         return userMessageMapper.selectOneByExample(example);
     }

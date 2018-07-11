@@ -1,14 +1,14 @@
 package com.hzed.easyget.application.service;
 
-import com.hzed.easyget.controller.model.TransactionRecordRequest;
-import com.hzed.easyget.controller.model.TransactionRecordResponse;
-import com.hzed.easyget.controller.model.TransactionVO;
-import com.hzed.easyget.controller.model.UserResponse;
+import com.google.common.collect.Lists;
+import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.repository.UserMessageRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.User;
+import com.hzed.easyget.persistence.auto.entity.UserMessage;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -32,6 +32,8 @@ import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserMessageRepository userMessageRepository;
 
     /**
      * 我的
@@ -77,4 +79,21 @@ public class UserService {
     }
 
 
+    public List<MessageResponse> getMessageList(MessageRequest request) {
+
+        List<MessageResponse> messageResponseList = Lists.newArrayList();
+        Long userId = RequestUtil.getGlobalUser().getUserId();
+        Integer pageNo = request.getPageNo();
+        Integer pageSize = request.getPageSize();
+        List<UserMessage> list = userMessageRepository.findList(userId, pageNo, pageSize);
+        list.forEach(userMessage -> {
+            MessageResponse messageResponse = new MessageResponse();
+            messageResponse.setMessageTitle(userMessage.getTitle());
+            messageResponse.setMessage(userMessage.getMessage());
+            messageResponse.setHasRead(userMessage.getHasRead());
+            messageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
+            messageResponseList.add(messageResponse);
+        });
+        return messageResponseList;
+    }
 }

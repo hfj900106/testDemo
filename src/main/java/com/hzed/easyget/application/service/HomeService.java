@@ -164,24 +164,21 @@ public class HomeService {
         return UpdateTokenResponse.builder().token(newToken).build();
     }
 
-    public List<MessageResponse> getMessage() {
-        List<MessageResponse> newsResponseList = Lists.newArrayList();
-
+    public MessageResponse getMessage() {
+        MessageResponse messageResponse = new MessageResponse();
         UserMessage userMessage = userMessageRepository.findOne();
         // 如果不在30天内，直接返回
         int day = DateUtil.daysBetween(userMessage.getCreateTime(), LocalDateTime.now());
         if (day > systemProp.getExpiredDay()) {
-            return newsResponseList;
+            return messageResponse;
         }
-        MessageResponse newsResponse = new MessageResponse();
-        newsResponse.setMessageTitle(userMessage.getTitle());
-        newsResponse.setMessage(userMessage.getMessage());
-        newsResponse.setToUrl(userMessage.getToUrl());
-        newsResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
-        newsResponse.setId(userMessage.getId());
-        newsResponseList.add(newsResponse);
+        messageResponse.setMessageTitle(userMessage.getTitle());
+        messageResponse.setMessage(userMessage.getMessage());
+        messageResponse.setToUrl(userMessage.getToUrl());
+        messageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
+        messageResponse.setId(userMessage.getId());
 
-        return newsResponseList;
+        return messageResponse;
     }
 
     public Response<List<CheckLoanResponse>> checkLoan() {

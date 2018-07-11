@@ -56,7 +56,7 @@ public class HomeController {
     @TokenIgnore
     @ModuleFunc("获取公告")
     @PostMapping("/getMessage")
-    public List<MessageResponse> getMessage() {
+    public MessageResponse getMessage() {
         return homeService.getMessage();
     }
 

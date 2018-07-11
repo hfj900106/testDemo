@@ -52,4 +52,11 @@ public class UserController {
         return dictService.getDictByModule(request.getModuleCode());
     }
 
+    @ModuleFunc("消息公告列表")
+    @PostMapping("/getMessageList")
+    public List<MessageResponse> getMessageList(@Valid @RequestBody MessageRequest request){
+
+        return userService.getMessageList(request);
+    }
+
 }

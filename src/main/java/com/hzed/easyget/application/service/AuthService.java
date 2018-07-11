@@ -226,7 +226,8 @@ public class AuthService {
         String birthPlaceBirthday = data.getString("birthPlaceBirthday");
         if (!StringUtils.isBlank(birthPlaceBirthday)) {
             // 注意有空格
-            recognitionResponse.setBirthday(birthPlaceBirthday.split(". ")[1]);
+            int strLength = birthPlaceBirthday.length();
+            recognitionResponse.setBirthday(birthPlaceBirthday.substring(strLength - 10, strLength));
         }
         recognitionResponse.setName(name);
         int genderInt = 1;

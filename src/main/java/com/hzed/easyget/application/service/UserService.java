@@ -96,6 +96,9 @@ public class UserService {
             if (userMessage.getHasRead() != null) {
                 messageResponse.setHasRead(userMessage.getHasRead());
             }
+            if (userMessage.getToUrl() != null) {
+                messageResponse.setToUrl(userMessage.getToUrl());
+            }
             messageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
             messageResponseList.add(messageResponse);
         });

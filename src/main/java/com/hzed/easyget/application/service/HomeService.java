@@ -157,12 +157,13 @@ public class HomeService {
     public MessageResponse getMessage() {
         MessageResponse messageResponse = new MessageResponse();
         UserMessage userMessage = userMessageRepository.findOne();
+        if (!ObjectUtils.isEmpty(userMessage)) {
         // 如果不在30天内，直接返回
         int day = DateUtil.daysBetween(userMessage.getCreateTime(), LocalDateTime.now());
         if (day > systemProp.getExpiredDay()) {
             return messageResponse;
         }
-        if (!ObjectUtils.isEmpty(userMessage)) {
+
             messageResponse.setMessageTitle(userMessage.getTitle());
             messageResponse.setMessage(userMessage.getMessage());
             messageResponse.setToUrl(userMessage.getToUrl());

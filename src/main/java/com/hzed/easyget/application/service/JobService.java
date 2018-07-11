@@ -24,7 +24,7 @@ import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
 import com.hzed.easyget.persistence.ext.entity.BillExt;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -68,6 +68,11 @@ public class JobService {
     private SmsService smsService;
     @Autowired
     private BluePayService bluePayService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserMessageRepository messageRepository;
+    ;
 
     /**
      * 风控审核
@@ -231,8 +236,13 @@ public class JobService {
             return;
         }
         String template = dictRepository.findByCodeAndLanguage(ComConsts.SMS_CONTENT_4, systemProp.getLocal()).getDicValue();
-        if (template == null) {
+        String title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
+        if (StringUtils.isBlank(template)) {
             log.error("没有配置短信模板");
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
+        if (StringUtils.isBlank(title)) {
+            log.error("没有配置信息title");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
         for (BillExt billExt : billExts) {
@@ -249,6 +259,9 @@ public class JobService {
                     }
                     // 保存短信记录
                     smsService.saveSmsLog(smsId, msg, mobile, (byte) 2, "短信催账");
+                    // 通过手机号获取用户id
+                    Long userId = userRepository.findByMobile(mobile).getId();
+                    messageRepository.addUserMessage(userId, title, msg, "短信催账");
                 } catch (Exception ex) {
                     log.info("发送催账短信-失败，手机号码{}", mobile);
                 }

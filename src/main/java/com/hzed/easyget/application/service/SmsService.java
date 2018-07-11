@@ -9,6 +9,8 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.repository.DictRepository;
 import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
+import com.hzed.easyget.infrastructure.repository.UserMessageRepository;
+import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.hzed.easyget.infrastructure.utils.SpringContextUtil;
@@ -50,6 +52,10 @@ public class SmsService {
     private ComService comService;
     @Autowired
     private SmsLogRepository smsLogRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserMessageRepository messageRepository;
 
     /**
      * 部分结清/全部结清 短信通知
@@ -65,10 +71,13 @@ public class SmsService {
         String local = systemProp.getLocal();
         // 默认全部结清
         String smsCode = ComConsts.SMS_CONTENT_5;
+        String title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_4, systemProp.getLocal()).getDicValue();
         // 默认代还总额0
         BigDecimal balance = BigDecimal.valueOf(0);
+        // 部分结清
         if (!ObjectUtils.isEmpty(bidId)) {
             smsCode = ComConsts.SMS_CONTENT_6;
+            title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_5, systemProp.getLocal()).getDicValue();
             // 获取剩余代还总额
             balance = comService.getBidNoRepayFee(bidId, LocalDateTime.now());
         }
@@ -77,12 +86,15 @@ public class SmsService {
             log.error("没有配置短信模板");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
-        content=MessageFormat.format(content, DateUtil.localDateTimeToStr(LocalDateTime.now(), DateUtil.FORMAT6),repaymentAmount.toString(),balance.toString());
+        content = MessageFormat.format(content, DateUtil.localDateTimeToStr(LocalDateTime.now(), DateUtil.FORMAT6), repaymentAmount.toString(), balance.toString());
         Long smsId = IdentifierGenerator.nextId();
         // 发送短信
         this.sendSms(mobile, content, String.valueOf(smsId));
         // 保存短信记录
         this.saveSmsLog(smsId, content, mobile, (byte) 2, "用户还款短信通知");
+        // 通过手机号获取用户id
+        Long userId = userRepository.findByMobile(mobile).getId();
+        messageRepository.addUserMessage(userId, title, content, "用户还款短信通知");
         log.info("用户还款短信通知，手机号码：{},短信类容：{}", mobile, content);
     }
 

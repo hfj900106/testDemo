@@ -76,7 +76,7 @@ system:
   tokenExpire: 7 # token失效时间 7 天
   expected_audit_time_interval: 1440 # 预计审核时间间隔 单位分
   expected_lending_time_interval: 60 # 预计放款时间间隔 单位分
-  expiredDay: 30 # 有效时间
+  expiredDay: 30 # 公告未读有效时间 单位天
   # 地区 id-ID：印尼
   local: id-ID
   # 短信催账提前天数

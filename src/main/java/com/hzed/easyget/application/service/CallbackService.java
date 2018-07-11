@@ -13,9 +13,7 @@ import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
-import com.hzed.easyget.infrastructure.repository.BidRepository;
-import com.hzed.easyget.infrastructure.repository.TempTableRepository;
-import com.hzed.easyget.infrastructure.repository.UserRepository;
+import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.SpringContextUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
@@ -49,6 +47,10 @@ public class CallbackService {
     private UserRepository userRepository;
     @Autowired
     private SmsService smsService;
+    @Autowired
+    private UserMessageRepository messageRepository;
+    @Autowired
+    private DictRepository dictRepository;
 
     public PushBidCallbackResponse pushBidCallback(PushBidCallbackRequest request) {
         Long bidId = request.getBidId();
@@ -115,12 +117,15 @@ public class CallbackService {
         SystemProp systemProp = SpringContextUtil.getBean(SystemProp.class);
         DictService dictService = SpringContextUtil.getBean(DictService.class);
         List<DictResponse> smsContent;
+        String title;
         // 通过审核
         if (isPass) {
+            title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_2, systemProp.getLocal()).getDicValue();
             smsContent = dictService.getDictByDicCodeAndLanguage(ComConsts.SMS_CONTENT_3, systemProp.getLocal());
         }
         // 不通过
         else {
+            title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_1, systemProp.getLocal()).getDicValue();
             smsContent = dictService.getDictByDicCodeAndLanguage(ComConsts.SMS_CONTENT_2, systemProp.getLocal());
         }
         if (ObjectUtils.isEmpty(smsContent)) {
@@ -140,8 +145,12 @@ public class CallbackService {
             smsService.sendSms(mobile, content, String.valueOf(smsId));
         }
         // 保存短信记录
+        if (StringUtils.isBlank(title)) {
+            log.error("没有配置信息title");
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
         smsService.saveSmsLog(smsId, content, mobile, (byte) 2, "审核结果短信通知用户");
-
+        messageRepository.addUserMessage(user.getId(), title, content, "审核结果短信通知用户");
     }
 
 }

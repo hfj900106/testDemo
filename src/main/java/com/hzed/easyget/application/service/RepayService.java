@@ -5,8 +5,6 @@ import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
-import com.hzed.easyget.application.service.product.ProductService;
-import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
@@ -110,7 +108,7 @@ public class RepayService {
                 repayListResponse.setLoanAmount(bid.getLoanAmount());
 
                 // 查询应还时间与当前时间对比，大于当前时间表示逾期，小于等于表示没到期
-                int days = DateUtil.getBetweenDays(bill.getRepaymentTime(), LocalDateTime.now());
+                int days = DateUtil.daysBetweenNoHMS(bill.getRepaymentTime(), LocalDateTime.now());
 
                 // 逾期未结清
                 if (days > 0) {
@@ -120,7 +118,7 @@ public class RepayService {
                 // 正常未结清
                 else {
                     repaymentResponse.setStatus(RepayStatusEnum.UN_REPAY.getCode().intValue());
-                    int days1 = DateUtil.getBetweenDays(LocalDateTime.now(), bill.getRepaymentTime());
+                    int days1 = DateUtil.daysBetweenNoHMS(LocalDateTime.now(), bill.getRepaymentTime());
                     repaymentResponse.setDays(days1);
                 }
 
@@ -165,7 +163,7 @@ public class RepayService {
             repayDetailResponse.setStatus(RepayStatusEnum.CLEAR_REPAY.getCode());
             totalRepayAmount = bill.getRealRepaymentAmount();
         } else {
-            int days = DateUtil.getBetweenDays(bill.getRepaymentTime(), LocalDateTime.now());
+            int days = DateUtil.daysBetweenNoHMS(bill.getRepaymentTime(), LocalDateTime.now());
             repayDetailResponse.setStatus(days > 0 ? RepayStatusEnum.OVDUE_UN_REPAY.getCode() : RepayStatusEnum.UN_REPAY.getCode());
             // 标的待还总费用
             totalRepayAmount = comService.getBidNoRepayFee(bidId, LocalDateTime.now());

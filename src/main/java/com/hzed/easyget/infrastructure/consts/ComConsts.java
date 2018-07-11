@@ -24,10 +24,12 @@ public class ComConsts {
     public static final String RISK_OPERATOR_PARAMS_ERROR = "1";
     public static final String RISK_OPERATOR_HAVE_AUTH = "0000";
     public static final String H5 = "H5";
-     /** 风控审核回调code */
-     public static final String RISK_2 = "2";
-     public static final String RISK_3 = "3";
-     public static final String RISK_4 = "4";
+    /**
+     * 风控审核回调code
+     */
+    public static final String RISK_2 = "2";
+    public static final String RISK_3 = "3";
+    public static final String RISK_4 = "4";
 
     /**
      * 印尼身份证上的性别-女
@@ -47,6 +49,14 @@ public class ComConsts {
     public static final String SMS_CONTENT_5 = "sms_templete_5";
     public static final String SMS_CONTENT_6 = "sms_templete_6";
 
+    /**
+     * 消息title
+     */
+    public static final String MESSAGE_TITLE_1 = "message_title_1";
+    public static final String MESSAGE_TITLE_2 = "message_title_2";
+    public static final String MESSAGE_TITLE_3 = "message_title_3";
+    public static final String MESSAGE_TITLE_4 = "message_title_4";
+    public static final String MESSAGE_TITLE_5 = "message_title_5";
 
     /**
      * 牛信

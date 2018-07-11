@@ -164,7 +164,7 @@ public class ComService {
         }
 
         // 逾期天数
-        int overDays = DateUtil.getBetweenDays(bill.getRepaymentTime(), realRepaymentTime);
+        int overDays = DateUtil.daysBetweenNoHMS(bill.getRepaymentTime(), realRepaymentTime);
         // 逾期天数小于0则没有逾期费
         if (overDays <= 0) {
             return BigDecimal.ZERO;

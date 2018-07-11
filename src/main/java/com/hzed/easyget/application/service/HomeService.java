@@ -115,17 +115,23 @@ public class HomeService {
 
     public LoanCalculateResponse loanCalculate(LoanCalculateRequest request) {
         LoanCalculateResponse loanCalculateResponse = new LoanCalculateResponse();
-        Long userId = RequestUtil.getGlobalUser().getUserId();
+
         BigDecimal loanAmount = request.getLoanAmount();
         Integer period = request.getPeriod();
 
-        List<UserBank> userBankList = userBankRepository.findByUserId(userId);
-        if (!ObjectUtils.isEmpty(userBankList)) {
-            Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
-            loanCalculateResponse.setBankCode(dict.getDicCode());
-            loanCalculateResponse.setBankName(dict.getDicValue());
-            loanCalculateResponse.setInAccount(userBankList.get(0).getInAccount());
+        try {
+            Long userId = RequestUtil.getGlobalUser().getUserId();
+            List<UserBank> userBankList = userBankRepository.findByUserId(userId);
+            if (!ObjectUtils.isEmpty(userBankList)) {
+                Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
+                loanCalculateResponse.setBankCode(dict.getDicCode());
+                loanCalculateResponse.setBankName(dict.getDicValue());
+                loanCalculateResponse.setInAccount(userBankList.get(0).getInAccount());
+            }
+        } catch(Exception e) {
+
         }
+
         AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
 
         loanCalculateResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());
@@ -245,7 +251,7 @@ public class HomeService {
         if (userExt != null && userExt.getRepaymentTime() != null) {
             LocalDateTime repaymentTime = userExt.getRepaymentTime();
             LocalDateTime now = LocalDateTime.now();
-            int days = DateUtil.getBetweenDays(repaymentTime, now);
+            int days = DateUtil.daysBetweenNoHMS(repaymentTime, now);
             // 有未结清的标,且离逾期天数小于等于两天。days = 今天日期 - 应还日期
             if (days < -2) {
                 return result;

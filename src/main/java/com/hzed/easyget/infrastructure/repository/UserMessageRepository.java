@@ -21,6 +21,7 @@ public class UserMessageRepository {
 
 
     public List<UserMessage> findList(Long userId, Integer pageNo, Integer pageSize) {
+    public List<UserMessage> findList() {
         UserMessageExample example = new UserMessageExample();
 
         UserMessageExample.Criteria criteria1 = example.createCriteria();
@@ -39,5 +40,24 @@ public class UserMessageRepository {
         example.createCriteria().andUserIdIsNull();
         example.setOrderByClause(UserMessage.Column.createTime.desc());
         return userMessageMapper.selectOneByExample(example);
+    }
+
+    /**
+     * 插入消息
+     *
+     * @param userId
+     * @param title
+     * @param message
+     * @param remark
+     */
+    public void addUserMessage(Long userId, String title, String message, String remark) {
+        UserMessage userMessage = new UserMessage();
+        userMessage.setId(IdentifierGenerator.nextId());
+        userMessage.setUserId(userId);
+        userMessage.setTitle(title);
+        userMessage.setMessage(message);
+        userMessage.setHasRead(false);
+        userMessage.setRemark(remark);
+        userMessageMapper.insertSelective(userMessage);
     }
 }

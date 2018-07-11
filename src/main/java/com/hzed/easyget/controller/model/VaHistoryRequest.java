@@ -15,7 +15,7 @@ public class VaHistoryRequest {
     @NotNull(message = "{param.repay.bidId.isNotEmpty}")
     private Long bidId;
 
-    @Min(1) @NotNull(message = "{param.repay.pageNo.isNotEmpty}")
+    @Min(0) @NotNull(message = "{param.repay.pageNo.isNotEmpty}")
     private Integer page;
 
     @Min(10)@NotNull(message = "{param.repay.pageSize.isNotEmpty}")

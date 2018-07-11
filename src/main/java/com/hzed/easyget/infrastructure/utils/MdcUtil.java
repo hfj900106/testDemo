@@ -17,12 +17,19 @@ public class MdcUtil {
     }
 
     public static void putTrace() {
-        MDC.remove(TRACE);
         MDC.put(TRACE, UUID.randomUUID().toString().replaceAll("-", "").substring(3, 20));
     }
 
     public static void putModuleName(String moduleName) {
         MDC.put(MODULENAME, moduleName);
+    }
+
+    public static void clearTrace() {
+        MDC.remove(TRACE);
+    }
+
+    public static void clearModuleName() {
+        MDC.remove(MODULENAME);
     }
 
     public static void clear() {

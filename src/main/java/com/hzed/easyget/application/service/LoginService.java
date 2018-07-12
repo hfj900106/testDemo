@@ -260,6 +260,7 @@ public class LoginService {
         redisService.setCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile, map.get("code"), 300L);
         PictureCodeResponse response = new PictureCodeResponse();
         response.setPicture(map.get("picStr"));
+        log.info("图片验证码：{}",map.get("code"));
         return response;
     }
 

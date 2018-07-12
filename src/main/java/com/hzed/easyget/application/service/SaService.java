@@ -306,7 +306,7 @@ public class SaService {
         if (BidStatusEnum.CLEARED.getCode().byteValue() == info.getBidStatus()) {
             isUnpaid = false;
         }
-        if (BidStatusEnum.REPAYMENT.getCode().byteValue() == info.getBidStatus() && BillStatusEnum.WAIT_CLEAR.getCode().byteValue() == info.getBillStatus() && RepayTypeEnum.PART.getCode().byteValue() == info.getIsPartialRepayment()) {
+        if (BidStatusEnum.REPAYMENT.getCode().byteValue() == info.getBidStatus() && BillStatusEnum.WAIT_CLEAR.getCode().byteValue() == info.getBillStatus() && BillStatusEnum.WAIT_CLEAR.getCode().byteValue() == info.getIsPartialRepayment()) {
             isUnpaid = true;
         }
         return isUnpaid;

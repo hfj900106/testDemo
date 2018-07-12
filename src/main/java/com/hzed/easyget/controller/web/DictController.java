@@ -34,18 +34,19 @@ public class DictController {
 
     @IgnoreHeader
     @ModuleFunc("清除字典缓存")
-    @GetMapping("/clearCodeCache/{module}")
-    public void clearCodeCache(@PathVariable String module) {
-        dictService.clearCodeCache(module);
+    @GetMapping("/clearCodeCache/{code}")
+    public void clearCodeCache(@PathVariable String code) {
+        log.info("请求参数：{}", code);
+        dictService.clearCodeCache(code);
     }
 
     @IgnoreHeader
     @ModuleFunc("清除地区字典缓存")
-    @GetMapping("/clearCodeAndLanguageCache/{module}/{i18n}")
-    public void clearCodeAndLanguageCache(@PathVariable String module, @PathVariable String i18n) {
-        dictService.clearCodeAndLanguageCache(module, i18n);
+    @GetMapping("/clearCodeAndLanguageCache/{code}/{language}")
+    public void clearCodeAndLanguageCache(@PathVariable String code, @PathVariable String language) {
+        log.info("请求参数：{}, {}", code, language);
+        dictService.clearCodeAndLanguageCache(code, language);
     }
-
 
     @TokenIgnore
     @ModuleFunc("根据module获取字典列表")

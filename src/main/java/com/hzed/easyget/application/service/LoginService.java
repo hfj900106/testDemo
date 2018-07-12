@@ -240,15 +240,7 @@ public class LoginService {
         String dicValue = smsContent1.get(0).getDictValue();
         //替换验证码
         String content = StringUtils.replace(dicValue, "{0}", code);
-        Long smsId = IdentifierGenerator.nextId();
-
-        if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
-            //非测试环境发送短信
-            smsService.sendSms(mobile, content, String.valueOf(smsId));
-        }
-
-        // 保存短信记录
-        smsService.saveSmsLog(smsId,content,mobile,(byte)2,"短信验证码");
+        smsService.sendAndSaveSms(content,mobile,"短信验证码");
 
         //保存到Redis，手机验证码30分钟有效
         redisService.setCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile, code, 1800L);

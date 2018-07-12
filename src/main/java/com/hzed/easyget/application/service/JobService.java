@@ -249,16 +249,13 @@ public class JobService {
             Integer day = billExt.getDay();
             if (day != null) {
                 String msg = StringUtils.replace(template, "{0}", String.valueOf(day));
-                Long smsId = IdentifierGenerator.nextId();
                 String mobile = billExt.getMobile();
                 try {
-                    if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
-                        // 非测试环境发送短信
-                        smsService.sendSms(mobile, msg, String.valueOf(smsId));
-                        log.info("发送催账短信-成功，手机号码{}", mobile);
-                    }
-                    // 保存短信记录
-                    smsService.saveSmsLog(smsId, msg, mobile, (byte) 2, "短信催账");
+                    log.info("发送催账短信-成功，手机号码{}", mobile);
+
+                    // 发送及保存短信
+                    smsService.sendAndSaveSms(msg, mobile, "短信催账");
+
                     // 通过手机号获取用户id
                     Long userId = userRepository.findByMobile(mobile).getId();
                     messageRepository.addUserMessage(userId, title, msg, "短信催账");

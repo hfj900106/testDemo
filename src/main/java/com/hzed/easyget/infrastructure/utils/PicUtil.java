@@ -6,11 +6,13 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.BaseBizException;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import org.apache.commons.codec.binary.Base64;
+import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Random;
 
@@ -152,9 +154,12 @@ public class PicUtil {
             }
         }
         Map<String, String> map = Maps.newHashMap();
+        BASE64Encoder encoder = new BASE64Encoder();
+
+        String strUTF8 = encoder.encode(bos.toByteArray());
         try {
-//        map.put("picStr", java.util.Base64.getEncoder().encodeToString(bos.toByteArray()));
-            map.put("picStr", java.util.Base64.getEncoder().encodeToString(bos.toString("utf-8").getBytes()));
+            strUTF8 = URLEncoder.encode(strUTF8, "UTF-8");
+            map.put("picStr", strUTF8);
             map.put("code", randomString);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -162,10 +167,4 @@ public class PicUtil {
         return map;
     }
 
-    public static void main(String[] args) throws Exception {
-        String imgPath = "C:\\Users\\Administrator\\Desktop\\jifei.png";
-        System.out.println(getFileName(imgPath));
-//        String base64String = picToBase64(imgPath);
-//        generateImage(base64String, "png");
-    }
 }

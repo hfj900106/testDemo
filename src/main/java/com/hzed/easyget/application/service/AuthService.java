@@ -89,6 +89,9 @@ public class AuthService {
      */
     public void authContacts(ContactsRequest request) {
         GlobalUser user = getGlobalUser();
+        // 判断该用户是否已经验证
+        checkAuth(user.getUserId(), AuthCodeEnum.CONTACTS.getCode());
+
         String platForm = getGlobalHead().getPlatform();
         int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
         RiskResponse response = riskService.authContacts(request.getContacts(), request.getCallLogs(), source);
@@ -119,6 +122,9 @@ public class AuthService {
      */
     public void authMessages(MessagesRequest request) {
         GlobalUser user = getGlobalUser();
+        // 判断该用户是否已经验证
+        checkAuth(user.getUserId(), AuthCodeEnum.MESSAGE.getCode());
+
         String platForm = getGlobalHead().getPlatform();
         int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
         RiskResponse response = riskService.authMessages(request.getMessage(), source);
@@ -160,6 +166,8 @@ public class AuthService {
      */
     public void operatorAuth(PeratorAuthRequest request) {
         GlobalUser user = getGlobalUser();
+        // 判断该用户是否已经验证
+        checkAuth(user.getUserId(),AuthCodeEnum.SMS.getCode());
 
         RiskResponse response = riskService.operatorAuth(request.getSmsCode());
 
@@ -176,6 +184,9 @@ public class AuthService {
      */
     public void authPersonInfo(PersonInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
+        // 判断该用户是否已经验证
+        checkAuth(user.getUserId(), AuthCodeEnum.PERSON_INFO.getCode());
+
         UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.PERSON_INFO.getCode(), "个人信息认证");
         Profile profile = new Profile();
         profile.setId(IdentifierGenerator.nextId());
@@ -252,6 +263,9 @@ public class AuthService {
      */
     public void identityInfoAuth(IdentityInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
+        // 判断该用户是否已经验证
+        checkAuth(user.getUserId(), AuthCodeEnum.ID_CARD.getCode());
+
         String realName = request.getRealName();
         String idCardNo = request.getIdCardNo();
         Integer gender = request.getGender();
@@ -293,11 +307,14 @@ public class AuthService {
      * 专业信息认证
      */
     public void professionalAuth(ProfessionalRequest request) {
+        GlobalUser user = getGlobalUser();
+        // 判断该用户是否已经验证
+        checkAuth(user.getUserId(),AuthCodeEnum.PROFESSIONAL.getCode());
+
         try {
             //照片上传
             String employeeCardPhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(), request.getPicSuffix());
             String workplacePhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(), request.getPicSuffix());
-            GlobalUser user = getGlobalUser();
             Work work = new Work();
             work.setId(IdentifierGenerator.nextId());
             work.setUserId(user.getUserId());
@@ -348,6 +365,9 @@ public class AuthService {
      */
     public void facebookAuth(FacebookRequest request) {
         log.info("facebook认证-风控回调数据：{}", JSONObject.toJSONString(request));
+        // 判断该用户是否已经验证
+        checkAuth(request.getUserId(), AuthCodeEnum.FACEBOOK.getCode());
+
         if (!ComConsts.RISK_OK.equals(request.getResultCode())) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
@@ -362,6 +382,9 @@ public class AuthService {
      */
     public void insAuth(InsRequest request) {
         log.info("ins认证-风控回调数据：{}", JSONObject.toJSONString(request));
+        // 判断该用户是否已经验证
+        checkAuth(request.getUserId(), AuthCodeEnum.INS.getCode());
+
         if (!ComConsts.RISK_OK.equals(request.getResultCode())) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
@@ -381,5 +404,18 @@ public class AuthService {
         riskService.facebookAndIns(user.getUserId(), taskId, source);
     }
 
+    /**
+     * 检测用户是否已经认证成功
+     * @param userId
+     * @param authCode
+     */
+    public void checkAuth(Long userId, String authCode) {
+        // 判断该用户是否已经验证
+        UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
+        if (!ObjectUtils.isEmpty(userAuthStatusHas)) {
+            log.info("该用户已认证");
+            throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
+        }
+    }
 
 }

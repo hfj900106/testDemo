@@ -186,10 +186,10 @@ public class AuthService {
         profile.setCompanyAddrDetail(request.getCompanyAddrDetail());
         profile.setEmail(request.getEmail());
         profile.setParentName(request.getParentName());
-        profile.setParentTel(request.getParentTel());
+        profile.setParentTel(request.getParentTel().replaceAll("\\s*", ""));
         profile.setRelationship(request.getRelationship());
         profile.setRelatedPersonName(request.getRelatedPersonName());
-        profile.setRelatedPersonTel(request.getRelatedPersonTel());
+        profile.setRelatedPersonTel(request.getRelatedPersonTel().replaceAll("\\s*", ""));
         profile.setRemark("个人信息认证");
         personInfoRepository.insertPersonInfoAndUserAuthStatus(profile, userAuthStatus);
     }

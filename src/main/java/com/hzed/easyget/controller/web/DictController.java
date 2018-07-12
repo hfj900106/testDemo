@@ -33,22 +33,22 @@ public class DictController {
     private DictService dictService;
 
     @IgnoreHeader
-    @ModuleFunc("根据module清除字典缓存")
-    @GetMapping("/clearModuleCache/{module}")
-    public void clearModuleCache(@PathVariable String module) {
-        dictService.clearModuleCache(module);
+    @ModuleFunc("清除字典缓存")
+    @GetMapping("/clearCodeCache/{module}")
+    public void clearCodeCache(@PathVariable String module) {
+        dictService.clearCodeCache(module);
     }
 
     @IgnoreHeader
-    @ModuleFunc("根据moduleAndI18n清除字典缓存")
-    @GetMapping("/clearModuleAndI18nCache/{module}/{i18n}")
-    public void clearModuleAndI18nCache(@PathVariable String module, @PathVariable String i18n) {
-        dictService.clearModuleAndI18nCache(module, i18n);
+    @ModuleFunc("清除地区字典缓存")
+    @GetMapping("/clearCodeAndLanguageCache/{module}/{i18n}")
+    public void clearCodeAndLanguageCache(@PathVariable String module, @PathVariable String i18n) {
+        dictService.clearCodeAndLanguageCache(module, i18n);
     }
 
 
     @TokenIgnore
-    @ModuleFunc("通过module获取字典列表")
+    @ModuleFunc("根据module获取字典列表")
     @PostMapping("/getDictList")
     public List<DictResponse> getDictList(@Valid @RequestBody DictRequest request) {
         return dictService.getDictByModuleCodeAndLanguage(request.getModuleCode(), RequestUtil.getGlobalHead().getI18n());
@@ -58,7 +58,7 @@ public class DictController {
     @ModuleFunc("获取印尼省市区")
     @PostMapping("/getIDAreaList")
     public List<IDAreaResponse> getIDAreaList(@Valid @RequestBody IDAreaRequest request) {
-        return dictService.getIDAreaList(request);
+        return dictService.getIDAreaList(request.getParent());
     }
 
 

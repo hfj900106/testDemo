@@ -49,7 +49,7 @@ public class UserController {
     @ModuleFunc("联系客服")
     @PostMapping("/getCustomerService")
     public List<DictResponse> getCustomerService(@Valid @RequestBody DictRequest request){
-        return dictService.getDictByModule(request.getModuleCode());
+        return dictService.getDictByModuleCode(request.getModuleCode());
     }
 
     @ModuleFunc("消息公告列表")

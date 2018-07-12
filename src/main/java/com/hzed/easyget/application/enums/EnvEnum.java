@@ -8,7 +8,9 @@ import lombok.Getter;
 
 @Getter
 public enum EnvEnum {
-    /** 过规则 */
+    /**
+     * 过规则
+     */
     DEV("dev", "开发环境", true),
     TEST("test", "测试环境", true),
     PROD("prod", "生产环境", false);
@@ -25,11 +27,10 @@ public enum EnvEnum {
 
     public static boolean isTestEnv(String env) {
         for (EnvEnum e : EnvEnum.values()) {
-            if(e.getEnv().equals(env)) {
+            if (e.getEnv().equals(env)) {
                 return e.getIsTest();
             }
         }
-
         // 默认是测试环境
         return false;
     }

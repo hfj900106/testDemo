@@ -137,19 +137,13 @@ public class CallbackService {
         String code = smsService.getCode();
         // 替换验证码
         String content = StringUtils.replace(dicValue, "{0}", code);
-        // 短信标识
-        Long smsId = IdentifierGenerator.nextId();
-
-        if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
-            // 非测试环境发送短信
-            smsService.sendSms(mobile, content, String.valueOf(smsId));
-        }
-        // 保存短信记录
+        // 发送及保存短信
+        smsService.sendAndSaveSms(content, mobile, "审核结果短信通知用户");
+        // 保存信息记录
         if (StringUtils.isBlank(title)) {
             log.error("没有配置信息title");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
-        smsService.saveSmsLog(smsId, content, mobile, (byte) 2, "审核结果短信通知用户");
         messageRepository.addUserMessage(user.getId(), title, content, "审核结果短信通知用户");
     }
 

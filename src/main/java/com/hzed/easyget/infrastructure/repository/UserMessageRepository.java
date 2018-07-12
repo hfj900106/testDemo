@@ -60,4 +60,13 @@ public class UserMessageRepository {
         userMessage.setRemark(remark);
         userMessageMapper.insertSelective(userMessage);
     }
+
+    /**
+     * 根据id获取公告内容
+     * @param id
+     * @return
+     */
+    public UserMessage findOneByIdAndLanguage(Long id) {
+        return userMessageMapper.selectByPrimaryKeySelective(id);
+    }
 }

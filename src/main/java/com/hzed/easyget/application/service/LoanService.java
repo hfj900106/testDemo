@@ -91,7 +91,7 @@ public class LoanService {
         bid.setApplyAmount(request.getApplyAmount());
         bid.setPeriod(request.getPeriod());
         bid.setInBank(request.getInBank());
-        bid.setInAccount(request.getInAccount());
+        bid.setInAccount(request.getInAccount().replaceAll(" ", ""));
         bid.setPurposeCode(request.getPurposeId());
         bid.setClient(BidEnum.INDONESIA_APP.getCode());
         bid.setStatus(BidStatusEnum.RISK_ING.getCode().byteValue());

@@ -105,4 +105,14 @@ public class UserService {
 
         return messageResponseList;
     }
+
+    public MessageContentH5Response getMessageContentH5(MessageContentH5Request request) {
+
+        MessageContentH5Response messageContentH5Response = new MessageContentH5Response();
+        UserMessage userMessage = userMessageRepository.findOneByIdAndLanguage(request.getId());
+        messageContentH5Response.setTitle(userMessage.getTitle());
+        messageContentH5Response.setMessage(userMessage.getMessage());
+        messageContentH5Response.setCreateTime(DateUtil.localDateTimeToStr1(userMessage.getCreateTime()));
+        return messageContentH5Response;
+    }
 }

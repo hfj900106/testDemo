@@ -25,7 +25,7 @@ import java.util.List;
 @Slf4j
 @ExceptionAnno
 @RestController
-@RequestMapping("/api/user")
+                                                                                                                                                                            @RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -55,8 +55,13 @@ public class UserController {
     @ModuleFunc("消息公告列表")
     @PostMapping("/getMessageList")
     public List<MessageResponse> getMessageList(@Valid @RequestBody MessageRequest request){
-
         return userService.getMessageList(request);
+    }
+
+    @ModuleFunc("H5获取公告内容")
+    @PostMapping("/getMessageContentH5")
+    public MessageContentH5Response getMessageContentH5(@RequestBody MessageContentH5Request request){
+        return userService.getMessageContentH5(request);
     }
 
 }

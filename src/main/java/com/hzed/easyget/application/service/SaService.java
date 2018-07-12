@@ -317,7 +317,7 @@ public class SaService {
         if (BidStatusEnum.CLEARED.getCode().byteValue() == info.getBidStatus()) {
             repaymentDesc = RepayTypeEnum.CLEAR.getMsg();
         }
-        if (BidStatusEnum.REPAYMENT.getCode().byteValue() == info.getBidStatus() && BillStatusEnum.WAIT_CLEAR.getCode().byteValue() == info.getBillStatus() && RepayTypeEnum.PART.getCode().byteValue() == info.getIsPartialRepayment()) {
+        if (BidStatusEnum.REPAYMENT.getCode().byteValue() == info.getBidStatus() && BillStatusEnum.WAIT_CLEAR.getCode().byteValue() == info.getBillStatus() && BillStatusEnum.WAIT_CLEAR.getCode().byteValue() == info.getIsPartialRepayment()) {
             repaymentDesc = RepayTypeEnum.PART.getMsg();
         }
         return repaymentDesc;

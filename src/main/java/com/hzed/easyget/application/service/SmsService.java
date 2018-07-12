@@ -56,8 +56,6 @@ public class SmsService {
     private UserRepository userRepository;
     @Autowired
     private UserMessageRepository messageRepository;
-    @Autowired
-    private SmsService smsService;
 
     /**
      * 部分结清/全部结清 短信通知
@@ -178,10 +176,10 @@ public class SmsService {
         Long smsId = IdentifierGenerator.nextId();
         if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
             // 非测试环境发送短信
-            smsService.sendSms(mobile, content, String.valueOf(smsId));
+            sendSms(mobile, content, String.valueOf(smsId));
         }
         // 保存短信记录
-        smsService.saveSmsLog(smsId, content, mobile, (byte) 2, remark);
+        saveSmsLog(smsId, content, mobile, (byte) 2, remark);
     }
 
     /**

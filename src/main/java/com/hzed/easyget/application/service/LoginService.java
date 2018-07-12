@@ -51,6 +51,7 @@ public class LoginService {
     SaService saService;
     @Autowired
     private SmsService smsService;
+
     /**
      * 用户登录注册
      *
@@ -240,7 +241,7 @@ public class LoginService {
         String dicValue = smsContent1.get(0).getDictValue();
         //替换验证码
         String content = StringUtils.replace(dicValue, "{0}", code);
-        smsService.sendAndSaveSms(content,mobile,"短信验证码");
+        smsService.sendAndSaveSms(mobile, content, "短信验证码");
 
         //保存到Redis，手机验证码30分钟有效
         redisService.setCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile, code, 1800L);
@@ -260,7 +261,7 @@ public class LoginService {
         redisService.setCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile, map.get("code"), 300L);
         PictureCodeResponse response = new PictureCodeResponse();
         response.setPicture(map.get("picStr"));
-        log.info("图片验证码：{}",map.get("code"));
+        log.info("图片验证码：{}", map.get("code"));
         return response;
     }
 

@@ -254,7 +254,7 @@ public class JobService {
                     log.info("发送催账短信-成功，手机号码{}", mobile);
 
                     // 发送及保存短信
-                    smsService.sendAndSaveSms(msg, mobile, "短信催账");
+                    smsService.sendAndSaveSms(mobile, msg, "短信催账");
 
                     // 通过手机号获取用户id
                     Long userId = userRepository.findByMobile(mobile).getId();

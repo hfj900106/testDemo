@@ -2,7 +2,6 @@ package com.hzed.easyget.application.service;
 
 import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
-import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
@@ -138,7 +137,7 @@ public class CallbackService {
         // 替换验证码
         String content = StringUtils.replace(dicValue, "{0}", code);
         // 发送及保存短信
-        smsService.sendAndSaveSms(content, mobile, "审核结果短信通知用户");
+        smsService.sendAndSaveSms(mobile, content, "审核结果短信通知用户");
         // 保存信息记录
         if (StringUtils.isBlank(title)) {
             log.error("没有配置信息title");

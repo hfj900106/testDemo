@@ -1,5 +1,6 @@
 package com.hzed.easyget.application.service;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.controller.model.IDAreaResponse;
@@ -125,29 +126,25 @@ public class DictService {
     }
 
     public void clearCodeCache(String code) {
-        redisService.clearCache(dictKey + code);
         Dict dict = redisService.getObjCache(dictKey + code);
         if (ObjectUtils.isEmpty(dict)) {
-            log.info("{}的缓存为空", code);
+            log.info("code：{} 的无缓存，不做清理操作", code);
             return;
         }
-        log.info("开始清理缓存，缓存的module:{}", code);
+        log.info("开始清理缓存，{}：{}", code, JSON.toJSONString(dict));
         redisService.clearCache(dictKey + code);
-        log.info("清理缓存完毕。。。");
-
+        log.info("清理缓存完毕");
     }
 
     public void clearCodeAndLanguageCache(String code, String language) {
-        redisService.clearCache(dictKey + code + RedisConsts.SPLIT + language);
-
-        List<DictResponse> dictResponseListCache = redisService.getObjCache(dictKey + code + RedisConsts.SPLIT + language);
-        if (ObjectUtils.isEmpty(dictResponseListCache)) {
-            log.info("{}的缓存为空", code);
+        List<DictResponse> respList = redisService.getObjCache(dictKey + code + RedisConsts.SPLIT + language);
+        if (ObjectUtils.isEmpty(respList)) {
+            log.info("code：{} 的无缓存，不做清理操作", code);
             return;
         }
-        log.info("开始清理缓存，缓存的module:{}，i18n：{}", code, language);
+        log.info("开始清理缓存，{},{}：{}", code, language, JSON.toJSONString(respList));
         redisService.clearCache(dictKey + code + RedisConsts.SPLIT + language);
-        log.info("清理缓存完毕。。。");
+        log.info("清理缓存完毕");
 
     }
 }

@@ -25,7 +25,7 @@ import java.util.List;
 @Slf4j
 @ExceptionAnno
 @RestController
-                                                                                                                                                                            @RequestMapping("/api/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -48,19 +48,19 @@ public class UserController {
     @IgnoreH5
     @ModuleFunc("联系客服")
     @PostMapping("/getCustomerService")
-    public List<DictResponse> getCustomerService(@Valid @RequestBody DictRequest request){
+    public List<DictResponse> getCustomerService(@Valid @RequestBody DictRequest request) {
         return dictService.getDictByModuleCode(request.getModuleCode());
     }
 
     @ModuleFunc("消息公告列表")
     @PostMapping("/getMessageList")
-    public List<MessageResponse> getMessageList(@Valid @RequestBody MessageRequest request){
+    public List<MessageResponse> getMessageList(@Valid @RequestBody MessageRequest request) {
         return userService.getMessageList(request);
     }
 
     @ModuleFunc("H5获取公告内容")
     @PostMapping("/getMessageContentH5")
-    public MessageContentH5Response getMessageContentH5(@RequestBody MessageContentH5Request request){
+    public MessageContentH5Response getMessageContentH5(@RequestBody MessageContentH5Request request) {
         return userService.getMessageContentH5(request);
     }
 

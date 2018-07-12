@@ -101,6 +101,7 @@ public class SmsService {
     }
 
     public void sendSms(String mobile, String content, String smsIdStr) {
+
         DictService dictService = SpringContextUtil.getBean(DictService.class);
         Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
         if (ObjectUtils.isEmpty(dictSms)) {
@@ -119,7 +120,7 @@ public class SmsService {
             smsDownRequest.setContent(content);
             log.info("发送短信渠道：{},请求参数：{}", dicValue, JSONObject.toJSONString(smsDownRequest));
             NxSmsDownResponse smsDownResponse = NxSmsUtil.smsSend(smsDownRequest);
-            if(ObjectUtils.isEmpty(smsDownResponse)){
+            if (ObjectUtils.isEmpty(smsDownResponse)) {
                 log.error("返回空的数据对象");
                 throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
             }
@@ -156,7 +157,7 @@ public class SmsService {
             smsDownRequest.setMessages(message);
             log.info("发送短信渠道：{},请求参数：{}", dicValue, JSONObject.toJSONString(smsDownRequest));
             BulkSmsDownResponse smsDownResponse = BulkSmsUtil.smsSend(smsDownRequest);
-            if(ObjectUtils.isEmpty(smsDownResponse)){
+            if (ObjectUtils.isEmpty(smsDownResponse)) {
                 log.error("返回空的数据对象");
                 throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
             }
@@ -169,6 +170,11 @@ public class SmsService {
     }
 
     public void sendAndSaveSms(String mobile, String content, String remark) {
+        // 判断长度超过11位给提示
+        if (mobile.length() > ComConsts.MOBILE_LEN) {
+            log.error("手机号过长");
+            throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
+        }
         Long smsId = IdentifierGenerator.nextId();
         if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
             // 非测试环境发送短信

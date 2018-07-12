@@ -56,6 +56,8 @@ public class SmsService {
     private UserRepository userRepository;
     @Autowired
     private UserMessageRepository messageRepository;
+    @Autowired
+    private SmsService smsService;
 
     /**
      * 部分结清/全部结清 短信通知
@@ -109,14 +111,18 @@ public class SmsService {
         if (!ObjectUtils.isEmpty(dicValue) && ComConsts.NX.equalsIgnoreCase(dicValue)) {
             // 使用牛信发送短信
             NxSmsDownRequest smsDownRequest = new NxSmsDownRequest();
-            smsDownRequest.setPhone(mobile);
+            smsDownRequest.setPhone("62" + mobile);
             smsDownRequest.setTimestamp(String.valueOf(System.currentTimeMillis()));
             // 拆分短信表的id作为短信的唯一标识发给渠道商
             smsDownRequest.setSourceadd(smsIdStr.substring(0, 10));
             smsDownRequest.setExtno(Integer.valueOf(smsIdStr.substring(10, 18)));
             smsDownRequest.setContent(content);
-            log.info("发送短信请求参数：{}", JSONObject.toJSONString(smsDownRequest));
+            log.info("发送短信渠道：{},请求参数：{}", dicValue, JSONObject.toJSONString(smsDownRequest));
             NxSmsDownResponse smsDownResponse = NxSmsUtil.smsSend(smsDownRequest);
+            if(ObjectUtils.isEmpty(smsDownResponse)){
+                log.error("返回空的数据对象");
+                throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
+            }
             log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
             // 发送失败
             if (!SmsCodeEnum.OK.getKey().equals(smsDownResponse.getCode())) {
@@ -140,7 +146,7 @@ public class SmsService {
             // 短信接收者
             BulkSmsDownRequest.MsgBody.Member member = new BulkSmsDownRequest.MsgBody.Member();
             // 00加国家代码中国为0086
-            member.setNumber(mobile);
+            member.setNumber("0062" + mobile);
             //设置短信接收列表
             msgBody.setTo(Lists.newArrayList(member));
             // bulk短信下发请求消息
@@ -148,14 +154,28 @@ public class SmsService {
             // bulk短信下发请求消息body列表
             message.setMsg(Lists.newArrayList(msgBody));
             smsDownRequest.setMessages(message);
-            log.info("发送短信请求参数：{}", JSONObject.toJSONString(smsDownRequest));
+            log.info("发送短信渠道：{},请求参数：{}", dicValue, JSONObject.toJSONString(smsDownRequest));
             BulkSmsDownResponse smsDownResponse = BulkSmsUtil.smsSend(smsDownRequest);
+            if(ObjectUtils.isEmpty(smsDownResponse)){
+                log.error("返回空的数据对象");
+                throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
+            }
             log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
             if (ComConsts.BULK_SMS_OK != smsDownResponse.getErrorCode()) {
                 log.error("发送失败：{}", JSONObject.toJSONString(smsDownResponse.getMessages()));
                 throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
             }
         }
+    }
+
+    public void sendAndSaveSms(String mobile, String content, String remark) {
+        Long smsId = IdentifierGenerator.nextId();
+        if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
+            // 非测试环境发送短信
+            smsService.sendSms(mobile, content, String.valueOf(smsId));
+        }
+        // 保存短信记录
+        smsService.saveSmsLog(smsId, content, mobile, (byte) 2, remark);
     }
 
     /**

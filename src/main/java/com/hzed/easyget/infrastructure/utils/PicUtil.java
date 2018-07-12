@@ -101,7 +101,8 @@ public class PicUtil {
     private static String drowString(Graphics g, String randomString, int i) {
 
         Random random = new Random();
-        g.setFont(new Font("Times New Roman", Font.CENTER_BASELINE, 18));
+//        g.setFont(new Font("Times New Roman", Font.CENTER_BASELINE, 18));
+        g.setFont(new Font("Default", Font.CENTER_BASELINE, 18));
         g.setColor(new Color(random.nextInt(101), random.nextInt(111), random.nextInt(121)));
         String rand = String.valueOf(getRandomString(random.nextInt(codeStr.length())));
         randomString += rand;

@@ -53,7 +53,6 @@ public class LoginController {
         loginService.sendSmsCode(request);
     }
 
-
     @IgnoreH5
     @ModuleFunc("H5手机验证码注册")
     @PostMapping("/registerH5")

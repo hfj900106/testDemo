@@ -170,9 +170,8 @@ public class SmsService {
     public void sendAndSaveSms(String mobile, String content, String remark) {
         // 判断长度超过11位给提示
         int mobileLen = mobile.length();
-        log.info("手机号长度：{}",mobileLen);
+        log.info("手机号长度：{}", mobileLen);
 //        if (mobileLen > ComConsts.MOBILE_LEN) {
-//
 //            log.error("手机号过长");
 //            throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
 //        }

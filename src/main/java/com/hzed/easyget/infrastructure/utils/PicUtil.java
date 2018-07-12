@@ -152,8 +152,13 @@ public class PicUtil {
             }
         }
         Map<String, String> map = Maps.newHashMap();
-        map.put("picStr", java.util.Base64.getEncoder().encodeToString(bos.toByteArray()));
-        map.put("code", randomString);
+        try {
+//        map.put("picStr", java.util.Base64.getEncoder().encodeToString(bos.toByteArray()));
+            map.put("picStr", java.util.Base64.getEncoder().encodeToString(bos.toString("utf-8").getBytes()));
+            map.put("code", randomString);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return map;
     }
 

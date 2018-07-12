@@ -58,6 +58,7 @@ public class UserController {
         return userService.getMessageList(request);
     }
 
+    @IgnoreH5
     @ModuleFunc("H5获取公告内容")
     @PostMapping("/getMessageContentH5")
     public MessageContentH5Response getMessageContentH5(@RequestBody MessageContentH5Request request) {

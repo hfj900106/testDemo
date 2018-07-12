@@ -126,29 +126,27 @@ public class DictService {
 
     public void clearCodeCache(String code) {
         redisService.clearCache(dictKey + code);
-    public void clearModuleCache(String module) {
-        Dict dict = redisService.getObjCache(dictKey + module);
+        Dict dict = redisService.getObjCache(dictKey + code);
         if (ObjectUtils.isEmpty(dict)) {
-            log.info("{}的缓存为空", module);
+            log.info("{}的缓存为空", code);
             return;
         }
-        log.info("开始清理缓存，缓存的module:{}", module);
-        redisService.clearCache(dictKey + module);
+        log.info("开始清理缓存，缓存的module:{}", code);
+        redisService.clearCache(dictKey + code);
         log.info("清理缓存完毕。。。");
 
     }
 
     public void clearCodeAndLanguageCache(String code, String language) {
         redisService.clearCache(dictKey + code + RedisConsts.SPLIT + language);
-    public void clearModuleAndI18nCache(String module, String i18n) {
 
-        List<DictResponse> dictResponseListCache = redisService.getObjCache(dictKey + module + RedisConsts.SPLIT + i18n);
+        List<DictResponse> dictResponseListCache = redisService.getObjCache(dictKey + code + RedisConsts.SPLIT + language);
         if (ObjectUtils.isEmpty(dictResponseListCache)) {
-            log.info("{}的缓存为空", module);
+            log.info("{}的缓存为空", code);
             return;
         }
-        log.info("开始清理缓存，缓存的module:{}，i18n：{}", module, i18n);
-        redisService.clearCache(dictKey + module + RedisConsts.SPLIT + i18n);
+        log.info("开始清理缓存，缓存的module:{}，i18n：{}", code, language);
+        redisService.clearCache(dictKey + code + RedisConsts.SPLIT + language);
         log.info("清理缓存完毕。。。");
 
     }

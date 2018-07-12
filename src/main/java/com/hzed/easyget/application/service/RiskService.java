@@ -167,9 +167,8 @@ public class RiskService {
             throw new WarnException(BizCodeEnum.NEED_SMS_AUTH_RISK);
         }
         if (codeObj.equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
-            //已经认证过
+            //认证通过
             saService.saOperator(user, false, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
-            throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
         }
         return response;
     }

@@ -188,6 +188,7 @@ public class HomeService {
             checkLoanResponseList.add(checkLoanResponse);
         });
         RiskResponse response = riskService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
+        log.info("贷款资格校验风控返回报文：{}",response);
         String errorCode = response.getHead().getError_code();
         log.info("查询风控是否有贷款资格，风控返回被拒原因:{}，用户id:{}", response.getHead().getError_msg(), userId);
         String code = "";

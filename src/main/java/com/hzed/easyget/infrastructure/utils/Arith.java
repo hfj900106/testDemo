@@ -14,6 +14,10 @@ public class Arith {
      */
     public static BigDecimal ZERO = new BigDecimal(0.01D);
 
+    public static boolean greaterThenZero(BigDecimal amount) {
+        return amount.compareTo(ZERO) > 0 ? true : false;
+    }
+
     public static BigDecimal add(BigDecimal s1, BigDecimal s2) {
         return s1.add(s2);
     }
@@ -58,6 +62,7 @@ public class Arith {
     /**
      * 功能：提供（相对）精确的除法运算。当发生除不尽的情况时，由scale参数指
      * 定精度，以后的数字四舍五入。
+     *
      * @param scale 小数点后保留几位
      */
     public static BigDecimal div(BigDecimal s1, BigDecimal s2, int scale) {
@@ -70,6 +75,7 @@ public class Arith {
     /**
      * 功能：提供（相对）精确的除法运算。当发生除不尽的情况时，由scale参数指
      * 定精度，以后的数字四舍五入。
+     *
      * @param scale 小数点后保留几位
      */
     public static int roundHalfUp(BigDecimal s1, BigDecimal s2, int scale) {
@@ -79,6 +85,7 @@ public class Arith {
     /**
      * 功能：提供（相对）精确的除法运算。当发生除不尽的情况时，由scale参数指
      * 定精度，以后的数字向上取。
+     *
      * @param scale 小数点后保留几位
      */
     public static BigDecimal divUp(BigDecimal s1, BigDecimal s2, int scale) {

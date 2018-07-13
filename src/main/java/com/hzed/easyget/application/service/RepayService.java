@@ -171,7 +171,6 @@ public class RepayService {
         }
 
 
-
         repayDetailResponse.setTotalRepayAmount(totalRepayAmount);
         repayDetailResponse.setPeriod(bid.getPeriod());
         repayDetailResponse.setLoanTime(DateUtil.localDateTimeToStr2(bidProgress.getHandleTime()));
@@ -429,8 +428,11 @@ public class RepayService {
             // 获取应还金额
             BigDecimal repayFee = comService.getBidNoRepayFee(bid.getId(), LocalDateTime.now());
             // 剩余应还金额小于最小还款额
-            if (repayFee.subtract(amount).compareTo(minRepayAmount) < 0) {
-                throw new ComBizException(BizCodeEnum.CLEAR_ONCE);
+            log.debug("还款金额{}",repayFee);
+            BigDecimal retain = repayFee.subtract(amount);
+            log.debug("剩余金额金额{}",retain);
+            if(Arith.greaterThenZero(retain) && retain.compareTo(minRepayAmount) < 0) {
+                throw new WarnException(BizCodeEnum.CLEAR_ONCE);
             }
         }
         PaymentIdResponse response = new PaymentIdResponse();

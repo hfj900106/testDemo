@@ -66,7 +66,7 @@ public class UserMessageRepository {
      * @param id
      * @return
      */
-    public UserMessage findOneByIdAndLanguage(Long id) {
+    public UserMessage findOneById(Long id) {
         UserMessageExample example = new UserMessageExample();
         example.createCriteria().andIdEqualTo(id);
         return userMessageMapper.selectOneByExample(example);

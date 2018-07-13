@@ -155,7 +155,7 @@ public class RepayService {
         if (BillStatusEnum.WAIT_CLEAR.getCode().equals(status)) {
             repayDetailResponse.setRepayTime(DateUtil.localDateTimeToStr2(bill.getRepaymentTime()));
         } else {
-            repayDetailResponse.setRepayTime(DateUtil.localDateTimeToStr2(bill.getSettlementTime()));
+            repayDetailResponse.setRepayTime(DateUtil.localDateTimeToStr2(bill.getRepaymentTime()));
         }
 
         // 还款状态

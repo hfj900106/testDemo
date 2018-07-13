@@ -134,7 +134,7 @@ public class SmsService {
             // 短信请求body
             BulkSmsDownRequest.MsgBody msgBody = new BulkSmsDownRequest.MsgBody();
             // 短信来源
-            msgBody.setFrom("easy-get");
+            msgBody.setFrom("easyget");
             // 消息标识id 短信表的id作为短信的唯一标识发给渠道商
             msgBody.setReference(smsIdStr);
             // 短信内容实体
@@ -168,17 +168,11 @@ public class SmsService {
     }
 
     public void sendAndSaveSms(String mobile, String content, String remark) {
-        // 判断长度超过11位给提示
-        int mobileLen = mobile.length();
-        log.info("手机号长度：{}", mobileLen);
-//        if (mobileLen > ComConsts.MOBILE_LEN) {
-//            log.error("手机号过长");
-//            throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
-//        }
         Long smsId = IdentifierGenerator.nextId();
         if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
             // 非测试环境发送短信
-            sendSms(mobile, content, String.valueOf(smsId));
+            // 发短信时去掉 0
+            sendSms(mobile.substring(1), content, String.valueOf(smsId));
         }
         // 保存短信记录
         saveSmsLog(smsId, content, mobile, (byte) 2, remark);

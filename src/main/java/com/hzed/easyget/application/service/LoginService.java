@@ -40,8 +40,6 @@ public class LoginService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private SmsLogRepository smsLogRepository;
-    @Autowired
     private RedisService redisService;
     @Autowired
     private UserTokenRepository userTokenRepository;
@@ -61,6 +59,10 @@ public class LoginService {
     public LoginByCodeResponse loginByCode(LoginByCodeRequest request) {
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String mobile = request.getMobile();
+        log.info("登录注册手机号：{}", mobile);
+        // 格式化手机号
+        mobile = mobileForm(mobile);
+
         String smsCode = request.getSmsCode();
         String platform = globalHead.getPlatform();
         String imei = globalHead.getImei();
@@ -134,6 +136,8 @@ public class LoginService {
     public void registerH5(RegisterH5Request request) {
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String mobile = request.getMobile();
+        // 格式化手机号
+        mobile = mobileForm(mobile);
         String smsCode = request.getSmsCode();
         String platform = globalHead.getPlatform();
         String clinet = request.getFromCode();
@@ -212,6 +216,10 @@ public class LoginService {
     public void sendSmsCode(SmsCodeRequest request) {
         SystemProp systemProp = SpringContextUtil.getBean(SystemProp.class);
         String mobile = request.getMobile();
+        log.info("发送验证码手机号：{}", mobile);
+        // 格式化手机号
+        mobile = mobileForm(mobile);
+
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String isH5 = globalHead.getPlatform();
         if (ComConsts.H5.equals(isH5)) {
@@ -220,7 +228,6 @@ public class LoginService {
                 throw new WarnException(BizCodeEnum.EXIST_USER);
             }
         }
-        log.info("发送验证码手机号：{}", mobile);
         String hasBeenSend = redisService.getCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile);
         if (StringUtils.isNotBlank(hasBeenSend)) {
             //发送过于频繁
@@ -277,6 +284,35 @@ public class LoginService {
 
         //验证通过则删除10分钟重发标识，等发送之后会重新加上
         redisService.clearCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile);
+    }
+
+    /**
+     * 格式化印尼手机号，将前缀为0062、62、+62 改为 0 ，没有前缀的加 0
+     *
+     * @param mobile
+     * @return
+     */
+    public String mobileForm(String mobile) {
+        log.info("格式化前手机号：{}", mobile);
+        String str1 = "0062";
+        String str2 = "62";
+        String str3 = "+62";
+        String str4 = "0";
+
+        if (str1.equals(mobile.substring(0, 4))) {
+            mobile = str4 + mobile.substring(4);
+        }
+        else if(str2.equals(mobile.substring(0, 2))){
+            mobile = str4 + mobile.substring(2);
+        }
+        else if(str3.equals(mobile.substring(0, 3))){
+            mobile = str4 + mobile.substring(3);
+        }
+        else if(!mobile.startsWith(str4)){
+            mobile = str4 + mobile;
+        }
+        log.info("格式化后手机号：{}", mobile);
+        return mobile;
     }
 
 

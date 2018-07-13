@@ -33,10 +33,6 @@ public class PaymentCodeRequest {
      * 银行类型
      */
     private String bankType;
-    /**
-     * 付款账号
-     */
-    private String cardNo;
 
 
 }

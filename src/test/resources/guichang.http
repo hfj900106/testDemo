@@ -190,13 +190,31 @@ POST http://10.10.30.92:8150/hzed/easy-get/api/test/testRepayment
 Accept: application/json;charset=UTF-8;
 Content-Type: application/json
 {
-"transactionId":"113492437942804480hzed",
-"payType":"otc",
-"paymentCode":"8888859300903866",
+"transactionId":"116061068727820288hzed",
+"payType":"atm",
+"bankType":"permata",
+"paymentCode":"8359180711750264",
 "msisdn":"8615926633889",
-"price":"100000.00",
+"price":"506000.00",
 "cardNo":"21934189228383587872"
 }
+###
+
+POST http://10.10.30.92:8150:8150/hzed/easy-get/api/repay/vaInfoDetail
+Content-Type: application/json
+imei: 353288082777677
+i18n: id-ID
+appKey: easyget
+platform: android
+version: 1.0.0
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIxMjM0NTY3ODkwMTIzNDVcIixcInVzZXJJZFwiOjExNjM3OTAyNzA2MDk1NzE4NH0iLCJleHAiOjE1MzE5ODUzODN9.R5YMvJLox22UVc5QBVQTcbsc3Og78ez5MAqNhp2xbgs
+{
+"bidId":"116384052365631488",
+"amount":"100000",
+"mode":"ATM",
+"flag":"false"
+}
+
 ###
 
 

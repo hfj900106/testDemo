@@ -60,7 +60,6 @@ public class BluePayService {
         PaymentCodeRequest paymentRequest = new PaymentCodeRequest();
         paymentRequest.setBankType(bid.getInBank().toLowerCase());
         paymentRequest.setTransactionId(paymentId);
-        paymentRequest.setCardNo(bid.getInAccount());
         paymentRequest.setPrice(amount);
         paymentRequest.setMsisdn(payeeMsisdn);
         paymentRequest.setPayType(RepayMentEnum.getBlue(mode));

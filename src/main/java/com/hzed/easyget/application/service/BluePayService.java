@@ -17,6 +17,7 @@ import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +57,12 @@ public class BluePayService {
     public PayResponse bluePaymentCode(Bid bid, String mode, BigDecimal amount, String paymentId) {
         //组装请求信息
         String env = systemProp.getEnv();
-        String payeeMsisdn = EnvEnum.isTestEnv(env) ? MobileEnum.CHINA.getMobile() + RequestUtil.getGlobalUser().getMobile() : MobileEnum.IDR.getMobile() + RequestUtil.getGlobalUser().getMobile();
+        String mobile = RequestUtil.getGlobalUser().getMobile();
+        boolean flag = StringUtils.substring(mobile, 0, 1).equals("0");
+        if (flag) {
+            mobile = StringUtils.substring(mobile, 1, mobile.length());
+        }
+        String payeeMsisdn = EnvEnum.isTestEnv(env) ? MobileEnum.CHINA.getMobile() + mobile : MobileEnum.IDR.getMobile() + mobile;
         PaymentCodeRequest paymentRequest = new PaymentCodeRequest();
         paymentRequest.setBankType(bid.getInBank().toLowerCase());
         paymentRequest.setTransactionId(paymentId);
@@ -105,7 +111,12 @@ public class BluePayService {
      */
     public PayResponse loanTransaction(LoanTransactionRequest request) {
         String env = systemProp.getEnv();
-        String payeeMsisdn = EnvEnum.isTestEnv(env) ? MobileEnum.CHINA.getMobile() + request.getPayeeMsisdn() : MobileEnum.IDR.getMobile() + request.getPayeeMsisdn();
+        String mobile = request.getPayeeMsisdn();
+        boolean flag = StringUtils.substring(mobile, 0, 1).equals("0");
+        if (flag) {
+            mobile = StringUtils.substring(mobile, 1, mobile.length());
+        }
+        String payeeMsisdn = EnvEnum.isTestEnv(env) ? MobileEnum.CHINA.getMobile() + mobile : MobileEnum.IDR.getMobile() + mobile;
         request.setPayeeMsisdn(payeeMsisdn);
         log.info("请求地址{},请求报文：{}", prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
@@ -121,5 +132,12 @@ public class BluePayService {
         return response;
     }
 
-
+    public static void main(String[] agr) {
+        String mobile = "01115688";
+        boolean flag = StringUtils.substring(mobile, 0, 1).equals("0");
+        if (flag) {
+            mobile = StringUtils.substring(mobile, 1, mobile.length());
+        }
+        System.out.println(mobile);
+    }
 }

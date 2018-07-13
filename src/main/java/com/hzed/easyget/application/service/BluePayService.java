@@ -131,13 +131,4 @@ public class BluePayService {
         }
         return response;
     }
-
-    public static void main(String[] agr) {
-        String mobile = "01115688";
-        boolean flag = StringUtils.substring(mobile, 0, 1).equals("0");
-        if (flag) {
-            mobile = StringUtils.substring(mobile, 1, mobile.length());
-        }
-        System.out.println(mobile);
-    }
 }

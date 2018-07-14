@@ -162,7 +162,7 @@ public class HomeService {
 
             messageResponse.setMessageTitle(userMessage.getTitle());
             messageResponse.setAppMessage(userMessage.getAppMessage());
-            messageResponse.setToUrl(systemProp.getH5MessageUrl() + "id=" + userMessage.getId());
+            messageResponse.setToUrl(systemProp.getH5MessageUrl() + userMessage.getId());
             messageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
             messageResponse.setId(userMessage.getId());
         }

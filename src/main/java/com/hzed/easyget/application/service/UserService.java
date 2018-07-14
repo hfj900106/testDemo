@@ -104,7 +104,7 @@ public class UserService {
                 messageResponse.setUserId(userMessage.getUserId());
             }
 
-            messageResponse.setToUrl(systemProp.getH5MessageUrl() + "id=" + userMessage.getId());
+            messageResponse.setToUrl(systemProp.getH5MessageUrl() + userMessage.getId());
 
             messageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
             messageResponseList.add(messageResponse);

@@ -81,7 +81,7 @@ system:
   local: id-ID
   # 短信催账提前天数
   daysInAdvance: 3
-  H5MessageUrl: http://www.rupiahget.com/article/MessagePushDetail.html? #请求前端H5页面链接
+  H5MessageUrl: http://www.rupiahget.com/article/MessagePushDetail.html?id= #请求前端H5页面链接
 
   # 定时任务 启动标志 周期
   job:

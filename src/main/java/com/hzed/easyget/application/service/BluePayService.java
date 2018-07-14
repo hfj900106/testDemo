@@ -64,7 +64,8 @@ public class BluePayService {
         }
         String payeeMsisdn = EnvEnum.isTestEnv(env) ? MobileEnum.CHINA.getMobile() + mobile : MobileEnum.IDR.getMobile() + mobile;
         PaymentCodeRequest paymentRequest = new PaymentCodeRequest();
-        paymentRequest.setBankType(bid.getInBank().toLowerCase());
+        // fixme 待完善
+        paymentRequest.setBankType("bni");
         paymentRequest.setTransactionId(paymentId);
         paymentRequest.setPrice(amount);
         paymentRequest.setMsisdn(payeeMsisdn);
@@ -94,6 +95,8 @@ public class BluePayService {
      */
     public PayResponse testRepayment(RepaymentCompleRequest request) {
         request.setRequestNo(IdentifierGenerator.nextSeqNo());
+        //fixme 待完善
+        request.setBankType("bni");
         log.info("测试还款接口请求地址{},报文：{}", prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(request));
         log.info("测试还款接口返回报文：{}", result);

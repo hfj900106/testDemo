@@ -22,5 +22,6 @@ public class SystemProp {
     private String local;
     private Integer daysInAdvance;
     private Integer expiredDay;
+    private String H5MessageUrl;
 
 }

@@ -5,9 +5,9 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="message" jdbcType="VARCHAR" property="message" />
+    <result column="h5_message" jdbcType="VARCHAR" property="h5Message" />
+    <result column="app_message" jdbcType="VARCHAR" property="appMessage" />
     <result column="has_read" jdbcType="BIT" property="hasRead" />
-    <result column="to_url" jdbcType="VARCHAR" property="toUrl" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -73,7 +73,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, title, message, has_read, to_url, create_time, create_by, update_time, 
+    id, user_id, title, h5_message, app_message, has_read, create_time, create_by, update_time, 
     update_by, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserMessageExample" resultMap="BaseResultMap">
@@ -140,11 +140,11 @@
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserMessage">
     insert into t_loan_user_message (id, user_id, title, 
-      message, has_read, to_url, 
+      h5_message, app_message, has_read, 
       create_time, create_by, update_time, 
       update_by, remark)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
-      #{message,jdbcType=VARCHAR}, #{hasRead,jdbcType=BIT}, #{toUrl,jdbcType=VARCHAR}, 
+      #{h5Message,jdbcType=VARCHAR}, #{appMessage,jdbcType=VARCHAR}, #{hasRead,jdbcType=BIT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=BIGINT}, #{remark,jdbcType=VARCHAR})
   </insert>
@@ -160,14 +160,14 @@
       <if test="title != null">
         title,
       </if>
-      <if test="message != null">
-        message,
+      <if test="h5Message != null">
+        h5_message,
+      </if>
+      <if test="appMessage != null">
+        app_message,
       </if>
       <if test="hasRead != null">
         has_read,
-      </if>
-      <if test="toUrl != null">
-        to_url,
       </if>
       <if test="createTime != null">
         create_time,
@@ -195,14 +195,14 @@
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
       </if>
-      <if test="message != null">
-        #{message,jdbcType=VARCHAR},
+      <if test="h5Message != null">
+        #{h5Message,jdbcType=VARCHAR},
+      </if>
+      <if test="appMessage != null">
+        #{appMessage,jdbcType=VARCHAR},
       </if>
       <if test="hasRead != null">
         #{hasRead,jdbcType=BIT},
-      </if>
-      <if test="toUrl != null">
-        #{toUrl,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -239,14 +239,14 @@
       <if test="record.title != null">
         title = #{record.title,jdbcType=VARCHAR},
       </if>
-      <if test="record.message != null">
-        message = #{record.message,jdbcType=VARCHAR},
+      <if test="record.h5Message != null">
+        h5_message = #{record.h5Message,jdbcType=VARCHAR},
+      </if>
+      <if test="record.appMessage != null">
+        app_message = #{record.appMessage,jdbcType=VARCHAR},
       </if>
       <if test="record.hasRead != null">
         has_read = #{record.hasRead,jdbcType=BIT},
-      </if>
-      <if test="record.toUrl != null">
-        to_url = #{record.toUrl,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -273,9 +273,9 @@
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
       title = #{record.title,jdbcType=VARCHAR},
-      message = #{record.message,jdbcType=VARCHAR},
+      h5_message = #{record.h5Message,jdbcType=VARCHAR},
+      app_message = #{record.appMessage,jdbcType=VARCHAR},
       has_read = #{record.hasRead,jdbcType=BIT},
-      to_url = #{record.toUrl,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_by = #{record.createBy,jdbcType=BIGINT},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -294,14 +294,14 @@
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
       </if>
-      <if test="message != null">
-        message = #{message,jdbcType=VARCHAR},
+      <if test="h5Message != null">
+        h5_message = #{h5Message,jdbcType=VARCHAR},
+      </if>
+      <if test="appMessage != null">
+        app_message = #{appMessage,jdbcType=VARCHAR},
       </if>
       <if test="hasRead != null">
         has_read = #{hasRead,jdbcType=BIT},
-      </if>
-      <if test="toUrl != null">
-        to_url = #{toUrl,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -325,9 +325,9 @@
     update t_loan_user_message
     set user_id = #{userId,jdbcType=BIGINT},
       title = #{title,jdbcType=VARCHAR},
-      message = #{message,jdbcType=VARCHAR},
+      h5_message = #{h5Message,jdbcType=VARCHAR},
+      app_message = #{appMessage,jdbcType=VARCHAR},
       has_read = #{hasRead,jdbcType=BIT},
-      to_url = #{toUrl,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -363,12 +363,12 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_user_message
-    (id, user_id, title, message, has_read, to_url, create_time, create_by, update_time, 
+    (id, user_id, title, h5_message, app_message, has_read, create_time, create_by, update_time, 
       update_by, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.title,jdbcType=VARCHAR}, 
-        #{item.message,jdbcType=VARCHAR}, #{item.hasRead,jdbcType=BIT}, #{item.toUrl,jdbcType=VARCHAR}, 
+        #{item.h5Message,jdbcType=VARCHAR}, #{item.appMessage,jdbcType=VARCHAR}, #{item.hasRead,jdbcType=BIT}, 
         #{item.createTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
         #{item.updateBy,jdbcType=BIGINT}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
@@ -392,14 +392,14 @@
         <if test="'title' == column.value">
           #{item.title,jdbcType=VARCHAR}
         </if>
-        <if test="'message' == column.value">
-          #{item.message,jdbcType=VARCHAR}
+        <if test="'h5_message' == column.value">
+          #{item.h5Message,jdbcType=VARCHAR}
+        </if>
+        <if test="'app_message' == column.value">
+          #{item.appMessage,jdbcType=VARCHAR}
         </if>
         <if test="'has_read' == column.value">
           #{item.hasRead,jdbcType=BIT}
-        </if>
-        <if test="'to_url' == column.value">
-          #{item.toUrl,jdbcType=VARCHAR}
         </if>
         <if test="'create_time' == column.value">
           #{item.createTime,jdbcType=TIMESTAMP}

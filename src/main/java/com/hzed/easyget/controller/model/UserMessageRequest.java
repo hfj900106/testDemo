@@ -3,14 +3,14 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 
 /**
- * H5获取消息内容返回参数
+ * 公告信息请求参数
  *
  * @author wuchengwu
- * @date 2018/7/12
+ * @date 2018/7/14
  */
 @Data
-public class MessageContentH5Response {
+public class UserMessageRequest {
     private String title;
+    private String appMessage;
     private String H5Message;
-    private String createTime;
 }

@@ -20,19 +20,19 @@ public class UserMessage implements Serializable {
     private String title;
 
     /**
-     * 内容
+     * H5内容
      */
-    private String message;
+    private String h5Message;
+
+    /**
+     * app内容
+     */
+    private String appMessage;
 
     /**
      * 是否已读
      */
     private Boolean hasRead;
-
-    /**
-     * 跳转链接
-     */
-    private String toUrl;
 
     /**
      * 创建时间
@@ -85,12 +85,20 @@ public class UserMessage implements Serializable {
         this.title = title == null ? null : title.trim();
     }
 
-    public String getMessage() {
-        return message;
+    public String getH5Message() {
+        return h5Message;
     }
 
-    public void setMessage(String message) {
-        this.message = message == null ? null : message.trim();
+    public void setH5Message(String h5Message) {
+        this.h5Message = h5Message == null ? null : h5Message.trim();
+    }
+
+    public String getAppMessage() {
+        return appMessage;
+    }
+
+    public void setAppMessage(String appMessage) {
+        this.appMessage = appMessage == null ? null : appMessage.trim();
     }
 
     public Boolean getHasRead() {
@@ -99,14 +107,6 @@ public class UserMessage implements Serializable {
 
     public void setHasRead(Boolean hasRead) {
         this.hasRead = hasRead;
-    }
-
-    public String getToUrl() {
-        return toUrl;
-    }
-
-    public void setToUrl(String toUrl) {
-        this.toUrl = toUrl == null ? null : toUrl.trim();
     }
 
     public LocalDateTime getCreateTime() {
@@ -158,9 +158,9 @@ public class UserMessage implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
         sb.append(", title=").append(title);
-        sb.append(", message=").append(message);
+        sb.append(", h5Message=").append(h5Message);
+        sb.append(", appMessage=").append(appMessage);
         sb.append(", hasRead=").append(hasRead);
-        sb.append(", toUrl=").append(toUrl);
         sb.append(", createTime=").append(createTime);
         sb.append(", createBy=").append(createBy);
         sb.append(", updateTime=").append(updateTime);
@@ -197,18 +197,18 @@ public class UserMessage implements Serializable {
             return this;
         }
 
-        public Builder message(String message) {
-            obj.setMessage(message);
+        public Builder h5Message(String h5Message) {
+            obj.setH5Message(h5Message);
+            return this;
+        }
+
+        public Builder appMessage(String appMessage) {
+            obj.setAppMessage(appMessage);
             return this;
         }
 
         public Builder hasRead(Boolean hasRead) {
             obj.setHasRead(hasRead);
-            return this;
-        }
-
-        public Builder toUrl(String toUrl) {
-            obj.setToUrl(toUrl);
             return this;
         }
 
@@ -246,9 +246,9 @@ public class UserMessage implements Serializable {
         id("id"),
         userId("user_id"),
         title("title"),
-        message("message"),
+        h5Message("h5_message"),
+        appMessage("app_message"),
         hasRead("has_read"),
-        toUrl("to_url"),
         createTime("create_time"),
         createBy("create_by"),
         updateTime("update_time"),

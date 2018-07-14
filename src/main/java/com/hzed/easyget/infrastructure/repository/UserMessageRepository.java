@@ -55,7 +55,7 @@ public class UserMessageRepository {
         userMessage.setId(IdentifierGenerator.nextId());
         userMessage.setUserId(userId);
         userMessage.setTitle(title);
-        userMessage.setMessage(message);
+        userMessage.setH5Message(message);
         userMessage.setHasRead(false);
         userMessage.setRemark(remark);
         userMessageMapper.insertSelective(userMessage);
@@ -70,5 +70,13 @@ public class UserMessageRepository {
         UserMessageExample example = new UserMessageExample();
         example.createCriteria().andIdEqualTo(id);
         return userMessageMapper.selectOneByExample(example);
+    }
+
+    /**
+     * 保存公告
+     */
+    public void insert(UserMessage userMessage) {
+
+        userMessageMapper.insertSelective(userMessage);
     }
 }

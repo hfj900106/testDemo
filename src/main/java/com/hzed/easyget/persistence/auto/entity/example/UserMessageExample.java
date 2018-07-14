@@ -351,73 +351,143 @@ public class UserMessageExample {
             return (Criteria) this;
         }
 
-        public Criteria andMessageIsNull() {
-            addCriterion("message is null");
+        public Criteria andH5MessageIsNull() {
+            addCriterion("h5_message is null");
             return (Criteria) this;
         }
 
-        public Criteria andMessageIsNotNull() {
-            addCriterion("message is not null");
+        public Criteria andH5MessageIsNotNull() {
+            addCriterion("h5_message is not null");
             return (Criteria) this;
         }
 
-        public Criteria andMessageEqualTo(String value) {
-            addCriterion("message =", value, "message");
+        public Criteria andH5MessageEqualTo(String value) {
+            addCriterion("h5_message =", value, "h5Message");
             return (Criteria) this;
         }
 
-        public Criteria andMessageNotEqualTo(String value) {
-            addCriterion("message <>", value, "message");
+        public Criteria andH5MessageNotEqualTo(String value) {
+            addCriterion("h5_message <>", value, "h5Message");
             return (Criteria) this;
         }
 
-        public Criteria andMessageGreaterThan(String value) {
-            addCriterion("message >", value, "message");
+        public Criteria andH5MessageGreaterThan(String value) {
+            addCriterion("h5_message >", value, "h5Message");
             return (Criteria) this;
         }
 
-        public Criteria andMessageGreaterThanOrEqualTo(String value) {
-            addCriterion("message >=", value, "message");
+        public Criteria andH5MessageGreaterThanOrEqualTo(String value) {
+            addCriterion("h5_message >=", value, "h5Message");
             return (Criteria) this;
         }
 
-        public Criteria andMessageLessThan(String value) {
-            addCriterion("message <", value, "message");
+        public Criteria andH5MessageLessThan(String value) {
+            addCriterion("h5_message <", value, "h5Message");
             return (Criteria) this;
         }
 
-        public Criteria andMessageLessThanOrEqualTo(String value) {
-            addCriterion("message <=", value, "message");
+        public Criteria andH5MessageLessThanOrEqualTo(String value) {
+            addCriterion("h5_message <=", value, "h5Message");
             return (Criteria) this;
         }
 
-        public Criteria andMessageLike(String value) {
-            addCriterion("message like", value, "message");
+        public Criteria andH5MessageLike(String value) {
+            addCriterion("h5_message like", value, "h5Message");
             return (Criteria) this;
         }
 
-        public Criteria andMessageNotLike(String value) {
-            addCriterion("message not like", value, "message");
+        public Criteria andH5MessageNotLike(String value) {
+            addCriterion("h5_message not like", value, "h5Message");
             return (Criteria) this;
         }
 
-        public Criteria andMessageIn(List<String> values) {
-            addCriterion("message in", values, "message");
+        public Criteria andH5MessageIn(List<String> values) {
+            addCriterion("h5_message in", values, "h5Message");
             return (Criteria) this;
         }
 
-        public Criteria andMessageNotIn(List<String> values) {
-            addCriterion("message not in", values, "message");
+        public Criteria andH5MessageNotIn(List<String> values) {
+            addCriterion("h5_message not in", values, "h5Message");
             return (Criteria) this;
         }
 
-        public Criteria andMessageBetween(String value1, String value2) {
-            addCriterion("message between", value1, value2, "message");
+        public Criteria andH5MessageBetween(String value1, String value2) {
+            addCriterion("h5_message between", value1, value2, "h5Message");
             return (Criteria) this;
         }
 
-        public Criteria andMessageNotBetween(String value1, String value2) {
-            addCriterion("message not between", value1, value2, "message");
+        public Criteria andH5MessageNotBetween(String value1, String value2) {
+            addCriterion("h5_message not between", value1, value2, "h5Message");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageIsNull() {
+            addCriterion("app_message is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageIsNotNull() {
+            addCriterion("app_message is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageEqualTo(String value) {
+            addCriterion("app_message =", value, "appMessage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageNotEqualTo(String value) {
+            addCriterion("app_message <>", value, "appMessage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageGreaterThan(String value) {
+            addCriterion("app_message >", value, "appMessage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageGreaterThanOrEqualTo(String value) {
+            addCriterion("app_message >=", value, "appMessage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageLessThan(String value) {
+            addCriterion("app_message <", value, "appMessage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageLessThanOrEqualTo(String value) {
+            addCriterion("app_message <=", value, "appMessage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageLike(String value) {
+            addCriterion("app_message like", value, "appMessage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageNotLike(String value) {
+            addCriterion("app_message not like", value, "appMessage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageIn(List<String> values) {
+            addCriterion("app_message in", values, "appMessage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageNotIn(List<String> values) {
+            addCriterion("app_message not in", values, "appMessage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageBetween(String value1, String value2) {
+            addCriterion("app_message between", value1, value2, "appMessage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAppMessageNotBetween(String value1, String value2) {
+            addCriterion("app_message not between", value1, value2, "appMessage");
             return (Criteria) this;
         }
 
@@ -478,76 +548,6 @@ public class UserMessageExample {
 
         public Criteria andHasReadNotBetween(Boolean value1, Boolean value2) {
             addCriterion("has_read not between", value1, value2, "hasRead");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlIsNull() {
-            addCriterion("to_url is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlIsNotNull() {
-            addCriterion("to_url is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlEqualTo(String value) {
-            addCriterion("to_url =", value, "toUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlNotEqualTo(String value) {
-            addCriterion("to_url <>", value, "toUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlGreaterThan(String value) {
-            addCriterion("to_url >", value, "toUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlGreaterThanOrEqualTo(String value) {
-            addCriterion("to_url >=", value, "toUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlLessThan(String value) {
-            addCriterion("to_url <", value, "toUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlLessThanOrEqualTo(String value) {
-            addCriterion("to_url <=", value, "toUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlLike(String value) {
-            addCriterion("to_url like", value, "toUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlNotLike(String value) {
-            addCriterion("to_url not like", value, "toUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlIn(List<String> values) {
-            addCriterion("to_url in", values, "toUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlNotIn(List<String> values) {
-            addCriterion("to_url not in", values, "toUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlBetween(String value1, String value2) {
-            addCriterion("to_url between", value1, value2, "toUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andToUrlNotBetween(String value1, String value2) {
-            addCriterion("to_url not between", value1, value2, "toUrl");
             return (Criteria) this;
         }
 
@@ -866,13 +866,13 @@ public class UserMessageExample {
             return (Criteria) this;
         }
 
-        public Criteria andMessageLikeInsensitive(String value) {
-            addCriterion("upper(message) like", value.toUpperCase(), "message");
+        public Criteria andH5MessageLikeInsensitive(String value) {
+            addCriterion("upper(h5_message) like", value.toUpperCase(), "h5Message");
             return (Criteria) this;
         }
 
-        public Criteria andToUrlLikeInsensitive(String value) {
-            addCriterion("upper(to_url) like", value.toUpperCase(), "toUrl");
+        public Criteria andAppMessageLikeInsensitive(String value) {
+            addCriterion("upper(app_message) like", value.toUpperCase(), "appMessage");
             return (Criteria) this;
         }
 

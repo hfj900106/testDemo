@@ -62,10 +62,6 @@ public class HomeService {
     @Autowired
     private RiskService riskService;
     @Autowired
-    private UserBankRepository userBankRepository;
-    @Autowired
-    private DictRepository dictRepository;
-    @Autowired
     private SystemProp systemProp;
 
     private static final String ANDROID_BOMB = "android_bomb";
@@ -158,15 +154,15 @@ public class HomeService {
         MessageResponse messageResponse = new MessageResponse();
         UserMessage userMessage = userMessageRepository.findOne();
         if (!ObjectUtils.isEmpty(userMessage)) {
-        // 如果不在30天内，直接返回
-        int day = DateUtil.daysBetween(userMessage.getCreateTime(), LocalDateTime.now());
-        if (day > systemProp.getExpiredDay()) {
-            return messageResponse;
-        }
+            // 如果不在30天内，直接返回
+            int day = DateUtil.daysBetween(userMessage.getCreateTime(), LocalDateTime.now());
+            if (day > systemProp.getExpiredDay()) {
+                return messageResponse;
+            }
 
             messageResponse.setMessageTitle(userMessage.getTitle());
-            messageResponse.setMessage(userMessage.getMessage());
-            messageResponse.setToUrl(userMessage.getToUrl());
+            messageResponse.setAppMessage(userMessage.getAppMessage());
+            messageResponse.setToUrl(systemProp.getH5MessageUrl() + "id=" + userMessage.getId());
             messageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
             messageResponse.setId(userMessage.getId());
         }

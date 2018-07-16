@@ -7,16 +7,17 @@ import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 
 /**
-*@description：获取还款码请求bluepay实体
-*@author：[zhangruilin]
-*@time：2018/6/18-14:01
-**/
+ * 获取还款码 bluepay请求实体
+ *
+ * @author zhangrl
+ * @date 2018/6/8
+ */
 @Data
 public class PaymentCodeRequest {
     /**
-     *  交易id
+     * 交易id
      */
-    private String  transactionId;
+    private String transactionId;
     /**
      * 还款金额
      */
@@ -28,7 +29,7 @@ public class PaymentCodeRequest {
     /**
      * 支付方式
      */
-    private String  payType;
+    private String payType;
     /**
      * 银行类型
      */

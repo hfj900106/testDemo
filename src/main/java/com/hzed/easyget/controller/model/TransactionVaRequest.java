@@ -10,10 +10,11 @@ import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 
 /**
- * @description：获取va码请求实体
- * @author：[zhangruilin]
- * @time：2018/6/18-11:06
- **/
+ * 获取还款码请求实体
+ *
+ * @author zhangrl
+ * @date 2018/6/8
+ */
 @Data
 public class TransactionVaRequest {
     /**
@@ -22,9 +23,9 @@ public class TransactionVaRequest {
     @NotNull(message = "{param.repay.bidId.isNotEmpty}")
     private Long bidId;
     /**
-     * 交易方式 ATM OTC
+     * 交易方式 BNI ATM|Mandiri ATM|Permata ATM|OTC
      */
-    @Pattern(regexp = "^ATM|OTC$", message = "{param.repay.mode.must}")
+    @Pattern(regexp = "^BNI ATM|Mandiri ATM|Permata ATM|OTC$", message = "{param.repay.mode.must}")
     private String mode;
     /**
      * 交易金额

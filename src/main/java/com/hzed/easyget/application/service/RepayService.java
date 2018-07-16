@@ -428,10 +428,10 @@ public class RepayService {
             // 获取应还金额
             BigDecimal repayFee = comService.getBidNoRepayFee(bid.getId(), LocalDateTime.now());
             // 剩余应还金额小于最小还款额
-            log.debug("还款金额{}",repayFee);
+            log.debug("还款金额{}", repayFee);
             BigDecimal retain = repayFee.subtract(amount);
-            log.debug("剩余金额金额{}",retain);
-            if(Arith.greaterThenZero(retain) && retain.compareTo(minRepayAmount) < 0) {
+            log.debug("剩余金额金额{}", retain);
+            if (Arith.greaterThenZero(retain) && retain.compareTo(minRepayAmount) < 0) {
                 throw new WarnException(BizCodeEnum.CLEAR_ONCE);
             }
         }
@@ -450,8 +450,6 @@ public class RepayService {
      * @return va码构建对象
      */
     public TransactionVaResponse findVaTranc(TransactionVaRequest request) {
-        // 查询标的信息
-        Bid bid = bidRepository.findByIdWithExp(request.getBidId());
         // 先查询数据库 是否存在没过期的还款码
         List<Byte> bytes = Arrays.asList(TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
         UserTransactionRepay repayQuery = repayRepository.getVaCodeByParmers(request.getBidId(), request.getAmount(), bytes, request.getMode());
@@ -465,7 +463,7 @@ public class RepayService {
         // 交易单号
         String paymentId = IdentifierGenerator.nextSeqNo();
         //bluepay接口调用
-        PayResponse response = bluePayService.bluePaymentCode(bid, request.getMode(), request.getAmount(), paymentId);
+        PayResponse response = bluePayService.bluePaymentCode(request.getMode(), request.getAmount(), paymentId);
         // 解析返回信息
         String paymentCode = JSON.parseObject(response.getData()).getString("paymentCode");
         log.info("获取还款码，bluepay返回还款码：{}", paymentCode);

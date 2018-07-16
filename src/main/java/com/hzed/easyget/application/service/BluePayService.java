@@ -15,7 +15,6 @@ import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.Bid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * bluepay交易相关
@@ -49,12 +49,11 @@ public class BluePayService {
     /**
      * 获取还款码
      *
-     * @param bid    标的
      * @param mode   交易方式
      * @param amount 交易金额
      * @return
      */
-    public PayResponse bluePaymentCode(Bid bid, String mode, BigDecimal amount, String paymentId) {
+    public PayResponse bluePaymentCode(String mode, BigDecimal amount, String paymentId) {
         //组装请求信息
         String env = systemProp.getEnv();
         String mobile = RequestUtil.getGlobalUser().getMobile();
@@ -64,8 +63,7 @@ public class BluePayService {
         }
         String payeeMsisdn = EnvEnum.isTestEnv(env) ? MobileEnum.CHINA.getMobile() + mobile : MobileEnum.IDR.getMobile() + mobile;
         PaymentCodeRequest paymentRequest = new PaymentCodeRequest();
-        // fixme 待完善
-        paymentRequest.setBankType("bni");
+        paymentRequest.setBankType(RepayMentEnum.getBank(mode));
         paymentRequest.setTransactionId(paymentId);
         paymentRequest.setPrice(amount);
         paymentRequest.setMsisdn(payeeMsisdn);
@@ -95,8 +93,6 @@ public class BluePayService {
      */
     public PayResponse testRepayment(RepaymentCompleRequest request) {
         request.setRequestNo(IdentifierGenerator.nextSeqNo());
-        //fixme 待完善
-        request.setBankType("bni");
         log.info("测试还款接口请求地址{},报文：{}", prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(request));
         log.info("测试还款接口返回报文：{}", result);

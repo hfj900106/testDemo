@@ -106,8 +106,6 @@
     <springProfile name="dev">
         <root level="debug">
             <appender-ref ref="STDOUT"/>
-            <!--<appender-ref ref="FILE_CRON"/>-->
-            <!--<appender-ref ref="FILE"/>-->
         </root>
     </springProfile>
 
@@ -120,7 +118,7 @@
     </springProfile>
 
     <springProfile name="prod">
-        <root level="info">
+        <root level="debug">
             <appender-ref ref="FILE"/>
             <appender-ref ref="FILE_CRON"/>
             <appender-ref ref="EMAIL"/>

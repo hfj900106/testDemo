@@ -168,7 +168,7 @@ public class RiskService {
         }
         if (codeObj.equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
             //认证通过
-            saService.saOperator(user, false, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
+            saService.saOperator(user, true, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
         }
         return response;
     }

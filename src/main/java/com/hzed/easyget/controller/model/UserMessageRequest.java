@@ -1,6 +1,7 @@
 package com.hzed.easyget.controller.model;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 公告信息请求参数
@@ -10,7 +11,10 @@ import lombok.Data;
  */
 @Data
 public class UserMessageRequest {
+    @NotBlank(message = "title不能为空")
     private String title;
+    @NotBlank(message = "appMessage不能为空")
     private String appMessage;
-    private String H5Message;
+    @NotBlank(message = "message不能为空")
+    private String message;
 }

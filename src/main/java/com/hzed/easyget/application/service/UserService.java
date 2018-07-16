@@ -132,7 +132,7 @@ public class UserService {
         userMessage.setId(IdentifierGenerator.nextId());
         userMessage.setTitle(request.getTitle());
         userMessage.setAppMessage(request.getAppMessage());
-        userMessage.setH5Message(request.getH5Message());
+        userMessage.setH5Message(request.getMessage());
         userMessageRepository.insert(userMessage);
     }
 }

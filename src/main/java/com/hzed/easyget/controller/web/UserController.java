@@ -6,7 +6,6 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.head.IgnoreH5;
-import com.hzed.easyget.infrastructure.annotation.head.TokenIgnore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,7 +65,6 @@ public class UserController {
         return userService.getMessageContentH5(request);
     }
 
-    @TokenIgnore
     @ModuleFunc("保存新增公告")
     @PostMapping("/saveUserMessage")
     public void saveUserMessage(@RequestBody UserMessageRequest request){

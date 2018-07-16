@@ -144,7 +144,6 @@ public class ComService {
         BigDecimal repaymentAmount = ledger.getRepaymentAmount();
         // 实还金额
         BigDecimal realRepaymentAmount = ledger.getRealRepaymentAmount();
-
         return realRepaymentAmount == null ? repaymentAmount : repaymentAmount.subtract(realRepaymentAmount);
     }
 

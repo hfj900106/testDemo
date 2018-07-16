@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,6 +124,12 @@ public class UserService {
         messageContentH5Response.setTitle(userMessage.getTitle());
         messageContentH5Response.setH5Message(userMessage.getH5Message());
         messageContentH5Response.setCreateTime(DateUtil.localDateTimeToStr1(userMessage.getCreateTime()));
+        if (!userMessage.getHasRead()) {
+            userMessage.setHasRead(true);
+            userMessage.setUpdateTime(LocalDateTime.now());
+            userMessageRepository.updateHasReadById(userMessage);
+        }
+
         return messageContentH5Response;
     }
 

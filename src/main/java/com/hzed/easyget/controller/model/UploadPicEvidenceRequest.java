@@ -23,7 +23,7 @@ public class UploadPicEvidenceRequest {
     /**
      * 交易方式 ATM OTC
      */
-    @Pattern(regexp = "^ATM|OTC$", message = "{param.repay.mode.must}")
+    @Pattern(regexp = "^BNI ATM|Mandiri ATM|Permata ATM|OTC$", message = "{param.repay.mode.must}")
     private String mode;
 
     /**

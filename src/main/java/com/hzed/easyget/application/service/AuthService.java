@@ -2,6 +2,7 @@ package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.controller.model.*;
@@ -27,6 +28,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalHead;
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
@@ -184,25 +186,47 @@ public class AuthService {
      */
     public void authPersonInfo(PersonInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
+        Long userId = user.getUserId();
         // 判断该用户是否已经验证
-        checkAuth(user.getUserId(), AuthCodeEnum.PERSON_INFO.getCode());
+        checkAuth(userId, AuthCodeEnum.PERSON_INFO.getCode());
 
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.PERSON_INFO.getCode(), "个人信息认证");
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(userId, AuthCodeEnum.PERSON_INFO.getCode(), "个人信息认证");
+
+        String parentName = request.getParentName();
+        String parentTel = request.getParentTel().replaceAll("\\s*", "");
+
+        String relatedPersonName = request.getRelatedPersonName();
+        String relatedPersonTel = request.getRelatedPersonTel().replaceAll("\\s*", "");
+
         Profile profile = new Profile();
         profile.setId(IdentifierGenerator.nextId());
-        profile.setUserId(user.getUserId());
+        profile.setUserId(userId);
         profile.setEducation(request.getEducation());
         profile.setCompanyName(request.getCompanyName());
         profile.setCompanyAddr(request.getCompanyAddr());
         profile.setCompanyAddrDetail(request.getCompanyAddrDetail());
         profile.setEmail(request.getEmail());
         profile.setParentName(request.getParentName());
-        profile.setParentTel(request.getParentTel().replaceAll("\\s*", ""));
+        profile.setParentTel(parentTel);
         profile.setRelationship(request.getRelationship());
         profile.setRelatedPersonName(request.getRelatedPersonName());
-        profile.setRelatedPersonTel(request.getRelatedPersonTel().replaceAll("\\s*", ""));
+        profile.setRelatedPersonTel(relatedPersonTel);
         profile.setRemark("个人信息认证");
         personInfoRepository.insertPersonInfoAndUserAuthStatus(profile, userAuthStatus);
+
+        List<Map<String, String>> objectList = Lists.newArrayList();
+        Map<String, String> stringMap1 = Maps.newHashMap();
+        stringMap1.put("relationship", "parent");
+        stringMap1.put("contact", parentName);
+        stringMap1.put("phone", parentTel);
+        objectList.add(stringMap1);
+
+        Map<String, String> stringMap2 = Maps.newHashMap();
+        stringMap2.put("relationship", request.getRelationship());
+        stringMap2.put("contact", relatedPersonName);
+        stringMap2.put("phone", relatedPersonTel);
+        objectList.add(stringMap2);
+        riskService.pushProfile(objectList, userId);
     }
 
     /**

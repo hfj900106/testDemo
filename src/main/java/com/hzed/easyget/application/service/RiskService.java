@@ -16,11 +16,13 @@ import com.hzed.easyget.infrastructure.utils.AesUtil;
 import com.hzed.easyget.infrastructure.utils.ComUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
@@ -270,6 +272,25 @@ public class RiskService {
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
+    }
+
+    /**
+     * 个人信息推风控
+     * @param list
+     * @param userId
+     */
+    @Async
+    public void pushProfile(List<Map<String,String>> list, Long userId){
+        Long timeStamp = System.currentTimeMillis();
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("sign", AesUtil.aesEncode(userId, timeStamp));
+        map.put("userId", userId);
+        map.put("timeStamp", timeStamp);
+        map.put("contacts", list);
+        String url = riskProp.getAuthPersonInfoUrl();
+        log.info("请求风控URL：{},参数：{}", url, JSON.toJSONString(map));
+        RiskResponse response = restService.postJson(url, map, RiskResponse.class);
+        log.info("风控返回数据：{}", JSON.toJSONString(response));
     }
 
 }

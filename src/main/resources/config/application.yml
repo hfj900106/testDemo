@@ -59,7 +59,7 @@ thirdParty:
     receiverTransactionUrl:   /bluepay/gatherDr # 收款接口链接
     getPaymentCodeUrl:        /bluepay/getPaymentCode #获取还款码接口
   risk:
-    domain:                   http://10.10.20.198:9611 # 请求风控域名地址
+    domain:                   http://10.10.20.145:9611 # 请求风控域名地址
     checkRiskEnableBorrowUrl: /api/risk/checkRiskEnableBorrow # 请求风控查询用户贷款资格
     idCardRecognitionUrl:     /api/risk/core/ocr   # 身份证识别
     faceRecognitionUrl:       /api/risk/core/faceComparison # 人脸识别
@@ -69,7 +69,8 @@ thirdParty:
     operatorAuthUrl:          /api/riskOperator/sendSmsCode  # 运营商-输入验证码认证
     identityInfoUrl:          /api/risk/core/identity   # 身份信息认证
     pushBidUrl:               /api/risk/auto/antifraud  # 风控审核
-    facebookAndInsUrl:        /api/riskSocial/certificationNotify  #facebook和ins认证时数据推风控
+    facebookAndInsUrl:        /api/riskSocial/certificationNotify  # facebook和ins认证时数据推风控
+    authPersonInfoUrl:        /api/risk/emercontact/push  # 个人信息认证时数据异步推风控
 #======================================= 系统参数 开始 =======================================#
 system:
   imgUploadPath: c:/imgUpload # 上传图片文件目录

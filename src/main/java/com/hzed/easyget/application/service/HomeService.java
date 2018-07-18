@@ -184,6 +184,9 @@ public class HomeService {
             checkLoanResponseList.add(checkLoanResponse);
         });
         RiskResponse response = riskService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
+        if(ObjectUtils.isEmpty(response)){
+            throw new ComBizException(BizCodeEnum.ERROR_RISK__RESULT);
+        }
         log.info("贷款资格校验风控返回报文：{}",response);
         String errorCode = response.getHead().getError_code();
         log.info("查询风控是否有贷款资格，风控返回被拒原因:{}，用户id:{}", response.getHead().getError_msg(), userId);
@@ -251,5 +254,13 @@ public class HomeService {
             }
         }
         return result;
+    }
+
+    public BidProgressResponse getBidProgress() {
+        BidProgressResponse bidProgressResponse = new BidProgressResponse();
+        Long userId = RequestUtil.getGlobalUser().getUserId();
+        List<Bid> byUserId = bidRepository.findByUserId(userId);
+
+        return bidProgressResponse;
     }
 }

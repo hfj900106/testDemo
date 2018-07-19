@@ -75,7 +75,6 @@ public class JobService {
     private UserRepository userRepository;
     @Autowired
     private UserMessageRepository messageRepository;
-    ;
 
     /**
      * 风控审核

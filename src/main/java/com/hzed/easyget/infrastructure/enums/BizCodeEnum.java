@@ -31,8 +31,6 @@ public enum BizCodeEnum {
     LOANVOUCHER_ERROR("8007","还款凭证错误"),
     REPAYMENT_INFORMATION_ERROR("8008","必要信息错误"),
 
-
-
     // 1-请求业务校验
     ILLEGAL_PARAM("1000", "请求参数非法"),
     ILLEGAL_APPKEY("1001", "无效的appKey"),
@@ -84,8 +82,6 @@ public enum BizCodeEnum {
     PIC_SIZE_ERROR("1045","图片后缀长度不匹配"),
     IDCARD_EXIST("1046","该身份证已经被使用过了，认证失败"),
     CLEAR_ONCE("1047","需要一次性结清"),
-
-
 
     // 首页还款检测
     MSG_BID_OVERDUE_TODAY("2001","您的借款于今天到期，请尽快还款，以免逾期"),

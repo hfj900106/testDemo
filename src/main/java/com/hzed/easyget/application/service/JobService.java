@@ -167,6 +167,7 @@ public class JobService {
             log.info("没有需要放款的记录");
             return;
         }
+
         bidList.forEach(bid -> {
             MdcUtil.putTrace();
             Long bidId = bid.getBidId();
@@ -174,24 +175,41 @@ public class JobService {
             Long tempId = IdentifierGenerator.nextId();
             try {
                 // 插入中间表
-                tempTableRepository.insertJob(TempTable.builder().id(tempId).jobName(ComConsts.PUSH_BANK_TASK).relaseId(bidId).remark("放款").reRunTimes((byte) 1).build());
+                TempTable tempTable = TempTable.builder()
+                        .id(tempId)
+                        .jobName(ComConsts.PUSH_BANK_TASK)
+                        .relaseId(bidId)
+                        .remark("放款")
+                        .reRunTimes((byte) 1)
+                        .build();
+                tempTableRepository.insertJob(tempTable);
+
                 LoanTransactionRequest loan = bidRepository.findLoanTransaction(bidId);
-                if (!ObjectUtils.isEmpty(loan)) {
-                    // 交易编号
-                    loan.setTransactionId(IdentifierGenerator.nextSeqNo());
-                    // 交易流水
-                    loan.setRequestNo(tempId.toString());
-                    PayResponse response = bluePayService.loanTransaction(loan);
-                    if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
-                        transactionService.lendingCallback(bidId, tempId, loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
-                    } else {
-                        transactionService.insertUsrTransactionInfo(bidId, loan.getTransactionId(), TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(), null);
-                    }
+
+                // 交易编号
+                String transactionId = IdentifierGenerator.nextSeqNo();
+
+                loan.setTransactionId(transactionId);
+                // 交易流水
+                loan.setRequestNo(tempId.toString());
+
+                PayResponse response = bluePayService.loanTransaction(loan);
+
+                if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
+                    transactionService.lendingCallback(bidId, tempId, transactionId, TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
+                } else {
+                    transactionService.insertUsrTransactionInfo(bidId, transactionId, TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(), null);
                 }
+
             } catch (Exception e) {
                 log.error("标ID：{}，放款失败", bidId, e);
                 //更新中间表
-                tempTableRepository.updateTemp(TempTable.builder().id(Long.valueOf(tempId)).updateTime(LocalDateTime.now()).remark("放款失败：" + e.getMessage()).build());
+                TempTable build = TempTable.builder()
+                        .id(Long.valueOf(tempId))
+                        .updateTime(LocalDateTime.now())
+                        .remark("放款失败：" + e.getMessage())
+                        .build();
+                tempTableRepository.updateTemp(build);
             }
         });
 

@@ -252,7 +252,6 @@ public class RiskService {
     }
 
     public void facebookAndIns(Long userId, String taskId, Integer source) {
-
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = Maps.newHashMap();
         map.put("sign", AesUtil.aesEncode(userId, timeStamp));

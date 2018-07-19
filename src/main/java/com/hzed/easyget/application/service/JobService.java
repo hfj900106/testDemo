@@ -3,7 +3,6 @@ package com.hzed.easyget.application.service;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.BidStatusEnum;
-import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.application.enums.JobStatusEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
@@ -20,7 +19,8 @@ import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.AesUtil;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
+import com.hzed.easyget.persistence.auto.entity.TempTable;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
 import com.hzed.easyget.persistence.ext.entity.BillExt;
 import lombok.extern.slf4j.Slf4j;
@@ -182,8 +182,6 @@ public class JobService {
                     // 交易流水
                     loan.setRequestNo(tempId.toString());
                     PayResponse response = bluePayService.loanTransaction(loan);
-                    /// 模拟放款成功
-                    /// PayResponse response = new PayResponse(BizCodeEnum.SUCCESS.getCode());
                     if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
                         transactionService.lendingCallback(bidId, tempId, loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
                     } else {

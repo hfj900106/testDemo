@@ -106,7 +106,7 @@ public class RiskService {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
         Object bodyObj = response.getBody();
-        if(ObjectUtils.isEmpty(bodyObj)){
+        if (ObjectUtils.isEmpty(bodyObj)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
 
@@ -145,7 +145,7 @@ public class RiskService {
             throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
         }
         Object bodyObj = response.getBody();
-        if(ObjectUtils.isEmpty(bodyObj)){
+        if (ObjectUtils.isEmpty(bodyObj)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
 

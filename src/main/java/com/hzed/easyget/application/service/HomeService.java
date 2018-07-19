@@ -255,12 +255,4 @@ public class HomeService {
         }
         return result;
     }
-
-    public BidProgressResponse getBidProgress() {
-        BidProgressResponse bidProgressResponse = new BidProgressResponse();
-        Long userId = RequestUtil.getGlobalUser().getUserId();
-        List<Bid> byUserId = bidRepository.findByUserId(userId);
-
-        return bidProgressResponse;
-    }
 }

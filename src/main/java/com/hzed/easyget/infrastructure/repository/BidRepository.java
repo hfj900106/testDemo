@@ -83,6 +83,13 @@ public class BidRepository {
         return bidMapper.selectByExample(example);
     }
 
+    public Bid findOneByUserId(Long userId) {
+        BidExample example = new BidExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        example.setOrderByClause(Bid.Column.createTime.desc());
+        return bidMapper.selectOneByExample(example);
+    }
+
     /**
      * 放款信息查询
      *

@@ -3,6 +3,7 @@ package com.hzed.easyget.application.service;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AppVersionEnum;
+import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
@@ -63,6 +64,12 @@ public class HomeService {
     private RiskService riskService;
     @Autowired
     private SystemProp systemProp;
+    @Autowired
+    private BillRepository billRepository;
+    @Autowired
+    private BidProgressRepository bidProgressRepository;
+    @Autowired
+    private ComService comService;
 
     private static final String ANDROID_BOMB = "android_bomb";
     private static final String IOS_BOMB = "ios_bomb";
@@ -251,5 +258,51 @@ public class HomeService {
             }
         }
         return result;
+    }
+
+    public BidProgressResponse getBidProgress() {
+
+        BidProgressResponse bidProgressResponse = new BidProgressResponse();
+        Long userId = RequestUtil.getGlobalUser().getUserId();
+        Bid bid = bidRepository.findOneByUserId(userId);
+        // 不存在标的或已结清不弹窗提示
+        if (ObjectUtils.isEmpty(bid) || BidStatusEnum.CLEARED.getCode().byteValue() == bid.getStatus()) {
+            return bidProgressResponse;
+        }
+
+        // 贷款金额 贷款期限
+        bidProgressResponse.setLoanAmount(bid.getLoanAmount());
+        bidProgressResponse.setPeriod(bid.getPeriod());
+        Long bidId = bid.getId();
+        // 已放款
+        if (BidStatusEnum.REPAYMENT.getCode().byteValue() == bid.getStatus()) {
+            Bill bill = billRepository.findByBid(bidId);
+            if (!ObjectUtils.isEmpty(bill)) {
+
+                // 逾期天数计算 大于当前时间表示逾期，小于等于表示没到期
+                int days = DateUtil.daysBetweenNoHMS(bill.getRepaymentTime(), LocalDateTime.now());
+                bidProgressResponse.setOverdueDay(days > 0 ? days : 0);
+                bidProgressResponse.setRepayTime(DateUtil.localDateTimeToTimestamp(bill.getRepaymentTime()));
+                bidProgressResponse.setTotalRepayAmount(comService.getBidNoRepayFee(bidId, LocalDateTime.now()));
+
+                // 放款日期
+                BidProgress bidProgress = bidProgressRepository.findByBidIdAndType(bidId, BidProgressTypeEnum.LOAN.getCode().byteValue());
+                bidProgressResponse.setLoanTime(DateUtil.localDateTimeToTimestamp(bidProgress.getHandleTime()));
+                bidProgressResponse.setPopupChoice(1);
+            }
+            return bidProgressResponse;
+        }
+
+        // 审核中
+        bidProgressResponse.setApplyTime(DateUtil.localDateTimeToTimestamp(bid.getCreateTime()));
+        if (BidStatusEnum.RISK_ING.getCode().byteValue() == bid.getStatus() || BidStatusEnum.MANMADE_ING.getCode().byteValue() == bid.getStatus()) {
+            bidProgressResponse.setReviewStatus(BidProgressTypeEnum.AUDIT.getCode());
+        }
+        bidProgressResponse.setReviewStatus(Integer.valueOf(bid.getStatus()));
+
+        BidProgress bidProgresses = bidProgressRepository.findByBidIdAndType(bidId, BidProgressTypeEnum.AUDIT.getCode().byteValue());
+        bidProgressResponse.setReviewTime(DateUtil.localDateTimeToTimestamp(bidProgresses.getHandleTime()));
+        bidProgressResponse.setPopupChoice(2);
+        return bidProgressResponse;
     }
 }

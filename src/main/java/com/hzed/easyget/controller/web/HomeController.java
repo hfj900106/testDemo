@@ -78,4 +78,11 @@ public class HomeController {
         return homeService.checkRepayment();
     }
 
+    @ModuleFunc("首页弹窗获取标的进度")
+    @PostMapping("/getBidProgress")
+    public BidProgressResponse getBidProgress(){
+
+        return homeService.getBidProgress();
+    }
+
 }

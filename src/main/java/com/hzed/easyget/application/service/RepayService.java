@@ -648,7 +648,7 @@ public class RepayService {
             // 放款失败  更新标状态为：7 放款失败
             else {
                 // 通过交易id 和type（1入账）查找bidId
-                UserTransaction transaction = userTransactionRepository.findUserTranByPaymentId(paymentId,(byte)1);
+                UserTransaction transaction = userTransactionRepository.findUserTranByPaymentId(paymentId, (byte) 1);
                 Bid bid = new Bid();
                 bid.setId(transaction.getBidId());
                 bid.setStatus(BidStatusEnum.LOAN_FAIL.getCode().byteValue());

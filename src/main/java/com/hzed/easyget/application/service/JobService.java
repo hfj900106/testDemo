@@ -202,7 +202,7 @@ public class JobService {
                 // 收款银行
                 loan.setPayeeBankName(bid1.getInBank());
                 // 放款金额
-                loan.setAmount(Arith.sub(bid1.getLoanAmount(),bid1.getAuditFee()));
+                loan.setAmount(Arith.sub(bid1.getLoanAmount(), bid1.getAuditFee()));
 
                 // 交易id
                 String transactionId = IdentifierGenerator.nextSeqNo();

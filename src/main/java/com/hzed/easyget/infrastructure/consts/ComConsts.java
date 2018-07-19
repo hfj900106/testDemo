@@ -69,7 +69,6 @@ public class ComConsts {
     public static final String BL = "BL";
 
     public static final int MOBILE_LEN = 11;
-
     public static final int BULK_SMS_OK = 0;
     public static final int IS_ANDROID = 1;
     public static final int IS_IOS = 2;

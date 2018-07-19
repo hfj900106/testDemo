@@ -188,7 +188,7 @@ public class JobService {
                 tempTableRepository.insertJob(tempTable);
 
                 // 获取bid
-                Bid bid1 = bidRepository.findById(bidId);
+                Bid bidQuery = bidRepository.findById(bidId);
                 // 获取用户
                 User user = userRepository.findById(bid.getUserId());
 
@@ -198,12 +198,11 @@ public class JobService {
                 // 收款人手机号
                 loan.setPayeeMsisdn(user.getMobileAccount());
                 // 收款人账号
-                loan.setPayeeAccount(bid1.getInAccount());
+                loan.setPayeeAccount(bidQuery.getInAccount());
                 // 收款银行
-                loan.setPayeeBankName(bid1.getInBank());
+                loan.setPayeeBankName(bidQuery.getInBank());
                 // 放款金额
-                loan.setAmount(Arith.sub(bid1.getLoanAmount(), bid1.getAuditFee()));
-
+                loan.setAmount(Arith.sub(bidQuery.getLoanAmount(), bidQuery.getAuditFee()));
                 // 交易id
                 String transactionId = IdentifierGenerator.nextSeqNo();
 

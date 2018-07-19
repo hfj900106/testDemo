@@ -1,8 +1,7 @@
-import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Maps;
-import com.hzed.easyget.infrastructure.utils.ComUtil;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import java.util.Map;
+import java.util.Optional;
 
 /**
  * 暂无描述
@@ -14,36 +13,28 @@ import java.util.Map;
 public class MainTest {
     public static void main(String[] args) throws Exception {
 
-//        String path = "http://localhost:8150/hzed/easy-get/login/loginByCode";
-//        System.out.println(path.substring(0, path.indexOf("/hzed")+"/hzed".length()));
+        optionalTest();
 
-//        Locale[] ls = Locale.getAvailableLocales();
-//
-//        for (Locale locale:ls) {
-//            System.out.println("locale :"+locale);
-//        }
+    }
 
 
-//        String imgPath = "C:\\Users\\Administrator\\Desktop\\3.png";
-//        String base64String = PicUtil.picToBase64(imgPath);
-//        System.out.println(base64String);
+    public static void optionalTest() {
+        Optional<Integer> op1 = Optional.of(1);
+        op1.ifPresent(t -> System.out.println("value is " + t));
+        op1.ifPresent(System.out::println);
 
-//        long l = System.currentTimeMillis();
-//        System.out.println(l);
-//        long l1 = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-//        System.out.println(l1);
+        Optional<User> user = Optional.of(new User(null));
 
-        Map map = Maps.newHashMap();
-        map.put("name", "guichang");
-        map.put("age",123);
-        map.put("img","jhefswjkfjkwekhfwkejfkhwekhwfkhewhf1111qewqewq11111");
+        String result = user.map(u -> u.getName()).map(name -> name.toUpperCase()).orElse("null string");
+        System.out.println(result);
 
-        System.out.println(JSON.toJSONString(map));
-        System.out.println(ComUtil.subJsonString(JSON.toJSONString(map), 10));
-
-        System.out.println(ComUtil.subJsonString("sfsadf3424324324324324324sd", 10));
+    }
 
 
+    @Data
+    @AllArgsConstructor
+    static class User {
+        private String name;
     }
 
 }

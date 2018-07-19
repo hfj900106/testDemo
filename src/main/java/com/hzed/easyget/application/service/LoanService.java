@@ -121,7 +121,6 @@ public class LoanService {
             subLoanResponse.setInAccount(userBankList.get(0).getInAccount());
         }
 
-
         AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
 
         subLoanResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());

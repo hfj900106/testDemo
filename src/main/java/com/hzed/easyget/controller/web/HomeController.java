@@ -34,7 +34,7 @@ public class HomeController {
     }
 
     @TokenIgnore
-    @ModuleFunc("版本号检测是否更新")
+    @ModuleFunc("版本检测")
     @PostMapping("/getAppVersion")
     public AppVersionResponse getAppVersion(@Valid @RequestBody AppVersionRequest request) {
         return homeService.getAppVersion(request);
@@ -66,13 +66,13 @@ public class HomeController {
         return homeService.checkLoan();
     }
 
-    @ModuleFunc("首页检测借款状态")
+    @ModuleFunc("借款状态检测")
     @PostMapping("/checkLoanJump")
     public CheckLoanJumpResponse checkLoanJump() {
         return homeService.checkLoanJump();
     }
 
-    @ModuleFunc("首页检测还款状态")
+    @ModuleFunc("还款状态检测")
     @PostMapping("/checkRepayment")
     public CheckRepaymentResponse checkRepayment() {
         return homeService.checkRepayment();

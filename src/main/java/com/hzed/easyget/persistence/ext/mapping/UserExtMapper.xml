@@ -2,28 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hzed.easyget.persistence.ext.mapper.UserExtMapper">
 
-
-    <select id="queryTransactionVisit" resultType="com.hzed.easyget.persistence.ext.entity.TransactionExt">
-        SELECT trans.id AS id,trans.status AS status,trans.confirm_time AS confirmTime
-        FROM t_loan_user_transaction trans
-        WHERE trans.type = 2 AND trans.user_id = #{id}
-        AND NOT EXISTS (SELECT 1 FROM t_loan_user_repayment_visit WHERE transaction_id = trans.id AND user_id = trans.user_id)
-    </select>
     <select id="queryUnRepayment" resultType="com.hzed.easyget.persistence.ext.entity.UserExt">
         SELECT bid.id AS id,bill.repayment_time AS repaymentTime from t_loan_bill bill
         LEFT JOIN t_loan_bid bid ON bill.bid_id = bid.id
         WHERE bid.status = 5 AND bill.status = 1
         AND bid.user_id = #{id}
-    </select>
-
-    <select id="findUserTransToUpdateRepayFail" resultType="com.hzed.easyget.persistence.auto.entity.UserTransaction">
-        SELECT  tu.id AS id,tu.bid_id AS bidId,tu.status AS status,tu.update_time AS updateTime
-        FROM t_loan_user_transaction tu LEFT JOIN t_loan_temp_table tt
-        ON tu.bid_id=tt.relase_id
-        WHERE    tu.type = 2
-        AND tu.status = 1
-        AND tu.confirm_time &lt; #{time}
-        AND(( tt.re_run_times &lt; 2  AND tt.job_name='repayFail' ) OR tt.relase_id is null)
     </select>
 
 </mapper>

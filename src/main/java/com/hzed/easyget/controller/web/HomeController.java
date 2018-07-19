@@ -81,7 +81,6 @@ public class HomeController {
     @ModuleFunc("首页弹窗获取标的进度")
     @PostMapping("/getBidProgress")
     public BidProgressResponse getBidProgress(){
-
         return homeService.getBidProgress();
     }
 

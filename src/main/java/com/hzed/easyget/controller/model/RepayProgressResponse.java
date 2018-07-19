@@ -5,25 +5,22 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 /**
- * 标的进度请求参数
+ * 还款进度返回参数
  *
  * @author wuchengwu
- * @date 2018/7/18
+ * @date 2018/7/19
  */
 @Data
-public class BidProgressResponse {
+public class RepayProgressResponse {
     private BigDecimal loanAmount;
     private Integer period;
-    private Long applyTime;
-    private Long reviewTime;
+    private BigDecimal tailFree;
     private Long loanTime;
     private BigDecimal totalRepayAmount;
-    private Integer overdueDay;
     private Long repayTime;
-    private Integer reviewStatus;
-    private Integer popupChoice;
-    private boolean isPopup;
-
-
-
+    private BigDecimal realRepayAmount;
+    private Integer overdueDay;
+    private BigDecimal remainderAmount;
+    private BigDecimal overdueFree;
+    private Byte bidStatus;
 }

@@ -17,10 +17,13 @@ import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.AesUtil;
+import com.hzed.easyget.infrastructure.utils.Arith;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
 import com.hzed.easyget.persistence.auto.entity.TempTable;
+import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
 import com.hzed.easyget.persistence.ext.entity.BillExt;
 import lombok.extern.slf4j.Slf4j;
@@ -184,13 +187,28 @@ public class JobService {
                         .build();
                 tempTableRepository.insertJob(tempTable);
 
-                LoanTransactionRequest loan = bidRepository.findLoanTransaction(bidId);
+                // 获取bid
+                Bid bid1 = bidRepository.findById(bidId);
+                // 获取用户
+                User user = userRepository.findById(bid.getUserId());
 
-                // 交易编号
+                LoanTransactionRequest loan = new LoanTransactionRequest();
+                // 收款人
+                loan.setPayeeName(user.getRealName());
+                // 收款人手机号
+                loan.setPayeeMsisdn(user.getMobileAccount());
+                // 收款人账号
+                loan.setPayeeAccount(bid1.getInAccount());
+                // 收款银行
+                loan.setPayeeBankName(bid1.getInBank());
+                // 放款金额
+                loan.setAmount(Arith.sub(bid1.getLoanAmount(),bid1.getAuditFee()));
+
+                // 交易id
                 String transactionId = IdentifierGenerator.nextSeqNo();
 
                 loan.setTransactionId(transactionId);
-                // 交易流水
+                // 交易流水号
                 loan.setRequestNo(tempId.toString());
 
                 PayResponse response = bluePayService.loanTransaction(loan);

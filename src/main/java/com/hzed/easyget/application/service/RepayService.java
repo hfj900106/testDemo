@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -607,6 +608,7 @@ public class RepayService {
         String status = bluePayRequest.getStatus();
         // 交易ID
         String paymentId = bluePayRequest.getT_id().trim();
+
         // 放还款类型
         String interfacetype = bluePayRequest.getInterfacetype();
         log.info("当前交易类型：{}", CASHOUT.equals(interfacetype) ? "放款" : (BANK.equals(interfacetype) ? "还款" : "其他"));
@@ -633,16 +635,31 @@ public class RepayService {
                 this.insertUserTransaction(repayQuery.getBidId(), paymentId, bluePayRequest.getPrice(), repayQuery.getRepaymentType());
             }
         }
-        // 过滤失败直接修改交易记录
+        // 交易失败
         if (!status.equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())) {
+            // 修改交易记录
             transactionService.updateUserTranState(paymentId, TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
+
+            // 还款失败  修改va码对应状态
             if (BANK.equals(interfacetype)) {
-                // 还款失败还需要修改va码对应状态
+                log.info("还款失败");
                 this.updateUserTransactionRepay(UserTransactionRepay.builder().paymentId(paymentId).status(TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue()).build());
+            }
+            // 放款失败  更新标状态为：7 放款失败
+            else {
+                // 通过交易id 和type（1入账）查找bidId
+                UserTransaction transaction = userTransactionRepository.findUserTranByPaymentId(paymentId,(byte)1);
+                Bid bid = new Bid();
+                bid.setId(transaction.getBidId());
+                bid.setStatus(BidStatusEnum.LOAN_FAIL.getCode().byteValue());
+                bid.setUpdateTime(LocalDateTime.now());
+                bidRepository.update(bid);
+                log.info("标的：{} 放款失败", transaction.getBidId());
             }
             log.info("MQ交易处理失败：{}，处理终止", BluePayStatusEnum.getValueDesc(status));
             return;
         }
+
         log.info("MQ交易处理成功，下面进行本地交易处理");
         // 查询是否有交易记录
         UserTransaction loanTransacQuery = transactionService.findUserTranByPaymentId(paymentId, interfacetype.equals(BANK) ? TransactionTypeEnum.OUT.getCode().byteValue() : TransactionTypeEnum.IN.getCode().byteValue());

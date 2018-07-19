@@ -19,7 +19,8 @@ public enum BidStatusEnum {
     AUDIT_FAIL(3, "审核不通过"),
     AUDIT_PASS(4, "审核通过"),
     REPAYMENT(5, "已放款"),
-    CLEARED(6, "已结清");
+    CLEARED(6, "已结清"),
+    LOAN_FAIL(7, "放款失败");
 
     private Integer code;
     private String msg;

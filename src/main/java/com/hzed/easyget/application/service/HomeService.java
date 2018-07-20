@@ -86,6 +86,9 @@ public class HomeService {
         String channel = request.getChannel();
         Integer versionCode = request.getVersionCode();
         Dict verDict = dictService.getDictByCode(channel);
+        if(ObjectUtils.isEmpty(verDict)){
+            throw new ComBizException(BizCodeEnum.DICT_NOTEXISTS);
+        }
         String dictLabelJson = verDict.getDicLabel();
         JSONObject jsonObject = JSONObject.parseObject(dictLabelJson);
         appVersionResponse.setVersion(verDict.getDicValue());

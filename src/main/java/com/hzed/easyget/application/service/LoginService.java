@@ -276,13 +276,13 @@ public class LoginService {
      * 验证码验证，不区分大小写
      */
     public void checkPictureCode(String mobile, String code) {
-        //获取缓存数据
+        // 获取缓存数据
         String cacheCode = redisService.getCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile);
         if (StringUtils.isBlank(cacheCode) || !code.equalsIgnoreCase(cacheCode)) {
-            throw new ComBizException(BizCodeEnum.PIC_CODE_ERROR);
+            throw new WarnException(BizCodeEnum.PIC_CODE_ERROR);
         }
 
-        //验证通过则删除10分钟重发标识，等发送之后会重新加上
+        // 验证通过则删除10分钟重发标识，等发送之后会重新加上
         redisService.clearCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile);
     }
 

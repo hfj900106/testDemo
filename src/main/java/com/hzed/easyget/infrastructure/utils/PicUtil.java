@@ -91,9 +91,9 @@ public class PicUtil {
 
 
     /**
-     * 随机字符串，去掉易混淆的字符
+     * 随机字符串
      */
-    private static String codeStr = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+    private static String codeStr = "1234567890";
 
     /**
      * 绘制字符串

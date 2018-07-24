@@ -267,7 +267,7 @@ public class LoginService {
      * @param mobile
      */
     private void checkMobile(String mobile) {
-        // 不符合
+        // 手机号码前四位
         String mobilePre = mobile.substring(0, 4);
 
         for (String prefix : systemProp.getMobilePrefixList()) {
@@ -276,7 +276,7 @@ public class LoginService {
                 return;
             }
         }
-
+        // 不在则直接抛异常
         throw new WarnException(BizCodeEnum.MOBILE_ILLEGAL);
     }
 

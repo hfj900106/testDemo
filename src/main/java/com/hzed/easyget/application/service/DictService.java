@@ -5,7 +5,10 @@ import com.google.common.collect.Lists;
 import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.controller.model.IDAreaResponse;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
+import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.NestedException;
 import com.hzed.easyget.infrastructure.repository.DictRepository;
 import com.hzed.easyget.infrastructure.repository.IDAreaRepository;
 import com.hzed.easyget.persistence.auto.entity.Dict;
@@ -15,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -37,14 +41,14 @@ public class DictService {
     public Dict getDictByCode(String dictCode) {
         Dict dict = redisService.getObjCache(dictKey + dictCode);
         if (dict == null) {
-            dict = dictRepository.findByCode(dictCode);
+            dict = dictRepository.findOneByCodeWithExp(dictCode);
             redisService.setObjCache(dictKey + dictCode, dict, 5 * 3600L);
         }
         return dict;
     }
 
     public List<DictResponse> getDictByModuleCodeAndLanguage(String moduleCode, String language) {
-        // 获取缓存数据,缓存没有，才查询数据库
+        // 获取缓存数据，缓存没有才查询数据库
         List<DictResponse> respList = redisService.getObjCache(dictKey + moduleCode + RedisConsts.SPLIT + language);
         if (!ObjectUtils.isEmpty(respList)) {
             return respList;
@@ -128,7 +132,7 @@ public class DictService {
     public void clearCodeCache(String code) {
         Dict dict = redisService.getObjCache(dictKey + code);
         if (ObjectUtils.isEmpty(dict)) {
-            log.info("code：{} 的无缓存，不做清理操作", code);
+            log.info("code：{} 无缓存，不做清理操作", code);
             return;
         }
         log.info("开始清理缓存，{}：{}", code, JSON.toJSONString(dict));
@@ -139,12 +143,28 @@ public class DictService {
     public void clearCodeAndLanguageCache(String code, String language) {
         List<DictResponse> respList = redisService.getObjCache(dictKey + code + RedisConsts.SPLIT + language);
         if (ObjectUtils.isEmpty(respList)) {
-            log.info("code：{} 的无缓存，不做清理操作", code);
+            log.info("code：{} 无缓存，不做清理操作", code);
             return;
         }
         log.info("开始清理缓存，{},{}：{}", code, language, JSON.toJSONString(respList));
         redisService.clearCache(dictKey + code + RedisConsts.SPLIT + language);
         log.info("清理缓存完毕");
+    }
 
+    public void switchSmsChannel(String channel) {
+        String DICT_SMS_CHANNEL = "sms_channel";
+        channel = channel.toUpperCase();
+        if (!channel.equals(ComConsts.BL) && !channel.equals(ComConsts.NX)) {
+            throw new NestedException(BizCodeEnum.SERVICE_EXCEPTION, "无此短信渠道");
+        }
+
+        Dict smsDict = dictRepository.findOneByCodeWithExp(DICT_SMS_CHANNEL);
+        log.info("当前的短信通道：{}", smsDict.getDicValue());
+        log.info("即将切换成{}渠道", channel);
+        Dict dictUpdate = Dict.builder().id(smsDict.getId()).dicValue(channel).updateTime(LocalDateTime.now()).build();
+        dictRepository.update(dictUpdate);
+        // 清理缓存数据
+        clearCodeCache(DICT_SMS_CHANNEL);
+        log.info("渠道切换成功", channel);
     }
 }

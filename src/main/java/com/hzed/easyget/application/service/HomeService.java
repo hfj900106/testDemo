@@ -15,6 +15,7 @@ import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
+import com.hzed.easyget.infrastructure.model.AppVersionModel;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
@@ -64,9 +65,6 @@ public class HomeService {
     @Autowired
     private SystemProp systemProp;
 
-    private static final String ANDROID_BOMB = "android_bomb";
-    private static final String IOS_BOMB = "ios_bomb";
-
     public ProductInfoResponse getProductInfo() {
 
         ProductInfoResponse productInfoResponse = new ProductInfoResponse();
@@ -80,36 +78,36 @@ public class HomeService {
     }
 
     public AppVersionResponse getAppVersion(AppVersionRequest request) {
-
-        AppVersionResponse appVersionResponse = new AppVersionResponse();
-
         String channel = request.getChannel();
         Integer versionCode = request.getVersionCode();
-        Dict verDict = dictService.getDictByCode(channel);
-        if(ObjectUtils.isEmpty(verDict)){
-            throw new ComBizException(BizCodeEnum.DICT_NOTEXISTS);
-        }
-        String dictLabelJson = verDict.getDicLabel();
-        JSONObject jsonObject = JSONObject.parseObject(dictLabelJson);
-        appVersionResponse.setVersion(verDict.getDicValue());
-        appVersionResponse.setPath(jsonObject.getString("update_url"));
-        checkIsUpdate(verDict.getDicValue(), appVersionResponse, jsonObject, versionCode);
-        return appVersionResponse;
-    }
 
-    private void checkIsUpdate(String newVersion, AppVersionResponse appVersionResponse, JSONObject jsonObject, Integer versionCode) {
-        String oldVersion = RequestUtil.getGlobalHead().getVersion();
-        if (oldVersion.equals(newVersion)) {
-            appVersionResponse.setIsUpdate(AppVersionEnum.NOT_UPDATE.getCode());
-            appVersionResponse.setIsForce("1");
-        } else {
-            appVersionResponse.setIsUpdate(AppVersionEnum.HAS_UPDATE.getCode());
-            appVersionResponse.setIsForce(jsonObject.getString("force_update"));
-            Integer minimumVersion = Integer.valueOf(jsonObject.getString("minimum_version"));
-            if (versionCode < minimumVersion) {
-                appVersionResponse.setIsForce("0");
+        AppVersionResponse appVersionResponse = new AppVersionResponse();
+        // 字典配置
+        Dict dict = dictService.getDictByCode(channel);
+
+        AppVersionModel appVersionModel = JSONObject.parseObject(dict.getDicLabel(), AppVersionModel.class);
+        // 当前用户版本号
+        String currentUserVersion = RequestUtil.getGlobalHead().getVersion();
+        // 后台版本号
+        String currentAppVersion = dict.getDicValue();
+        // 当前用户版本号比后台配置版本号大则不提示更新
+        if (currentUserVersion.compareTo(currentAppVersion) >= 0) {
+            appVersionResponse.setIsUpdate(AppVersionEnum.NO_NEED_TO_UPDATE.getCode());
+            appVersionResponse.setIsForce(AppVersionEnum.NO_MANDATORY_UPDATES_ARE_REQUIRED.getCode());
+        }
+        // 否则按后台配置提示更新
+        else {
+            appVersionResponse.setIsUpdate(AppVersionEnum.NEED_TO_BE_UPDATED.getCode());
+            appVersionResponse.setIsForce(AppVersionEnum.NO_MANDATORY_UPDATES_ARE_REQUIRED.getCode());
+            // 最低控制版本大于当前版本则强制更新
+            if (appVersionModel.getMinimum_version() > versionCode) {
+                appVersionResponse.setIsForce(AppVersionEnum.NEED_TO_FORCE_AN_UPDATE.getCode());
             }
         }
+
+        appVersionResponse.setVersion(currentAppVersion);
+        appVersionResponse.setPath(appVersionModel.getUpdate_url());
+        return appVersionResponse;
     }
 
     public LoanCalculateResponse loanCalculate(LoanCalculateRequest request) {
@@ -187,10 +185,10 @@ public class HomeService {
             checkLoanResponseList.add(checkLoanResponse);
         });
         RiskResponse response = riskService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
-        if(ObjectUtils.isEmpty(response)){
+        if (ObjectUtils.isEmpty(response)) {
             throw new ComBizException(BizCodeEnum.ERROR_RISK__RESULT);
         }
-        log.info("贷款资格校验风控返回报文：{}",response);
+        log.info("贷款资格校验风控返回报文：{}", response);
         String errorCode = response.getHead().getError_code();
         log.info("查询风控是否有贷款资格，风控返回被拒原因:{}，用户id:{}", response.getHead().getError_msg(), userId);
 
@@ -258,4 +256,7 @@ public class HomeService {
         }
         return result;
     }
+
+    // {"update_url":"123213","force_update":"1","minimum_version": "5","is_bom":"true"}
+
 }

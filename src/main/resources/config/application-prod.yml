@@ -24,7 +24,7 @@ spring:
 # 日志文件配置
 logging:
   envNameCN: 生产环境 # 环境中文名
-  emailTo: guichang@hzed.com,wuchengwu@hzed.com,huangfengjing@hzed.com,dengzhenhao@hzed.com,zhangruilin@hzed.com,wenhuaping@hzed.com # 邮件接收者，多个用逗号隔开
+  emailTo: guichang@hzed.com,wuchengwu@hzed.com,huangfengjing@hzed.com # 邮件接收者，多个用逗号隔开
 
 # 第三方
 thirdParty:

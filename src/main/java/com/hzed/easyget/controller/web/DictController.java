@@ -70,4 +70,12 @@ public class DictController {
         dictService.switchSmsChannel(channel);
     }
 
+    @IgnoreHeader
+    @ModuleFunc("修改版本号")
+    @GetMapping("/updateVersion/{channel}/{newVersion}/{minVersionCode}")
+    public void updateVersion(@PathVariable String channel, @PathVariable String newVersion, @PathVariable String minVersionCode) {
+        log.info("请求报文，channel：{}, newVersion：{}, minVersionCode：{}", channel, newVersion, minVersionCode);
+        dictService.updateVersion(channel, newVersion, minVersionCode);
+    }
+
 }

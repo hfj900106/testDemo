@@ -1,6 +1,7 @@
 package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.controller.model.IDAreaResponse;
@@ -9,6 +10,7 @@ import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.NestedException;
+import com.hzed.easyget.infrastructure.model.AppVersionModel;
 import com.hzed.easyget.infrastructure.repository.DictRepository;
 import com.hzed.easyget.infrastructure.repository.IDAreaRepository;
 import com.hzed.easyget.persistence.auto.entity.Dict;
@@ -165,6 +167,22 @@ public class DictService {
         dictRepository.update(dictUpdate);
         // 清理缓存数据
         clearCodeCache(DICT_SMS_CHANNEL);
-        log.info("渠道切换成功", channel);
+        log.info("渠道切换成功");
+    }
+
+    public void updateVersion(String channel, String newVersion, String minVersionCode) {
+        Dict versionDict = dictRepository.findOneByCode(channel);
+        if (ObjectUtils.isEmpty(versionDict)) {
+            throw new NestedException(BizCodeEnum.SERVICE_EXCEPTION, "无此应用商店");
+        }
+        AppVersionModel appVersionModel = JSONObject.parseObject(versionDict.getDicLabel(), AppVersionModel.class);
+        log.info("当前版本信息，version：{}，minVersionCode：{}", versionDict.getDicValue(), appVersionModel.getMinimum_version());
+        appVersionModel.setMinimum_version(Integer.parseInt(minVersionCode));
+        log.info("即将更新成，version：{}，minVersionCode：{}", newVersion, minVersionCode);
+        Dict dictUpdate = Dict.builder().id(versionDict.getId()).dicValue(newVersion).dicLabel(JSONObject.toJSONString(appVersionModel)).build();
+        dictRepository.update(dictUpdate);
+        // 清理缓存
+        clearCodeCache(channel);
+        log.info("版本更新成功");
     }
 }

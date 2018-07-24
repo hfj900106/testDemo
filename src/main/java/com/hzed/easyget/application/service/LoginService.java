@@ -274,6 +274,7 @@ public class LoginService {
             if (mobile.substring(0, 4).equals(strArr[i])) {
                 // 符合
                 mobileIllegal = false;
+                return;
             }
         }
         if (mobileIllegal) {

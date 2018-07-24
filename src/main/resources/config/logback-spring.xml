@@ -100,9 +100,8 @@
     <!-- 这些日志不要打印debug，不然数量太多 -->
     <logger name="org.spring" level="WARN"/>
     <logger name="org.springframework" level="WARN"/>
-    <logger name="com.hzed.service.common.util.IdentifierGenerator" level="WARN"/>
 
-    <!-- 环境输出日志类型 关联 spring.profiles.active-->
+    <!-- 环境输出日志类型 关联 spring.profiles.active -->
     <springProfile name="dev">
         <root level="debug">
             <appender-ref ref="STDOUT"/>

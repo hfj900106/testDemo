@@ -1,0 +1,4 @@
+### 清除字典缓存
+GET http://localhost:8150/hzed/easy-get/api/dict/clearCodeCache/google
+
+###

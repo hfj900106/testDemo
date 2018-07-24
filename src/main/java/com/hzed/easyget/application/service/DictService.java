@@ -132,23 +132,23 @@ public class DictService {
     }
 
     public void clearCodeCache(String code) {
-        Dict dict = redisService.getObjCache(dictKey + code);
-        if (ObjectUtils.isEmpty(dict)) {
+        Object obj = redisService.getObjCache(dictKey + code);
+        if (ObjectUtils.isEmpty(obj)) {
             log.info("code：{} 无缓存，不做清理操作", code);
             return;
         }
-        log.info("开始清理缓存，{}：{}", code, JSON.toJSONString(dict));
+        log.info("开始清理缓存，{}：{}", code, JSON.toJSONString(obj));
         redisService.clearCache(dictKey + code);
         log.info("清理缓存完毕");
     }
 
     public void clearCodeAndLanguageCache(String code, String language) {
-        List<DictResponse> respList = redisService.getObjCache(dictKey + code + RedisConsts.SPLIT + language);
-        if (ObjectUtils.isEmpty(respList)) {
+        Object obj = redisService.getObjCache(dictKey + code + RedisConsts.SPLIT + language);
+        if (ObjectUtils.isEmpty(obj)) {
             log.info("code：{} 无缓存，不做清理操作", code);
             return;
         }
-        log.info("开始清理缓存，{},{}：{}", code, language, JSON.toJSONString(respList));
+        log.info("开始清理缓存，{},{}：{}", code, language, JSON.toJSONString(obj));
         redisService.clearCache(dictKey + code + RedisConsts.SPLIT + language);
         log.info("清理缓存完毕");
     }

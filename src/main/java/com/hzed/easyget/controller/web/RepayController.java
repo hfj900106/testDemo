@@ -71,7 +71,6 @@ public class RepayController {
         return repayService.findVaTranc(request);
     }
 
-
     @ModuleFunc("已生成va码列表")
     @PostMapping("/getVaHistory")
     public List<VaHistoryResponse> getVaHistory(@Valid @RequestBody VaHistoryRequest request) {

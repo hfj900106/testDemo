@@ -1,0 +1,2 @@
+### 获取广告产品列表
+POST http://localhost:8150/hzed/easy-get/api/ads/getAdsProductList

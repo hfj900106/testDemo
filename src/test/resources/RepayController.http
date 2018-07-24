@@ -1,0 +1,29 @@
+### 还款列表
+POST http://localhost:8150/hzed/easy-get/api/repay/repaidList
+Accept: application/json;charset=UTF-8
+Cache-Control: no-cache
+Content-Type: application/json
+imei: 123123
+i18n: en-US
+appKey: 1233
+platform: android
+version: 1.1.0
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIxNDQ1MTI1MzYzNVwiLFwidXNlcklkXCI6MTA3NjU5NDQxNzA4ODY3NTg0fSIsImV4cCI6MTUyOTkyMDgxMH0.S1H-8OrUVAoeV_ZmqSYz3tcSMquqzioFx23_4IUgi7E
+
+
+### 生成VA码
+POST http://10.10.30.92:8150:8150/hzed/easy-get/api/repay/vaInfoDetail
+Content-Type: application/json
+imei: 353288082777677
+i18n: id-ID
+appKey: easyget
+platform: android
+version: 1.0.0
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIxMjM0NTY3ODkwMTIzNDVcIixcInVzZXJJZFwiOjExNjM3OTAyNzA2MDk1NzE4NH0iLCJleHAiOjE1MzE5ODUzODN9.R5YMvJLox22UVc5QBVQTcbsc3Og78ez5MAqNhp2xbgs
+
+{
+    "bidId":"116384052365631488",
+    "amount":"100000",
+    "mode":"ATM",
+    "flag":"false"
+}

@@ -268,17 +268,16 @@ public class LoginService {
      */
     private void checkMobile(String mobile) {
         // 不符合
-        boolean mobileIllegal = true;
-        String[] strArr = systemProp.getMobileProfixList();
-        for (int i = 0; i < strArr.length; i++) {
-            if (mobile.substring(0, 4).equals(strArr[i])) {
-                // 符合
-                mobileIllegal = false;
+        String mobilePre = mobile.substring(0, 4);
+
+        for (String prefix : systemProp.getMobilePrefixList()) {
+            if(mobilePre.equals(prefix)) {
+                // 通过
+                return;
             }
         }
-        if (mobileIllegal) {
-            throw new WarnException(BizCodeEnum.MOBILE_ILLEGAL);
-        }
+
+        throw new WarnException(BizCodeEnum.MOBILE_ILLEGAL);
     }
 
 

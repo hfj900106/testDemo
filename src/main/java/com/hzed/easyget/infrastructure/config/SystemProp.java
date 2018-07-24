@@ -23,5 +23,6 @@ public class SystemProp {
     private Integer daysInAdvance;
     private Integer expiredDay;
     private String H5MessageUrl;
+    private String[] mobileProfixList;
 
 }

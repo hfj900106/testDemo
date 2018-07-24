@@ -8,16 +8,17 @@ import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
-import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.*;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.auto.entity.User;
+import com.hzed.easyget.persistence.auto.entity.UserLogin;
+import com.hzed.easyget.persistence.auto.entity.UserStatus;
+import com.hzed.easyget.persistence.auto.entity.UserToken;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,6 +220,8 @@ public class LoginService {
         log.info("发送验证码手机号：{}", mobile);
         // 格式化手机号
         mobile = mobileForm(mobile);
+        // 校验是否三大运营商手机号
+        checkMobile(mobile);
 
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String isH5 = globalHead.getPlatform();
@@ -256,6 +259,26 @@ public class LoginService {
         redisService.setCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile, mobile, 60L);
         //10分钟内重发需要验证码
         redisService.setCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile, mobile, 600L);
+    }
+
+    /**
+     * 校验手机号是否三大运营商手机号
+     *
+     * @param mobile
+     */
+    private void checkMobile(String mobile) {
+        // 不符合
+        boolean mobileIllegal = true;
+        String[] strArr = systemProp.getMobileProfixList();
+        for (int i = 0; i < strArr.length; i++) {
+            if (mobile.substring(0, 4).equals(strArr[i])) {
+                // 符合
+                mobileIllegal = false;
+            }
+        }
+        if (mobileIllegal) {
+            throw new WarnException(BizCodeEnum.MOBILE_ILLEGAL);
+        }
     }
 
 
@@ -301,14 +324,11 @@ public class LoginService {
 
         if (str1.equals(mobile.substring(0, 4))) {
             mobile = str4 + mobile.substring(4);
-        }
-        else if(str2.equals(mobile.substring(0, 2))){
+        } else if (str2.equals(mobile.substring(0, 2))) {
             mobile = str4 + mobile.substring(2);
-        }
-        else if(str3.equals(mobile.substring(0, 3))){
+        } else if (str3.equals(mobile.substring(0, 3))) {
             mobile = str4 + mobile.substring(3);
-        }
-        else if(!mobile.startsWith(str4)){
+        } else if (!mobile.startsWith(str4)) {
             mobile = str4 + mobile;
         }
         log.info("格式化后手机号：{}", mobile);

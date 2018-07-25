@@ -99,8 +99,8 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSONObject.toJSONString(response));
         if (ObjectUtils.isEmpty(response)) {
-            saService.saOperator(user, false, BizCodeEnum.ERROR_RISK__RESULT.getMessage());
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+            saService.saOperator(user, false, BizCodeEnum.ERROR_RISK_RESULT.getMessage());
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             saService.saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
@@ -143,7 +143,7 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
         if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         Object bodyObj = response.getBody();
         if (ObjectUtils.isEmpty(bodyObj)) {
@@ -188,7 +188,7 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
         if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             throw new WarnException(BizCodeEnum.FAIL_FACE_RECOGNITION);
@@ -210,7 +210,7 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
         if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             throw new WarnException(BizCodeEnum.FAIL_FACE_RECOGNITION);
@@ -238,7 +238,7 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
         if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
@@ -275,7 +275,7 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
         if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);

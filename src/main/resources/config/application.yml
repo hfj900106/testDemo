@@ -59,7 +59,7 @@ thirdParty:
     receiverTransactionUrl:   /bluepay/gatherDr # 收款接口链接
     getPaymentCodeUrl:        /bluepay/getPaymentCode #获取还款码接口
   risk:
-    domain:                   http://10.10.20.198:9611 # 请求风控域名地址
+    domain:                   http://10.10.30.92:9611 # 请求风控域名地址
     checkRiskEnableBorrowUrl: /api/risk/checkRiskEnableBorrow # 请求风控查询用户贷款资格
     idCardRecognitionUrl:     /api/risk/core/ocr   # 身份证识别
     faceRecognitionUrl:       /api/risk/core/faceComparison # 人脸识别

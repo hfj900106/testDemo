@@ -17,7 +17,6 @@ import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.AppVersionModel;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.model.Response;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
@@ -171,9 +170,7 @@ public class HomeService {
         return messageResponse;
     }
 
-    public Response<List<CheckLoanResponse>> checkLoan() {
-        final String mk02 = "1100011";
-        final String mk06 = "1100014";
+    public List<CheckLoanResponse> checkLoan() {
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String imei = RequestUtil.getGlobalHead().getImei();
         User user = userRepository.findById(userId);
@@ -186,31 +183,26 @@ public class HomeService {
         });
         RiskResponse response = riskService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
         if (ObjectUtils.isEmpty(response)) {
-            throw new ComBizException(BizCodeEnum.ERROR_RISK__RESULT);
+            throw new ComBizException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         log.info("贷款资格校验风控返回报文：{}", response);
         String errorCode = response.getHead().getError_code();
         log.info("查询风控是否有贷款资格，风控返回被拒原因:{}，用户id:{}", response.getHead().getError_msg(), userId);
 
-        String code;
-        String msg;
         if (StringUtils.isBlank(errorCode)) {
-            return Response.getSuccessResponse(checkLoanResponseList);
+            return checkLoanResponseList;
         }
 
+        final String mk02 = "1100011";
+        final String mk06 = "1100014";
         //每日通过超过数量
         if (mk02.equals(errorCode)) {
-            code = BizCodeEnum.INSUFFICIENT_QUOTA.getCode();
-            msg = BizCodeEnum.INSUFFICIENT_QUOTA.getMessage();
+            throw new WarnException(BizCodeEnum.INSUFFICIENT_QUOTA, checkLoanResponseList);
         } else if (mk06.equals(errorCode)) {
-            code = BizCodeEnum.BID_EXISTS.getCode();
-            msg = BizCodeEnum.BID_EXISTS.getMessage();
+            throw new WarnException(BizCodeEnum.BID_EXISTS, checkLoanResponseList);
         } else {
-            code = BizCodeEnum.UN_LOAN_QUALIFICATION.getCode();
-            msg = BizCodeEnum.UN_LOAN_QUALIFICATION.getMessage();
+            throw new WarnException(BizCodeEnum.UN_LOAN_QUALIFICATION, checkLoanResponseList);
         }
-
-        return Response.getFailResponse(checkLoanResponseList, code, msg);
 
     }
 

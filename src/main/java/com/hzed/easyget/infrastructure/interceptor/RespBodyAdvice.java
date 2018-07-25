@@ -15,6 +15,8 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import java.util.Locale;
+
 /**
  * 拦截返回并封装成 com.hzed.easyget.infrastructure.model.Response
  *
@@ -51,6 +53,7 @@ public class RespBodyAdvice implements ResponseBodyAdvice<Object> {
         if (!(body instanceof Response) && moduleFunc != null && moduleFunc.isCommonResponse()) {
             Response resp = Response.getSuccessResponse(body);
             resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
+            resp.setMessage(i18nService.getBizCodeMessage(resp.getCode(), Locale.CHINA));
             result = resp;
         }
         log.info("返回报文：{}", JSON.toJSONString(result, SerializerFeature.WriteMapNullValue));

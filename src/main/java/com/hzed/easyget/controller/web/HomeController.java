@@ -5,9 +5,11 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.head.TokenIgnore;
-import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -62,7 +64,7 @@ public class HomeController {
 
     @ModuleFunc("发起借款校验")
     @PostMapping("/checkLoan")
-    public Response<List<CheckLoanResponse>> checkLoan() {
+    public List<CheckLoanResponse> checkLoan() {
         return homeService.checkLoan();
     }
 

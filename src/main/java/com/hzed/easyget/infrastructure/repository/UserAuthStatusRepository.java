@@ -7,13 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * 暂无描述
- *
- * @author wuchengwu
  * @author hfj
  * @data 2018/5/23
- * /**
- * @date 2018/5/22
  */
 @Repository
 public class UserAuthStatusRepository {

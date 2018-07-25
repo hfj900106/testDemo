@@ -50,7 +50,8 @@ public class LoginService {
     SaService saService;
     @Autowired
     private SmsService smsService;
-
+    @Autowired
+    private DictService dictService;
     /**
      * 用户登录注册
      *
@@ -242,7 +243,6 @@ public class LoginService {
         }
         String code = smsService.getCode();
 
-        DictService dictService = SpringContextUtil.getBean(DictService.class);
         List<DictResponse> smsContent1 = dictService.getDictByDicCodeAndLanguage(ComConsts.SMS_CONTENT_1, systemProp.getLocal());
         if (ObjectUtils.isEmpty(smsContent1)) {
             log.error("没有配置短信模板");

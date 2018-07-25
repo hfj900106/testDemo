@@ -14,7 +14,6 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
-import com.hzed.easyget.infrastructure.utils.SpringContextUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.BidProgress;
@@ -50,6 +49,10 @@ public class CallbackService {
     private UserMessageRepository messageRepository;
     @Autowired
     private DictRepository dictRepository;
+    @Autowired
+    private DictService dictService;
+    @Autowired
+    private SystemProp systemProp;
 
     public PushBidCallbackResponse pushBidCallback(PushBidCallbackRequest request) {
         Long bidId = request.getBidId();
@@ -113,8 +116,6 @@ public class CallbackService {
         }
         // 打印日志
         log.info("标id：{}审核结果短信通知用户：{}", bidId, mobile);
-        SystemProp systemProp = SpringContextUtil.getBean(SystemProp.class);
-        DictService dictService = SpringContextUtil.getBean(DictService.class);
         List<DictResponse> smsContent;
         String title;
         // 通过审核

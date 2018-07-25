@@ -89,13 +89,17 @@ public class AuthService {
      */
     public void authContacts(ContactsRequest request) {
         GlobalUser user = getGlobalUser();
+        String auth_code = AuthCodeEnum.CONTACTS.getCode();
+        // 请求防重
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
         // 判断该用户是否已经验证
-        checkAuth(user.getUserId(), AuthCodeEnum.CONTACTS.getCode());
+        checkAuth(user.getUserId(), auth_code);
 
         String platForm = getGlobalHead().getPlatform();
         int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
         RiskResponse response = riskService.authContacts(request.getContacts(), request.getCallLogs(), source);
-        afterResponse(response, user.getUserId(), AuthCodeEnum.CONTACTS.getCode(), "通讯录认证");
+        afterResponse(response, user.getUserId(), auth_code, "通讯录认证");
     }
 
     /**
@@ -122,20 +126,24 @@ public class AuthService {
      */
     public void authMessages(MessagesRequest request) {
         GlobalUser user = getGlobalUser();
+        String auth_code = AuthCodeEnum.MESSAGE.getCode();
+        // 请求防重
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
+
         // 判断该用户是否已经验证
-        checkAuth(user.getUserId(), AuthCodeEnum.MESSAGE.getCode());
+        checkAuth(user.getUserId(), auth_code);
 
         String platForm = getGlobalHead().getPlatform();
         int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
         RiskResponse response = riskService.authMessages(request.getMessage(), source);
-        afterResponse(response, user.getUserId(), AuthCodeEnum.MESSAGE.getCode(), "短信认证");
+        afterResponse(response, user.getUserId(), auth_code, "短信认证");
     }
 
     /**
      * 运营商认证 - 发送验证码接口
      */
     public void operatorSendSmsCode() {
-
         GlobalUser user = getGlobalUser();
         String isSend = redisService.getCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
         if (StringUtils.isNotBlank(isSend)) {

@@ -23,5 +23,6 @@ public class RedisConsts {
 
     public static final String TOKEN = "token";
     public static final String FACE = "face";
+    public static final String AUTH = "auth";
 
 }

@@ -1,10 +1,13 @@
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hzed.easyget.infrastructure.model.AppVersionModel;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 /**
@@ -14,6 +17,7 @@ import java.util.Optional;
  * @since 2018/4/26
  */
 
+@Slf4j
 public class MainTest {
     public static void main(String[] args) {
 
@@ -21,7 +25,9 @@ public class MainTest {
 //        optionalTest();
 //        jsonTest();
 //        stringCompareTest();
-        tokenTest();
+//        tokenTest();
+
+        mapIfAbsentTest();
 
 
     }
@@ -70,5 +76,26 @@ public class MainTest {
         GlobalUser after = JwtUtil.verify(token, GlobalUser.class);
         System.out.println(after);
     }
+
+    public static void mapIfAbsentTest() {
+        HashMap<String, String> map = Maps.newHashMap();
+        map.put("123", "456");
+
+//        log.info("computeIfAbsent");
+//        map.computeIfAbsent("123", key -> {
+//            System.out.println(key);
+//            String value = key;
+//            return value;
+//        });
+//        System.out.println(map);
+        log.info("computeIfPresent");
+        map.computeIfPresent("123", (key, value) -> {
+            System.out.println(key + "," + value);
+            String value2 = key;
+            return value2;
+        });
+        System.out.println(map);
+    }
+
 
 }

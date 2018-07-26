@@ -58,22 +58,19 @@ public class CallbackService {
         Long bidId = request.getBidId();
         BigDecimal loanAmount = request.getLoanAmount();
         byte status = (byte) 0;
-        boolean isPass;
         //通过
         if (ComConsts.RISK_4.equals(request.getResultCode())) {
-            isPass = true;
             status = BidStatusEnum.AUDIT_PASS.getCode().byteValue();
             log.info("审核通过标id：{}，金额{}", bidId, loanAmount);
             // 发送短信
-            sendSmsOfPushResult(bidId, isPass);
+            sendSmsOfPushResult(bidId, true);
         }
         // 失败
         else if (ComConsts.RISK_3.equals(request.getResultCode())) {
-            isPass = false;
             status = BidStatusEnum.AUDIT_FAIL.getCode().byteValue();
             log.info("审核失败标id：{}，原因{}", bidId, request.getMessage());
             // 发送短信
-            sendSmsOfPushResult(bidId, isPass);
+            sendSmsOfPushResult(bidId, false);
         }
         // 人审
         else if (ComConsts.RISK_2.equals(request.getResultCode())) {

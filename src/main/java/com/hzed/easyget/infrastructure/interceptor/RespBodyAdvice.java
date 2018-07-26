@@ -53,7 +53,7 @@ public class RespBodyAdvice implements ResponseBodyAdvice<Object> {
         if (!(body instanceof Response) && moduleFunc != null && moduleFunc.isCommonResponse()) {
             Response resp = Response.getSuccessResponse(body);
             resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
-            resp.setMessage(i18nService.getBizCodeMessage(resp.getCode(), Locale.CHINA));
+            resp.setMessageCN(i18nService.getBizCodeMessage(resp.getCode(), Locale.CHINA));
             result = resp;
         }
         log.info("返回报文：{}", JSON.toJSONString(result, SerializerFeature.WriteMapNullValue));

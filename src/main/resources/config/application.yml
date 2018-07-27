@@ -83,8 +83,13 @@ system:
   daysInAdvance: 3
   # 请求前端H5页面链接
   H5MessageUrl: http://www.rupiahget.com/article/MessagePushDetail.html?id=
-  # 允许注册的手机号前缀
-  mobilePrefixList: 0811,0812,0813,0814,0815,0816,0817,0818,0819,0820,0821,0822,0823,0852,0855,0856,0858,0859,0877,0878
+
+  # 允许注册的三大运营商手机号前缀
+  MobilePrefix:
+    Telkomsel: 0811,0812,0813,0821,0822,0823,0852
+    XL: 0817,0818,0819,0859,0877,0878
+    Indosat: 0814,0815,0816,0855,0856,0858
+
 
   # 定时任务 启动标志 周期
   job:

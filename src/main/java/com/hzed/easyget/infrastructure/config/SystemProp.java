@@ -23,6 +23,18 @@ public class SystemProp {
     private Integer daysInAdvance;
     private Integer expiredDay;
     private String H5MessageUrl;
-    private String[] mobilePrefixList;
+    private String[] TelkomselMobilePrefix;
+    private String[] XLMobilePrefix;
+    private String[] IndosatMobilePrefix;
+    private MobilePrefix mobilePrefix;
+
+    @Data
+    @Configuration
+    @ConfigurationProperties(prefix = "system.mobilePrefix")
+    public static class MobilePrefix {
+        private String Telkomsel;
+        private String XL;
+        private String Indosat;
+    }
 
 }

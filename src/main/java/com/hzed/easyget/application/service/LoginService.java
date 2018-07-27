@@ -1,5 +1,6 @@
 package com.hzed.easyget.application.service;
 
+import com.google.common.collect.Maps;
 import com.hzed.easyget.application.enums.BidEnum;
 import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.controller.model.*;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +54,7 @@ public class LoginService {
     private SmsService smsService;
     @Autowired
     private DictService dictService;
+
     /**
      * 用户登录注册
      *
@@ -267,17 +270,26 @@ public class LoginService {
      * @param mobile
      */
     private void checkMobile(String mobile) {
+        if (mobile.length() < 4) {
+            throw new WarnException(BizCodeEnum.MOBILE_INCORRECT);
+        }
         // 手机号码前四位
         String mobilePre = mobile.substring(0, 4);
 
-        for (String prefix : systemProp.getMobilePrefixList()) {
-            if(mobilePre.equals(prefix)) {
-                // 通过
+        Map<String, List<String>> mobilePrefixMap = Maps.newHashMap();
+        SystemProp.MobilePrefix mobilePrefix = systemProp.getMobilePrefix();
+        mobilePrefixMap.put("Indosat", Arrays.asList(mobilePrefix.getIndosat().split(",")));
+        mobilePrefixMap.put("XL", Arrays.asList(mobilePrefix.getXL().split(",")));
+        mobilePrefixMap.put("Telkomsel", Arrays.asList(mobilePrefix.getTelkomsel().split(",")));
+
+        mobilePrefixMap.entrySet().forEach(entry -> entry.getValue().forEach(v -> {
+            if(v.equals(mobilePre)) {
                 return;
             }
-        }
+        }));
+
         // 不在则直接抛异常
-        throw new WarnException(BizCodeEnum.MOBILE_ILLEGAL);
+        throw new WarnException(BizCodeEnum.MOBILE_ILLEGAL, mobilePrefixMap);
     }
 
 
@@ -334,5 +346,9 @@ public class LoginService {
         return mobile;
     }
 
+    public Object getMobilePrefix() {
+
+        return null;
+    }
 
 }

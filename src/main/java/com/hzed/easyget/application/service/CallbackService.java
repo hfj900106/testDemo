@@ -56,6 +56,17 @@ public class CallbackService {
 
     public PushBidCallbackResponse pushBidCallback(PushBidCallbackRequest request) {
         Long bidId = request.getBidId();
+        Bid bid = bidRepository.findById(bidId);
+        if (ObjectUtils.isEmpty(bid)) {
+            log.error("回调处理的标ID：{} 不存在标的表中", bidId);
+            return PushBidCallbackResponse.getSuccessResponse();
+        }
+        byte bidStatus = bid.getStatus();
+        if (bidStatus != BidStatusEnum.RISK_ING.getCode().byteValue()) {
+            log.error("回调处理的标ID：{}状态为{}，不处理", bidId, bidStatus);
+            return PushBidCallbackResponse.getSuccessResponse();
+        }
+
         BigDecimal loanAmount = request.getLoanAmount();
         byte status = (byte) 0;
         //通过
@@ -79,17 +90,14 @@ public class CallbackService {
         }
 
         LocalDateTime dateTime = DateUtil.timestampToLocalDateTimeTo(request.getHandleTime());
-        Bid bid = bidRepository.findById(bidId);
-        if (ObjectUtils.isEmpty(bid)) {
-            log.error("回调处理的标ID：{} 不存在标的表中", bidId);
-        } else {
-            AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
-            tempTableRepository.pushBidCallback(
-                    Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(LocalDateTime.now()).auditFee(absProduct.getHeadFee()).status(status).build(),
-                    BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue()).handleResult(request.getMessage())
-                            .handleTime(dateTime).build(),
-                    bidId);
-        }
+
+        AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
+        tempTableRepository.pushBidCallback(
+                Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(LocalDateTime.now()).auditFee(absProduct.getHeadFee()).status(status).build(),
+                BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue()).handleResult(request.getMessage())
+                        .handleTime(dateTime).build(),
+                bidId);
+
         // 成功或者失败都返回
         return PushBidCallbackResponse.getSuccessResponse();
     }

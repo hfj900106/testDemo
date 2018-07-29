@@ -282,11 +282,23 @@ public class LoginService {
         mobilePrefixMap.put("XL", Arrays.asList(mobilePrefix.getXL().split(",")));
         mobilePrefixMap.put("Telkomsel", Arrays.asList(mobilePrefix.getTelkomsel().split(",")));
 
-        mobilePrefixMap.entrySet().forEach(entry -> entry.getValue().forEach(v -> {
-            if(v.equals(mobilePre)) {
-                return;
+        for (Map.Entry<String, List<String>> entry : mobilePrefixMap.entrySet()) {
+            for (String v : entry.getValue()) {
+                if (v.equals(mobilePre)) {
+                    return;
+                }
             }
-        }));
+        }
+
+
+//        mobilePrefixMap.entrySet().forEach(entry -> {
+//                    entry.getValue().forEach(v -> {
+//                        if (v.equals(mobilePre)) {
+//                            return;
+//                        }
+//                    });
+//                }
+//        );
 
         // 不在则直接抛异常
         throw new WarnException(BizCodeEnum.MOBILE_ILLEGAL, mobilePrefixMap);

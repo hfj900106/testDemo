@@ -5,8 +5,11 @@ import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -19,7 +22,7 @@ import java.util.Optional;
 
 @Slf4j
 public class MainTest {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvocationTargetException, IllegalAccessException {
 
 
 //        optionalTest();
@@ -27,7 +30,8 @@ public class MainTest {
 //        stringCompareTest();
 //        tokenTest();
 
-        mapIfAbsentTest();
+//        mapIfAbsentTest();
+        methodNameTest();
 
 
     }
@@ -64,6 +68,7 @@ public class MainTest {
 
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
     static class User {
         private String name;
@@ -95,6 +100,21 @@ public class MainTest {
             return value2;
         });
         System.out.println(map);
+    }
+
+    public static void methodNameTest() throws InvocationTargetException, IllegalAccessException {
+        User u = new User("gui");
+
+        Method[] methods = User.class.getDeclaredMethods();
+        for(Method method:methods) {
+            String name = method.getName();
+            if(name.startsWith("get")) {
+                System.out.println(name);
+                String invoke = (String) method.invoke(u, null);
+                System.out.println(invoke);
+            }
+
+        }
     }
 
 

@@ -1,5 +1,6 @@
 ### 发送验证码
 POST http://localhost:8150/hzed/easy-get/api/login/sendSmsCode
+#POST http://10.10.30.92:8150/hzed/easy-get/api/login/sendSmsCode
 Accept: application/json;charset=UTF-8;
 Content-Type: application/json
 imei:1
@@ -9,7 +10,7 @@ platform:android
 version:1.0.0
 
 {
-    "mobile":"18721551111"
+    "mobile":"0181721551111"
 }
 
 ### 用户登录

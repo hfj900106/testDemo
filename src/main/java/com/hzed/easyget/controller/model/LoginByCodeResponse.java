@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginByCodeResponse {
     private String token;
+    private String client;
     private Long userId;
     private Boolean isNew;
 }

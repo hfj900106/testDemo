@@ -129,7 +129,9 @@ public class LoginService {
         redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 10800L);
         //验证SmsCode之后删除掉
         redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
-        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).build();
+        //重新查询用户，取出client
+        User userQuery = userRepository.findByMobile(mobile);
+        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(userQuery.getClient()).build();
     }
 
 

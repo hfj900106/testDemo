@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hzed.easyget.persistence.ext.mapper.UserMessageExtMapper">
+
+
+    <select id="selectNewsAndMessageList" resultType="com.hzed.easyget.persistence.ext.entity.UserMessageExt">
+        SELECT t.id,t.`create_time`,t.`title`,NULL AS user_id,NULL AS has_read FROM t_loan_news t
+        UNION
+        SELECT m.id,m.create_time,m.title,m.user_id AS user_id,m.has_read AS has_read FROM t_loan_user_message m
+        WHERE m.user_id = #{userId}
+        ORDER BY create_time DESC
+        LIMIT ${pageNo},${pageSize};
+    </select>
+
+
+</mapper>
+

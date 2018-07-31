@@ -9,14 +9,11 @@ import lombok.Data;
  * @date 2018/5/25
  */
 @Data
-public class MessageResponse {
+public class NewsResponse {
 
-    private String messageTitle;
-    private String appMessage;
-    private String H5Message;
+    private String title;
+    private String content;
     private String toUrl;
     private Long createTime;
     private Long id;
-    private boolean hasRead;
-    private Long userId;
 }

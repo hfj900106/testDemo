@@ -53,9 +53,9 @@ public class UserController {
     }
 
     @ModuleFunc("消息公告列表")
-    @PostMapping("/getMessageList")
-    public List<MessageResponse> getMessageList(@Valid @RequestBody MessageRequest request) {
-        return userService.getMessageList(request);
+    @PostMapping("/getNewsAndMessageList")
+    public List<NewsAndMessageResponse> getNewsAndMessageList(@Valid @RequestBody NewsRequest request) {
+        return userService.getNewsAndMessageList(request);
     }
 
     @IgnoreH5

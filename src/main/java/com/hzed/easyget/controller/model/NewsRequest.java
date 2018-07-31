@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  * @date 2018/6/22
  */
 @Data
-public class MessageRequest {
+public class NewsRequest {
     @Min(0L) @NotNull(message = "{param.home.pageNo.isNotEmpty}")
     private Integer pageNo;
     @Min(1L) @NotNull(message = "{param.home.pageSize.isNotEmpty}")

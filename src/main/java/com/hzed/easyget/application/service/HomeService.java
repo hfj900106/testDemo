@@ -53,7 +53,7 @@ public class HomeService {
     @Autowired
     private RedisService redisService;
     @Autowired
-    private UserMessageRepository userMessageRepository;
+    private NewsRepository newsRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -157,24 +157,25 @@ public class HomeService {
         return UpdateTokenResponse.builder().token(newToken).build();
     }
 
-    public MessageResponse getMessage() {
-        MessageResponse messageResponse = new MessageResponse();
-        UserMessage userMessage = userMessageRepository.findOne();
-        if (!ObjectUtils.isEmpty(userMessage)) {
+    public NewsResponse getMessage() {
+        NewsResponse newsResponse = new NewsResponse();
+        String i18n = RequestUtil.getGlobalHead().getI18n();
+        News news = newsRepository.findOne(i18n);
+        if (!ObjectUtils.isEmpty(news)) {
             // 如果不在30天内，直接返回
-            int day = DateUtil.daysBetween(userMessage.getCreateTime(), LocalDateTime.now());
+            int day = DateUtil.daysBetween(news.getCreateTime(), LocalDateTime.now());
             if (day > systemProp.getExpiredDay()) {
-                return messageResponse;
+                return newsResponse;
             }
 
-            messageResponse.setMessageTitle(userMessage.getTitle());
-            messageResponse.setAppMessage(userMessage.getAppMessage());
-            messageResponse.setToUrl(systemProp.getH5MessageUrl() + userMessage.getId());
-            messageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
-            messageResponse.setId(userMessage.getId());
+            newsResponse.setTitle(news.getTitle());
+            newsResponse.setContent(news.getContent());
+            newsResponse.setToUrl(systemProp.getH5MessageUrl() + news.getId());
+            newsResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(news.getCreateTime()));
+            newsResponse.setId(news.getId());
         }
 
-        return messageResponse;
+        return newsResponse;
     }
 
     public Response<List<CheckLoanResponse>> checkLoan() {

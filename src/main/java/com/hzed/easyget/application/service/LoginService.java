@@ -66,7 +66,7 @@ public class LoginService {
         String mobile = request.getMobile();
         log.info("登录注册手机号：{}", mobile);
         // 格式化手机号
-        mobile = mobileForm(mobile);
+        mobile = mobileFormat(mobile);
 
         String smsCode = request.getSmsCode();
         String platform = globalHead.getPlatform();
@@ -142,7 +142,7 @@ public class LoginService {
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String mobile = request.getMobile();
         // 格式化手机号
-        mobile = mobileForm(mobile);
+        mobile = mobileFormat(mobile);
         String smsCode = request.getSmsCode();
         String platform = globalHead.getPlatform();
         String clinet = request.getFromCode();
@@ -223,7 +223,7 @@ public class LoginService {
         String mobile = request.getMobile();
         log.info("发送验证码手机号：{}", mobile);
         // 格式化手机号
-        mobile = mobileForm(mobile);
+        mobile = mobileFormat(mobile);
         // 校验是否三大运营商手机号
         checkMobile(mobile);
 
@@ -290,16 +290,6 @@ public class LoginService {
             }
         }
 
-
-//        mobilePrefixMap.entrySet().forEach(entry -> {
-//                    entry.getValue().forEach(v -> {
-//                        if (v.equals(mobilePre)) {
-//                            return;
-//                        }
-//                    });
-//                }
-//        );
-
         // 不在则直接抛异常
         throw new WarnException(BizCodeEnum.MOBILE_ILLEGAL, mobilePrefixMap);
     }
@@ -338,8 +328,12 @@ public class LoginService {
      * @param mobile
      * @return
      */
-    public String mobileForm(String mobile) {
+    public String mobileFormat(String mobile) {
         log.info("格式化前手机号：{}", mobile);
+        if(mobile.length()<4) {
+            // 手机号码太短
+            throw new WarnException(BizCodeEnum.MOBILE_ILLEGAL);
+        }
         String str1 = "0062";
         String str2 = "62";
         String str3 = "+62";
@@ -356,11 +350,6 @@ public class LoginService {
         }
         log.info("格式化后手机号：{}", mobile);
         return mobile;
-    }
-
-    public Object getMobilePrefix() {
-
-        return null;
     }
 
 }

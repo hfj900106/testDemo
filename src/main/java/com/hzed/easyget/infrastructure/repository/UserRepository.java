@@ -2,6 +2,7 @@ package com.hzed.easyget.infrastructure.repository;
 
 import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.auto.entity.example.UserExample;
+import com.hzed.easyget.persistence.auto.entity.example.UserLoginExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.mapper.*;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
@@ -102,5 +103,11 @@ public class UserRepository {
 
     public UserExt queryUnRepayment(Long userId) {
         return userExtMapper.queryUnRepayment(userId);
+    }
+
+    public List<UserLogin> getUserLoginsByUserId(Long userId){
+        UserLoginExample userLoginExample = new UserLoginExample();
+        userLoginExample.createCriteria().andUserIdEqualTo(userId);
+        return loginMapper.selectByExampleSelective(userLoginExample,UserLogin.Column.userId);
     }
 }

@@ -131,7 +131,13 @@ public class LoginService {
         redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
         //重新查询用户，取出client
         User userQuery = userRepository.findByMobile(mobile);
-        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(userQuery.getClient()).build();
+        // 查询登录记录标，只有一条登录记录就算首次登录
+        List<UserLogin> userLoginList = userRepository.getUserLoginsByUserId(userQuery.getId());
+        String client = "";
+        if (!ObjectUtils.isEmpty(userLoginList) && userLoginList.size() == 1) {
+            client = userQuery.getClient();
+        }
+        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(client).build();
     }
 
 
@@ -332,7 +338,7 @@ public class LoginService {
      */
     public String mobileFormat(String mobile) {
         log.info("格式化前手机号：{}", mobile);
-        if(mobile.length()<4) {
+        if (mobile.length() < 4) {
             // 手机号码太短
             throw new WarnException(BizCodeEnum.MOBILE_ILLEGAL);
         }

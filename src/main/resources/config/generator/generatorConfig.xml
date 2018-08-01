@@ -94,8 +94,8 @@
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
             <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
-        <table tableName="t_loan_id_area" domainObjectName="IDArea" >
-        </table>
+       <!-- <table tableName="t_loan_id_area" domainObjectName="IDArea" >
+        </table>-->
 
         <!--<table tableName="t_loan_news" domainObjectName="News" >-->
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
@@ -196,6 +196,11 @@
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
             <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
+
+        <table tableName="t_loan_news" domainObjectName="News" >
+        <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        </table>
 
 
 

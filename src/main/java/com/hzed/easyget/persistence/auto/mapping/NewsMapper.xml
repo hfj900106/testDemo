@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.News">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="summary" jdbcType="VARCHAR" property="summary" />
     <result column="language" jdbcType="VARCHAR" property="language" />
     <result column="is_release" jdbcType="BIT" property="isRelease" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -74,7 +75,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, title, language, is_release, create_time, create_by, update_time, update_by, 
+    id, title, summary, language, is_release, create_time, create_by, update_time, update_by, 
     remark
   </sql>
   <sql id="Blob_Column_List">
@@ -169,14 +170,14 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.News">
-    insert into t_loan_news (id, title, language, 
-      is_release, create_time, create_by, 
-      update_time, update_by, remark, 
-      content)
-    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{language,jdbcType=VARCHAR}, 
-      #{isRelease,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=BIGINT}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, #{remark,jdbcType=VARCHAR}, 
-      #{content,jdbcType=LONGVARCHAR})
+    insert into t_loan_news (id, title, summary, 
+      language, is_release, create_time, 
+      create_by, update_time, update_by, 
+      remark, content)
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
+      #{language,jdbcType=VARCHAR}, #{isRelease,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{remark,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.News">
     insert into t_loan_news
@@ -186,6 +187,9 @@
       </if>
       <if test="title != null">
         title,
+      </if>
+      <if test="summary != null">
+        summary,
       </if>
       <if test="language != null">
         language,
@@ -218,6 +222,9 @@
       </if>
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null">
+        #{summary,jdbcType=VARCHAR},
       </if>
       <if test="language != null">
         #{language,jdbcType=VARCHAR},
@@ -260,6 +267,9 @@
       <if test="record.title != null">
         title = #{record.title,jdbcType=VARCHAR},
       </if>
+      <if test="record.summary != null">
+        summary = #{record.summary,jdbcType=VARCHAR},
+      </if>
       <if test="record.language != null">
         language = #{record.language,jdbcType=VARCHAR},
       </if>
@@ -293,6 +303,7 @@
     update t_loan_news
     set id = #{record.id,jdbcType=BIGINT},
       title = #{record.title,jdbcType=VARCHAR},
+      summary = #{record.summary,jdbcType=VARCHAR},
       language = #{record.language,jdbcType=VARCHAR},
       is_release = #{record.isRelease,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -309,6 +320,7 @@
     update t_loan_news
     set id = #{record.id,jdbcType=BIGINT},
       title = #{record.title,jdbcType=VARCHAR},
+      summary = #{record.summary,jdbcType=VARCHAR},
       language = #{record.language,jdbcType=VARCHAR},
       is_release = #{record.isRelease,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -325,6 +337,9 @@
     <set>
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null">
+        summary = #{summary,jdbcType=VARCHAR},
       </if>
       <if test="language != null">
         language = #{language,jdbcType=VARCHAR},
@@ -356,6 +371,7 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hzed.easyget.persistence.auto.entity.News">
     update t_loan_news
     set title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
       language = #{language,jdbcType=VARCHAR},
       is_release = #{isRelease,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -369,6 +385,7 @@
   <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.News">
     update t_loan_news
     set title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
       language = #{language,jdbcType=VARCHAR},
       is_release = #{isRelease,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -420,14 +437,14 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_news
-    (id, title, language, is_release, create_time, create_by, update_time, update_by, 
+    (id, title, summary, language, is_release, create_time, create_by, update_time, update_by, 
       remark, content)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.title,jdbcType=VARCHAR}, #{item.language,jdbcType=VARCHAR}, 
-        #{item.isRelease,jdbcType=BIT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.createBy,jdbcType=BIGINT}, 
-        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, #{item.remark,jdbcType=VARCHAR}, 
-        #{item.content,jdbcType=LONGVARCHAR})
+      (#{item.id,jdbcType=BIGINT}, #{item.title,jdbcType=VARCHAR}, #{item.summary,jdbcType=VARCHAR}, 
+        #{item.language,jdbcType=VARCHAR}, #{item.isRelease,jdbcType=BIT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.createBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
+        #{item.remark,jdbcType=VARCHAR}, #{item.content,jdbcType=LONGVARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -445,6 +462,9 @@
         </if>
         <if test="'title' == column.value">
           #{item.title,jdbcType=VARCHAR}
+        </if>
+        <if test="'summary' == column.value">
+          #{item.summary,jdbcType=VARCHAR}
         </if>
         <if test="'language' == column.value">
           #{item.language,jdbcType=VARCHAR}

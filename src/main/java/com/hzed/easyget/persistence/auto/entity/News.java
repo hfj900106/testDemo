@@ -15,6 +15,11 @@ public class News implements Serializable {
     private String title;
 
     /**
+     * 简介
+     */
+    private String summary;
+
+    /**
      * 语言
      */
     private String language;
@@ -70,6 +75,14 @@ public class News implements Serializable {
 
     public void setTitle(String title) {
         this.title = title == null ? null : title.trim();
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary == null ? null : summary.trim();
     }
 
     public String getLanguage() {
@@ -144,6 +157,7 @@ public class News implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", title=").append(title);
+        sb.append(", summary=").append(summary);
         sb.append(", language=").append(language);
         sb.append(", isRelease=").append(isRelease);
         sb.append(", createTime=").append(createTime);
@@ -175,6 +189,11 @@ public class News implements Serializable {
 
         public Builder title(String title) {
             obj.setTitle(title);
+            return this;
+        }
+
+        public Builder summary(String summary) {
+            obj.setSummary(summary);
             return this;
         }
 
@@ -226,6 +245,7 @@ public class News implements Serializable {
     public enum Column {
         id("id"),
         title("title"),
+        summary("summary"),
         language("language"),
         isRelease("is_release"),
         createTime("create_time"),

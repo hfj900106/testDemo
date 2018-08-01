@@ -291,6 +291,76 @@ public class NewsExample {
             return (Criteria) this;
         }
 
+        public Criteria andSummaryIsNull() {
+            addCriterion("summary is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryIsNotNull() {
+            addCriterion("summary is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryEqualTo(String value) {
+            addCriterion("summary =", value, "summary");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryNotEqualTo(String value) {
+            addCriterion("summary <>", value, "summary");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryGreaterThan(String value) {
+            addCriterion("summary >", value, "summary");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryGreaterThanOrEqualTo(String value) {
+            addCriterion("summary >=", value, "summary");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryLessThan(String value) {
+            addCriterion("summary <", value, "summary");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryLessThanOrEqualTo(String value) {
+            addCriterion("summary <=", value, "summary");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryLike(String value) {
+            addCriterion("summary like", value, "summary");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryNotLike(String value) {
+            addCriterion("summary not like", value, "summary");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryIn(List<String> values) {
+            addCriterion("summary in", values, "summary");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryNotIn(List<String> values) {
+            addCriterion("summary not in", values, "summary");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryBetween(String value1, String value2) {
+            addCriterion("summary between", value1, value2, "summary");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryNotBetween(String value1, String value2) {
+            addCriterion("summary not between", value1, value2, "summary");
+            return (Criteria) this;
+        }
+
         public Criteria andLanguageIsNull() {
             addCriterion("language is null");
             return (Criteria) this;
@@ -733,6 +803,11 @@ public class NewsExample {
 
         public Criteria andTitleLikeInsensitive(String value) {
             addCriterion("upper(title) like", value.toUpperCase(), "title");
+            return (Criteria) this;
+        }
+
+        public Criteria andSummaryLikeInsensitive(String value) {
+            addCriterion("upper(summary) like", value.toUpperCase(), "summary");
             return (Criteria) this;
         }
 

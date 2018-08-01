@@ -83,7 +83,7 @@ system:
   # 短信催账提前天数
   daysInAdvance: 3
   # 请求前端H5页面链接
-  H5MessageUrl: http://www.rupiahget.com/article/MessagePushDetail.html?id=
+  H5MessageUrl: http://10.10.20.163:8803/article/MessagePushDetail.html?id=
 
   # 允许注册的三大运营商手机号前缀
   MobilePrefix:

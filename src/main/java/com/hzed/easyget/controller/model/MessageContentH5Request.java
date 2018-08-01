@@ -14,4 +14,6 @@ import javax.validation.constraints.NotNull;
 public class MessageContentH5Request {
     @NotNull(message = "id不能为空")
     private Long id;
+    @NotNull(message = "类型不能为空")
+    private String type;
 }

@@ -33,4 +33,10 @@ public class NewsRepository {
         example.setOrderByClause(News.Column.createTime.desc());
         return newsMapper.selectByExample(example);
     }
+
+    public News findOneByIdAndLanguage(Long id) {
+        NewsExample example = new NewsExample();
+        example.createCriteria().andIdEqualTo(id);
+        return newsMapper.selectOneByExampleWithBLOBs(example);
+    }
 }

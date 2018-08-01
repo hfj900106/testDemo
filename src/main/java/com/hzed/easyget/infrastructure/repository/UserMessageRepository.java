@@ -27,10 +27,6 @@ public class UserMessageRepository {
 
 
     public List<UserMessageExt> findList(Long userId, String i18n, Integer pageNo, Integer pageSize) {
-        /*UserMessageExample example = new UserMessageExample();
-        example.createCriteria().andUserIdEqualTo(userId).andLanguageEqualTo(i18n);
-        example.setOrderByClause(UserMessage.Column.createTime.desc());
-        example.page(pageNo, pageSize);*/
 
         return userMessageExtMapper.selectNewsAndMessageList(userId,i18n,pageNo,pageSize);
     }
@@ -62,7 +58,7 @@ public class UserMessageRepository {
     }
 
     /**
-     * 根据id获取公告内容
+     * 根据id和语言获取公告内容
      * @param id
      * @return
      */

@@ -167,8 +167,8 @@ public class HomeService {
             }
 
             newsResponse.setTitle(news.getTitle());
-            newsResponse.setSummary(news.getContent());
-            newsResponse.setToUrl(systemProp.getH5MessageUrl() + news.getId());
+            newsResponse.setSummary(news.getSummary());
+            newsResponse.setToUrl(systemProp.getH5MessageUrl() + news.getId() + "&type=news");
             newsResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(news.getCreateTime()));
             newsResponse.setId(news.getId());
         }

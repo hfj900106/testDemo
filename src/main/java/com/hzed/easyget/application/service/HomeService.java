@@ -169,7 +169,7 @@ public class HomeService {
             }
 
             newsResponse.setTitle(news.getTitle());
-            newsResponse.setContent(news.getContent());
+            newsResponse.setSummary(news.getContent());
             newsResponse.setToUrl(systemProp.getH5MessageUrl() + news.getId());
             newsResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(news.getCreateTime()));
             newsResponse.setId(news.getId());

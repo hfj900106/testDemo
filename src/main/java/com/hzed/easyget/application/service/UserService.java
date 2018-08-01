@@ -100,6 +100,7 @@ public class UserService {
         List<UserMessageExt> newsAndMessageList = userMessageRepository.findList(userId, i18n, pageNo, pageSize);
         newsAndMessageList.forEach(newsAndMessage -> {
             NewsAndMessageResponse newsAndMessageResponse = new NewsAndMessageResponse();
+            newsAndMessageResponse.setTitle(newsAndMessage.getTitle());
             if (!ObjectUtils.isEmpty(newsAndMessage.isHasRead())) {
                 newsAndMessageResponse.setHasRead(newsAndMessage.isHasRead());
             }
@@ -109,6 +110,8 @@ public class UserService {
             }
 
             newsAndMessageResponse.setToUrl(systemProp.getH5MessageUrl() + newsAndMessage.getId());
+            newsAndMessageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(newsAndMessage.getCreateTime()));
+            newsAndMessageResponse.setId(newsAndMessage.getId());
 
             newsAndMessageResponseList.add(newsAndMessageResponse);
         });

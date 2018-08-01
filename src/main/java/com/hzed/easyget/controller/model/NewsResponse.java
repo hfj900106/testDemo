@@ -12,7 +12,7 @@ import lombok.Data;
 public class NewsResponse {
 
     private String title;
-    private String content;
+    private String summary;
     private String toUrl;
     private Long createTime;
     private Long id;

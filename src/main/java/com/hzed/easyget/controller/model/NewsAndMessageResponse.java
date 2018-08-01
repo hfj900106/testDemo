@@ -2,8 +2,6 @@ package com.hzed.easyget.controller.model;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * 消息公告列表
  *
@@ -17,7 +15,7 @@ public class NewsAndMessageResponse {
     private boolean hasRead;
     private String toUrl;
     private Long userId;
-    private LocalDateTime createTime;
+    private Long createTime;
     private Long id;
 
 

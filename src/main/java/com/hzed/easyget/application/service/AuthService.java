@@ -246,7 +246,12 @@ public class AuthService {
         if (!StringUtils.isBlank(birthPlaceBirthday)) {
             // 注意有空格
             int strLength = birthPlaceBirthday.length();
-            recognitionResponse.setBirthday(birthPlaceBirthday.substring(strLength - 10, strLength));
+            if (strLength < 10) {
+                // 识别生日数据有错则直接给空串
+                recognitionResponse.setBirthday("");
+            }else {
+                recognitionResponse.setBirthday(birthPlaceBirthday.substring(strLength - 10, strLength));
+            }
         }
         recognitionResponse.setName(name);
         int genderInt = 1;

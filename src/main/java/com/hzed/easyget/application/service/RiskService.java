@@ -272,8 +272,8 @@ public class RiskService {
             return ;
         }
         log.info("查询风控是否有贷款资格，风控返回被拒原因:{}，用户id:{}", response.getHead().getError_msg(), mobile);
-        final String mk02 = "1100011";
-        final String mk06 = "1100014";
+        final String mk02 = "MK02";
+        final String mk06 = "MK06";
         //每日通过超过数量
         if (mk02.equals(errorCode)) {
             throw new WarnException(BizCodeEnum.INSUFFICIENT_QUOTA);

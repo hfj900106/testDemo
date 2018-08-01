@@ -179,7 +179,7 @@ public class DictService {
         log.info("当前版本信息，version：{}，minVersionCode：{}", versionDict.getDicValue(), appVersionModel.getMinimum_version());
         appVersionModel.setMinimum_version(Integer.parseInt(minVersionCode));
         log.info("即将更新成，version：{}，minVersionCode：{}", newVersion, minVersionCode);
-        Dict dictUpdate = Dict.builder().id(versionDict.getId()).dicValue(newVersion).dicLabel(JSONObject.toJSONString(appVersionModel)).build();
+        Dict dictUpdate = Dict.builder().id(versionDict.getId()).dicValue(newVersion).dicLabel(JSONObject.toJSONString(appVersionModel)).updateTime(LocalDateTime.now()).build();
         dictRepository.update(dictUpdate);
         // 清理缓存
         clearCodeCache(channel);

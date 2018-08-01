@@ -17,7 +17,6 @@ import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.AppVersionModel;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
@@ -25,7 +24,6 @@ import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -181,29 +179,10 @@ public class HomeService {
             checkLoanResponse.setBidStatus(bid.getStatus().toString());
             checkLoanResponseList.add(checkLoanResponse);
         });
-        RiskResponse response = riskService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
-        if (ObjectUtils.isEmpty(response)) {
-            throw new ComBizException(BizCodeEnum.ERROR_RISK_RESULT);
-        }
-        log.info("贷款资格校验风控返回报文：{}", response);
-        String errorCode = response.getHead().getError_code();
-        log.info("查询风控是否有贷款资格，风控返回被拒原因:{}，用户id:{}", response.getHead().getError_msg(), userId);
+        // 调风控接口
+        riskService.checkRiskEnableBorrow(user.getMobileAccount(), imei,"0");
 
-        if (StringUtils.isBlank(errorCode)) {
-            return checkLoanResponseList;
-        }
-
-        final String mk02 = "1100011";
-        final String mk06 = "1100014";
-        //每日通过超过数量
-        if (mk02.equals(errorCode)) {
-            throw new WarnException(BizCodeEnum.INSUFFICIENT_QUOTA, checkLoanResponseList);
-        } else if (mk06.equals(errorCode)) {
-            throw new WarnException(BizCodeEnum.BID_EXISTS, checkLoanResponseList);
-        } else {
-            throw new WarnException(BizCodeEnum.UN_LOAN_QUALIFICATION, checkLoanResponseList);
-        }
-
+        return checkLoanResponseList;
     }
 
     public CheckLoanJumpResponse checkLoanJump() {

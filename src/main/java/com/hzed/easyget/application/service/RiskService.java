@@ -9,6 +9,7 @@ import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
@@ -250,15 +251,37 @@ public class RiskService {
     /**
      * 根据用户手机号，imei通过用户查询风控是否有贷款规则
      */
-    public RiskResponse checkRiskEnableBorrow(String mobile, String imei) {
+    public void checkRiskEnableBorrow(String mobile, String imei, String flag) {
         Map<String, String> paramMap = Maps.newHashMap();
         paramMap.put("mobile", mobile);
         paramMap.put("imei", imei);
+        paramMap.put("flag", flag);
         String url = riskProp.getAbsCheckRiskEnableBorrowUrl();
         log.info("查询风控是否有贷款规则请求URL：{},参数：{}", url, JSON.toJSONString(paramMap));
+
         RiskResponse response = restService.postJson(url, paramMap, RiskResponse.class);
+
         log.info("查询风控是否有贷款规则返回报文：{}", JSON.toJSONString(response));
-        return response;
+        if (ObjectUtils.isEmpty(response)) {
+            throw new ComBizException(BizCodeEnum.ERROR_RISK_RESULT);
+        }
+        log.info("贷款资格校验风控返回报文：{}", response);
+        String errorCode = response.getHead().getError_code();
+
+        if (ObjectUtils.isEmpty(errorCode)) {
+            return ;
+        }
+        log.info("查询风控是否有贷款资格，风控返回被拒原因:{}，用户id:{}", response.getHead().getError_msg(), mobile);
+        final String mk02 = "1100011";
+        final String mk06 = "1100014";
+        //每日通过超过数量
+        if (mk02.equals(errorCode)) {
+            throw new WarnException(BizCodeEnum.INSUFFICIENT_QUOTA);
+        } else if (mk06.equals(errorCode)) {
+            throw new WarnException(BizCodeEnum.BID_EXISTS);
+        } else {
+            throw new WarnException(BizCodeEnum.UN_LOAN_QUALIFICATION);
+        }
 
     }
 

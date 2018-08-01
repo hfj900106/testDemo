@@ -2,15 +2,18 @@ package com.hzed.easyget.infrastructure.model;
 
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author guichang
  */
 @Data
+@NoArgsConstructor
 public class Response<T> {
     private String code;
 
     private String message;
+    private String messageCN;
 
     private T data;
 
@@ -22,6 +25,13 @@ public class Response<T> {
     public Response(String errorCode, String message, T data) {
         this.code = errorCode;
         this.message = message;
+        this.data = data;
+    }
+
+    public Response(String errorCode, String message, String messageCN,T data) {
+        this.code = errorCode;
+        this.message = message;
+        this.messageCN = messageCN;
         this.data = data;
     }
 

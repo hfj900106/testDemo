@@ -5,9 +5,11 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.head.TokenIgnore;
-import com.hzed.easyget.infrastructure.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -34,7 +36,7 @@ public class HomeController {
     }
 
     @TokenIgnore
-    @ModuleFunc("版本号检测是否更新")
+    @ModuleFunc("版本检测")
     @PostMapping("/getAppVersion")
     public AppVersionResponse getAppVersion(@Valid @RequestBody AppVersionRequest request) {
         return homeService.getAppVersion(request);
@@ -62,17 +64,17 @@ public class HomeController {
 
     @ModuleFunc("发起借款校验")
     @PostMapping("/checkLoan")
-    public Response<List<CheckLoanResponse>> checkLoan() {
+    public List<CheckLoanResponse> checkLoan() {
         return homeService.checkLoan();
     }
 
-    @ModuleFunc("首页检测借款状态")
+    @ModuleFunc("借款状态检测")
     @PostMapping("/checkLoanJump")
     public CheckLoanJumpResponse checkLoanJump() {
         return homeService.checkLoanJump();
     }
 
-    @ModuleFunc("首页检测还款状态")
+    @ModuleFunc("还款状态检测")
     @PostMapping("/checkRepayment")
     public CheckRepaymentResponse checkRepayment() {
         return homeService.checkRepayment();

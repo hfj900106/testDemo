@@ -91,13 +91,17 @@ public class AuthService {
      */
     public void authContacts(ContactsRequest request) {
         GlobalUser user = getGlobalUser();
+        String auth_code = AuthCodeEnum.CONTACTS.getCode();
+        // 请求防重
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
         // 判断该用户是否已经验证
-        checkAuth(user.getUserId(), AuthCodeEnum.CONTACTS.getCode());
+        checkAuth(user.getUserId(), auth_code);
 
         String platForm = getGlobalHead().getPlatform();
         int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
         RiskResponse response = riskService.authContacts(request.getContacts(), request.getCallLogs(), source);
-        afterResponse(response, user.getUserId(), AuthCodeEnum.CONTACTS.getCode(), "通讯录认证");
+        afterResponse(response, user.getUserId(), auth_code, "通讯录认证");
     }
 
     /**
@@ -124,20 +128,24 @@ public class AuthService {
      */
     public void authMessages(MessagesRequest request) {
         GlobalUser user = getGlobalUser();
+        String auth_code = AuthCodeEnum.MESSAGE.getCode();
+        // 请求防重
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
+
         // 判断该用户是否已经验证
-        checkAuth(user.getUserId(), AuthCodeEnum.MESSAGE.getCode());
+        checkAuth(user.getUserId(), auth_code);
 
         String platForm = getGlobalHead().getPlatform();
         int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
         RiskResponse response = riskService.authMessages(request.getMessage(), source);
-        afterResponse(response, user.getUserId(), AuthCodeEnum.MESSAGE.getCode(), "短信认证");
+        afterResponse(response, user.getUserId(), auth_code, "短信认证");
     }
 
     /**
      * 运营商认证 - 发送验证码接口
      */
     public void operatorSendSmsCode() {
-
         GlobalUser user = getGlobalUser();
         String isSend = redisService.getCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
         if (StringUtils.isNotBlank(isSend)) {
@@ -169,7 +177,7 @@ public class AuthService {
     public void operatorAuth(PeratorAuthRequest request) {
         GlobalUser user = getGlobalUser();
         // 判断该用户是否已经验证
-        checkAuth(user.getUserId(),AuthCodeEnum.SMS.getCode());
+        checkAuth(user.getUserId(), AuthCodeEnum.SMS.getCode());
 
         RiskResponse response = riskService.operatorAuth(request.getSmsCode());
 
@@ -333,7 +341,7 @@ public class AuthService {
     public void professionalAuth(ProfessionalRequest request) {
         GlobalUser user = getGlobalUser();
         // 判断该用户是否已经验证
-        checkAuth(user.getUserId(),AuthCodeEnum.PROFESSIONAL.getCode());
+        checkAuth(user.getUserId(), AuthCodeEnum.PROFESSIONAL.getCode());
 
         try {
             //照片上传
@@ -358,7 +366,7 @@ public class AuthService {
 
     private void afterResponse(RiskResponse response, Long userId, String code, String remark) {
         if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
@@ -384,8 +392,6 @@ public class AuthService {
 
     /**
      * Facebook认证-风控回调
-     *
-     * @param request
      */
     public void facebookAuth(FacebookRequest request) {
         log.info("facebook认证-风控回调数据：{}", JSONObject.toJSONString(request));
@@ -401,8 +407,6 @@ public class AuthService {
 
     /**
      * ins认证-风控回调
-     *
-     * @param request
      */
     public void insAuth(InsRequest request) {
         log.info("ins认证-风控回调数据：{}", JSONObject.toJSONString(request));
@@ -418,8 +422,6 @@ public class AuthService {
 
     /**
      * facebook和ins认证-风控回调
-     *
-     * @param request
      */
     public void facebookAndIns(FacebookInsRequest request) {
         String taskId = request.getTaskId();
@@ -430,8 +432,6 @@ public class AuthService {
 
     /**
      * 检测用户是否已经认证成功
-     * @param userId
-     * @param authCode
      */
     public void checkAuth(Long userId, String authCode) {
         // 判断该用户是否已经验证

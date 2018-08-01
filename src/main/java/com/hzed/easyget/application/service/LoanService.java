@@ -7,19 +7,12 @@ import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.SystemProp;
-import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
-import com.hzed.easyget.infrastructure.exception.WarnException;
-import com.hzed.easyget.infrastructure.repository.BidRepository;
-import com.hzed.easyget.infrastructure.repository.DictRepository;
-import com.hzed.easyget.infrastructure.repository.UserBankRepository;
-import com.hzed.easyget.infrastructure.repository.UserLoanVisitRepository;
+import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.Bid;
-import com.hzed.easyget.persistence.auto.entity.Dict;
-import com.hzed.easyget.persistence.auto.entity.UserBank;
-import com.hzed.easyget.persistence.auto.entity.UserLoanVisit;
+import com.hzed.easyget.persistence.auto.entity.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -34,6 +27,7 @@ import java.util.List;
  * @author wuchengwu
  * @data 2018/6/7
  */
+@Slf4j
 @Service
 public class LoanService {
 
@@ -49,6 +43,10 @@ public class LoanService {
     private UserBankRepository userBankRepository;
     @Autowired
     private DictRepository dictRepository;
+    @Autowired
+    private RiskService riskService;
+    @Autowired
+    private UserRepository userRepository;
 
     public LoanDetailResponse loanDetail(LoanDetailRequest request) {
         LoanDetailResponse loanDetailResponse = new LoanDetailResponse();
@@ -77,10 +75,15 @@ public class LoanService {
     }
 
     public SubmitLoanResponse submitLoan(SubmitLoanRequest request) {
+        SubmitLoanResponse submitLoanResponse = new SubmitLoanResponse();
         Long userId = RequestUtil.getGlobalUser().getUserId();
-        if (!comService.isLoan(userId)) {
+        User user = userRepository.findById(userId);
+        /*if (!comService.isLoan(userId)) {
             throw new WarnException(BizCodeEnum.BID_EXISTS);
-        }
+        }*/
+        // 调风控
+        riskService.checkRiskEnableBorrow(user.getMobileAccount(), RequestUtil.getGlobalHead().getImei(),"1");
+
         Bid bid = new Bid();
         Long bidId = IdentifierGenerator.nextId();
         bid.setId(bidId);
@@ -101,9 +104,10 @@ public class LoanService {
         userBank.setUserId(userId);
         userBank.setInBank(request.getInBank());
         userBank.setInAccount(request.getInAccount());
+        submitLoanResponse.setBid(bidId);
         bidRepository.insertBidAndUserBank(bid, userBank);
 
-        return SubmitLoanResponse.builder().bid(bidId).build();
+        return submitLoanResponse;
     }
 
     public PreSubmitLoanResponse preSubmitLoan(PreSubmitLoanRequest request) {
@@ -120,7 +124,6 @@ public class LoanService {
             subLoanResponse.setBankName(dict.getDicValue());
             subLoanResponse.setInAccount(userBankList.get(0).getInAccount());
         }
-
 
         AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
 

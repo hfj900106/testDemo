@@ -13,7 +13,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.HandlerMethod;
 
 import java.util.List;
 import java.util.Locale;
@@ -31,7 +30,7 @@ public class ExpHandlerAdvice {
     private I18nService i18nService;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Response handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex, HandlerMethod handler) {
+    public Response handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         List<ObjectError> errors = ex.getBindingResult().getAllErrors();
         StringBuffer errorMsg = new StringBuffer();
         errors.stream().forEach(x -> errorMsg.append(x.getDefaultMessage()).append(";"));
@@ -43,11 +42,11 @@ public class ExpHandlerAdvice {
 
         String errorCode = ex.getErrorCode();
         String message = i18nService.getBizCodeMessage(errorCode, ex.getObjs());
-        // 中文描述 用于打印日志
+        // 中文描述
         String messageCN = i18nService.getBizCodeMessage(errorCode, ex.getObjs(), Locale.CHINA);
 
         log.error("业务异常：{}", messageCN, ex);
-        return new Response(errorCode, message, ex.getData());
+        return new Response(errorCode, message, messageCN, ex.getData());
     }
 
     @ExceptionHandler(WarnException.class)
@@ -55,11 +54,11 @@ public class ExpHandlerAdvice {
 
         String errorCode = ex.getErrorCode();
         String message = i18nService.getBizCodeMessage(errorCode, ex.getObjs());
-        // 中文描述 用于打印日志
+        // 中文描述
         String messageCN = i18nService.getBizCodeMessage(errorCode, ex.getObjs(), Locale.CHINA);
 
         log.warn("业务警告：{}", messageCN);
-        return new Response(ex.getErrorCode(), message, ex.getData());
+        return new Response(ex.getErrorCode(), message, messageCN, ex.getData());
     }
 
     @ExceptionHandler(NestedException.class)
@@ -82,6 +81,7 @@ public class ExpHandlerAdvice {
         }
 
         resp.setMessage(i18nService.getBizCodeMessage(resp.getCode()));
+        resp.setMessageCN(i18nService.getBizCodeMessage(resp.getCode(), Locale.CHINA));
         return resp;
     }
 

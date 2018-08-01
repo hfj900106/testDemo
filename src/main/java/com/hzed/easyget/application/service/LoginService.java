@@ -1,5 +1,6 @@
 package com.hzed.easyget.application.service;
 
+import com.google.common.collect.Maps;
 import com.hzed.easyget.application.enums.BidEnum;
 import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.controller.model.*;
@@ -8,16 +9,17 @@ import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
-import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalHead;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.*;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.auto.entity.User;
+import com.hzed.easyget.persistence.auto.entity.UserLogin;
+import com.hzed.easyget.persistence.auto.entity.UserStatus;
+import com.hzed.easyget.persistence.auto.entity.UserToken;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +52,8 @@ public class LoginService {
     SaService saService;
     @Autowired
     private SmsService smsService;
+    @Autowired
+    private DictService dictService;
 
     /**
      * 用户登录注册
@@ -61,7 +66,7 @@ public class LoginService {
         String mobile = request.getMobile();
         log.info("登录注册手机号：{}", mobile);
         // 格式化手机号
-        mobile = mobileForm(mobile);
+        mobile = mobileFormat(mobile);
 
         String smsCode = request.getSmsCode();
         String platform = globalHead.getPlatform();
@@ -124,7 +129,15 @@ public class LoginService {
         redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 10800L);
         //验证SmsCode之后删除掉
         redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
-        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).build();
+        //重新查询用户，取出client
+        User userQuery = userRepository.findByMobile(mobile);
+        // 查询登录记录标，只有一条登录记录就算首次登录
+        List<UserLogin> userLoginList = userRepository.getUserLoginsByUserId(userQuery.getId());
+        String client = "";
+        if (!ObjectUtils.isEmpty(userLoginList) && userLoginList.size() == 1) {
+            client = userQuery.getClient();
+        }
+        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(client).build();
     }
 
 
@@ -137,7 +150,7 @@ public class LoginService {
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String mobile = request.getMobile();
         // 格式化手机号
-        mobile = mobileForm(mobile);
+        mobile = mobileFormat(mobile);
         String smsCode = request.getSmsCode();
         String platform = globalHead.getPlatform();
         String clinet = request.getFromCode();
@@ -218,7 +231,9 @@ public class LoginService {
         String mobile = request.getMobile();
         log.info("发送验证码手机号：{}", mobile);
         // 格式化手机号
-        mobile = mobileForm(mobile);
+        mobile = mobileFormat(mobile);
+        // 校验是否三大运营商手机号
+        checkMobile(mobile);
 
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         String isH5 = globalHead.getPlatform();
@@ -239,7 +254,6 @@ public class LoginService {
         }
         String code = smsService.getCode();
 
-        DictService dictService = SpringContextUtil.getBean(DictService.class);
         List<DictResponse> smsContent1 = dictService.getDictByDicCodeAndLanguage(ComConsts.SMS_CONTENT_1, systemProp.getLocal());
         if (ObjectUtils.isEmpty(smsContent1)) {
             log.error("没有配置短信模板");
@@ -256,6 +270,36 @@ public class LoginService {
         redisService.setCache(RedisConsts.LOGIN_SMS_CODE_SEND + RedisConsts.SPLIT + mobile, mobile, 60L);
         //10分钟内重发需要验证码
         redisService.setCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile, mobile, 600L);
+    }
+
+    /**
+     * 校验手机号是否三大运营商手机号
+     *
+     * @param mobile
+     */
+    private void checkMobile(String mobile) {
+        if (mobile.length() < 4) {
+            throw new WarnException(BizCodeEnum.MOBILE_INCORRECT);
+        }
+        // 手机号码前四位
+        String mobilePre = mobile.substring(0, 4);
+
+        Map<String, List<String>> mobilePrefixMap = Maps.newHashMap();
+        SystemProp.MobilePrefix mobilePrefix = systemProp.getMobilePrefix();
+        mobilePrefixMap.put("Indosat", Arrays.asList(mobilePrefix.getIndosat().split(",")));
+        mobilePrefixMap.put("XL", Arrays.asList(mobilePrefix.getXL().split(",")));
+        mobilePrefixMap.put("Telkomsel", Arrays.asList(mobilePrefix.getTelkomsel().split(",")));
+
+        for (Map.Entry<String, List<String>> entry : mobilePrefixMap.entrySet()) {
+            for (String v : entry.getValue()) {
+                if (v.equals(mobilePre)) {
+                    return;
+                }
+            }
+        }
+
+        // 不在则直接抛异常
+        throw new WarnException(BizCodeEnum.MOBILE_ILLEGAL, mobilePrefixMap);
     }
 
 
@@ -276,13 +320,13 @@ public class LoginService {
      * 验证码验证，不区分大小写
      */
     public void checkPictureCode(String mobile, String code) {
-        //获取缓存数据
+        // 获取缓存数据
         String cacheCode = redisService.getCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile);
         if (StringUtils.isBlank(cacheCode) || !code.equalsIgnoreCase(cacheCode)) {
-            throw new ComBizException(BizCodeEnum.PIC_CODE_ERROR);
+            throw new WarnException(BizCodeEnum.PIC_CODE_ERROR);
         }
 
-        //验证通过则删除10分钟重发标识，等发送之后会重新加上
+        // 验证通过则删除10分钟重发标识，等发送之后会重新加上
         redisService.clearCache(RedisConsts.LOGIN_PIC_CODE_SEND + RedisConsts.SPLIT + mobile);
     }
 
@@ -292,8 +336,12 @@ public class LoginService {
      * @param mobile
      * @return
      */
-    public String mobileForm(String mobile) {
+    public String mobileFormat(String mobile) {
         log.info("格式化前手机号：{}", mobile);
+        if (mobile.length() < 4) {
+            // 手机号码太短
+            throw new WarnException(BizCodeEnum.MOBILE_ILLEGAL);
+        }
         String str1 = "0062";
         String str2 = "62";
         String str3 = "+62";
@@ -301,19 +349,15 @@ public class LoginService {
 
         if (str1.equals(mobile.substring(0, 4))) {
             mobile = str4 + mobile.substring(4);
-        }
-        else if(str2.equals(mobile.substring(0, 2))){
+        } else if (str2.equals(mobile.substring(0, 2))) {
             mobile = str4 + mobile.substring(2);
-        }
-        else if(str3.equals(mobile.substring(0, 3))){
+        } else if (str3.equals(mobile.substring(0, 3))) {
             mobile = str4 + mobile.substring(3);
-        }
-        else if(!mobile.startsWith(str4)){
+        } else if (!mobile.startsWith(str4)) {
             mobile = str4 + mobile;
         }
         log.info("格式化后手机号：{}", mobile);
         return mobile;
     }
-
 
 }

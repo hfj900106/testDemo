@@ -3,7 +3,6 @@ package com.hzed.easyget.application.service;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.BidStatusEnum;
-import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.application.enums.JobStatusEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
@@ -18,9 +17,13 @@ import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.AesUtil;
+import com.hzed.easyget.infrastructure.utils.Arith;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
-import com.hzed.easyget.persistence.auto.entity.*;
+import com.hzed.easyget.persistence.auto.entity.Bid;
+import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
+import com.hzed.easyget.persistence.auto.entity.TempTable;
+import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
 import com.hzed.easyget.persistence.ext.entity.BillExt;
 import lombok.extern.slf4j.Slf4j;
@@ -72,7 +75,6 @@ public class JobService {
     private UserRepository userRepository;
     @Autowired
     private UserMessageRepository messageRepository;
-    ;
 
     /**
      * 风控审核
@@ -167,6 +169,7 @@ public class JobService {
             log.info("没有需要放款的记录");
             return;
         }
+
         bidList.forEach(bid -> {
             MdcUtil.putTrace();
             Long bidId = bid.getBidId();
@@ -174,26 +177,55 @@ public class JobService {
             Long tempId = IdentifierGenerator.nextId();
             try {
                 // 插入中间表
-                tempTableRepository.insertJob(TempTable.builder().id(tempId).jobName(ComConsts.PUSH_BANK_TASK).relaseId(bidId).remark("放款").reRunTimes((byte) 1).build());
-                LoanTransactionRequest loan = bidRepository.findLoanTransaction(bidId);
-                if (!ObjectUtils.isEmpty(loan)) {
-                    // 交易编号
-                    loan.setTransactionId(IdentifierGenerator.nextSeqNo());
-                    // 交易流水
-                    loan.setRequestNo(tempId.toString());
-                    PayResponse response = bluePayService.loanTransaction(loan);
-                    /// 模拟放款成功
-                    /// PayResponse response = new PayResponse(BizCodeEnum.SUCCESS.getCode());
-                    if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
-                        transactionService.lendingCallback(bidId, tempId, loan.getTransactionId(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
-                    } else {
-                        transactionService.insertUsrTransactionInfo(bidId, loan.getTransactionId(), TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(), null);
-                    }
+                TempTable tempTable = TempTable.builder()
+                        .id(tempId)
+                        .jobName(ComConsts.PUSH_BANK_TASK)
+                        .relaseId(bidId)
+                        .remark("放款")
+                        .reRunTimes((byte) 1)
+                        .build();
+                tempTableRepository.insertJob(tempTable);
+
+                // 获取bid
+                Bid bidQuery = bidRepository.findById(bidId);
+                // 获取用户
+                User user = userRepository.findById(bid.getUserId());
+
+                LoanTransactionRequest loan = new LoanTransactionRequest();
+                // 收款人
+                loan.setPayeeName(user.getRealName());
+                // 收款人手机号
+                loan.setPayeeMsisdn(user.getMobileAccount());
+                // 收款人账号
+                loan.setPayeeAccount(bidQuery.getInAccount());
+                // 收款银行
+                loan.setPayeeBankName(bidQuery.getInBank());
+                // 放款金额
+                loan.setAmount(Arith.sub(bidQuery.getLoanAmount(), bidQuery.getAuditFee()));
+                // 交易id
+                String transactionId = IdentifierGenerator.nextSeqNo();
+
+                loan.setTransactionId(transactionId);
+                // 交易流水号
+                loan.setRequestNo(tempId.toString());
+
+                PayResponse response = bluePayService.loanTransaction(loan);
+
+                if (response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
+                    transactionService.lendingCallback(bidId, tempId, transactionId, TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
+                } else {
+                    transactionService.insertUsrTransactionInfo(bidId, transactionId, TransactionTypeEnum.IN_RANSACTION.getCode().byteValue(), null);
                 }
+
             } catch (Exception e) {
                 log.error("标ID：{}，放款失败", bidId, e);
                 //更新中间表
-                tempTableRepository.updateTemp(TempTable.builder().id(Long.valueOf(tempId)).updateTime(LocalDateTime.now()).remark("放款失败：" + e.getMessage()).build());
+                TempTable build = TempTable.builder()
+                        .id(Long.valueOf(tempId))
+                        .updateTime(LocalDateTime.now())
+                        .remark("放款失败：" + e.getMessage())
+                        .build();
+                tempTableRepository.updateTemp(build);
             }
         });
 

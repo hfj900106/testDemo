@@ -14,12 +14,13 @@ public enum BidStatusEnum {
     /**
      * 过规则
      */
-    RISK_ING(1, "待走风控"),
-    MANMADE_ING(2, "待人审"),
-    AUDIT_FAIL(3, "审核不通过"),
-    AUDIT_PASS(4, "审核通过"),
+    RISK_ING(1, "待风控机审"),
+    MANMADE_ING(2, "待风控人审"),
+    AUDIT_FAIL(3, "风控审核不通过"),
+    AUDIT_PASS(4, "风控审核通过"),
     REPAYMENT(5, "已放款"),
-    CLEARED(6, "已结清");
+    CLEARED(6, "已结清"),
+    LOAN_FAIL(7, "放款失败");
 
     private Integer code;
     private String msg;

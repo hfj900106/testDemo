@@ -1,0 +1,26 @@
+### 版本检测
+POST http://localhost:8150/hzed/easy-get/api/home/getAppVersion
+Content-Type: application/json
+imei:1
+i18n:zh-CN
+appKey:easyGet
+platform:android
+version:1.0.1
+token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIxNTkxMDA4NjU1NVwiLFwidXNlcklkXCI6MTA1NTM0MzE1NjY4MzE2MTYwfSIsImV4cCI6MTUzMDE1MTUwMn0.POUZ5GrN_CK2rlnO77doW6AAEAYRgpDMX8RII8wd6xs
+
+{
+"channel":"google",
+"versionCode":"2"
+}
+
+### 发起借款校验
+POST http://localhost:8150/hzed/easy-get/api/home/checkLoan
+Content-Type: application/json
+imei: 123123
+i18n: id-ID
+appKey: easyGet
+platform: android
+version: 1.0.1
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIwMTg3MjE1NTExMTFcIixcInVzZXJJZFwiOjEyMTA4NDczNzgwODExMzY2NH0iLCJleHAiOjE1MzMxMDU3MzF9.WckPVThPsTmQYwUucfIfMF9kscfJpOJDtCb_nYTK9TI
+
+###

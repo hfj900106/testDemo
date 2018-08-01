@@ -56,6 +56,8 @@ public class SmsService {
     private UserRepository userRepository;
     @Autowired
     private UserMessageRepository messageRepository;
+    @Autowired
+    private DictService dictService;
 
     /**
      * 部分结清/全部结清 短信通知
@@ -100,7 +102,6 @@ public class SmsService {
 
     public void sendSms(String mobile, String content, String smsIdStr) {
 
-        DictService dictService = SpringContextUtil.getBean(DictService.class);
         Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
         if (ObjectUtils.isEmpty(dictSms)) {
             log.error("没有配置短信渠道");
@@ -188,7 +189,6 @@ public class SmsService {
      * @param remark
      */
     public void saveSmsLog(Long id, String content, String mobile, byte status, String remark) {
-        DictService dictService = SpringContextUtil.getBean(DictService.class);
         Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
         if (ObjectUtils.isEmpty(dictSms)) {
             log.error("没有配置短信渠道");

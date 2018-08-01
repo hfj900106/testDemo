@@ -92,9 +92,6 @@ public class BidRepository {
 
     /**
      * 放款信息查询
-     *
-     * @param bidId
-     * @return
      */
     public LoanTransactionRequest findLoanTransaction(Long bidId) {
         return bidExtMapper.findLoanTransaction(bidId);

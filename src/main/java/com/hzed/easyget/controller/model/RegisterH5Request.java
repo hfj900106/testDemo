@@ -13,7 +13,5 @@ public class RegisterH5Request {
     private String mobile;
     @NotBlank(message = "{param.login.smsCode.isNotEmpty}")
     private String smsCode;
-    @NotBlank
     private String fromCode;
-
 }

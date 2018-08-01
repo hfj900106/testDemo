@@ -59,7 +59,7 @@ thirdParty:
     receiverTransactionUrl:   /bluepay/gatherDr # 收款接口链接
     getPaymentCodeUrl:        /bluepay/getPaymentCode #获取还款码接口
   risk:
-    domain:                   http://10.10.20.145:9611 # 请求风控域名地址
+    domain:                   http://10.10.30.141:49611 # 请求风控域名地址
     checkRiskEnableBorrowUrl: /api/risk/checkRiskEnableBorrow # 请求风控查询用户贷款资格
     idCardRecognitionUrl:     /api/risk/core/ocr   # 身份证识别
     faceRecognitionUrl:       /api/risk/core/faceComparison # 人脸识别
@@ -82,7 +82,15 @@ system:
   local: id-ID
   # 短信催账提前天数
   daysInAdvance: 3
-  H5MessageUrl: http://www.rupiahget.com/article/MessagePushDetail.html?id= #请求前端H5页面链接
+  # 请求前端H5页面链接
+  H5MessageUrl: http://www.rupiahget.com/article/MessagePushDetail.html?id=
+
+  # 允许注册的三大运营商手机号前缀
+  MobilePrefix:
+    Telkomsel: 0811,0812,0813,0821,0822,0823,0852
+    XL: 0817,0818,0819,0859,0877,0878
+    Indosat: 0814,0815,0816,0855,0856,0858
+
 
   # 定时任务 启动标志 周期
   job:

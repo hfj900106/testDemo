@@ -31,7 +31,7 @@ public class Arith {
     }
 
     public static BigDecimal sub(BigDecimal s1, BigDecimal s2) {
-        return s1.subtract(s2);
+        return round(s1.subtract(s2), 2);
     }
 
     public static BigDecimal mul(BigDecimal s1, BigDecimal s2) {
@@ -120,6 +120,11 @@ public class Arith {
 
         }
         return v.setScale(scale, BigDecimal.ROUND_HALF_UP);
+    }
+
+    public static void main(String[] args) {
+        BigDecimal sub = sub(new BigDecimal(20.2), new BigDecimal(10.5));
+        System.out.println(sub);
     }
 
 

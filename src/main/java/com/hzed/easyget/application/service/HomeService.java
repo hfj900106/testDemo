@@ -16,9 +16,8 @@ import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
+import com.hzed.easyget.infrastructure.model.AppVersionModel;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.model.Response;
-import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
@@ -26,7 +25,6 @@ import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -71,9 +69,6 @@ public class HomeService {
     @Autowired
     private ComService comService;
 
-    private static final String ANDROID_BOMB = "android_bomb";
-    private static final String IOS_BOMB = "ios_bomb";
-
     public ProductInfoResponse getProductInfo() {
 
         ProductInfoResponse productInfoResponse = new ProductInfoResponse();
@@ -87,33 +82,36 @@ public class HomeService {
     }
 
     public AppVersionResponse getAppVersion(AppVersionRequest request) {
-
-        AppVersionResponse appVersionResponse = new AppVersionResponse();
-
         String channel = request.getChannel();
         Integer versionCode = request.getVersionCode();
-        Dict verDict = dictService.getDictByCode(channel);
-        String dictLabelJson = verDict.getDicLabel();
-        JSONObject jsonObject = JSONObject.parseObject(dictLabelJson);
-        appVersionResponse.setVersion(verDict.getDicValue());
-        appVersionResponse.setPath(jsonObject.getString("update_url"));
-        checkIsUpdate(verDict.getDicValue(), appVersionResponse, jsonObject, versionCode);
-        return appVersionResponse;
-    }
 
-    private void checkIsUpdate(String newVersion, AppVersionResponse appVersionResponse, JSONObject jsonObject, Integer versionCode) {
-        String oldVersion = RequestUtil.getGlobalHead().getVersion();
-        if (oldVersion.equals(newVersion)) {
-            appVersionResponse.setIsUpdate(AppVersionEnum.NOT_UPDATE.getCode());
-            appVersionResponse.setIsForce("1");
-        } else {
-            appVersionResponse.setIsUpdate(AppVersionEnum.HAS_UPDATE.getCode());
-            appVersionResponse.setIsForce(jsonObject.getString("force_update"));
-            Integer minimumVersion = Integer.valueOf(jsonObject.getString("minimum_version"));
-            if (versionCode < minimumVersion) {
-                appVersionResponse.setIsForce("0");
+        AppVersionResponse appVersionResponse = new AppVersionResponse();
+        // 字典配置
+        Dict dict = dictService.getDictByCode(channel);
+
+        AppVersionModel appVersionModel = JSONObject.parseObject(dict.getDicLabel(), AppVersionModel.class);
+        // 当前用户版本号
+        String currentUserVersion = RequestUtil.getGlobalHead().getVersion();
+        // 后台版本号
+        String currentAppVersion = dict.getDicValue();
+        // 当前用户版本号比后台配置版本号大则不提示更新
+        if (currentUserVersion.compareTo(currentAppVersion) >= 0) {
+            appVersionResponse.setIsUpdate(AppVersionEnum.NO_NEED_TO_UPDATE.getCode());
+            appVersionResponse.setIsForce(AppVersionEnum.NO_MANDATORY_UPDATES_ARE_REQUIRED.getCode());
+        }
+        // 否则按后台配置提示更新
+        else {
+            appVersionResponse.setIsUpdate(AppVersionEnum.NEED_TO_BE_UPDATED.getCode());
+            appVersionResponse.setIsForce(AppVersionEnum.NO_MANDATORY_UPDATES_ARE_REQUIRED.getCode());
+            // 最低控制版本大于当前版本则强制更新
+            if (appVersionModel.getMinimum_version() > versionCode) {
+                appVersionResponse.setIsForce(AppVersionEnum.NEED_TO_FORCE_AN_UPDATE.getCode());
             }
         }
+
+        appVersionResponse.setVersion(currentAppVersion);
+        appVersionResponse.setPath(appVersionModel.getUpdate_url());
+        return appVersionResponse;
     }
 
     public LoanCalculateResponse loanCalculate(LoanCalculateRequest request) {
@@ -178,9 +176,7 @@ public class HomeService {
         return newsResponse;
     }
 
-    public Response<List<CheckLoanResponse>> checkLoan() {
-        final String mk02 = "1100011";
-        final String mk06 = "1100014";
+    public List<CheckLoanResponse> checkLoan() {
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String imei = RequestUtil.getGlobalHead().getImei();
         User user = userRepository.findById(userId);
@@ -191,31 +187,10 @@ public class HomeService {
             checkLoanResponse.setBidStatus(bid.getStatus().toString());
             checkLoanResponseList.add(checkLoanResponse);
         });
-        RiskResponse response = riskService.checkRiskEnableBorrow(user.getMobileAccount(), imei);
-        log.info("贷款资格校验风控返回报文：{}",response);
-        String errorCode = response.getHead().getError_code();
-        log.info("查询风控是否有贷款资格，风控返回被拒原因:{}，用户id:{}", response.getHead().getError_msg(), userId);
+        // 调风控接口
+        riskService.checkRiskEnableBorrow(user.getMobileAccount(), imei,"0");
 
-        String code;
-        String msg;
-        if (StringUtils.isBlank(errorCode)) {
-            return Response.getSuccessResponse(checkLoanResponseList);
-        }
-
-        //每日通过超过数量
-        if (mk02.equals(errorCode)) {
-            code = BizCodeEnum.INSUFFICIENT_QUOTA.getCode();
-            msg = BizCodeEnum.INSUFFICIENT_QUOTA.getMessage();
-        } else if (mk06.equals(errorCode)) {
-            code = BizCodeEnum.BID_EXISTS.getCode();
-            msg = BizCodeEnum.BID_EXISTS.getMessage();
-        } else {
-            code = BizCodeEnum.UN_LOAN_QUALIFICATION.getCode();
-            msg = BizCodeEnum.UN_LOAN_QUALIFICATION.getMessage();
-        }
-
-        return Response.getFailResponse(checkLoanResponseList, code, msg);
-
+        return checkLoanResponseList;
     }
 
     public CheckLoanJumpResponse checkLoanJump() {

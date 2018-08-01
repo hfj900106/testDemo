@@ -32,7 +32,6 @@ public class LoanController {
         return loanService.loanDetail(request);
     }
 
-
     @ModuleFunc("预申请贷款")
     @PostMapping("/preSubmitLoan")
     public PreSubmitLoanResponse preSubmitLoan(@Valid @RequestBody PreSubmitLoanRequest request){

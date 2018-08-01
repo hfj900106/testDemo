@@ -21,13 +21,19 @@ public class DictRepository {
     @Autowired
     private DictMapper dictMapper;
 
-    public Dict findByCode(String dicCode) {
+    public List<Dict> findListByCode(String code) {
         DictExample example = new DictExample();
-        example.createCriteria().andDicCodeEqualTo(dicCode);
+        example.createCriteria().andDicCodeEqualTo(code);
+        return dictMapper.selectByExample(example);
+    }
+
+    public Dict findOneByCode(String code) {
+        DictExample example = new DictExample();
+        example.createCriteria().andDicCodeEqualTo(code);
         return dictMapper.selectOneByExample(example);
     }
 
-    public Dict findByCodeWithExp(String code) {
+    public Dict findOneByCodeWithExp(String code) {
         DictExample example = new DictExample();
         example.createCriteria().andDicCodeEqualTo(code);
 
@@ -49,7 +55,6 @@ public class DictRepository {
             throw new ComBizException(BizCodeEnum.DICT_NOTEXISTS);
         }
         return dicts;
-
     }
 
     public List<Dict> findEnableByModuleCodeAndLanguage(String moduleCode, String language) {
@@ -97,5 +102,9 @@ public class DictRepository {
         DictExample example = new DictExample();
         example.createCriteria().andDicCodeEqualTo(dicCode).andLanguageEqualTo(language);
         return dictMapper.selectOneByExample(example);
+    }
+
+    public void update(Dict dict) {
+        dictMapper.updateByPrimaryKeySelective(dict);
     }
 }

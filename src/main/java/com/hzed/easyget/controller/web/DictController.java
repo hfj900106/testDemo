@@ -1,10 +1,7 @@
 package com.hzed.easyget.controller.web;
 
 import com.hzed.easyget.application.service.DictService;
-import com.hzed.easyget.controller.model.DictRequest;
-import com.hzed.easyget.controller.model.DictResponse;
-import com.hzed.easyget.controller.model.IDAreaRequest;
-import com.hzed.easyget.controller.model.IDAreaResponse;
+import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.head.IgnoreHeader;
@@ -49,7 +46,7 @@ public class DictController {
     }
 
     @TokenIgnore
-    @ModuleFunc("根据module获取字典列表")
+    @ModuleFunc("获取字典列表")
     @PostMapping("/getDictList")
     public List<DictResponse> getDictList(@Valid @RequestBody DictRequest request) {
         return dictService.getDictByModuleCodeAndLanguage(request.getModuleCode(), RequestUtil.getGlobalHead().getI18n());
@@ -62,5 +59,23 @@ public class DictController {
         return dictService.getIDAreaList(request.getParent());
     }
 
+    /**
+     * =======================================================================================================================================
+     **/
+    @IgnoreHeader
+    @ModuleFunc("切换短信通道")
+    @GetMapping("/switchSmsChannel/{channel}")
+    public void switchSmsChannel(@PathVariable String channel) {
+        log.info("请求报文：{}", channel);
+        dictService.switchSmsChannel(channel);
+    }
+
+    @IgnoreHeader
+    @ModuleFunc("修改版本号")
+    @GetMapping("/updateVersion/{channel}/{newVersion}/{minVersionCode}")
+    public void updateVersion(@PathVariable String channel, @PathVariable String newVersion, @PathVariable String minVersionCode) {
+        log.info("请求报文，channel：{}, newVersion：{}, minVersionCode：{}", channel, newVersion, minVersionCode);
+        dictService.updateVersion(channel, newVersion, minVersionCode);
+    }
 
 }

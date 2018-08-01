@@ -1,6 +1,8 @@
 package com.hzed.easyget.infrastructure.config.redis;
 
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.WarnException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -55,6 +57,10 @@ public class RedisService {
         return (T) o;
     }
 
+    public void expire(String key, long timeout, TimeUnit unit) {
+        sTemplate.expire(getKey(key), timeout, unit);
+    }
+
     public void clearCache(String key) {
         sTemplate.delete(getKey(key));
         redisTemplate.delete(getKey(key));
@@ -64,5 +70,21 @@ public class RedisService {
         return appName + RedisConsts.SPLIT + env + RedisConsts.SPLIT + key;
     }
 
+    /**
+     * redis防重
+     *
+     * @param key     key值
+     * @param expEnum 重复后抛异常的枚举
+     */
+    public void defensiveRepet(String key, BizCodeEnum expEnum) {
+        // 插入成功
+        if (setIfAbsent(key, String.valueOf(0))) {
+            // 设置超时时间
+            expire(key, 3, TimeUnit.MINUTES);
+            return;
+        }
+        // 插入失败直接抛异常
+        throw new WarnException(expEnum);
+    }
 
 }

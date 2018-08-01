@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * bluepay交易相关
@@ -111,8 +110,7 @@ public class BluePayService {
     public PayResponse loanTransaction(LoanTransactionRequest request) {
         String env = systemProp.getEnv();
         String mobile = request.getPayeeMsisdn();
-        boolean flag = StringUtils.substring(mobile, 0, 1).equals("0");
-        if (flag) {
+        if (mobile.startsWith("0")) {
             mobile = StringUtils.substring(mobile, 1, mobile.length());
         }
         String payeeMsisdn = EnvEnum.isTestEnv(env) ? MobileEnum.CHINA.getMobile() + mobile : MobileEnum.IDR.getMobile() + mobile;

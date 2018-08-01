@@ -9,12 +9,14 @@ import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.utils.AesUtil;
 import com.hzed.easyget.infrastructure.utils.ComUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -100,15 +102,15 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSONObject.toJSONString(response));
         if (ObjectUtils.isEmpty(response)) {
-            saService.saOperator(user, false, BizCodeEnum.ERROR_RISK__RESULT.getMessage());
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+            saService.saOperator(user, false, BizCodeEnum.ERROR_RISK_RESULT.getMessage());
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             saService.saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
         Object bodyObj = response.getBody();
-        if(ObjectUtils.isEmpty(bodyObj)){
+        if (ObjectUtils.isEmpty(bodyObj)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
 
@@ -144,10 +146,10 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
         if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         Object bodyObj = response.getBody();
-        if(ObjectUtils.isEmpty(bodyObj)){
+        if (ObjectUtils.isEmpty(bodyObj)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
 
@@ -189,7 +191,7 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
         if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             throw new WarnException(BizCodeEnum.FAIL_FACE_RECOGNITION);
@@ -211,15 +213,23 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
         if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             throw new WarnException(BizCodeEnum.FAIL_FACE_RECOGNITION);
         }
+
+        // 识别成功缓存结果，用于判断用户身份认证时是否已经人脸识别成功 ，缓存两小时，识别成功后两小时内没有提交认证则重新识别
+        redisService.setCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile(), "face", 7200L);
     }
 
     public void identityInfoAuth() {
         GlobalUser user = getGlobalUser();
+        String face = redisService.getCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
+        if(StringUtils.isBlank(face)){
+            log.info("用户{}需进行人脸识别",user.getMobile());
+            throw new WarnException(BizCodeEnum.FAIL_AUTH);
+        }
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
         map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
@@ -231,30 +241,53 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
         if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
+        // 成功后删除redis标志
+        redisService.clearCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
     }
 
     /**
      * 根据用户手机号，imei通过用户查询风控是否有贷款规则
      */
-    public RiskResponse checkRiskEnableBorrow(String mobile, String imei) {
+    public void checkRiskEnableBorrow(String mobile, String imei, String flag) {
         Map<String, String> paramMap = Maps.newHashMap();
         paramMap.put("mobile", mobile);
         paramMap.put("imei", imei);
+        paramMap.put("flag", flag);
         String url = riskProp.getAbsCheckRiskEnableBorrowUrl();
         log.info("查询风控是否有贷款规则请求URL：{},参数：{}", url, JSON.toJSONString(paramMap));
+
         RiskResponse response = restService.postJson(url, paramMap, RiskResponse.class);
+
         log.info("查询风控是否有贷款规则返回报文：{}", JSON.toJSONString(response));
-        return response;
+        if (ObjectUtils.isEmpty(response)) {
+            throw new ComBizException(BizCodeEnum.ERROR_RISK_RESULT);
+        }
+        log.info("贷款资格校验风控返回报文：{}", response);
+        String errorCode = response.getHead().getError_code();
+
+        if (ObjectUtils.isEmpty(errorCode)) {
+            return ;
+        }
+        log.info("查询风控是否有贷款资格，风控返回被拒原因:{}，用户id:{}", response.getHead().getError_msg(), mobile);
+        final String mk02 = "1100011";
+        final String mk06 = "1100014";
+        //每日通过超过数量
+        if (mk02.equals(errorCode)) {
+            throw new WarnException(BizCodeEnum.INSUFFICIENT_QUOTA);
+        } else if (mk06.equals(errorCode)) {
+            throw new WarnException(BizCodeEnum.BID_EXISTS);
+        } else {
+            throw new WarnException(BizCodeEnum.UN_LOAN_QUALIFICATION);
+        }
 
     }
 
     public void facebookAndIns(Long userId, String taskId, Integer source) {
-
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = Maps.newHashMap();
         map.put("sign", AesUtil.aesEncode(userId, timeStamp));
@@ -267,7 +300,7 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", JSON.toJSONString(response));
         if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK__RESULT);
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);

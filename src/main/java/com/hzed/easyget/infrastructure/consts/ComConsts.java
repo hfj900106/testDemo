@@ -15,7 +15,6 @@ public class ComConsts {
     public static final String VERSION = "version";
     public static final String IMEI = "imei";
     public static final int EXPIRE_DAYS = 7;
-    public static final int APP_PAGESIZE = 18;
     public static final String RISK_OK = "ok";
     public static final String RISK_CODE = "code";
     public static final String RISK_OPERATOR_HAVE_SEND = "2";
@@ -69,7 +68,6 @@ public class ComConsts {
     public static final String BL = "BL";
 
     public static final int MOBILE_LEN = 11;
-
     public static final int BULK_SMS_OK = 0;
     public static final int IS_ANDROID = 1;
     public static final int IS_IOS = 2;
@@ -81,8 +79,4 @@ public class ComConsts {
      * 推送放款定时任务名
      */
     public static final String PUSH_BANK_TASK = "bankLoan";
-    /**
-     * 处理还款失败定时任务名
-     */
-    public static final String REPAY_DAIL_TASK = "repayFail";
 }

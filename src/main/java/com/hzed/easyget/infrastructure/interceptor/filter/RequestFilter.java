@@ -34,7 +34,6 @@ public class RequestFilter implements Filter {
             Locale locale = LocaleEnum.getLocale(RequestUtil.getGlobalHead().getI18n());
             Locale.setDefault(locale);
             RequestWrapper request = new RequestWrapper((HttpServletRequest) servletRequest, locale);
-            log.info("请求URL：{}", request.getRequestURL());
             request.setAttribute("body", request.getBody());
             filterChain.doFilter(request, servletResponse);
         } else {

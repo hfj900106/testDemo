@@ -165,7 +165,7 @@ public class AuthService {
 
         saService.saOperator(user, true, BizCodeEnum.SUCCESS_AUTH.getMessage());
         //redis存一个发送标识，要等输入验证认证结束才可以重新发送，第三方接口要求
-        redisService.setCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId(), "operatorAuth", 24 * 3600L);
+        redisService.setCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId(), "operatorAuth", 180L);
 
     }
 

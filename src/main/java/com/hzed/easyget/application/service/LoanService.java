@@ -60,7 +60,7 @@ public class LoanService {
         loanDetailResponse.setStatus(status);
         LocalDateTime auditTime = DateUtil.addMins(bid.getCreateTime(), systemProp.getExpectedAuditTimeInterval().intValue());
         loanDetailResponse.setAuditTime(DateUtil.localDateTimeToStr1(auditTime));
-        loanDetailResponse.setLoanTime(DateUtil.localDateTimeToStr1(DateUtil.addMins(auditTime,systemProp.getExpectedLendingTimeInterval().intValue())));
+        loanDetailResponse.setLoanTime(DateUtil.localDateTimeToStr1(DateUtil.addMins(auditTime, systemProp.getExpectedLendingTimeInterval().intValue())));
 
         if (BidStatusEnum.AUDIT_FAIL.getCode().equals(Integer.valueOf(status)) || BidStatusEnum.AUDIT_PASS.getCode().equals(Integer.valueOf(status)) || BidStatusEnum.REPAYMENT.getCode().equals(Integer.valueOf(status))) {
             UserLoanVisit userLoanVisit = new UserLoanVisit();
@@ -82,7 +82,7 @@ public class LoanService {
             throw new WarnException(BizCodeEnum.BID_EXISTS);
         }*/
         // 调风控
-        riskService.checkRiskEnableBorrow(user.getMobileAccount(), RequestUtil.getGlobalHead().getImei(),"1");
+        riskService.checkRiskEnableBorrow(user.getMobileAccount(), RequestUtil.getGlobalHead().getImei(), "1");
 
         Bid bid = new Bid();
         Long bidId = IdentifierGenerator.nextId();
@@ -120,9 +120,11 @@ public class LoanService {
         List<UserBank> userBankList = userBankRepository.findByUserId(userId);
         if (!ObjectUtils.isEmpty(userBankList)) {
             Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
-            subLoanResponse.setBankCode(dict.getDicCode());
-            subLoanResponse.setBankName(dict.getDicValue());
-            subLoanResponse.setInAccount(userBankList.get(0).getInAccount());
+            if (!ObjectUtils.isEmpty(dict)) {
+                subLoanResponse.setBankCode(dict.getDicCode());
+                subLoanResponse.setBankName(dict.getDicValue());
+                subLoanResponse.setInAccount(userBankList.get(0).getInAccount());
+            }
         }
 
         AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);

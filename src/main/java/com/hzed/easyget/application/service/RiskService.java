@@ -109,7 +109,7 @@ public class RiskService {
         }
         Object bodyObj = response.getBody();
         if (ObjectUtils.isEmpty(bodyObj)) {
-            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
 
         Object codeObj = ((LinkedHashMap) bodyObj).get(ComConsts.RISK_CODE);

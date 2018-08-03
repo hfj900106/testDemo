@@ -1,0 +1,19 @@
+### 风控审核回调
+POST http://localhost:8150/hzed/easy-get/callback/riskCallback/pushBidCallback
+Content-Type: application/json
+imei:123123
+i18n:zh-CN
+appKey:easyGet
+platform:android
+version:1.0.0
+token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIwMTg3MjE1NTExMTFcIixcInVzZXJJZFwiOjEyMTA4NDczNzgwODExMzY2NH0iLCJleHAiOjE1MzM4ODgyMzZ9.QINg2o4oNFC51PfzYHQjbndEqts-Rn1oYfneaGP3PoU
+
+{
+    "handleTime": "1533282302188",
+    "resultCode": "3",
+    "message": "{\"hit\":{\"FI08\":\"FB发帖定位地点匹配工作城市不一致（具体到市）\",\"FI05\":\"FB账号（手机）于INS账号（手机）不一致\",\"FI01\":\"FB联系人姓名与INS联系人姓名一致≤10\",\"FI02\":\"FB点赞人姓名与INS联系人姓名一致≤10\",\"FI03\":\"FB评论人姓名与INS联系人姓名一致≤10\",\"FI04\":\"FB联系人与INS联系人，共同好友≤10\",\"FB03\":\"FB真实姓名与身份证姓名不一致\"},\"lack\":[],\"error\":[]}",
+    "bidId": "104101327290114048",
+    "loanAmount": "600000.0"
+}
+
+###

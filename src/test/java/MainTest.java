@@ -31,7 +31,9 @@ public class MainTest {
 //        tokenTest();
 
 //        mapIfAbsentTest();
-        methodNameTest();
+//        methodNameTest();
+        System.out.println(System.nanoTime());
+        System.out.println("1548757259746196".length());
 
 
     }

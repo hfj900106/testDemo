@@ -48,7 +48,8 @@ public class UserMessageRepository {
      */
     public void addUserMessage(Long userId, String title, String message, String remark) {
         UserMessage userMessage = new UserMessage();
-        userMessage.setId(IdentifierGenerator.nextId());
+        // id经常重复，用纳秒
+        userMessage.setId(System.nanoTime());
         userMessage.setUserId(userId);
         userMessage.setTitle(title);
         userMessage.setH5Message(message);

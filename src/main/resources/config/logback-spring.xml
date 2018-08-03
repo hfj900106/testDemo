@@ -33,8 +33,7 @@
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [${envNameCN} ${port}] [%X{trace}] [%X{moduleName}] - %-5level - %logger{50} - %msg%n</pattern>
         </encoder>
-        <filter class="com.hzed.easyget.infrastructure.config.logback.MyLogFilter">
-            <match>false</match>
+        <filter class="com.hzed.easyget.infrastructure.config.logback.MyModuleNameNotFilter">
             <moduleName>定时任务</moduleName>
         </filter>
     </appender>
@@ -55,8 +54,7 @@
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [${envNameCN} ${port}] [%X{trace}] [%X{moduleName}] - %-5level - %logger{50} - %msg%n</pattern>
         </encoder>
-        <filter class="com.hzed.easyget.infrastructure.config.logback.MyLogFilter">
-            <match>true</match>
+        <filter class="com.hzed.easyget.infrastructure.config.logback.MyModuleNameFilter">
             <moduleName>定时任务</moduleName>
         </filter>
     </appender>
@@ -103,7 +101,7 @@
 
     <!-- 环境输出日志类型 关联 spring.profiles.active -->
     <springProfile name="dev">
-        <root level="debug">
+        <root level="info">
             <appender-ref ref="STDOUT"/>
         </root>
     </springProfile>

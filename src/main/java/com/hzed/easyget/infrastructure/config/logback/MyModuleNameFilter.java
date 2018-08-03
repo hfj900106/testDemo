@@ -18,33 +18,25 @@ import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import lombok.Data;
-import org.springframework.util.ObjectUtils;
-
-import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- * 自定义日志拦截
+ * 拦截moduleName的日志
  *
  * @author guichang
  */
 @Data
-public class MyLogFilter extends Filter<ILoggingEvent> {
+public class MyModuleNameFilter extends Filter<ILoggingEvent> {
     /**
      * 需拦截的moduleName
      */
     private String moduleName;
-    /**
-     * 过滤标志
-     */
-    private boolean match = true;
 
     @Override
     public FilterReply decide(ILoggingEvent event) {
-        Map<String, String> mdcPropertyMap = event.getMDCPropertyMap();
-        boolean isModuleName = !ObjectUtils.isEmpty(mdcPropertyMap) && mdcPropertyMap.get(MdcUtil.MODULENAME).indexOf(moduleName) > -1;
-        if (match && isModuleName) {
-            return FilterReply.ACCEPT;
-        } else if(!match && !isModuleName) {
+        String moduleNameLog = event.getMDCPropertyMap().get(MdcUtil.MODULENAME);
+        boolean isModuleName = StringUtils.isNotBlank(moduleNameLog) && moduleNameLog.indexOf(moduleName) > -1;
+        if (isModuleName) {
             return FilterReply.ACCEPT;
         } else {
             return FilterReply.DENY;

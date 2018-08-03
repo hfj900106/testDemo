@@ -45,11 +45,6 @@ public class UserMessageRepository {
 
     /**
      * 插入消息
-     *
-     * @param userId
-     * @param title
-     * @param message
-     * @param remark
      */
     public void addUserMessage(Long userId, String title, String message, String remark) {
         UserMessage userMessage = new UserMessage();
@@ -64,8 +59,6 @@ public class UserMessageRepository {
 
     /**
      * 根据id获取公告内容
-     * @param id
-     * @return
      */
     public UserMessage findOneById(Long id) {
         UserMessageExample example = new UserMessageExample();

@@ -36,6 +36,8 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
         if (!(handler instanceof HandlerMethod)) {
             return true;
         }
+        log.info("请求URL：{}，来源IP：{}", request.getRequestURL(), RequestUtil.getIp());
+
         HandlerMethod mHandler = (HandlerMethod) handler;
 
         // 处理moduleFunc

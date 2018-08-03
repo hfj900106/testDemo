@@ -101,7 +101,7 @@
 
     <!-- 环境输出日志类型 关联 spring.profiles.active -->
     <springProfile name="dev">
-        <root level="info">
+        <root level="debug">
             <appender-ref ref="STDOUT"/>
         </root>
     </springProfile>

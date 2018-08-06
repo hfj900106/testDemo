@@ -3,6 +3,7 @@ import com.google.common.collect.Maps;
 import com.hzed.easyget.infrastructure.model.AppVersionModel;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
+import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,8 +33,13 @@ public class MainTest {
 
 //        mapIfAbsentTest();
 //        methodNameTest();
-        System.out.println(System.nanoTime());
-        System.out.println("1548757259746196".length());
+//        System.out.println(System.currentTimeMillis());
+//        System.out.println(String.valueOf(System.currentTimeMillis()).length());
+//        System.out.println(System.nanoTime());
+//        System.out.println(System.nanoTime());
+//        System.out.println(System.nanoTime());
+        System.out.println("124154829718560768".length());
+        System.out.println(String.valueOf(IdentifierGenerator.nextId()).length());
 
 
     }

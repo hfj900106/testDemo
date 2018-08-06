@@ -44,7 +44,7 @@ public class BootTest {
 
     @Test
     public void uploadPicTest() throws Exception {
-        String imgPath = "C:\\Users\\Administrator\\Desktop\\1.png";
+        String imgPath = "C:\\imgUpload\\adminPic\\20180804\\7713984226503770112.png";
         String base64String = PicUtil.picToBase64(imgPath);
 //        String aliyunPath = aliyunService.uploadBase64PicStr(base64String, "png");
 //        System.out.println(aliyunPath);

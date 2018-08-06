@@ -16,6 +16,7 @@ public class IdentifierGenerator {
         try {
             long idWorkerId = Long.parseLong(System.getProperty("idWorkerId", "2"));
             long idDataCenterId = Long.parseLong(System.getProperty("idDataCenterId", "3"));
+            log.info(">>>>>>>>idWorkerId：{}，idDataCenterId：{}", idWorkerId, idDataCenterId);
             idWorker = new SnowflakeIdWorker(idWorkerId, idDataCenterId);
         } catch (NumberFormatException e) {
             log.error(">>>>>>初始化ID生成器出错", e);

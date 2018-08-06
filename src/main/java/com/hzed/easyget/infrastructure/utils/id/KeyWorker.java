@@ -1,4 +1,4 @@
-package com.hzed.easyget.infrastructure.utils;
+package com.hzed.easyget.infrastructure.utils.id;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;

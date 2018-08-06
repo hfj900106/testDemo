@@ -11,7 +11,6 @@ import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.BidProgress;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +76,7 @@ public class CallbackService {
         AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
         tempTableRepository.pushBidCallback(
                 Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(LocalDateTime.now()).auditFee(absProduct.getHeadFee()).status(status).build(),
-                BidProgress.builder().id(IdentifierGenerator.nextId()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue()).handleResult(request.getMessage())
+                BidProgress.builder().id(System.nanoTime()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue()).handleResult(request.getMessage())
                         .handleTime(dateTime).build(),
                 bidId);
 

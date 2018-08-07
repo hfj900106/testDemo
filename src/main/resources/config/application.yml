@@ -105,7 +105,7 @@ system:
     repayInfoFlowCron: 0/5 * * * * ?
     # 神策进件
     saInData: false
-    saInDataCron:  0 */1 * * * ?
+    saInDataCron:  0/5 * * * * ?
     # 神策借款成功
     saLoanSuccess: false
     saLoanSuccessCron:  0 */1 * * * ?

@@ -75,7 +75,7 @@ public class SaService {
     public List<SaExt> distinctInDataInfo(List<SaExt> inDataInfoList) {
         List<SaExt> list = new ArrayList<>();
         for (SaExt info : inDataInfoList){
-            int count = saRepository.findInDataInfo(info.getBidId(), info.getUserId());
+            int count = saRepository.findInDataInfo(info.getBidId(), info.getUserId(), info.getBidStatus());
             if (count == 0) {
                 list.add(info);
             }
@@ -369,11 +369,7 @@ public class SaService {
             // FailReason	认证失败原因	字符串
             properties.put("EventResult", desc);
 
-            log.info("SensorsAnalytics DetailedList track method begin, userId:{}, userMobile:{}, bool:{}, desc{}" , user.getUserId(), user.getMobile(), bool, desc);
-            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saProp.getSaLogPath()));
-            sa.track(String.valueOf(user.getUserId()), true, "DetailedList", properties);
-            sa.flush();
-            log.info("SensorsAnalytics DetailedList track method end.");
+            log.info("DetailedList cancel the push to SensorsAnalytics, save to local DB .");
             saOperator(saExt);
         } catch (Exception e){
             log.error("SensorsAnalytics DetailedList track method exception, userId:{}, userMobile:{}, info: {}",user.getUserId(), user.getMobile(), e);

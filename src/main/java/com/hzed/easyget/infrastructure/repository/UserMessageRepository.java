@@ -1,6 +1,5 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.UserMessage;
 import com.hzed.easyget.persistence.auto.entity.example.UserMessageExample;
 import com.hzed.easyget.persistence.auto.mapper.UserMessageMapper;
@@ -40,15 +39,11 @@ public class UserMessageRepository {
 
     /**
      * 插入消息
-     *
-     * @param userId
-     * @param title
-     * @param message
-     * @param remark
      */
     public void addUserMessage(Long userId, String title, String message, String remark) {
         UserMessage userMessage = new UserMessage();
-        userMessage.setId(IdentifierGenerator.nextId());
+        // id经常重复，用纳秒
+        userMessage.setId(System.nanoTime());
         userMessage.setUserId(userId);
         userMessage.setTitle(title);
         userMessage.setMessage(message);
@@ -58,9 +53,13 @@ public class UserMessageRepository {
     }
 
     /**
+<<<<<<< HEAD
      * 根据id和语言获取公告内容
      * @param id
      * @return
+=======
+     * 根据id获取公告内容
+>>>>>>> remotes/origin/dev
      */
     public UserMessage findOneById(Long id) {
         UserMessageExample example = new UserMessageExample();

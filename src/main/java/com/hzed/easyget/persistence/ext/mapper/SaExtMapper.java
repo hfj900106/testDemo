@@ -109,7 +109,7 @@ public interface SaExtMapper {
      * @param userId
      * @return
      */
-    int findInDataInfo(@Param("bidId") Long bidId, @Param("userId") Long userId);
+    int findInDataInfo(@Param("bidId") Long bidId, @Param("userId") Long userId, @Param("bidStatus") Byte bidStatus);
 
     /**
      * 查找借款成功的数据是否存在

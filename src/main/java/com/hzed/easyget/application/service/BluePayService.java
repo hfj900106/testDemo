@@ -14,7 +14,7 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +91,7 @@ public class BluePayService {
      * @return 返回状态
      */
     public PayResponse testRepayment(RepaymentCompleRequest request) {
-        request.setRequestNo(IdentifierGenerator.nextSeqNo());
+        request.setRequestNo(IDGenerator.nextSeqNo());
         log.info("测试还款接口请求地址{},报文：{}", prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(request));
         log.info("测试还款接口返回报文：{}", result);

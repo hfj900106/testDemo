@@ -15,7 +15,7 @@ import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.*;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserLogin;
 import com.hzed.easyget.persistence.auto.entity.UserStatus;
@@ -86,14 +86,14 @@ public class LoginService {
         //用户为空，那么该用户的token表数据肯定也为空
         if (user == null) {
             isNew = true;
-            userId = IdentifierGenerator.nextId();
+            userId = IDGenerator.nextId();
             //build User
             user = User.builder().id(userId).mobileAccount(mobile).platform(platform).client(BidEnum.INDONESIA_APP.getCode()).imei(imei).build();
             // 生成token
             GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
             token = JwtUtil.createToken(newUserToken);
             //build UserToken
-            UserToken userToken = buildUserToken(IdentifierGenerator.nextId(), userId, token, imei);
+            UserToken userToken = buildUserToken(IDGenerator.nextId(), userId, token, imei);
             userToken.setCreateTime(LocalDateTime.now());
             // UserLogin
             UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
@@ -110,7 +110,7 @@ public class LoginService {
             if (ObjectUtils.isEmpty(userToken)) {
                 //说明用户换了设备 新增token
                 //build UserToken
-                UserToken userToken2 = buildUserToken(IdentifierGenerator.nextId(), userId, token, imei);
+                UserToken userToken2 = buildUserToken(IDGenerator.nextId(), userId, token, imei);
                 userToken2.setCreateTime(LocalDateTime.now());
                 // UserLogin
                 UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
@@ -161,7 +161,7 @@ public class LoginService {
         //校验验证码
         checkSmsCode(mobile, smsCode);
 
-        Long userId = IdentifierGenerator.nextId();
+        Long userId = IDGenerator.nextId();
         //build User
         user = new User();
         user.setId(userId);
@@ -176,7 +176,7 @@ public class LoginService {
 
     private UserLogin buildUserLogin(Long userId, String platform, String ip, String device) {
         UserLogin userLogin = new UserLogin();
-        userLogin.setId(IdentifierGenerator.nextId());
+        userLogin.setId(IDGenerator.nextId());
         userLogin.setUserId(userId);
         userLogin.setPlatform(platform);
         userLogin.setClient((byte) 1);
@@ -199,7 +199,7 @@ public class LoginService {
 
     private UserStatus buildUserStatus(Long userId) {
         UserStatus userStatus = new UserStatus();
-        userStatus.setId(IdentifierGenerator.nextId());
+        userStatus.setId(IDGenerator.nextId());
         userStatus.setUserId(userId);
         userStatus.setIsBlacklist(false);
         userStatus.setIsLock(false);

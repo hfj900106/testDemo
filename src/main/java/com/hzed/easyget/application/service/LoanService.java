@@ -10,7 +10,7 @@ import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,11 +60,11 @@ public class LoanService {
         loanDetailResponse.setStatus(status);
         LocalDateTime auditTime = DateUtil.addMins(bid.getCreateTime(), systemProp.getExpectedAuditTimeInterval().intValue());
         loanDetailResponse.setAuditTime(DateUtil.localDateTimeToStr1(auditTime));
-        loanDetailResponse.setLoanTime(DateUtil.localDateTimeToStr1(DateUtil.addMins(auditTime,systemProp.getExpectedLendingTimeInterval().intValue())));
+        loanDetailResponse.setLoanTime(DateUtil.localDateTimeToStr1(DateUtil.addMins(auditTime, systemProp.getExpectedLendingTimeInterval().intValue())));
 
         if (BidStatusEnum.AUDIT_FAIL.getCode().equals(Integer.valueOf(status)) || BidStatusEnum.AUDIT_PASS.getCode().equals(Integer.valueOf(status)) || BidStatusEnum.REPAYMENT.getCode().equals(Integer.valueOf(status))) {
             UserLoanVisit userLoanVisit = new UserLoanVisit();
-            userLoanVisit.setId(IdentifierGenerator.nextId());
+            userLoanVisit.setId(IDGenerator.nextId());
             userLoanVisit.setUserId(RequestUtil.getGlobalUser().getUserId());
             userLoanVisit.setBidId(bid.getId());
             userLoanVisit.setBidStatus(status);
@@ -82,13 +82,13 @@ public class LoanService {
             throw new WarnException(BizCodeEnum.BID_EXISTS);
         }*/
         // 调风控
-        riskService.checkRiskEnableBorrow(user.getMobileAccount(), RequestUtil.getGlobalHead().getImei(),"1");
+        riskService.checkRiskEnableBorrow(user.getMobileAccount(), RequestUtil.getGlobalHead().getImei(), "1");
 
         Bid bid = new Bid();
-        Long bidId = IdentifierGenerator.nextId();
+        Long bidId = IDGenerator.nextId();
         bid.setId(bidId);
         bid.setUserId(userId);
-        bid.setBidNo(String.valueOf(IdentifierGenerator.nextId()));
+        bid.setBidNo(String.valueOf(IDGenerator.nextId()));
         bid.setTitle("消费贷");
         bid.setProductCode(ProductEnum.PRODUCT_CODE.getCode());
         bid.setApplyAmount(request.getApplyAmount());
@@ -100,7 +100,7 @@ public class LoanService {
         bid.setStatus(BidStatusEnum.RISK_ING.getCode().byteValue());
 
         UserBank userBank = new UserBank();
-        userBank.setId(IdentifierGenerator.nextId());
+        userBank.setId(IDGenerator.nextId());
         userBank.setUserId(userId);
         userBank.setInBank(request.getInBank());
         userBank.setInAccount(request.getInAccount());
@@ -120,9 +120,11 @@ public class LoanService {
         List<UserBank> userBankList = userBankRepository.findByUserId(userId);
         if (!ObjectUtils.isEmpty(userBankList)) {
             Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
-            subLoanResponse.setBankCode(dict.getDicCode());
-            subLoanResponse.setBankName(dict.getDicValue());
-            subLoanResponse.setInAccount(userBankList.get(0).getInAccount());
+            if (!ObjectUtils.isEmpty(dict)) {
+                subLoanResponse.setBankCode(dict.getDicCode());
+                subLoanResponse.setBankName(dict.getDicValue());
+                subLoanResponse.setInAccount(userBankList.get(0).getInAccount());
+            }
         }
 
         AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);

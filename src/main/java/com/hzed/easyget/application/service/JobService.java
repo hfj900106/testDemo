@@ -19,7 +19,7 @@ import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.AesUtil;
 import com.hzed.easyget.infrastructure.utils.Arith;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.RepayInfoFlowJob;
 import com.hzed.easyget.persistence.auto.entity.TempTable;
@@ -90,7 +90,7 @@ public class JobService {
             MdcUtil.putTrace();
             Long bidId = bidExt.getBidId();
             log.info("开始处理标ID：{}", bidId);
-            long tempId = IdentifierGenerator.nextId();
+            long tempId = IDGenerator.nextId();
             int times = 1;
             try {
                 TempTable tempTable = tempTableRepository.findTempTableByBidNoAndJobName(bidId, ComConsts.PUSH_RISK_TASK);
@@ -174,7 +174,7 @@ public class JobService {
             MdcUtil.putTrace();
             Long bidId = bid.getBidId();
             log.info("开始处理标ID：{}", bidId);
-            Long tempId = IdentifierGenerator.nextId();
+            Long tempId = IDGenerator.nextId();
             try {
                 // 插入中间表
                 TempTable tempTable = TempTable.builder()
@@ -203,7 +203,7 @@ public class JobService {
                 // 放款金额
                 loan.setAmount(Arith.sub(bidQuery.getLoanAmount(), bidQuery.getAuditFee()));
                 // 交易id
-                String transactionId = IdentifierGenerator.nextSeqNo();
+                String transactionId = IDGenerator.nextSeqNo();
 
                 loan.setTransactionId(transactionId);
                 // 交易流水号

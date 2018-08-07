@@ -60,6 +60,7 @@ public class TestController {
     @ModuleFunc("手动执行任务")
     @GetMapping("/manMadeJob/{jobName}")
     public void testRepayment(@PathVariable("jobName") String jobName) {
+        log.info("定时任务名称：{}", jobName);
         try {
             JobService.class.getMethod(jobName).invoke(jobService);
         } catch (NoSuchMethodException e) {

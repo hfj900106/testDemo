@@ -72,8 +72,8 @@ public class SaRepository {
         saExtMapper.updateToDbRepaymentSuccessDetail(bidId, userId);
     }
 
-    public int findInDataInfo(Long bidId, Long userId, Byte bidStatus) {
-        return saExtMapper.findInDataInfo(bidId, userId, bidStatus);
+    public int findInDataInfo(Long bidId, Long userId) {
+        return saExtMapper.findInDataInfo(bidId, userId);
     }
 
     public int findLoanSuccess(Long bidId, Long userId) {

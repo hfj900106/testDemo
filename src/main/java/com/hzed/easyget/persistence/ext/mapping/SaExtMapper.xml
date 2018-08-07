@@ -3,16 +3,16 @@
 <mapper namespace="com.hzed.easyget.persistence.ext.mapper.SaExtMapper">
 
     <select id="queryInDataInfo" resultType="com.hzed.easyget.persistence.ext.entity.SaExt">
-        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, pro.handle_time, (CASE WHEN bid.status = 3 THEN '审核不通过' WHEN bid.status = 4 THEN '审核通过' ELSE '' END) as handle_result, users.mobile_account as telephone, users.nick_name as user_name, bid.in_bank, bid.purpose_code, bid.apply_amount, bid.period
+        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, pro.handle_time, (CASE WHEN bid.status = 1 THEN '待风控机审' WHEN bid.status = 2 THEN '待风控人审' WHEN bid.status = 3 THEN '审核不通过' WHEN bid.status = 4 THEN '审核通过' ELSE '' END) as handle_result, users.mobile_account as telephone, users.nick_name as user_name, bid.in_bank, bid.purpose_code, bid.apply_amount, bid.period
         FROM t_loan_bid bid
         LEFT JOIN t_loan_bid_progress pro ON bid.id = pro.bid_id
         LEFT JOIN t_loan_user users ON bid.user_id = users.id
-        WHERE bid.status IN (3, 4)  AND  pro.type = 1
+        WHERE bid.status IN (1, 2, 3, 4)  AND  pro.type = 1
         AND (pro.handle_time BETWEEN #{startDate} AND #{endDate})
     </select>
 
     <select id="findInDataInfo" resultType="java.lang.Integer">
-        select count(*) from t_sa_jinjian_order where bid_id = #{bidId} and user_id = #{userId}
+        select count(*) from t_sa_jinjian_order where bid_id = #{bidId} and user_id = #{userId} and bid_status = #{bidStatus}
     </select>
 
     <insert id="batchSaveInData" parameterType="java.util.List">
@@ -26,12 +26,12 @@
     </insert>
 
     <select id="pushInDataList" resultType="com.hzed.easyget.persistence.ext.entity.SaExt">
-        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, pro.handle_time, (CASE WHEN bid.status = 3 THEN '审核不通过' WHEN bid.status = 4 THEN '审核通过' ELSE '' END) as handle_result, users.mobile_account as telephone, users.nick_name as user_name, bid.in_bank, bid.purpose_code, bid.apply_amount, bid.period
+        SELECT bid.id as bid_id, bid.user_id, bid.status as bid_status, pro.handle_time, (CASE WHEN bid.status = 1 THEN '待风控机审' WHEN bid.status = 2 THEN '待风控人审'  WHEN bid.status = 3 THEN '审核不通过' WHEN bid.status = 4 THEN '审核通过' ELSE '' END) as handle_result, users.mobile_account as telephone, users.nick_name as user_name, bid.in_bank, bid.purpose_code, bid.apply_amount, bid.period
         FROM t_loan_bid bid
         LEFT JOIN t_loan_bid_progress pro ON bid.id = pro.bid_id
         LEFT JOIN t_loan_user users ON bid.user_id = users.id
         LEFT JOIN t_sa_jinjian_order jijian ON jijian.bid_id = bid.id
-        WHERE bid.status IN (3, 4)  AND  pro.type = 1
+        WHERE bid.status IN (1, 2, 3, 4)  AND  pro.type = 1
         AND (pro.handle_time BETWEEN #{startDate} AND #{endDate})
         AND jijian.status = 100
     </select>

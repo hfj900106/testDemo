@@ -3,7 +3,7 @@ package com.hzed.easyget.application.service;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.PicUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class FileService {
         // 取有效路径 如 http://localhost:8150/hzed
         String requestPath = requestURL.substring(0, requestURL.indexOf(contextPath) + contextPath.length());
         // 文件地址 如 /20180612/3214234234234.png
-        String suffixPath = "/" + DateUtil.localDateTimeToStr3(LocalDateTime.now()) + "/" + IdentifierGenerator.nextId() + "." + picSuffix;
+        String suffixPath = "/" + DateUtil.localDateTimeToStr3(LocalDateTime.now()) + "/" + IDGenerator.nextId() + "." + picSuffix;
         // 可访问地址 如 http://localhost:8150/hzed/20180612/3214234234234.png
         String returnUrl = requestPath + suffixPath;
         // 上传至 配置的 imgUploadPath 目录

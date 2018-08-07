@@ -17,7 +17,7 @@ import com.hzed.easyget.infrastructure.utils.Arith;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.ValidatorUtil;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,7 +201,7 @@ public class RepayService {
 
         // 保存 t_loan_bid_progress 标的进度表
         BidProgress progressInsert = new BidProgress();
-        long progressId = IdentifierGenerator.nextId();
+        long progressId = IDGenerator.nextId();
         progressInsert.setId(progressId);
         progressInsert.setBidId(bidId);
         progressInsert.setType(BidProgressTypeEnum.REPAY.getCode().byteValue());
@@ -321,7 +321,7 @@ public class RepayService {
 
         // 保存 t_loan_user_repayment 还款记录表
         UserRepayment userRepayment = new UserRepayment();
-        userRepayment.setId(IdentifierGenerator.nextId());
+        userRepayment.setId(IDGenerator.nextId());
         userRepayment.setTransactionId(transactionId);
         userRepayment.setBillId(billId);
         userRepayment.setRepaymentItem(item.byteValue());
@@ -336,7 +336,7 @@ public class RepayService {
             // 无逾期费记录则新增
             if (ledger == null) {
                 BillLedger ledgerInsert = new BillLedger();
-                ledgerInsert.setId(IdentifierGenerator.nextId());
+                ledgerInsert.setId(IDGenerator.nextId());
                 ledgerInsert.setBillId(billId);
                 ledgerInsert.setRepaymentTime(LocalDateTime.now());
                 ledgerInsert.setRepaymentAmount(billItemNoRepay);
@@ -461,7 +461,7 @@ public class RepayService {
             return vaResponse;
         }
         // 交易单号
-        String paymentId = IdentifierGenerator.nextSeqNo();
+        String paymentId = IDGenerator.nextSeqNo();
         //bluepay接口调用
         PayResponse response = bluePayService.bluePaymentCode(request.getMode(), request.getAmount(), paymentId);
         // 解析返回信息
@@ -469,7 +469,7 @@ public class RepayService {
         log.info("获取还款码，bluepay返回还款码：{}", paymentCode);
         LocalDateTime createTime = LocalDateTime.now();
         UserTransactionRepay repayInsert = UserTransactionRepay.builder()
-                .id(IdentifierGenerator.nextId())
+                .id(IDGenerator.nextId())
                 .bidId(request.getBidId())
                 .paymentId(paymentId)
                 .amount(request.getAmount())
@@ -504,7 +504,7 @@ public class RepayService {
                 .updateTime(LocalDateTime.now()).build();
         // 插入还款定时任务
         RepayInfoFlowJob repayInfoFlowJobInsert = RepayInfoFlowJob.builder()
-                .id(IdentifierGenerator.nextId())
+                .id(IDGenerator.nextId())
                 .transactionId(userTransaction.getId())
                 .bidId(userTransaction.getBidId())
                 .repaymentAmount(userTransaction.getAmount())
@@ -538,7 +538,7 @@ public class RepayService {
         //查询标的信息
         Bid bid = bidRepository.findByIdWithExp(bidId);
         UserTransaction transactionInsert = UserTransaction.builder()
-                .id(IdentifierGenerator.nextId())
+                .id(IDGenerator.nextId())
                 .status(TransactionTypeEnum.IN_RANSACTION.getCode().byteValue())
                 .paymentId(paymentId)
                 .account(bid.getInAccount())

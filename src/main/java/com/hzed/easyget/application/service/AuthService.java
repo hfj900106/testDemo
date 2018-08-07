@@ -17,7 +17,7 @@ import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -111,7 +111,7 @@ public class AuthService {
     public UserAuthStatus buildUserAuthStatus(Long userId, String code, String remark) {
         //保存到数据库短信记录表
         UserAuthStatus userAuthStatus = new UserAuthStatus();
-        userAuthStatus.setId(IdentifierGenerator.nextId());
+        userAuthStatus.setId(IDGenerator.nextId());
         userAuthStatus.setUserId(userId);
         userAuthStatus.setAuthCode(code);
         userAuthStatus.setAuthStatus(Integer.valueOf(AuthStatusEnum.HAS_AUTH.getCode()));
@@ -197,7 +197,7 @@ public class AuthService {
 
         UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.PERSON_INFO.getCode(), "个人信息认证");
         Profile profile = new Profile();
-        profile.setId(IdentifierGenerator.nextId());
+        profile.setId(IDGenerator.nextId());
         profile.setUserId(user.getUserId());
         profile.setEducation(request.getEducation());
         profile.setCompanyName(request.getCompanyName());
@@ -306,8 +306,8 @@ public class AuthService {
             userObj.setUpdateTime(LocalDateTime.now());
             //组装pic对象
             List<UserPic> list = Lists.newArrayList();
-            list.add(UserPic.builder().id(IdentifierGenerator.nextId()).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
-            list.add(UserPic.builder().id(IdentifierGenerator.nextId()).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
+            list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
+            list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
             //获取UserAuthStatus对象
             UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.ID_CARD.getCode(), "身份信息认证");
             workRepository.insertIdentityInfo(list, userAuthStatus, userObj);
@@ -329,7 +329,7 @@ public class AuthService {
             String employeeCardPhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(), request.getPicSuffix());
             String workplacePhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(), request.getPicSuffix());
             Work work = new Work();
-            work.setId(IdentifierGenerator.nextId());
+            work.setId(IDGenerator.nextId());
             work.setUserId(user.getUserId());
             work.setJobType(request.getJobType());
             work.setMonthlyIncome(request.getMonthlyIncome());

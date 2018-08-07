@@ -4,7 +4,7 @@ package com.hzed.easyget.infrastructure.utils;
 import com.google.common.collect.Maps;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.BaseBizException;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import org.apache.commons.codec.binary.Base64;
 import sun.misc.BASE64Encoder;
 
@@ -37,7 +37,7 @@ public class PicUtil {
      * @return 生成文件的完整路径
      */
     public static String uploadImage(String base64ImgStr, String picSuffix) throws Exception {
-        String imgPathAbs = basePath + File.separator + IdentifierGenerator.nextId() + "." + picSuffix;
+        String imgPathAbs = basePath + File.separator + IDGenerator.nextId() + "." + picSuffix;
         return uploadImageAbs(base64ImgStr, imgPathAbs);
 
     }

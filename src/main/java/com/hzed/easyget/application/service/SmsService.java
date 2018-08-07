@@ -14,7 +14,7 @@ import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.hzed.easyget.infrastructure.utils.SpringContextUtil;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.Dict;
 import com.hzed.easyget.persistence.auto.entity.SmsLog;
 import com.hzed.indonesia.sms.constants.SmsCodeEnum;
@@ -89,7 +89,7 @@ public class SmsService {
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
         content = MessageFormat.format(content, DateUtil.localDateTimeToStr(LocalDateTime.now(), DateUtil.FORMAT6), repaymentAmount.toString(), balance.toString());
-        Long smsId = IdentifierGenerator.nextId();
+        Long smsId = IDGenerator.nextId();
         // 发送短信
         this.sendSms(mobile, content, String.valueOf(smsId));
         // 保存短信记录
@@ -169,7 +169,7 @@ public class SmsService {
     }
 
     public void sendAndSaveSms(String mobile, String content, String remark) {
-        Long smsId = IdentifierGenerator.nextId();
+        Long smsId = IDGenerator.nextId();
         if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
             // 非测试环境发送短信
             // 发短信时去掉 0

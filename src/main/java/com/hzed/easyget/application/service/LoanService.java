@@ -10,7 +10,7 @@ import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ public class LoanService {
 
         if (BidStatusEnum.AUDIT_FAIL.getCode().equals(Integer.valueOf(status)) || BidStatusEnum.AUDIT_PASS.getCode().equals(Integer.valueOf(status)) || BidStatusEnum.REPAYMENT.getCode().equals(Integer.valueOf(status))) {
             UserLoanVisit userLoanVisit = new UserLoanVisit();
-            userLoanVisit.setId(IdentifierGenerator.nextId());
+            userLoanVisit.setId(IDGenerator.nextId());
             userLoanVisit.setUserId(RequestUtil.getGlobalUser().getUserId());
             userLoanVisit.setBidId(bid.getId());
             userLoanVisit.setBidStatus(status);
@@ -85,10 +85,10 @@ public class LoanService {
         riskService.checkRiskEnableBorrow(user.getMobileAccount(), RequestUtil.getGlobalHead().getImei(), "1");
 
         Bid bid = new Bid();
-        Long bidId = IdentifierGenerator.nextId();
+        Long bidId = IDGenerator.nextId();
         bid.setId(bidId);
         bid.setUserId(userId);
-        bid.setBidNo(String.valueOf(IdentifierGenerator.nextId()));
+        bid.setBidNo(String.valueOf(IDGenerator.nextId()));
         bid.setTitle("消费贷");
         bid.setProductCode(ProductEnum.PRODUCT_CODE.getCode());
         bid.setApplyAmount(request.getApplyAmount());
@@ -100,7 +100,7 @@ public class LoanService {
         bid.setStatus(BidStatusEnum.RISK_ING.getCode().byteValue());
 
         UserBank userBank = new UserBank();
-        userBank.setId(IdentifierGenerator.nextId());
+        userBank.setId(IDGenerator.nextId());
         userBank.setUserId(userId);
         userBank.setInBank(request.getInBank());
         userBank.setInAccount(request.getInAccount());

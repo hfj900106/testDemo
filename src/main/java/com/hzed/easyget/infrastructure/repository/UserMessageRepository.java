@@ -1,6 +1,5 @@
 package com.hzed.easyget.infrastructure.repository;
 
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
 import com.hzed.easyget.persistence.auto.entity.UserMessage;
 import com.hzed.easyget.persistence.auto.entity.example.UserMessageExample;
 import com.hzed.easyget.persistence.auto.mapper.UserMessageMapper;

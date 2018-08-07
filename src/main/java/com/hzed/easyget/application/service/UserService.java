@@ -8,7 +8,7 @@ import com.hzed.easyget.infrastructure.repository.UserMessageRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserMessage;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
@@ -136,7 +136,7 @@ public class UserService {
     public void saveUserMessage(UserMessageRequest request) {
 
         UserMessage userMessage = new UserMessage();
-        userMessage.setId(IdentifierGenerator.nextId());
+        userMessage.setId(IDGenerator.nextId());
         userMessage.setTitle(request.getTitle());
         userMessage.setAppMessage(request.getAppMessage());
         userMessage.setH5Message(request.getMessage());

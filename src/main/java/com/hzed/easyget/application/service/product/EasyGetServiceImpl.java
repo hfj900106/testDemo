@@ -10,7 +10,7 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.repository.ProductRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.Bill;
 import com.hzed.easyget.persistence.auto.entity.BillLedger;
@@ -40,7 +40,7 @@ public class EasyGetServiceImpl implements ProductService {
         checkBid(bid);
 
         Bill bill = new Bill();
-        bill.setId(IdentifierGenerator.nextId());
+        bill.setId(IDGenerator.nextId());
         bill.setBidId(bid.getId());
         bill.setIndexPeriods(1);
         bill.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), bid.getPeriod()));
@@ -63,7 +63,7 @@ public class EasyGetServiceImpl implements ProductService {
             BillLedger billLedger1 = new BillLedger();
             billLedger1.setBillId(bill.getId());
             billLedger1.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), period));
-            billLedger1.setId(IdentifierGenerator.nextId());
+            billLedger1.setId(IDGenerator.nextId());
             billLedger1.setRepaymentAmount(amount);
             billLedger1.setRepaymentItem(BillLedgerItemEnum.CORPUS.getCode().byteValue());
             lists.add(billLedger1);
@@ -71,7 +71,7 @@ public class EasyGetServiceImpl implements ProductService {
             BillLedger billLedger2 = new BillLedger();
             billLedger2.setBillId(bill.getId());
             billLedger2.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), period));
-            billLedger2.setId(IdentifierGenerator.nextId());
+            billLedger2.setId(IDGenerator.nextId());
             billLedger2.setRepaymentAmount(product.getTailFee());
             billLedger2.setRepaymentItem(BillLedgerItemEnum.TAIL_FEE.getCode().byteValue());
             lists.add(billLedger2);

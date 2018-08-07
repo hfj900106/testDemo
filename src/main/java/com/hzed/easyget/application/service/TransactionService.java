@@ -9,7 +9,7 @@ import com.hzed.easyget.application.service.product.ProductService;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.repository.TempTableRepository;
 import com.hzed.easyget.infrastructure.repository.UserTransactionRepository;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class TransactionService {
         UserTransaction transaction = buildUserTransaction(bid.getUserId(), bidId, TransactionTypeEnum.IN.getCode().byteValue(), bid.getLoanAmount().subtract(bid.getAuditFee()), paymentId, bid.getInBank(), bid.getInAccount(), states, overTime);
         tempTableRepository.afterBankLoan(
                 Bid.builder().id(bidId).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).updateTime(LocalDateTime.now()).build(),
-                BidProgress.builder().bidId(bidId).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
+                BidProgress.builder().bidId(bidId).id(IDGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
                 bills.get(0),
                 billLedgers,
                 tempId,
@@ -80,7 +80,7 @@ public class TransactionService {
      */
     private UserTransaction buildUserTransaction(Long userId, Long bidId, Byte type, BigDecimal amount, String paymentId, String bank, String account, Byte states, LocalDateTime overTime) {
         UserTransaction transaction = new UserTransaction();
-        transaction.setId(IdentifierGenerator.nextId());
+        transaction.setId(IDGenerator.nextId());
         transaction.setUserId(userId);
         transaction.setBidId(bidId);
         transaction.setType(type);
@@ -142,7 +142,7 @@ public class TransactionService {
         UserTransaction transaction = buildUserTransaction(bid.getUserId(), bidId, TransactionTypeEnum.IN.getCode().byteValue(), bid.getLoanAmount().subtract(bid.getAuditFee()), paymentId, bid.getInBank(), bid.getInAccount(), TransactionTypeEnum.SUCCESS_RANSACTION.getCode().byteValue(), LocalDateTime.now());
         tempTableRepository.afterBankLoan(
                 Bid.builder().id(bidId).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).updateTime(LocalDateTime.now()).build(),
-                BidProgress.builder().bidId(bidId).id(IdentifierGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
+                BidProgress.builder().bidId(bidId).id(IDGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
                 bills.get(0),
                 billLedgers,
                 tempId,

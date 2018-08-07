@@ -1,5 +1,4 @@
 import com.hzed.BootApplication;
-import com.hzed.easyget.application.enums.BankTypeEnum;
 import com.hzed.easyget.application.enums.RepayMentEnum;
 import com.hzed.easyget.application.service.BluePayService;
 import com.hzed.easyget.application.service.RepayService;
@@ -9,7 +8,7 @@ import com.hzed.easyget.controller.model.RepaymentCompleRequest;
 import com.hzed.easyget.controller.model.TransactionVaRequest;
 import com.hzed.easyget.controller.model.TransactionVaResponse;
 import com.hzed.easyget.infrastructure.model.PayResponse;
-import com.hzed.easyget.infrastructure.utils.id.IdentifierGenerator;
+import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +66,7 @@ public class RepayTest {
         request.setPrice(BigDecimal.valueOf(10000));
         request.setCardNo("21934189228383587872");
         request.setMsisdn("8615926633889");
-        request.setRequestNo(String.valueOf(IdentifierGenerator.nextId()));
+        request.setRequestNo(String.valueOf(IDGenerator.nextId()));
         PayResponse response = bluePayService.testRepayment(request);
         System.out.println(response);
     }

@@ -23,7 +23,7 @@ public class PersonInfoAuthRequest {
     @NotBlank(message = "{param.auth.companyAddrDetail.isNotEmpty}")
     private String companyAddrDetail;
     @NotBlank(message = "{param.auth.email.isNotEmpty}")
-    @Length(max = 64,message = "{param.auth.email.extraLong}")
+    @Length(max = 64, message = "{param.auth.email.extraLong}")
     private String email;
     @NotBlank(message = "{param.auth.parentName.isNotEmpty}")
     private String parentName;

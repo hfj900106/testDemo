@@ -19,9 +19,9 @@ import com.hzed.easyget.persistence.auto.entity.Dict;
 import com.hzed.easyget.persistence.auto.entity.SmsLog;
 import com.hzed.indonesia.sms.constants.SmsCodeEnum;
 import com.hzed.indonesia.sms.model.request.BulkSmsDownRequest;
-import com.hzed.indonesia.sms.model.request.NxSmsDownRequest;
+import com.hzed.indonesia.sms.model.request.NxSmsSendRequest;
 import com.hzed.indonesia.sms.model.response.BulkSmsDownResponse;
-import com.hzed.indonesia.sms.model.response.NxSmsDownResponse;
+import com.hzed.indonesia.sms.model.response.NxSmsSendResponse;
 import com.hzed.indonesia.sms.utils.BulkSmsUtil;
 import com.hzed.indonesia.sms.utils.NxSmsUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -110,23 +110,20 @@ public class SmsService {
         String dicValue = dictSms.getDicValue();
         if (!ObjectUtils.isEmpty(dicValue) && ComConsts.NX.equalsIgnoreCase(dicValue)) {
             // 使用牛信发送短信
-            NxSmsDownRequest smsDownRequest = new NxSmsDownRequest();
-            smsDownRequest.setPhone("62" + mobile);
-            smsDownRequest.setTimestamp(String.valueOf(System.currentTimeMillis()));
-            // 拆分短信表的id作为短信的唯一标识发给渠道商
-            smsDownRequest.setSourceadd(smsIdStr.substring(0, 10));
-            smsDownRequest.setExtno(Integer.valueOf(smsIdStr.substring(10, 18)));
-            smsDownRequest.setContent(content);
-            log.info("发送短信渠道：{},请求参数：{}", dicValue, JSONObject.toJSONString(smsDownRequest));
-            NxSmsDownResponse smsDownResponse = NxSmsUtil.smsSend(smsDownRequest);
-            if (ObjectUtils.isEmpty(smsDownResponse)) {
+            NxSmsSendRequest smsSendRequest = new NxSmsSendRequest();
+            smsSendRequest.setPhone("62" + mobile);
+            smsSendRequest.setTaskTime(String.valueOf(System.currentTimeMillis()));
+            smsSendRequest.setContent(content);
+            log.info("发送短信渠道：{},请求参数：{}", dicValue, JSONObject.toJSONString(smsSendRequest));
+            NxSmsSendResponse smsSendResponse = NxSmsUtil.smsSend(smsSendRequest);
+            if (ObjectUtils.isEmpty(smsSendResponse)) {
                 log.error("返回空的数据对象");
                 throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
             }
-            log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
+            log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsSendResponse));
             // 发送失败
-            if (!SmsCodeEnum.OK.getKey().equals(smsDownResponse.getCode())) {
-                log.error("发送失败：{}", smsDownResponse.getInfo());
+            if (!SmsCodeEnum.OK.getKey().equals(smsSendResponse.getCode())) {
+                log.error("发送失败：{}", smsSendResponse.getResult());
                 throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
             }
         } else {

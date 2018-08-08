@@ -1,6 +1,7 @@
 package com.hzed.easyget.controller.model;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -22,6 +23,7 @@ public class PersonInfoAuthRequest {
     @NotBlank(message = "{param.auth.companyAddrDetail.isNotEmpty}")
     private String companyAddrDetail;
     @NotBlank(message = "{param.auth.email.isNotEmpty}")
+    @Length(max = 64)
     private String email;
     @NotBlank(message = "{param.auth.parentName.isNotEmpty}")
     private String parentName;

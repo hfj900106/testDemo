@@ -20,14 +20,9 @@ public class UserMessage implements Serializable {
     private String title;
 
     /**
-     * 消息
+     * 内容
      */
     private String message;
-
-    /**
-     * 语言
-     */
-    private String language;
 
     /**
      * 是否已读
@@ -93,14 +88,6 @@ public class UserMessage implements Serializable {
         this.message = message == null ? null : message.trim();
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language == null ? null : language.trim();
-    }
-
     public Boolean getHasRead() {
         return hasRead;
     }
@@ -159,7 +146,6 @@ public class UserMessage implements Serializable {
         sb.append(", userId=").append(userId);
         sb.append(", title=").append(title);
         sb.append(", message=").append(message);
-        sb.append(", language=").append(language);
         sb.append(", hasRead=").append(hasRead);
         sb.append(", createTime=").append(createTime);
         sb.append(", createBy=").append(createBy);
@@ -199,11 +185,6 @@ public class UserMessage implements Serializable {
 
         public Builder message(String message) {
             obj.setMessage(message);
-            return this;
-        }
-
-        public Builder language(String language) {
-            obj.setLanguage(language);
             return this;
         }
 
@@ -247,7 +228,6 @@ public class UserMessage implements Serializable {
         userId("user_id"),
         title("title"),
         message("message"),
-        language("language"),
         hasRead("has_read"),
         createTime("create_time"),
         createBy("create_by"),

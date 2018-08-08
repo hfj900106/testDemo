@@ -24,8 +24,4 @@ public class PayResponse {
     private boolean flag;
 
     private String data;
-
-    public PayResponse(String code) {
-        this.code = code;
-    }
 }

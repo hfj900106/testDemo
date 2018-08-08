@@ -135,17 +135,6 @@
             <artifactId>spring-rabbit</artifactId>
             <version>1.7.4.RELEASE</version>
         </dependency>
-        <!-- swagger核心包 -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>RELEASE</version>
-        </dependency>
         <!-- 集成 Sensors Analytics SDK -->
         <dependency>
             <groupId>com.sensorsdata.analytics.javasdk</groupId>

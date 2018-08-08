@@ -1,6 +1,7 @@
 package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.application.enums.MobileEnum;
 import com.hzed.easyget.application.enums.RepayMentEnum;
@@ -41,9 +42,7 @@ public class BluePayService {
     @Autowired
     private SystemProp systemProp;
 
-    private static final String TIMEOUT = "TIMEOUT";
     private static final List<String> LISTCODE = Arrays.asList(BizCodeEnum.PROCESS_LENDING.getCode(), BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.REPAYMENTS.getCode());
-
 
     /**
      * 获取还款码
@@ -74,9 +73,6 @@ public class BluePayService {
         log.info("获取还款码，bluepay请求地址{}，参数：{}", prop.getAbsGetPaymentCodeUrl(), JSON.toJSONString(paymentRequest));
         String result = restService.doPostJson(prop.getAbsGetPaymentCodeUrl(), JSON.toJSONString(paymentRequest));
         log.info("获取还款码，bluepay返回数据：{}", result);
-        if (result.equalsIgnoreCase(TIMEOUT)) {
-            throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR);
-        }
         PayResponse response = JSON.parseObject(result, PayResponse.class);
         if (!response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
             throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR);
@@ -95,9 +91,6 @@ public class BluePayService {
         log.info("测试还款接口请求地址{},报文：{}", prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsReceiverTransactionUrl(), JSON.toJSONString(request));
         log.info("测试还款接口返回报文：{}", result);
-        if (result.equalsIgnoreCase(TIMEOUT)) {
-            throw new ComBizException(BizCodeEnum.RECEIVER_TRANSACTION_ERROR);
-        }
         return JSON.parseObject(result, PayResponse.class);
     }
 
@@ -115,16 +108,14 @@ public class BluePayService {
         }
         String payeeMsisdn = EnvEnum.isTestEnv(env) ? MobileEnum.CHINA.getMobile() + mobile : MobileEnum.IDR.getMobile() + mobile;
         request.setPayeeMsisdn(payeeMsisdn);
-        log.info("请求地址{},请求报文：{}", prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
+        log.info("请求放款地址：{}", prop.getAbsLoanTransactionUrl());
+        log.info("请求报文：{}", JSONObject.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
-        log.info("请求地址{},返回报文：{}", prop.getAbsLoanTransactionUrl(), result);
-        if (TIMEOUT.equals(result)) {
-            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR);
-        }
+        log.info("返回报文：{}", result);
         PayResponse response = JSON.parseObject(result, PayResponse.class);
         //判断返回状态 0000 0001 0002
         if (!LISTCODE.contains(response.getCode())) {
-            throw new ComBizException(BizCodeEnum.LOAN_TRANSACTION_ERROR);
+            log.error("放款失败，请求报文：{}，返回报文：{}", JSONObject.toJSONString(request), result);
         }
         return response;
     }

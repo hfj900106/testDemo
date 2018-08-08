@@ -141,8 +141,7 @@ public class RestService {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            result = "TIMEOUT";
+            throw new RuntimeException("请求放款接口异常", e);
         } finally {
             httpPost.releaseConnection();
         }

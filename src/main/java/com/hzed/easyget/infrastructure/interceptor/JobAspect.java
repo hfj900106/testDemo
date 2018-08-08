@@ -32,7 +32,7 @@ public class JobAspect {
      * 拦截定时任务主要处理类
      */
     @Around("@annotation(jobAnnotation)")
-    public Object aroundTest(ProceedingJoinPoint pPoint, JobAnnotation jobAnnotation) throws Throwable {
+    public Object aroundJob(ProceedingJoinPoint pPoint, JobAnnotation jobAnnotation) throws Throwable {
         // 定时任务名放入日志中
         String jobName = jobAnnotation.value();
         MdcUtil.putModuleName(jobName.indexOf("定时任务") > -1 ? jobName : ("定时任务 " + jobName));

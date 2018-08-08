@@ -5,6 +5,7 @@ import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
+import com.hzed.easyget.controller.model.NxCallbackRequest;
 import com.hzed.easyget.controller.model.PushBidCallbackRequest;
 import com.hzed.easyget.controller.model.PushBidCallbackResponse;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
@@ -84,6 +85,10 @@ public class CallbackService {
         return PushBidCallbackResponse.getSuccessResponse();
     }
 
+    /**
+     * TODO 保存短信状态
+     */
+    public void nxCallback(NxCallbackRequest request) {
 
-
+    }
 }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hzed.easyget.infrastructure.annotation.EnableRabbitMQ;
 import com.hzed.easyget.infrastructure.annotation.EnableRedis;
 import com.hzed.easyget.infrastructure.annotation.EnableRest;
-import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -24,14 +23,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.context.request.async.DeferredResult;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.sql.DataSource;
 import javax.validation.Validator;
@@ -52,7 +43,6 @@ import javax.validation.Validator;
 @EnableRedis
 @EnableRest
 @EnableRabbitMQ
-@EnableSwagger2
 public class BootApplication {
 
     public static void main(String[] args) {
@@ -107,31 +97,6 @@ public class BootApplication {
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.setValidationMessageSource(rbms);
         return validator;
-    }
-
-    /**
-     * swagger2 初始化类
-     */
-    @Bean
-    public Docket setDocket() {
-
-        ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("api文档")
-                .description("restfun 风格接口")
-                .version("1.0")
-                .build();
-
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
-                .genericModelSubstitutes(DeferredResult.class)
-                .useDefaultResponseMessages(false)
-                .forCodeGeneration(false)
-                .apiInfo(apiInfo)
-                .select()
-                .apis(RequestHandlerSelectors.withMethodAnnotation(ModuleFunc.class))
-                .paths(PathSelectors.any())
-                .build();
-
-        return docket;
     }
 
 }

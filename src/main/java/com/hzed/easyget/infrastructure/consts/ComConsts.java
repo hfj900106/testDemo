@@ -29,6 +29,7 @@ public class ComConsts {
     public static final String RISK_2 = "2";
     public static final String RISK_3 = "3";
     public static final String RISK_4 = "4";
+    public static final String RISK_8 = "8";
 
     /**
      * 印尼身份证上的性别-女

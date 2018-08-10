@@ -7,6 +7,7 @@
         FROM t_loan_bid bd  LEFT JOIN t_loan_temp_table tt
         ON bd.id=tt.relase_id
         WHERE bd.status=#{status} AND(( tt.re_run_times &lt; #{times}  AND tt.job_name=#{jobName} ) OR tt.relase_id IS NULL)
+        LIMIT 60
     </select>
     <!--放款信息查询-->
     <select id="findLoanTransaction" resultType="com.hzed.easyget.controller.model.LoanTransactionRequest">

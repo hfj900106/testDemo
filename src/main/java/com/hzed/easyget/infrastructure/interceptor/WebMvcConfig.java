@@ -33,7 +33,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         super.addResourceHandlers(registry);
-//        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/swagger/webjars/");
     }
 
     /**

@@ -192,8 +192,12 @@ public class AuthService {
      */
     public void authPersonInfo(PersonInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
+        String auth_code = AuthCodeEnum.PERSON_INFO.getCode();
+        // 请求防重
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
         // 判断该用户是否已经验证
-        checkAuth(user.getUserId(), AuthCodeEnum.PERSON_INFO.getCode());
+        checkAuth(user.getUserId(), auth_code);
 
         UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.PERSON_INFO.getCode(), "个人信息认证");
         Profile profile = new Profile();
@@ -276,8 +280,12 @@ public class AuthService {
      */
     public void identityInfoAuth(IdentityInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
+        String auth_code = AuthCodeEnum.ID_CARD.getCode();
+        // 请求防重
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
         // 判断该用户是否已经验证
-        checkAuth(user.getUserId(), AuthCodeEnum.ID_CARD.getCode());
+        checkAuth(user.getUserId(), auth_code);
 
         String realName = request.getRealName();
         // 姓名中多个空格替换成1个空格
@@ -311,7 +319,7 @@ public class AuthService {
             list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
             list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
             //获取UserAuthStatus对象
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.ID_CARD.getCode(), "身份信息认证");
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), auth_code, "身份信息认证");
             workRepository.insertIdentityInfo(list, userAuthStatus, userObj);
         } catch (NestedException e) {
             throw new ComBizException(BizCodeEnum.FAIL_IDENTITY_AUTH);

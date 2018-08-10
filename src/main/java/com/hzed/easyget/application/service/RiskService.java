@@ -280,12 +280,10 @@ public class RiskService {
         paramMap.put("flag", flag);
         String url = riskProp.getAbsCheckRiskEnableBorrowUrl();
         log.info("============================请求风控开始===============================");
-        log.info("查询风控是否有贷款规则请求URL：{}", url);
-        log.info("查询风控是否有贷款规则请求参数：{}", JSON.toJSONString(paramMap));
-
+        log.info("请求风控URL：{}", url);
+        log.info("请求风控参数：{}", JSON.toJSONString(paramMap));
         RiskResponse response = restService.postJson(url, paramMap, RiskResponse.class);
-
-        log.info("查询风控是否有贷款规则返回报文：{}", JSON.toJSONString(response));
+        log.info("风控返回数据：{}", JSON.toJSONString(response));
         log.info("============================请求风控结束===============================");
         if (ObjectUtils.isEmpty(response)) {
             throw new ComBizException(BizCodeEnum.ERROR_RISK_RESULT);
@@ -307,7 +305,6 @@ public class RiskService {
         } else {
             throw new WarnException(BizCodeEnum.UN_LOAN_QUALIFICATION);
         }
-
     }
 
     public void facebookAndIns(Long userId, String taskId, Integer source) {

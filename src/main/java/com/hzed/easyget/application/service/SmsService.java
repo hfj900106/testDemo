@@ -123,7 +123,7 @@ public class SmsService {
             log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsSendResponse));
             // 发送失败
             if (!SmsCodeEnum.OK.getKey().equals(smsSendResponse.getCode())) {
-                log.error("发送失败：{}", smsSendResponse.getResult());
+                log.error("NX发送失败：{}", smsSendResponse.getResult());
                 throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
             }
         } else {
@@ -159,7 +159,7 @@ public class SmsService {
             }
             log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
             if (ComConsts.BULK_SMS_OK != smsDownResponse.getErrorCode()) {
-                log.error("发送失败：{}", JSONObject.toJSONString(smsDownResponse.getMessages()));
+                log.error("CM发送失败：{}", JSONObject.toJSONString(smsDownResponse.getMessages()));
                 throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
             }
         }

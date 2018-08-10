@@ -113,7 +113,7 @@ public class AuthService {
      */
     public UserAuthStatus buildUserAuthStatus(Long userId, String code, String remark) {
         //保存到数据库短信记录表
-        UserAuthStatus userAuthStatus = new UserAuthStatus(); 
+        UserAuthStatus userAuthStatus = new UserAuthStatus();
         userAuthStatus.setId(IDGenerator.nextId());
         userAuthStatus.setUserId(userId);
         userAuthStatus.setAuthCode(code);
@@ -195,12 +195,17 @@ public class AuthService {
      */
     public void authPersonInfo(PersonInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
+        String auth_code = AuthCodeEnum.PERSON_INFO.getCode();
+        // 请求防重
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
         Long userId = user.getUserId();
         // 判断该用户是否已经验证
-      
+        checkAuth(user.getUserId(), auth_code);
+
         checkAuth(userId, AuthCodeEnum.PERSON_INFO.getCode());
 
-       
+
         UserAuthStatus userAuthStatus = buildUserAuthStatus(userId, AuthCodeEnum.PERSON_INFO.getCode(), "个人信息认证");
 
         String parentName = request.getParentName();
@@ -210,9 +215,9 @@ public class AuthService {
         String relatedPersonTel = request.getRelatedPersonTel().replaceAll("\\s*", "");
 
         Profile profile = new Profile();
-       
+
         profile.setId(IDGenerator.nextId());
-        
+
         profile.setUserId(userId);
         profile.setEducation(request.getEducation());
         profile.setCompanyName(request.getCompanyName());
@@ -220,11 +225,11 @@ public class AuthService {
         profile.setCompanyAddrDetail(request.getCompanyAddrDetail());
         profile.setEmail(request.getEmail());
         profile.setParentName(request.getParentName());
-       
+
         profile.setParentTel(parentTel);
         profile.setRelationship(request.getRelationship());
         profile.setRelatedPersonName(request.getRelatedPersonName());
-        
+
         profile.setRelatedPersonTel(relatedPersonTel);
         profile.setRemark("个人信息认证");
         personInfoRepository.insertPersonInfoAndUserAuthStatus(profile, userAuthStatus);
@@ -307,8 +312,12 @@ public class AuthService {
      */
     public void identityInfoAuth(IdentityInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
+        String auth_code = AuthCodeEnum.ID_CARD.getCode();
+        // 请求防重
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
         // 判断该用户是否已经验证
-        checkAuth(user.getUserId(), AuthCodeEnum.ID_CARD.getCode());
+        checkAuth(user.getUserId(), auth_code);
 
         String realName = request.getRealName();
         String idCardNo = request.getIdCardNo();
@@ -341,7 +350,7 @@ public class AuthService {
             list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
             list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
             //获取UserAuthStatus对象
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.ID_CARD.getCode(), "身份信息认证");
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), auth_code, "身份信息认证");
             workRepository.insertIdentityInfo(list, userAuthStatus, userObj);
         } catch (NestedException e) {
             throw new ComBizException(BizCodeEnum.FAIL_IDENTITY_AUTH);
@@ -361,7 +370,7 @@ public class AuthService {
             String employeeCardPhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(), request.getPicSuffix());
             String workplacePhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(), request.getPicSuffix());
             Work work = new Work();
-    
+
             work.setId(IDGenerator.nextId());
             work.setUserId(user.getUserId());
             work.setJobType(request.getJobType());

@@ -194,17 +194,14 @@ public class AuthService {
      * 个人信息认证
      */
     public void authPersonInfo(PersonInfoAuthRequest request) {
-        GlobalUser user = getGlobalUser();
+        Long userId = getGlobalUser().getUserId();
         String auth_code = AuthCodeEnum.PERSON_INFO.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
-        Long userId = user.getUserId();
         // 判断该用户是否已经验证
-        checkAuth(user.getUserId(), auth_code);
 
-        checkAuth(userId, AuthCodeEnum.PERSON_INFO.getCode());
-
+        checkAuth(userId, auth_code);
 
         UserAuthStatus userAuthStatus = buildUserAuthStatus(userId, AuthCodeEnum.PERSON_INFO.getCode(), "个人信息认证");
 

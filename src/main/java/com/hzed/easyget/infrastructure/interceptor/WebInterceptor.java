@@ -9,7 +9,6 @@ import com.hzed.easyget.infrastructure.utils.ComUtil;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -48,7 +47,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
             // 设置模块名
             MdcUtil.putModuleName(moduleFunc.value());
             String body = ComUtil.subJsonString(request.getAttribute("body").toString(), moduleFunc.printParameterLength());
-            log.info("请求报文：{}", StringUtils.isBlank(body) ? "无请求参数" : body);
+            log.info("请求报文：{}", body);
         }
 
         GlobalHead globalHeadr = RequestUtil.getGlobalHead();

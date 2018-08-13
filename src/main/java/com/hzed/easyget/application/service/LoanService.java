@@ -97,7 +97,7 @@ public class LoanService {
         bid.setClient(BidEnum.INDONESIA_APP.getCode());
         bid.setStatus(BidStatusEnum.RISK_ING.getCode().byteValue());
         submitLoanResponse.setBid(bidId);
-        // 不存在则插入
+        // 用户银行卡信息不存在则插入
         List<UserBank> userBankList = userBankRepository.findByUserIdAndInbankAndInAccount(userId, request.getInBank(), request.getInAccount());
         if (ObjectUtils.isEmpty(userBankList)) {
             UserBank userBank = new UserBank();

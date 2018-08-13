@@ -348,6 +348,7 @@ public class AuthService {
             UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.PROFESSIONAL.getCode(), "专业信息认证");
             professionalRepository.insertProfessionalAndUserAuthStatus(work, userAuthStatus);
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new ComBizException(BizCodeEnum.FAIL_PROFESSIONAL_AUTH);
         }
 

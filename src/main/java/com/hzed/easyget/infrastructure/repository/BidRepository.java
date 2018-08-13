@@ -107,4 +107,8 @@ public class BidRepository {
         return bidMapper.selectByPrimaryKey(bidId);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void insertBid(Bid bid) {
+        bidMapper.insertSelective(bid);
+    }
 }

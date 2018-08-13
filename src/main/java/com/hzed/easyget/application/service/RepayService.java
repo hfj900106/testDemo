@@ -632,8 +632,8 @@ public class RepayService {
         }
         // 交易失败处理
         if (!status.equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())) {
-            // 修改交易记录
-            transactionService.updateUserTranState(paymentId, TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue());
+            // 修改交易记录，交易失败记录原因
+            transactionService.updateUserTranState(paymentId, TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue(),BluePayStatusEnum.getValueDesc(status));
             // 还款失败  修改va码对应状态
             if (BANK.equals(interfacetype)) {
                 log.info("还款失败");

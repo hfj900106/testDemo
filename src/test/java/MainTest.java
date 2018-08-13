@@ -37,7 +37,7 @@ public class MainTest {
 //        System.out.println(System.nanoTime());
 //        System.out.println(System.nanoTime());
 //        System.out.println(System.nanoTime());
-        System.out.println("TEDDY GUNTUR CHRISTIYANTO NADEAK".length());
+        System.out.println("BANK TABUNGAN PENSIUNAN NASIONAL/BTPN".length());
 //        System.out.println(String.valueOf(IDGenerator.nextId()).length());
 
 

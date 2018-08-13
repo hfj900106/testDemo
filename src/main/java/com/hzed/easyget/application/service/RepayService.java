@@ -649,9 +649,9 @@ public class RepayService {
                 bidUpdate.setStatus(BidStatusEnum.LOAN_FAIL.getCode().byteValue());
                 bidUpdate.setUpdateTime(LocalDateTime.now());
                 bidRepository.update(bidUpdate);
-                log.info("标的：{} 放款失败", transaction.getBidId());
+                log.error("标的：{} 放款失败", transaction.getBidId());
             }
-            log.info("MQ交易处理失败：{}，处理终止", BluePayStatusEnum.getValueDesc(status));
+            log.error("MQ交易处理失败：{}，处理终止", BluePayStatusEnum.getValueDesc(status));
             return;
         }
         log.info("MQ交易处理成功，下面进行本地交易处理");

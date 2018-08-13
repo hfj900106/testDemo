@@ -15,22 +15,25 @@ Content-Type: application/json
 }
 
 ### 人工处理MQ回调
-POST http://10.10.30.92:8150/hzed/easy-get/api/test/manMadeMqCallback
+#POST http://10.10.30.92:8150/hzed/easy-get/api/test/manMadeMqCallback
+POST https://rupiahget.id/hzed/easy-get/api/test/manMadeMqCallback
 #POST http://localhost:8150/hzed/easy-get/api/test/manMadeMqCallback
 Accept: application/json;charset=UTF-8;
 Content-Type: application/json
 
 {
-    "bt_id": "1605042141530530417608YMWasB",
+    "bt_id": "1673022141533729002097OYzEUl",
     "cmd": "CFM",
     "currency": "IDR",
-    "encrypt": "9b223fb0ae1f40d6d93be7016ca945a5",
+    "encrypt": "4b647ebd6c2de5f4da71ce4d77f4279e",
     "interfacetype": "cashout",
-    "msisdn": "8613900139021",
-    "operator": "PERMATA",
+    "msisdn": "6281380094372",
+    "operator": "BCA",
     "paytype": "pre",
     "price": 480000,
-    "productid": 1605,
+    "productid": 1673,
     "status": "200",
-    "t_id": "112823616491888640hzed"
+    "t_id": "126239442070712320hzed"
 }
+
+###

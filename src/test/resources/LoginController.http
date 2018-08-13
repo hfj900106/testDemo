@@ -14,9 +14,9 @@ version:1.0.0
 }
 
 ### 用户登录
-POST http://localhost:8150/hzed/easy-get/api/login/loginByCode
+#POST http://localhost:8150/hzed/easy-get/api/login/loginByCode
 #POST http://m.rupiahget.id/hzed/easy-get/api/login/loginByCode
-#POST http://10.10.30.92:8150/hzed/easy-get/api/login/loginByCode
+POST http://10.10.30.133:8150/hzed/easy-get/api/login/loginByCode
 #POST https://rupiahget.id/hzed/easy-get/api/login/loginByCode
 #POST http://149.129.212.112:8150/hzed/easy-get/api/login/loginByCode
 Accept: application/json;charset=UTF-8

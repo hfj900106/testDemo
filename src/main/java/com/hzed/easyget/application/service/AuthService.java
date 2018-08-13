@@ -2,6 +2,7 @@ package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.hzed.easyget.application.enums.AuthCodeEnum;
 import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.controller.model.*;
@@ -17,6 +18,7 @@ import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
+
 import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalHead;
 import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
@@ -191,30 +194,56 @@ public class AuthService {
      * 个人信息认证
      */
     public void authPersonInfo(PersonInfoAuthRequest request) {
-        GlobalUser user = getGlobalUser();
+        Long userId = getGlobalUser().getUserId();
         String auth_code = AuthCodeEnum.PERSON_INFO.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
         // 判断该用户是否已经验证
-        checkAuth(user.getUserId(), auth_code);
 
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.PERSON_INFO.getCode(), "个人信息认证");
+        checkAuth(userId, auth_code);
+
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(userId, AuthCodeEnum.PERSON_INFO.getCode(), "个人信息认证");
+
+        String parentName = request.getParentName();
+        String parentTel = request.getParentTel().replaceAll("\\s*", "");
+
+        String relatedPersonName = request.getRelatedPersonName();
+        String relatedPersonTel = request.getRelatedPersonTel().replaceAll("\\s*", "");
+
         Profile profile = new Profile();
+
         profile.setId(IDGenerator.nextId());
-        profile.setUserId(user.getUserId());
+
+        profile.setUserId(userId);
         profile.setEducation(request.getEducation());
         profile.setCompanyName(request.getCompanyName());
         profile.setCompanyAddr(request.getCompanyAddr());
         profile.setCompanyAddrDetail(request.getCompanyAddrDetail());
         profile.setEmail(request.getEmail());
         profile.setParentName(request.getParentName());
-        profile.setParentTel(request.getParentTel().replaceAll("\\s*", ""));
+
+        profile.setParentTel(parentTel);
         profile.setRelationship(request.getRelationship());
         profile.setRelatedPersonName(request.getRelatedPersonName());
-        profile.setRelatedPersonTel(request.getRelatedPersonTel().replaceAll("\\s*", ""));
+
+        profile.setRelatedPersonTel(relatedPersonTel);
         profile.setRemark("个人信息认证");
         personInfoRepository.insertPersonInfoAndUserAuthStatus(profile, userAuthStatus);
+
+        List<Map<String, String>> objectList = Lists.newArrayList();
+        Map<String, String> stringMap1 = Maps.newHashMap();
+        stringMap1.put("relationship", "parent");
+        stringMap1.put("contact", parentName);
+        stringMap1.put("phone", parentTel);
+        objectList.add(stringMap1);
+
+        Map<String, String> stringMap2 = Maps.newHashMap();
+        stringMap2.put("relationship", request.getRelationship());
+        stringMap2.put("contact", relatedPersonName);
+        stringMap2.put("phone", relatedPersonTel);
+        objectList.add(stringMap2);
+        riskService.pushProfile(objectList, userId);
     }
 
     /**
@@ -254,8 +283,8 @@ public class AuthService {
                 // 识别生日数据有错则直接给空串
                 recognitionResponse.setBirthday("");
             }else {
-                recognitionResponse.setBirthday(birthPlaceBirthday.substring(strLength - 10, strLength));
-            }
+            recognitionResponse.setBirthday(birthPlaceBirthday.substring(strLength - 10, strLength));
+        }
         }
         recognitionResponse.setName(name);
         int genderInt = 1;
@@ -314,6 +343,7 @@ public class AuthService {
             userObj.setUpdateTime(LocalDateTime.now());
             //组装pic对象
             List<UserPic> list = Lists.newArrayList();
+
             list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
             list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
             //获取UserAuthStatus对象
@@ -337,6 +367,7 @@ public class AuthService {
             String employeeCardPhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(), request.getPicSuffix());
             String workplacePhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(), request.getPicSuffix());
             Work work = new Work();
+
             work.setId(IDGenerator.nextId());
             work.setUserId(user.getUserId());
             work.setJobType(request.getJobType());

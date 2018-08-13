@@ -3,6 +3,7 @@ package com.hzed.easyget.application.service;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AppVersionEnum;
+import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
@@ -50,7 +51,7 @@ public class HomeService {
     @Autowired
     private RedisService redisService;
     @Autowired
-    private UserMessageRepository userMessageRepository;
+    private NewsRepository newsRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -61,6 +62,12 @@ public class HomeService {
     private RiskService riskService;
     @Autowired
     private SystemProp systemProp;
+    @Autowired
+    private BillRepository billRepository;
+    @Autowired
+    private BidProgressRepository bidProgressRepository;
+    @Autowired
+    private ComService comService;
 
     public ProductInfoResponse getProductInfo() {
 
@@ -148,24 +155,25 @@ public class HomeService {
         return UpdateTokenResponse.builder().token(newToken).build();
     }
 
-    public MessageResponse getMessage() {
-        MessageResponse messageResponse = new MessageResponse();
-        UserMessage userMessage = userMessageRepository.findOne();
-        if (!ObjectUtils.isEmpty(userMessage)) {
+    public NewsResponse getMessage() {
+        NewsResponse newsResponse = new NewsResponse();
+        String i18n = RequestUtil.getGlobalHead().getI18n();
+        News news = newsRepository.findOne(i18n);
+        if (!ObjectUtils.isEmpty(news)) {
             // 如果不在30天内，直接返回
-            int day = DateUtil.daysBetween(userMessage.getCreateTime(), LocalDateTime.now());
+            int day = DateUtil.daysBetween(news.getCreateTime(), LocalDateTime.now());
             if (day > systemProp.getExpiredDay()) {
-                return messageResponse;
+                return newsResponse;
             }
 
-            messageResponse.setMessageTitle(userMessage.getTitle());
-            messageResponse.setAppMessage(userMessage.getAppMessage());
-            messageResponse.setToUrl(systemProp.getH5MessageUrl() + userMessage.getId());
-            messageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
-            messageResponse.setId(userMessage.getId());
+            newsResponse.setTitle(news.getTitle());
+            newsResponse.setSummary(news.getSummary());
+            newsResponse.setToUrl(systemProp.getH5MessageUrl() + news.getId() + "&type=news");
+            newsResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(news.getCreateTime()));
+            newsResponse.setId(news.getId());
         }
 
-        return messageResponse;
+        return newsResponse;
     }
 
     public List<CheckLoanResponse> checkLoan() {
@@ -228,6 +236,54 @@ public class HomeService {
         return result;
     }
 
-    // {"update_url":"123213","force_update":"1","minimum_version": "5","is_bom":"true"}
+    public BidProgressResponse getBidProgress() {
 
+        BidProgressResponse bidProgressResponse = new BidProgressResponse();
+        Long userId = RequestUtil.getGlobalUser().getUserId();
+        Bid bid = bidRepository.findOneByUserId(userId);
+        // 不存在标的或已结清不弹窗提示
+        if (ObjectUtils.isEmpty(bid) || BidStatusEnum.CLEARED.getCode().byteValue() == bid.getStatus()) {
+            return bidProgressResponse;
+        }
+
+        // 贷款金额 贷款期限
+        bidProgressResponse.setLoanAmount(bid.getLoanAmount());
+        bidProgressResponse.setPeriod(bid.getPeriod());
+        Long bidId = bid.getId();
+        // 已放款
+        if (BidStatusEnum.REPAYMENT.getCode().byteValue() == bid.getStatus()) {
+            Bill bill = billRepository.findByBid(bidId);
+            if (!ObjectUtils.isEmpty(bill)) {
+
+                // 逾期天数计算 大于当前时间表示逾期，小于等于表示没到期
+                int days = DateUtil.daysBetweenNoHMS(bill.getRepaymentTime(), LocalDateTime.now());
+                bidProgressResponse.setOverdueDay(days > 0 ? days : 0);
+                bidProgressResponse.setRepayTime(DateUtil.localDateTimeToTimestamp(bill.getRepaymentTime()));
+                bidProgressResponse.setTotalRepayAmount(comService.getBidNoRepayFee(bidId, LocalDateTime.now()));
+
+                // 放款日期
+                BidProgress bidProgress = bidProgressRepository.findByBidIdAndType(bidId, BidProgressTypeEnum.LOAN.getCode().byteValue());
+                bidProgressResponse.setLoanTime(DateUtil.localDateTimeToTimestamp(bidProgress.getHandleTime()));
+                bidProgressResponse.setPopupChoice(1);
+                // 计算是否在弹窗日期之内，当前日期减去放款日期，小于等于3，要弹，反之不弹
+                int popupDay = DateUtil.daysBetweenNoHMS(bidProgress.getHandleTime(), LocalDateTime.now());
+                bidProgressResponse.setPopup(popupDay <= 3 ? true : false);
+            }
+            return bidProgressResponse;
+        }
+
+        // 审核中
+        bidProgressResponse.setApplyTime(DateUtil.localDateTimeToTimestamp(bid.getCreateTime()));
+        if (BidStatusEnum.RISK_ING.getCode().byteValue() == bid.getStatus() || BidStatusEnum.MANMADE_ING.getCode().byteValue() == bid.getStatus()) {
+            bidProgressResponse.setReviewStatus(BidProgressTypeEnum.AUDIT.getCode());
+        }
+        bidProgressResponse.setReviewStatus(Integer.valueOf(bid.getStatus()));
+
+        BidProgress bidProgresses = bidProgressRepository.findByBidIdAndType(bidId, BidProgressTypeEnum.AUDIT.getCode().byteValue());
+        bidProgressResponse.setReviewTime(DateUtil.localDateTimeToTimestamp(bidProgresses.getHandleTime()));
+        bidProgressResponse.setPopupChoice(2);
+        int popupDay = DateUtil.daysBetweenNoHMS(bidProgresses.getHandleTime(), LocalDateTime.now());
+        bidProgressResponse.setPopup(popupDay <= 3 ? true : false);
+        return bidProgressResponse;
+    }
 }

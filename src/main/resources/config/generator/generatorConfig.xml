@@ -94,8 +94,8 @@
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
             <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
-        <table tableName="t_loan_id_area" domainObjectName="IDArea" >
-        </table>
+       <!-- <table tableName="t_loan_id_area" domainObjectName="IDArea" >
+        </table>-->
 
         <!--<table tableName="t_loan_product" domainObjectName="Product" >-->
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
@@ -189,6 +189,17 @@
             <!--<columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
             <!--<columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>-->
         <!--</table>-->
+
+        <!--<table tableName="t_loan_news" domainObjectName="News" >
+        <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        <columnOverride column="content" javaType="java.lang.String" jdbcType="LONGVARCHAR"/>
+        </table>-->
+
+        <table tableName="t_loan_user_message" domainObjectName="UserMessage" >
+            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+            <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        </table>
 
 
 

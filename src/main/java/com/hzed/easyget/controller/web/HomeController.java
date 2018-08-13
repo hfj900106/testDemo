@@ -58,7 +58,7 @@ public class HomeController {
     @TokenIgnore
     @ModuleFunc("获取公告")
     @PostMapping("/getMessage")
-    public MessageResponse getMessage() {
+    public NewsResponse getMessage() {
         return homeService.getMessage();
     }
 
@@ -80,7 +80,10 @@ public class HomeController {
         return homeService.checkRepayment();
     }
 
-
-
+    @ModuleFunc("首页弹窗获取标的进度")
+    @PostMapping("/getBidProgress")
+    public BidProgressResponse getBidProgress(){
+        return homeService.getBidProgress();
+    }
 
 }

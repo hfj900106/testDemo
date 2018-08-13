@@ -3,16 +3,11 @@ package com.hzed.easyget.persistence.auto.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class UserMessage implements Serializable {
+public class News implements Serializable {
     /**
      * 主键
      */
     private Long id;
-
-    /**
-     * 用户id
-     */
-    private Long userId;
 
     /**
      * 标题
@@ -20,14 +15,19 @@ public class UserMessage implements Serializable {
     private String title;
 
     /**
-     * 内容
+     * 简介
      */
-    private String message;
+    private String summary;
 
     /**
-     * 是否已读
+     * 语言
      */
-    private Boolean hasRead;
+    private String language;
+
+    /**
+     * 是否发布 1-发布 0-下架
+     */
+    private Boolean isRelease;
 
     /**
      * 创建时间
@@ -54,6 +54,11 @@ public class UserMessage implements Serializable {
      */
     private String remark;
 
+    /**
+     * 内容
+     */
+    private String content;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -64,14 +69,6 @@ public class UserMessage implements Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -80,20 +77,28 @@ public class UserMessage implements Serializable {
         this.title = title == null ? null : title.trim();
     }
 
-    public String getMessage() {
-        return message;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setMessage(String message) {
-        this.message = message == null ? null : message.trim();
+    public void setSummary(String summary) {
+        this.summary = summary == null ? null : summary.trim();
     }
 
-    public Boolean getHasRead() {
-        return hasRead;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setHasRead(Boolean hasRead) {
-        this.hasRead = hasRead;
+    public void setLanguage(String language) {
+        this.language = language == null ? null : language.trim();
+    }
+
+    public Boolean getIsRelease() {
+        return isRelease;
+    }
+
+    public void setIsRelease(Boolean isRelease) {
+        this.isRelease = isRelease;
     }
 
     public LocalDateTime getCreateTime() {
@@ -136,6 +141,14 @@ public class UserMessage implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -143,38 +156,34 @@ public class UserMessage implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", userId=").append(userId);
         sb.append(", title=").append(title);
-        sb.append(", message=").append(message);
-        sb.append(", hasRead=").append(hasRead);
+        sb.append(", summary=").append(summary);
+        sb.append(", language=").append(language);
+        sb.append(", isRelease=").append(isRelease);
         sb.append(", createTime=").append(createTime);
         sb.append(", createBy=").append(createBy);
         sb.append(", updateTime=").append(updateTime);
         sb.append(", updateBy=").append(updateBy);
         sb.append(", remark=").append(remark);
+        sb.append(", content=").append(content);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
     }
 
-    public static UserMessage.Builder builder() {
-        return new UserMessage.Builder();
+    public static News.Builder builder() {
+        return new News.Builder();
     }
 
     public static class Builder {
-        private UserMessage obj;
+        private News obj;
 
         public Builder() {
-            this.obj = new UserMessage();
+            this.obj = new News();
         }
 
         public Builder id(Long id) {
             obj.setId(id);
-            return this;
-        }
-
-        public Builder userId(Long userId) {
-            obj.setUserId(userId);
             return this;
         }
 
@@ -183,13 +192,18 @@ public class UserMessage implements Serializable {
             return this;
         }
 
-        public Builder message(String message) {
-            obj.setMessage(message);
+        public Builder summary(String summary) {
+            obj.setSummary(summary);
             return this;
         }
 
-        public Builder hasRead(Boolean hasRead) {
-            obj.setHasRead(hasRead);
+        public Builder language(String language) {
+            obj.setLanguage(language);
+            return this;
+        }
+
+        public Builder isRelease(Boolean isRelease) {
+            obj.setIsRelease(isRelease);
             return this;
         }
 
@@ -218,22 +232,28 @@ public class UserMessage implements Serializable {
             return this;
         }
 
-        public UserMessage build() {
+        public Builder content(String content) {
+            obj.setContent(content);
+            return this;
+        }
+
+        public News build() {
             return this.obj;
         }
     }
 
     public enum Column {
         id("id"),
-        userId("user_id"),
         title("title"),
-        message("message"),
-        hasRead("has_read"),
+        summary("summary"),
+        language("language"),
+        isRelease("is_release"),
         createTime("create_time"),
         createBy("create_by"),
         updateTime("update_time"),
         updateBy("update_by"),
-        remark("remark");
+        remark("remark"),
+        content("content");
 
         private final String column;
 

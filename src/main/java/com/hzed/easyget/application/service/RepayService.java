@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
+import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
@@ -680,5 +681,29 @@ public class RepayService {
             this.repaymentSuccess(transactionQuery, paymentId);
             log.info("本地还款交易处理成功");
         }
+    }
+
+    public RepayProgressResponse getRepayProgress(RepayDetailRequest request) {
+        RepayProgressResponse repayProgressResponse = new RepayProgressResponse();
+
+        Long bidId = request.getBidId();
+        Bid bid = bidRepository.findById(bidId);
+        repayProgressResponse.setLoanAmount(bid.getLoanAmount());
+        repayProgressResponse.setPeriod(bid.getPeriod());
+        AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(bid.getLoanAmount(), bid.getPeriod());
+        repayProgressResponse.setTailFree(productInfo.getTailFee());
+        repayProgressResponse.setLoanTime(DateUtil.localDateTimeToTimestamp(bid.getCreateTime()));
+        BigDecimal totalRepayAmount = comService.getBidNoRepayFee(bidId, LocalDateTime.now());
+        repayProgressResponse.setTotalRepayAmount(totalRepayAmount);
+        repayProgressResponse.setBidStatus(bid.getStatus());
+        Bill bill = billRepository.findByBid(bidId);
+        // 逾期天数计算 大于当前时间表示逾期，小于等于表示没到期
+        int days = DateUtil.daysBetweenNoHMS(bill.getRepaymentTime(), LocalDateTime.now());
+        repayProgressResponse.setOverdueDay(days > 0 ? days : 0);
+        repayProgressResponse.setOverdueFree(productInfo.getOverFee(days));
+        repayProgressResponse.setRepayTime(DateUtil.localDateTimeToTimestamp(bill.getRepaymentTime()));
+        repayProgressResponse.setRealRepayAmount(bill.getRealRepaymentAmount());
+        repayProgressResponse.setRemainderAmount(totalRepayAmount.subtract(bill.getRealRepaymentAmount().setScale(2, BigDecimal.ROUND_HALF_UP)));
+        return repayProgressResponse;
     }
 }

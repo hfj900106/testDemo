@@ -3,15 +3,20 @@ package com.hzed.easyget.application.service;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.SystemProp;
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.repository.NewsRepository;
 import com.hzed.easyget.infrastructure.repository.UserMessageRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
+import com.hzed.easyget.persistence.auto.entity.News;
 import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserMessage;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
+import com.hzed.easyget.persistence.ext.entity.UserMessageExt;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +44,8 @@ public class UserService {
     private UserMessageRepository userMessageRepository;
     @Autowired
     private SystemProp systemProp;
+    @Autowired
+    private NewsRepository newsRepository;
 
     /**
      * 我的
@@ -84,51 +91,68 @@ public class UserService {
     }
 
 
-    public List<MessageResponse> getMessageList(MessageRequest request) {
+    public List<NewsAndMessageResponse> getNewsAndMessageList(NewsRequest request) {
 
-        List<MessageResponse> messageResponseList = Lists.newArrayList();
+        List<NewsAndMessageResponse> newsAndMessageResponseList = Lists.newArrayList();
         Long userId = RequestUtil.getGlobalUser().getUserId();
+        String i18n = RequestUtil.getGlobalHead().getI18n();
         Integer pageNo = request.getPageNo();
         Integer pageSize = request.getPageSize();
-        List<UserMessage> list = userMessageRepository.findList(userId, pageNo, pageSize);
-        if (ObjectUtils.isEmpty(list)) {
-            return messageResponseList;
-        }
-        list.forEach(userMessage -> {
-            MessageResponse messageResponse = new MessageResponse();
-            messageResponse.setMessageTitle(userMessage.getTitle());
-            if (userMessage.getHasRead() != null) {
-                messageResponse.setHasRead(userMessage.getHasRead());
+
+        // 关联查询公告表与用户消息表
+        List<UserMessageExt> newsAndMessageList = userMessageRepository.findList(userId, i18n, pageNo, pageSize);
+        newsAndMessageList.forEach(newsAndMessage -> {
+            NewsAndMessageResponse newsAndMessageResponse = new NewsAndMessageResponse();
+            newsAndMessageResponse.setTitle(newsAndMessage.getTitle());
+            newsAndMessageResponse.setToUrl(systemProp.getH5MessageUrl() + newsAndMessage.getId() + "&type=news");
+            if (!ObjectUtils.isEmpty(newsAndMessage.isHasRead())) {
+                newsAndMessageResponse.setHasRead(newsAndMessage.isHasRead());
             }
 
-            if (!ObjectUtils.isEmpty(userMessage.getUserId())) {
-                messageResponse.setUserId(userMessage.getUserId());
+            if (!ObjectUtils.isEmpty(newsAndMessage.getUserId())) {
+                newsAndMessageResponse.setUserId(newsAndMessage.getUserId());
+                newsAndMessageResponse.setToUrl(systemProp.getH5MessageUrl() + newsAndMessage.getId() + "&type=message");
             }
 
-            messageResponse.setToUrl(systemProp.getH5MessageUrl() + userMessage.getId());
+            newsAndMessageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(newsAndMessage.getCreateTime()));
+            newsAndMessageResponse.setId(newsAndMessage.getId());
 
-            messageResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(userMessage.getCreateTime()));
-            messageResponseList.add(messageResponse);
+            newsAndMessageResponseList.add(newsAndMessageResponse);
         });
 
-        return messageResponseList;
+        return newsAndMessageResponseList;
     }
 
     public MessageContentH5Response getMessageContentH5(MessageContentH5Request request) {
 
         MessageContentH5Response messageContentH5Response = new MessageContentH5Response();
-        UserMessage userMessage = userMessageRepository.findOneById(request.getId());
-        if(ObjectUtils.isEmpty(userMessage)){
-            return messageContentH5Response;
+        String type = request.getType();
+        if (("news").equals(type)) {
+            News news = newsRepository.findOneByIdAndLanguage(request.getId());
+            if (ObjectUtils.isEmpty(news)) {
+                return messageContentH5Response;
+            }
+            messageContentH5Response.setTitle(news.getTitle());
+            messageContentH5Response.setH5Message(news.getContent());
+            messageContentH5Response.setCreateTime(DateUtil.localDateTimeToStr1(news.getCreateTime()));
+        } else if (("message").equals(type)) {
+            UserMessage userMessage = userMessageRepository.findOneById(request.getId());
+            if (ObjectUtils.isEmpty(userMessage)) {
+                return messageContentH5Response;
+            }
+            messageContentH5Response.setTitle(userMessage.getTitle());
+            messageContentH5Response.setH5Message(userMessage.getMessage());
+            messageContentH5Response.setCreateTime(DateUtil.localDateTimeToStr1(userMessage.getCreateTime()));
+            if (!userMessage.getHasRead()) {
+                userMessage.setHasRead(true);
+                userMessage.setUpdateTime(LocalDateTime.now());
+                userMessageRepository.updateHasReadById(userMessage);
+            }
+        } else {
+            throw new WarnException(BizCodeEnum.ILLEGAL_PARAM);
         }
-        messageContentH5Response.setTitle(userMessage.getTitle());
-        messageContentH5Response.setH5Message(userMessage.getH5Message());
-        messageContentH5Response.setCreateTime(DateUtil.localDateTimeToStr1(userMessage.getCreateTime()));
-        if (!userMessage.getHasRead()) {
-            userMessage.setHasRead(true);
-            userMessage.setUpdateTime(LocalDateTime.now());
-            userMessageRepository.updateHasReadById(userMessage);
-        }
+
+
 
         return messageContentH5Response;
     }
@@ -138,8 +162,7 @@ public class UserService {
         UserMessage userMessage = new UserMessage();
         userMessage.setId(IDGenerator.nextId());
         userMessage.setTitle(request.getTitle());
-        userMessage.setAppMessage(request.getAppMessage());
-        userMessage.setH5Message(request.getMessage());
+        userMessage.setMessage(request.getAppMessage());
         userMessageRepository.insert(userMessage);
     }
 }

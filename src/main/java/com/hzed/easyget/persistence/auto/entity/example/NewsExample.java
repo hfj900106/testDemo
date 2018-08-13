@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserMessageExample {
+public class NewsExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,7 +15,7 @@ public class UserMessageExample {
 
     protected Integer rows;
 
-    public UserMessageExample() {
+    public NewsExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -86,29 +86,29 @@ public class UserMessageExample {
         return this.rows;
     }
 
-    public UserMessageExample limit(Integer rows) {
+    public NewsExample limit(Integer rows) {
         this.rows = rows;
         return this;
     }
 
-    public UserMessageExample limit(Integer offset, Integer rows) {
+    public NewsExample limit(Integer offset, Integer rows) {
         this.offset = offset;
         this.rows = rows;
         return this;
     }
 
-    public UserMessageExample page(Integer page, Integer pageSize) {
+    public NewsExample page(Integer page, Integer pageSize) {
         this.offset = page * pageSize;
         this.rows = pageSize;
         return this;
     }
 
-    public UserMessageExample orderBy(String orderByClause) {
+    public NewsExample orderBy(String orderByClause) {
         this.setOrderByClause(orderByClause);
         return this;
     }
 
-    public UserMessageExample orderBy(String ... orderByClauses) {
+    public NewsExample orderBy(String ... orderByClauses) {
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < orderByClauses.length; i++) {
             sb.append(orderByClauses[i]);
@@ -221,66 +221,6 @@ public class UserMessageExample {
             return (Criteria) this;
         }
 
-        public Criteria andUserIdIsNull() {
-            addCriterion("user_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserIdIsNotNull() {
-            addCriterion("user_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserIdEqualTo(Long value) {
-            addCriterion("user_id =", value, "userId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserIdNotEqualTo(Long value) {
-            addCriterion("user_id <>", value, "userId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserIdGreaterThan(Long value) {
-            addCriterion("user_id >", value, "userId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("user_id >=", value, "userId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserIdLessThan(Long value) {
-            addCriterion("user_id <", value, "userId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserIdLessThanOrEqualTo(Long value) {
-            addCriterion("user_id <=", value, "userId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserIdIn(List<Long> values) {
-            addCriterion("user_id in", values, "userId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserIdNotIn(List<Long> values) {
-            addCriterion("user_id not in", values, "userId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserIdBetween(Long value1, Long value2) {
-            addCriterion("user_id between", value1, value2, "userId");
-            return (Criteria) this;
-        }
-
-        public Criteria andUserIdNotBetween(Long value1, Long value2) {
-            addCriterion("user_id not between", value1, value2, "userId");
-            return (Criteria) this;
-        }
-
         public Criteria andTitleIsNull() {
             addCriterion("title is null");
             return (Criteria) this;
@@ -351,133 +291,203 @@ public class UserMessageExample {
             return (Criteria) this;
         }
 
-        public Criteria andMessageIsNull() {
-            addCriterion("message is null");
+        public Criteria andSummaryIsNull() {
+            addCriterion("summary is null");
             return (Criteria) this;
         }
 
-        public Criteria andMessageIsNotNull() {
-            addCriterion("message is not null");
+        public Criteria andSummaryIsNotNull() {
+            addCriterion("summary is not null");
             return (Criteria) this;
         }
 
-        public Criteria andMessageEqualTo(String value) {
-            addCriterion("message =", value, "message");
+        public Criteria andSummaryEqualTo(String value) {
+            addCriterion("summary =", value, "summary");
             return (Criteria) this;
         }
 
-        public Criteria andMessageNotEqualTo(String value) {
-            addCriterion("message <>", value, "message");
+        public Criteria andSummaryNotEqualTo(String value) {
+            addCriterion("summary <>", value, "summary");
             return (Criteria) this;
         }
 
-        public Criteria andMessageGreaterThan(String value) {
-            addCriterion("message >", value, "message");
+        public Criteria andSummaryGreaterThan(String value) {
+            addCriterion("summary >", value, "summary");
             return (Criteria) this;
         }
 
-        public Criteria andMessageGreaterThanOrEqualTo(String value) {
-            addCriterion("message >=", value, "message");
+        public Criteria andSummaryGreaterThanOrEqualTo(String value) {
+            addCriterion("summary >=", value, "summary");
             return (Criteria) this;
         }
 
-        public Criteria andMessageLessThan(String value) {
-            addCriterion("message <", value, "message");
+        public Criteria andSummaryLessThan(String value) {
+            addCriterion("summary <", value, "summary");
             return (Criteria) this;
         }
 
-        public Criteria andMessageLessThanOrEqualTo(String value) {
-            addCriterion("message <=", value, "message");
+        public Criteria andSummaryLessThanOrEqualTo(String value) {
+            addCriterion("summary <=", value, "summary");
             return (Criteria) this;
         }
 
-        public Criteria andMessageLike(String value) {
-            addCriterion("message like", value, "message");
+        public Criteria andSummaryLike(String value) {
+            addCriterion("summary like", value, "summary");
             return (Criteria) this;
         }
 
-        public Criteria andMessageNotLike(String value) {
-            addCriterion("message not like", value, "message");
+        public Criteria andSummaryNotLike(String value) {
+            addCriterion("summary not like", value, "summary");
             return (Criteria) this;
         }
 
-        public Criteria andMessageIn(List<String> values) {
-            addCriterion("message in", values, "message");
+        public Criteria andSummaryIn(List<String> values) {
+            addCriterion("summary in", values, "summary");
             return (Criteria) this;
         }
 
-        public Criteria andMessageNotIn(List<String> values) {
-            addCriterion("message not in", values, "message");
+        public Criteria andSummaryNotIn(List<String> values) {
+            addCriterion("summary not in", values, "summary");
             return (Criteria) this;
         }
 
-        public Criteria andMessageBetween(String value1, String value2) {
-            addCriterion("message between", value1, value2, "message");
+        public Criteria andSummaryBetween(String value1, String value2) {
+            addCriterion("summary between", value1, value2, "summary");
             return (Criteria) this;
         }
 
-        public Criteria andMessageNotBetween(String value1, String value2) {
-            addCriterion("message not between", value1, value2, "message");
+        public Criteria andSummaryNotBetween(String value1, String value2) {
+            addCriterion("summary not between", value1, value2, "summary");
             return (Criteria) this;
         }
 
-        public Criteria andHasReadIsNull() {
-            addCriterion("has_read is null");
+        public Criteria andLanguageIsNull() {
+            addCriterion("language is null");
             return (Criteria) this;
         }
 
-        public Criteria andHasReadIsNotNull() {
-            addCriterion("has_read is not null");
+        public Criteria andLanguageIsNotNull() {
+            addCriterion("language is not null");
             return (Criteria) this;
         }
 
-        public Criteria andHasReadEqualTo(Boolean value) {
-            addCriterion("has_read =", value, "hasRead");
+        public Criteria andLanguageEqualTo(String value) {
+            addCriterion("language =", value, "language");
             return (Criteria) this;
         }
 
-        public Criteria andHasReadNotEqualTo(Boolean value) {
-            addCriterion("has_read <>", value, "hasRead");
+        public Criteria andLanguageNotEqualTo(String value) {
+            addCriterion("language <>", value, "language");
             return (Criteria) this;
         }
 
-        public Criteria andHasReadGreaterThan(Boolean value) {
-            addCriterion("has_read >", value, "hasRead");
+        public Criteria andLanguageGreaterThan(String value) {
+            addCriterion("language >", value, "language");
             return (Criteria) this;
         }
 
-        public Criteria andHasReadGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("has_read >=", value, "hasRead");
+        public Criteria andLanguageGreaterThanOrEqualTo(String value) {
+            addCriterion("language >=", value, "language");
             return (Criteria) this;
         }
 
-        public Criteria andHasReadLessThan(Boolean value) {
-            addCriterion("has_read <", value, "hasRead");
+        public Criteria andLanguageLessThan(String value) {
+            addCriterion("language <", value, "language");
             return (Criteria) this;
         }
 
-        public Criteria andHasReadLessThanOrEqualTo(Boolean value) {
-            addCriterion("has_read <=", value, "hasRead");
+        public Criteria andLanguageLessThanOrEqualTo(String value) {
+            addCriterion("language <=", value, "language");
             return (Criteria) this;
         }
 
-        public Criteria andHasReadIn(List<Boolean> values) {
-            addCriterion("has_read in", values, "hasRead");
+        public Criteria andLanguageLike(String value) {
+            addCriterion("language like", value, "language");
             return (Criteria) this;
         }
 
-        public Criteria andHasReadNotIn(List<Boolean> values) {
-            addCriterion("has_read not in", values, "hasRead");
+        public Criteria andLanguageNotLike(String value) {
+            addCriterion("language not like", value, "language");
             return (Criteria) this;
         }
 
-        public Criteria andHasReadBetween(Boolean value1, Boolean value2) {
-            addCriterion("has_read between", value1, value2, "hasRead");
+        public Criteria andLanguageIn(List<String> values) {
+            addCriterion("language in", values, "language");
             return (Criteria) this;
         }
 
-        public Criteria andHasReadNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("has_read not between", value1, value2, "hasRead");
+        public Criteria andLanguageNotIn(List<String> values) {
+            addCriterion("language not in", values, "language");
+            return (Criteria) this;
+        }
+
+        public Criteria andLanguageBetween(String value1, String value2) {
+            addCriterion("language between", value1, value2, "language");
+            return (Criteria) this;
+        }
+
+        public Criteria andLanguageNotBetween(String value1, String value2) {
+            addCriterion("language not between", value1, value2, "language");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsReleaseIsNull() {
+            addCriterion("is_release is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsReleaseIsNotNull() {
+            addCriterion("is_release is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsReleaseEqualTo(Boolean value) {
+            addCriterion("is_release =", value, "isRelease");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsReleaseNotEqualTo(Boolean value) {
+            addCriterion("is_release <>", value, "isRelease");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsReleaseGreaterThan(Boolean value) {
+            addCriterion("is_release >", value, "isRelease");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsReleaseGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_release >=", value, "isRelease");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsReleaseLessThan(Boolean value) {
+            addCriterion("is_release <", value, "isRelease");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsReleaseLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_release <=", value, "isRelease");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsReleaseIn(List<Boolean> values) {
+            addCriterion("is_release in", values, "isRelease");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsReleaseNotIn(List<Boolean> values) {
+            addCriterion("is_release not in", values, "isRelease");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsReleaseBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_release between", value1, value2, "isRelease");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsReleaseNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_release not between", value1, value2, "isRelease");
             return (Criteria) this;
         }
 
@@ -796,8 +806,13 @@ public class UserMessageExample {
             return (Criteria) this;
         }
 
-        public Criteria andMessageLikeInsensitive(String value) {
-            addCriterion("upper(message) like", value.toUpperCase(), "message");
+        public Criteria andSummaryLikeInsensitive(String value) {
+            addCriterion("upper(summary) like", value.toUpperCase(), "summary");
+            return (Criteria) this;
+        }
+
+        public Criteria andLanguageLikeInsensitive(String value) {
+            addCriterion("upper(language) like", value.toUpperCase(), "language");
             return (Criteria) this;
         }
 
@@ -808,14 +823,14 @@ public class UserMessageExample {
     }
 
     public static class Criteria extends GeneratedCriteria {
-        private UserMessageExample example;
+        private NewsExample example;
 
-        protected Criteria(UserMessageExample example) {
+        protected Criteria(NewsExample example) {
             super();
             this.example = example;
         }
 
-        public UserMessageExample example() {
+        public NewsExample example() {
             return this.example;
         }
 

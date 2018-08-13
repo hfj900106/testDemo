@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hzed.easyget.persistence.auto.mapper.UserMessageMapper">
-  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.UserMessage">
+<mapper namespace="com.hzed.easyget.persistence.auto.mapper.NewsMapper">
+  <resultMap id="BaseResultMap" type="com.hzed.easyget.persistence.auto.entity.News">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="message" jdbcType="VARCHAR" property="message" />
-    <result column="has_read" jdbcType="BIT" property="hasRead" />
+    <result column="summary" jdbcType="VARCHAR" property="summary" />
+    <result column="language" jdbcType="VARCHAR" property="language" />
+    <result column="is_release" jdbcType="BIT" property="isRelease" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.hzed.easyget.persistence.auto.entity.News">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -72,16 +75,43 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, title, message, has_read, create_time, create_by, update_time, update_by, 
+    id, title, summary, language, is_release, create_time, create_by, update_time, update_by, 
     remark
   </sql>
-  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserMessageExample" resultMap="BaseResultMap">
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.hzed.easyget.persistence.auto.entity.example.NewsExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from t_loan_user_message
+    ,
+    <include refid="Blob_Column_List" />
+    from t_loan_news
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="rows != null">
+      <if test="offset != null">
+        limit ${offset}, ${rows}
+      </if>
+      <if test="offset == null">
+        limit ${rows}
+      </if>
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.NewsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_loan_news
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -105,7 +135,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_user_message
+    from t_loan_news
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -113,10 +143,12 @@
       order by ${example.orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
-    from t_loan_user_message
+    ,
+    <include refid="Blob_Column_List" />
+    from t_loan_news
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectByPrimaryKeySelective" parameterType="map" resultMap="BaseResultMap">
@@ -124,46 +156,46 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_user_message
+    from t_loan_news
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from t_loan_user_message
+    delete from t_loan_news
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserMessageExample">
-    delete from t_loan_user_message
+  <delete id="deleteByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.NewsExample">
+    delete from t_loan_news
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.UserMessage">
-    insert into t_loan_user_message (id, user_id, title, 
-      message, has_read, create_time, 
+  <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.News">
+    insert into t_loan_news (id, title, summary, 
+      language, is_release, create_time, 
       create_by, update_time, update_by, 
-      remark)
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
-      #{message,jdbcType=VARCHAR}, #{hasRead,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
+      remark, content)
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
+      #{language,jdbcType=VARCHAR}, #{isRelease,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
-      #{remark,jdbcType=VARCHAR})
+      #{remark,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserMessage">
-    insert into t_loan_user_message
+  <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.News">
+    insert into t_loan_news
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="userId != null">
-        user_id,
-      </if>
       <if test="title != null">
         title,
       </if>
-      <if test="message != null">
-        message,
+      <if test="summary != null">
+        summary,
       </if>
-      <if test="hasRead != null">
-        has_read,
+      <if test="language != null">
+        language,
+      </if>
+      <if test="isRelease != null">
+        is_release,
       </if>
       <if test="createTime != null">
         create_time,
@@ -180,22 +212,25 @@
       <if test="remark != null">
         remark,
       </if>
+      <if test="content != null">
+        content,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="userId != null">
-        #{userId,jdbcType=BIGINT},
-      </if>
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
       </if>
-      <if test="message != null">
-        #{message,jdbcType=VARCHAR},
+      <if test="summary != null">
+        #{summary,jdbcType=VARCHAR},
       </if>
-      <if test="hasRead != null">
-        #{hasRead,jdbcType=BIT},
+      <if test="language != null">
+        #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="isRelease != null">
+        #{isRelease,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -212,31 +247,34 @@
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserMessageExample" resultType="java.lang.Long">
-    select count(*) from t_loan_user_message
+  <select id="countByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.NewsExample" resultType="java.lang.Long">
+    select count(*) from t_loan_news
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update t_loan_user_message
+    update t_loan_news
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.userId != null">
-        user_id = #{record.userId,jdbcType=BIGINT},
-      </if>
       <if test="record.title != null">
         title = #{record.title,jdbcType=VARCHAR},
       </if>
-      <if test="record.message != null">
-        message = #{record.message,jdbcType=VARCHAR},
+      <if test="record.summary != null">
+        summary = #{record.summary,jdbcType=VARCHAR},
       </if>
-      <if test="record.hasRead != null">
-        has_read = #{record.hasRead,jdbcType=BIT},
+      <if test="record.language != null">
+        language = #{record.language,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isRelease != null">
+        is_release = #{record.isRelease,jdbcType=BIT},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -253,18 +291,38 @@
       <if test="record.remark != null">
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map">
-    update t_loan_user_message
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update t_loan_news
     set id = #{record.id,jdbcType=BIGINT},
-      user_id = #{record.userId,jdbcType=BIGINT},
       title = #{record.title,jdbcType=VARCHAR},
-      message = #{record.message,jdbcType=VARCHAR},
-      has_read = #{record.hasRead,jdbcType=BIT},
+      summary = #{record.summary,jdbcType=VARCHAR},
+      language = #{record.language,jdbcType=VARCHAR},
+      is_release = #{record.isRelease,jdbcType=BIT},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_by = #{record.createBy,jdbcType=BIGINT},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_by = #{record.updateBy,jdbcType=BIGINT},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_loan_news
+    set id = #{record.id,jdbcType=BIGINT},
+      title = #{record.title,jdbcType=VARCHAR},
+      summary = #{record.summary,jdbcType=VARCHAR},
+      language = #{record.language,jdbcType=VARCHAR},
+      is_release = #{record.isRelease,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       create_by = #{record.createBy,jdbcType=BIGINT},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
@@ -274,20 +332,20 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.UserMessage">
-    update t_loan_user_message
+  <update id="updateByPrimaryKeySelective" parameterType="com.hzed.easyget.persistence.auto.entity.News">
+    update t_loan_news
     <set>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=BIGINT},
-      </if>
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
       </if>
-      <if test="message != null">
-        message = #{message,jdbcType=VARCHAR},
+      <if test="summary != null">
+        summary = #{summary,jdbcType=VARCHAR},
       </if>
-      <if test="hasRead != null">
-        has_read = #{hasRead,jdbcType=BIT},
+      <if test="language != null">
+        language = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="isRelease != null">
+        is_release = #{isRelease,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -304,15 +362,32 @@
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.UserMessage">
-    update t_loan_user_message
-    set user_id = #{userId,jdbcType=BIGINT},
-      title = #{title,jdbcType=VARCHAR},
-      message = #{message,jdbcType=VARCHAR},
-      has_read = #{hasRead,jdbcType=BIT},
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hzed.easyget.persistence.auto.entity.News">
+    update t_loan_news
+    set title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      language = #{language,jdbcType=VARCHAR},
+      is_release = #{isRelease,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=BIGINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hzed.easyget.persistence.auto.entity.News">
+    update t_loan_news
+    set title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      language = #{language,jdbcType=VARCHAR},
+      is_release = #{isRelease,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
@@ -320,10 +395,10 @@
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserMessageExample" resultMap="BaseResultMap">
+  <select id="selectOneByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.NewsExample" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_loan_user_message
+    from t_loan_news
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -337,7 +412,7 @@
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
-    from t_loan_user_message
+    from t_loan_news
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -346,20 +421,34 @@
     </if>
     limit 1
   </select>
+  <select id="selectOneByExampleWithBLOBs" parameterType="com.hzed.easyget.persistence.auto.entity.example.NewsExample" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_loan_news
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    limit 1
+  </select>
   <insert id="batchInsert" parameterType="map">
-    insert into t_loan_user_message
-    (id, user_id, title, message, has_read, create_time, create_by, update_time, update_by, 
-      remark)
+    insert into t_loan_news
+    (id, title, summary, language, is_release, create_time, create_by, update_time, update_by, 
+      remark, content)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.title,jdbcType=VARCHAR}, 
-        #{item.message,jdbcType=VARCHAR}, #{item.hasRead,jdbcType=BIT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+      (#{item.id,jdbcType=BIGINT}, #{item.title,jdbcType=VARCHAR}, #{item.summary,jdbcType=VARCHAR}, 
+        #{item.language,jdbcType=VARCHAR}, #{item.isRelease,jdbcType=BIT}, #{item.createTime,jdbcType=TIMESTAMP}, 
         #{item.createBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
-        #{item.remark,jdbcType=VARCHAR})
+        #{item.remark,jdbcType=VARCHAR}, #{item.content,jdbcType=LONGVARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
-    insert into t_loan_user_message (
+    insert into t_loan_news (
     <foreach collection="selective" item="column" separator=",">
       ${column.value}
     </foreach>
@@ -371,17 +460,17 @@
         <if test="'id' == column.value">
           #{item.id,jdbcType=BIGINT}
         </if>
-        <if test="'user_id' == column.value">
-          #{item.userId,jdbcType=BIGINT}
-        </if>
         <if test="'title' == column.value">
           #{item.title,jdbcType=VARCHAR}
         </if>
-        <if test="'message' == column.value">
-          #{item.message,jdbcType=VARCHAR}
+        <if test="'summary' == column.value">
+          #{item.summary,jdbcType=VARCHAR}
         </if>
-        <if test="'has_read' == column.value">
-          #{item.hasRead,jdbcType=BIT}
+        <if test="'language' == column.value">
+          #{item.language,jdbcType=VARCHAR}
+        </if>
+        <if test="'is_release' == column.value">
+          #{item.isRelease,jdbcType=BIT}
         </if>
         <if test="'create_time' == column.value">
           #{item.createTime,jdbcType=TIMESTAMP}
@@ -397,6 +486,9 @@
         </if>
         <if test="'remark' == column.value">
           #{item.remark,jdbcType=VARCHAR}
+        </if>
+        <if test="'content' == column.value">
+          #{item.content,jdbcType=LONGVARCHAR}
         </if>
       </foreach>
       )

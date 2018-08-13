@@ -3,6 +3,8 @@ package com.hzed.easyget.infrastructure.repository;
 import com.hzed.easyget.persistence.auto.entity.UserMessage;
 import com.hzed.easyget.persistence.auto.entity.example.UserMessageExample;
 import com.hzed.easyget.persistence.auto.mapper.UserMessageMapper;
+import com.hzed.easyget.persistence.ext.entity.UserMessageExt;
+import com.hzed.easyget.persistence.ext.mapper.UserMessageExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,20 +21,13 @@ import java.util.List;
 public class UserMessageRepository {
     @Autowired
     private UserMessageMapper userMessageMapper;
+    @Autowired
+    private UserMessageExtMapper userMessageExtMapper;
 
 
-    public List<UserMessage> findList(Long userId, Integer pageNo, Integer pageSize) {
-        UserMessageExample example = new UserMessageExample();
+    public List<UserMessageExt> findList(Long userId, String i18n, Integer pageNo, Integer pageSize) {
 
-        UserMessageExample.Criteria criteria1 = example.createCriteria();
-        criteria1.andUserIdEqualTo(userId);
-        UserMessageExample.Criteria criteria2 = example.createCriteria();
-        criteria2.andUserIdIsNull();
-        example.or(criteria2);
-        example.setOrderByClause(UserMessage.Column.createTime.desc());
-        example.page(pageNo, pageSize);
-
-        return userMessageMapper.selectByExample(example);
+        return userMessageExtMapper.selectNewsAndMessageList(userId,i18n,pageNo,pageSize);
     }
 
     public UserMessage findOne() {
@@ -51,14 +46,20 @@ public class UserMessageRepository {
         userMessage.setId(System.nanoTime());
         userMessage.setUserId(userId);
         userMessage.setTitle(title);
-        userMessage.setH5Message(message);
+        userMessage.setMessage(message);
         userMessage.setHasRead(false);
         userMessage.setRemark(remark);
         userMessageMapper.insertSelective(userMessage);
     }
 
     /**
+<<<<<<< HEAD
+     * 根据id和语言获取公告内容
+     * @param id
+     * @return
+=======
      * 根据id获取公告内容
+>>>>>>> remotes/origin/dev
      */
     public UserMessage findOneById(Long id) {
         UserMessageExample example = new UserMessageExample();

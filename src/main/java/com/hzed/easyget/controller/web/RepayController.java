@@ -82,4 +82,10 @@ public class RepayController {
     public void uploadPicEvidence(@Valid @RequestBody UploadPicEvidenceRequest request) {
         repayService.uploadPicEvidence(request);
     }
+
+    @ModuleFunc("获取还款进度")
+    @PostMapping("/getRepayProgress")
+    public RepayProgressResponse getRepayProgress(@Valid @RequestBody RepayDetailRequest request){
+        return repayService.getRepayProgress(request);
+    }
 }

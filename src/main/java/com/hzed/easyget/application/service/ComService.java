@@ -1,7 +1,5 @@
 package com.hzed.easyget.application.service;
 
-import com.google.common.collect.Lists;
-import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.BillLedgerItemEnum;
 import com.hzed.easyget.application.enums.BillStatusEnum;
 import com.hzed.easyget.application.service.product.ProductEnum;
@@ -27,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -178,18 +175,6 @@ public class ComService {
         BillLedger overDueLedger = billLedgerRepository.findBillLedgerItemByBillId(billId, BillLedgerItemEnum.OVERDUE_FEE.getCode().byteValue());
 
         return overDueLedger == null ? allOverFee : allOverFee.subtract(overDueLedger.getRealRepaymentAmount());
-    }
-
-    /**
-     * 根据bid状态判断用户是否有贷款资格
-     */
-    public boolean isLoan(Long userId) {
-        List<Bid> bidList = bidRepository.findByUserIdAndStatus(userId, Lists.newArrayList(BidStatusEnum.RISK_ING.getCode().byteValue(), BidStatusEnum.MANMADE_ING.getCode().byteValue(),
-                BidStatusEnum.AUDIT_PASS.getCode().byteValue(), BidStatusEnum.REPAYMENT.getCode().byteValue()));
-        if (ObjectUtils.isEmpty(bidList)) {
-            return true;
-        }
-        return false;
     }
 
 

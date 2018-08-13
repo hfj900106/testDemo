@@ -24,4 +24,10 @@ public class UserBankRepository {
         example.setOrderByClause(UserBank.Column.createTime.desc());
         return userBankMapper.selectByExample(example);
     }
+
+    public List<UserBank> findByUserIdAndInbankAndInAccount(Long userId, String inBank, String inAccount) {
+        UserBankExample example = new UserBankExample();
+        example.createCriteria().andUserIdEqualTo(userId).andInBankEqualTo(inBank).andInAccountEqualTo(inAccount);
+        return userBankMapper.selectByExample(example);
+    }
 }

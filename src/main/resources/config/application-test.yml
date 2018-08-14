@@ -5,11 +5,11 @@ spring:
     username: ENC(wD8fKKuFx4GcCaFsCnj3eg==) # 用户密文 明文用户：root
     password: ENC(c2BWF7K9ElGY0GZbWDmpfAaUhTuqYvie) # 密码密文 明文密码：rootroot
   # rabbitmq配置
-  rabbitmq:
-    host: 10.10.30.139
+ rabbitmq:
+    host: 10.10.30.114
     port: 5672
-    username: guest
-    password: guest
+    username: user
+    password: password
     publisher-confirms: true
     virtual-host: /
 # 日志文件配置

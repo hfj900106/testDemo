@@ -279,11 +279,15 @@ public class HomeService {
         }
         bidProgressResponse.setReviewStatus(Integer.valueOf(bid.getStatus()));
 
+        bidProgressResponse.setPopup(true);
         BidProgress bidProgresses = bidProgressRepository.findByBidIdAndType(bidId, BidProgressTypeEnum.AUDIT.getCode().byteValue());
-        bidProgressResponse.setReviewTime(DateUtil.localDateTimeToTimestamp(bidProgresses.getHandleTime()));
+        if (!ObjectUtils.isEmpty(bidProgresses)) {
+
+            bidProgressResponse.setReviewTime(DateUtil.localDateTimeToTimestamp(bidProgresses.getHandleTime()));
+            int popupDay = DateUtil.daysBetweenNoHMS(bidProgresses.getHandleTime(), LocalDateTime.now());
+            bidProgressResponse.setPopup(popupDay <= 3 ? true : false);
+        }
         bidProgressResponse.setPopupChoice(2);
-        int popupDay = DateUtil.daysBetweenNoHMS(bidProgresses.getHandleTime(), LocalDateTime.now());
-        bidProgressResponse.setPopup(popupDay <= 3 ? true : false);
         return bidProgressResponse;
     }
 }

@@ -100,4 +100,7 @@ public class BidRepository {
         return bidMapper.selectByPrimaryKey(bidId);
     }
 
+    public void insertBid(Bid bid) {
+        bidMapper.insertSelective(bid);
+    }
 }

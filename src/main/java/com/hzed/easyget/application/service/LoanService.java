@@ -78,9 +78,7 @@ public class LoanService {
         SubmitLoanResponse submitLoanResponse = new SubmitLoanResponse();
         Long userId = RequestUtil.getGlobalUser().getUserId();
         User user = userRepository.findById(userId);
-        /*if (!comService.isLoan(userId)) {
-            throw new WarnException(BizCodeEnum.BID_EXISTS);
-        }*/
+
         // 调风控
         riskService.checkRiskEnableBorrow(user.getMobileAccount(), RequestUtil.getGlobalHead().getImei(), "1");
 
@@ -98,14 +96,20 @@ public class LoanService {
         bid.setPurposeCode(request.getPurposeId());
         bid.setClient(BidEnum.INDONESIA_APP.getCode());
         bid.setStatus(BidStatusEnum.RISK_ING.getCode().byteValue());
-
-        UserBank userBank = new UserBank();
-        userBank.setId(IDGenerator.nextId());
-        userBank.setUserId(userId);
-        userBank.setInBank(request.getInBank());
-        userBank.setInAccount(request.getInAccount());
         submitLoanResponse.setBid(bidId);
-        bidRepository.insertBidAndUserBank(bid, userBank);
+        // 用户银行卡信息不存在则插入
+        List<UserBank> userBankList = userBankRepository.findByUserIdAndInbankAndInAccount(userId, request.getInBank(), request.getInAccount());
+        if (ObjectUtils.isEmpty(userBankList)) {
+            UserBank userBank = new UserBank();
+            userBank.setId(IDGenerator.nextId());
+            userBank.setUserId(userId);
+            userBank.setInBank(request.getInBank());
+            userBank.setInAccount(request.getInAccount());
+            bidRepository.insertBidAndUserBank(bid, userBank);
+            return submitLoanResponse;
+        }
+
+        bidRepository.insertBid(bid);
 
         return submitLoanResponse;
     }

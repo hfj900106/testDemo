@@ -11,9 +11,9 @@ spring:
   application.name: easy-get
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://10.10.30.91:3306/easy-get?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
-    username: ENC(djxDOCrXhNQN5FAfcpTPIw==) # 用户密文 明文用户：root
-    password: ENC(piWM79kO6kiDDcjR2jhwAw==) # 密码密文 明文密码：123456
+    url: jdbc:mysql://10.10.30.36:3306/easy_get?characterEncoding=utf8&useSSL=true&verifyServerCertificate=false
+    username: ENC(wD8fKKuFx4GcCaFsCnj3eg==) # 用户密文 明文用户：root
+    password: ENC(c2BWF7K9ElGY0GZbWDmpfAaUhTuqYvie) # 密码密文 明文密码：rootroot
   # Resid相关配置
   redis:
     database: 0

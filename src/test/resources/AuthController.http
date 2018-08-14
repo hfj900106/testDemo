@@ -119,6 +119,3 @@ token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIwO
 }
 
 ###
-POST http://10.10.20.45:8081/easy-get-admin/risk/emercontact/push?token=67635ab7b4f41667100e12ae5747db4b
-
-###

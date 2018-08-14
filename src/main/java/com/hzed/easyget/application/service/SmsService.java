@@ -113,7 +113,7 @@ public class SmsService {
             // 使用牛信发送短信
             NxSmsSendRequest smsSendRequest = new NxSmsSendRequest();
             smsSendRequest.setPhone("62" + mobile);
-            smsSendRequest.setTaskTime(DateUtil.getCurrentDate());
+            smsSendRequest.setTaskTime(DateUtil.localDateTimeToStr1(LocalDateTime.now()));
             smsSendRequest.setContent(content);
             log.info("发送短信渠道：{},请求参数：{}", dicValue, JSONObject.toJSONString(smsSendRequest));
             NxSmsSendResponse smsSendResponse = NxSmsUtil.smsSend(smsSendRequest);

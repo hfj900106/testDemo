@@ -3,6 +3,7 @@ package com.hzed.easyget.application.service;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.EnvEnum;
+import com.hzed.easyget.application.enums.SmsStatusEnum;
 import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
@@ -93,7 +94,7 @@ public class SmsService {
         // 发送短信
         this.sendSms(mobile, content, String.valueOf(smsId));
         // 保存短信记录
-        this.saveSmsLog(smsId, content, mobile, (byte) 2, "用户还款短信通知");
+        this.saveSmsLog(smsId, content, mobile, SmsStatusEnum.SUCCESS.getCode().byteValue(), "用户还款短信通知");
         // 通过手机号获取用户id
         Long userId = userRepository.findByMobile(mobile).getId();
         messageRepository.addUserMessage(userId, title, content, "用户还款短信通知");
@@ -173,7 +174,7 @@ public class SmsService {
             sendSms(mobile.substring(1), content, String.valueOf(smsId));
         }
         // 保存短信记录
-        saveSmsLog(smsId, content, mobile, (byte) 2, remark);
+        saveSmsLog(smsId, content, mobile, SmsStatusEnum.SUCCESS.getCode().byteValue(), remark);
     }
 
     /**

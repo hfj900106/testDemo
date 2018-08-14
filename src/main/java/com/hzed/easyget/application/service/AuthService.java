@@ -253,7 +253,7 @@ public class AuthService {
             if (strLength < 10) {
                 // 识别生日数据有错则直接给空串
                 recognitionResponse.setBirthday("");
-            }else {
+            } else {
                 recognitionResponse.setBirthday(birthPlaceBirthday.substring(strLength - 10, strLength));
             }
         }
@@ -374,7 +374,8 @@ public class AuthService {
         try {
             path = fileService.uploadBase64Img(base64Img, picSuffix);
         } catch (Exception e) {
-            log.info("上传图片异常：" + e.getStackTrace().toString());
+            e.printStackTrace();
+            log.info("上传图片异常");
             throw new ComBizException(BizCodeEnum.SERVICE_EXCEPTION);
         }
         return path;

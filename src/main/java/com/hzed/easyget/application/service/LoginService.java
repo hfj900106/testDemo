@@ -307,6 +307,8 @@ public class LoginService {
      * 生成随机图片
      */
     public PictureCodeResponse getPictureCode(String mobile) {
+        // 格式化手机号
+        mobile = mobileFormat(mobile);
         Map<String, String> map = PicUtil.getPictureCode();
         //保存到Redis，五分钟有效时间
         redisService.setCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile, map.get("code"), 300L);
@@ -320,6 +322,8 @@ public class LoginService {
      * 验证码验证，不区分大小写
      */
     public void checkPictureCode(String mobile, String code) {
+        // 格式化手机号
+        mobile = mobileFormat(mobile);
         // 获取缓存数据
         String cacheCode = redisService.getCache(RedisConsts.PICTURE_CODE + RedisConsts.SPLIT + mobile);
         if (StringUtils.isBlank(cacheCode) || !code.equalsIgnoreCase(cacheCode)) {

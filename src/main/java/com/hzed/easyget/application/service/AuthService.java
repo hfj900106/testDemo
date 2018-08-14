@@ -379,6 +379,7 @@ public class AuthService {
             UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.PROFESSIONAL.getCode(), "专业信息认证");
             professionalRepository.insertProfessionalAndUserAuthStatus(work, userAuthStatus);
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new ComBizException(BizCodeEnum.FAIL_PROFESSIONAL_AUTH);
         }
 
@@ -414,18 +415,18 @@ public class AuthService {
      * Facebook认证-风控回调
      */
     public void facebookAuth(FacebookRequest request) {
-        log.info("facebook认证-风控回调数据：{}", JSONObject.toJSONString(request));
+        Long userId = request.getUserId();
         String auth_code = AuthCodeEnum.FACEBOOK.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + getGlobalUser().getUserId();
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
         // 判断该用户是否已经验证
-        checkAuth(request.getUserId(), auth_code);
+        checkAuth(userId, auth_code);
 
         if (!ComConsts.RISK_OK.equals(request.getResultCode())) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(request.getUserId(), AuthCodeEnum.FACEBOOK.getCode(), "Facebook认证");
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(userId, AuthCodeEnum.FACEBOOK.getCode(), "Facebook认证");
         authStatusRepository.insertSelective(userAuthStatus);
     }
 
@@ -433,14 +434,19 @@ public class AuthService {
      * ins认证-风控回调
      */
     public void insAuth(InsRequest request) {
-        log.info("ins认证-风控回调数据：{}", JSONObject.toJSONString(request));
+        Long userId = request.getUserId();
+        String auth_code = AuthCodeEnum.INS.getCode();
+        // 请求防重
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
+        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
+
         // 判断该用户是否已经验证
-        checkAuth(request.getUserId(), AuthCodeEnum.INS.getCode());
+        checkAuth(userId, auth_code);
 
         if (!ComConsts.RISK_OK.equals(request.getResultCode())) {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(request.getUserId(), AuthCodeEnum.INS.getCode(), "ins认证");
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(userId, AuthCodeEnum.INS.getCode(), "ins认证");
         authStatusRepository.insertSelective(userAuthStatus);
     }
 

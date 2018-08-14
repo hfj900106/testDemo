@@ -16,11 +16,11 @@ public class PersonInfoAuthRequest {
 
     @NotBlank(message = "{param.auth.education.isNotEmpty}")
     private String education;
-    @NotBlank(message = "{param.auth.companyName.isNotEmpty}")
+    @Length(min = 1,max = 128, message = "{param.auth.companyName.extraLong}")
     private String companyName;
-    @NotBlank(message = "{param.auth.companyAddr.isNotEmpty}")
+    @Length(min = 1,max = 256, message = "{param.auth.companyAddr.extraLong}")
     private String companyAddr;
-    @NotBlank(message = "{param.auth.companyAddrDetail.isNotEmpty}")
+    @Length(min = 1,max = 256, message = "{param.auth.companyAddrDetail.extraLong}")
     private String companyAddrDetail;
     @Length(min = 1, max = 64, message = "{param.auth.email.extraLong}")
     private String email;

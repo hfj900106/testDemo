@@ -386,9 +386,6 @@ public class AuthService {
     public void facebookAuth(FacebookRequest request) {
         log.info("facebook认证-风控回调数据：{}", JSONObject.toJSONString(request));
         String auth_code = AuthCodeEnum.FACEBOOK.getCode();
-        // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + getGlobalUser().getUserId();
-        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
         // 判断该用户是否已经验证
         checkAuth(request.getUserId(), auth_code);
 

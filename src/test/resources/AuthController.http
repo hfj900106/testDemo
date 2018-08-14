@@ -93,3 +93,32 @@ token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIxN
 {
 "smsCode":"0000"
 }
+
+### 个人信息认证
+POST http://localhost:8150/hzed/easy-get/api/auth/personInfo
+Content-Type: application/json
+imei:1
+i18n:zh-CN
+appKey:easyGet
+platform:android
+version:1.0.0
+token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjoie1wibW9iaWxlXCI6XCIwODEyMTU1MTI5OVwiLFwidXNlcklkXCI6MTI4Mjc1MTQwMTM1MjMxNDg4fSIsImV4cCI6MTUzNDgxOTE1MH0.6L6DyBamdcu31pX1YTPsZrMASwd0S2k6B5NTw-3wDbI
+
+{
+"education":"education",
+"companyName":"companyName",
+"companyAddr":"companyAddr",
+"companyAddrDetail":"companyAddrDetail",
+"email":"email",
+"parentName":"HHFJ JI",
+"parentTel":"081233333",
+"relationship":"personalRelationship_02",
+"relatedPersonName":"KKHIU",
+"relatedPersonTel":"081322222",
+"education":"education"
+}
+
+###
+POST http://10.10.20.45:8081/easy-get-admin/risk/emercontact/push?token=67635ab7b4f41667100e12ae5747db4b
+
+###

@@ -253,10 +253,4 @@ public final class DateUtil {
 
         return false;
     }
-
-    public static String getCurrentDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateStr = dateFormat.format(new Date());
-        return dateStr;
-    }
 }

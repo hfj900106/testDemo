@@ -14,6 +14,7 @@
         LEFT JOIN t_loan_user user ON user.id = bid.user_id
         WHERE bid.status = 5 AND bill.status = 1
         AND (DATE(bill.repayment_time) - DATE(NOW()) >=0) and  ((DATE(bill.repayment_time) - DATE(NOW())) &lt; #{days})
+        LIMIT 60
     </select>
 
 

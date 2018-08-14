@@ -1,6 +1,7 @@
 package com.hzed.easyget.controller.model;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -15,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class IdentityInfoAuthRequest {
 
-    @NotBlank(message = "{param.auth.realName.isNotEmpty}")
+    @Length(min = 1, max = 32, message = "{param.auth.realName.extraLong}")
     private String realName;
     @NotBlank(message = "{param.auth.idCardNo.isNotEmpty}")
     private String idCardNo;

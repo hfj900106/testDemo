@@ -317,6 +317,8 @@ public class AuthService {
         checkAuth(user.getUserId(), auth_code);
 
         String realName = request.getRealName();
+        // 姓名中多个空格替换成1个空格
+        realName = realName.replaceAll("\\s+", " ");
         String idCardNo = request.getIdCardNo();
         Integer gender = request.getGender();
         // 查询身份证是否已存在

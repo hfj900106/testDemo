@@ -28,9 +28,10 @@ spring:
   # rabbitmq配置
   rabbitmq:
     host: 10.10.30.114
-    port: 32771
+    port: 5672
     username: user
     password: password
+    publisher-confirms: true
     virtual-host: /
 
 # 日志文件配置
@@ -54,7 +55,7 @@ logging:
 # 第三方
 thirdParty:
   pay:
-    domain:                   http://10.10.30.114:8082 # 请求架构组bulepay域名地址
+    domain:                   http://10.10.30.112:8082 # 请求架构组bulepay域名地址
     loanTransactionUrl:       /bluepay/transferBalance  # 放款接口链接
     receiverTransactionUrl:   /bluepay/gatherDr # 收款接口链接
     getPaymentCodeUrl:        /bluepay/getPaymentCode #获取还款码接口

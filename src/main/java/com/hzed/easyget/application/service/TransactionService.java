@@ -154,7 +154,7 @@ public class TransactionService {
     /**
      * 修改交易记录状态
      */
-    public void updateUserTranState(String paymentId, byte b,String remark) {
+    public void updateUserTranState(String paymentId, byte b, String remark) {
         UserTransaction userTransaction = UserTransaction.builder().paymentId(paymentId).status(b).updateTime(LocalDateTime.now()).remark(remark).build();
         bidRepository.updateUserTranStatus(userTransaction);
     }

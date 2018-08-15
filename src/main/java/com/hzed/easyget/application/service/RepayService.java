@@ -601,7 +601,8 @@ public class RepayService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void mqCallback(BluePayRequest bluePayRequest) {
-        log.info("详细返回信息：{}", JSON.toJSONString(bluePayRequest));
+        String requestStr = JSON.toJSONString(bluePayRequest);
+        log.info("详细返回信息：{}", requestStr);
         // 参数校验
         ValidatorUtil.validateWithNull(bluePayRequest);
         // 返回的状态
@@ -621,7 +622,7 @@ public class RepayService {
             // 查询是否有对应的va码记录
             UserTransactionRepay repayQuery = this.findRepayInfoByPaymentId(paymentId);
             if (ObjectUtils.isEmpty(repayQuery)) {
-                log.info("还款交易没有对应的va码记录，处理终止");
+                log.error("还款交易没有对应的va码记录，处理终止");
                 return;
             }
             // 查询本地是否有还款交易记录，没有交易就要先插入一条
@@ -634,8 +635,8 @@ public class RepayService {
         // 交易失败处理
         if (!status.equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())) {
             // 修改交易记录，交易失败记录原因
-            transactionService.updateUserTranState(paymentId, TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue(),BluePayStatusEnum.getValueDesc(status));
-            // 还款失败  修改va码对应状态
+            transactionService.updateUserTranState(paymentId, TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue(), BluePayStatusEnum.getValueDesc(status));
+            // 还款失败 修改va码对应状态
             if (BANK.equals(interfacetype)) {
                 log.info("还款失败");
                 this.updateUserTransactionRepay(UserTransactionRepay.builder().paymentId(paymentId).status(TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue()).build());
@@ -651,7 +652,7 @@ public class RepayService {
                 bidRepository.update(bidUpdate);
                 log.error("标的：{} 放款失败", transaction.getBidId());
             }
-            log.error("MQ交易处理失败：{}，处理终止", BluePayStatusEnum.getValueDesc(status));
+            log.error("MQ交易处理失败，处理终止。回调报文：{}，错误信息：{}", requestStr, BluePayStatusEnum.getValueDesc(status));
             return;
         }
         log.info("MQ交易处理成功，下面进行本地交易处理");
@@ -659,12 +660,12 @@ public class RepayService {
         UserTransaction transactionQuery = transactionService.findUserTranByPaymentId(paymentId, interfacetype.equals(BANK) ? TransactionTypeEnum.OUT.getCode().byteValue() : TransactionTypeEnum.IN.getCode().byteValue());
         // 获取交易id 判断是否合法
         if (ObjectUtils.isEmpty(transactionQuery)) {
-            log.info("本地无此交易信息，paymentId：{}，处理终止", paymentId);
+            log.error("本地无此交易信息，paymentId：{}，处理终止", paymentId);
             return;
         }
         // 判断这个交易是否是 交易中
         if (transactionQuery.getStatus().intValue() != TransactionTypeEnum.IN_RANSACTION.getCode().intValue()) {
-            log.info("本地当前交易状态：{}，不是交易中状态，处理终止", transactionQuery.getStatus());
+            log.error("本地当前交易状态：{}，不是交易中状态，处理终止", transactionQuery.getStatus());
             return;
         }
         // 本地处理放款

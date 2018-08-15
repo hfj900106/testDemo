@@ -41,7 +41,7 @@ public enum BluePayStatusEnum {
                 return bEnum.getValue();
             }
         }
-        return "无效的枚举";
+        return "未知的枚举值";
     }
 
 }

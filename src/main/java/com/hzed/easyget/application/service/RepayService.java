@@ -700,7 +700,7 @@ public class RepayService {
         // 逾期天数计算 大于当前时间表示逾期，小于等于表示没到期
         int days = DateUtil.daysBetweenNoHMS(bill.getRepaymentTime(), LocalDateTime.now());
         repayProgressResponse.setOverdueDay(days > 0 ? days : 0);
-        repayProgressResponse.setOverdueFree(productInfo.getOverFee(days));
+        repayProgressResponse.setOverdueFree(days > 0 ? productInfo.getOverFee(days) : new BigDecimal(0));
         repayProgressResponse.setRepayTime(DateUtil.localDateTimeToTimestamp(bill.getRepaymentTime()));
         repayProgressResponse.setRealRepayAmount(bill.getRealRepaymentAmount());
         repayProgressResponse.setRemainderAmount(totalRepayAmount.subtract(bill.getRealRepaymentAmount().setScale(2, BigDecimal.ROUND_HALF_UP)));

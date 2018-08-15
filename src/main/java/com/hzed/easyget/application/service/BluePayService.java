@@ -113,9 +113,9 @@ public class BluePayService {
         String result = restService.doPostJson(prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
         log.info("返回报文：{}", result);
         PayResponse response = JSON.parseObject(result, PayResponse.class);
-        //判断返回状态 0000 0001 0002
+        // 判断返回状态 0000 0001 0002
         if (!LISTCODE.contains(response.getCode())) {
-            log.error("放款失败，请求报文：{}，返回报文：{}", JSONObject.toJSONString(request), result);
+            log.error("请求放款服务放款失败，请求报文：{}，返回报文：{}", JSONObject.toJSONString(request), result);
         }
         return response;
     }

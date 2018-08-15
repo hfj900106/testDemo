@@ -25,7 +25,7 @@ thirdParty:
 
 #======================================= 系统参数 开始 =======================================#
 system:
-  imgUploadPath: /work/easy-get-8150/imgUpload # 上传图片文件目录
+  imgUploadPath: /home/hzed-dev/easy-get/imgUpload # 上传图片文件目录
 
   # 定时任务 启动标志 周期
   job:

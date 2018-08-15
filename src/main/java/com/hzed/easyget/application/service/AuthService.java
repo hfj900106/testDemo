@@ -351,7 +351,8 @@ public class AuthService {
             //获取UserAuthStatus对象
             UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), auth_code, "身份信息认证");
             workRepository.insertIdentityInfo(list, userAuthStatus, userObj);
-        } catch (NestedException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             throw new ComBizException(BizCodeEnum.FAIL_IDENTITY_AUTH);
         }
     }

@@ -580,6 +580,7 @@ public class RepayService {
             try {
                 picUrl = fileService.uploadBase64Img(base64Imgs[i], picSuffixs[i]);
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new ComBizException(BizCodeEnum.UPLOAD_PIC_FAIL);
             }
             UserTransactionPic repayPicInsert = UserTransactionPic.builder()

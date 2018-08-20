@@ -11,7 +11,6 @@ import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
-import com.hzed.easyget.infrastructure.exception.NestedException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
@@ -316,9 +315,9 @@ public class AuthService {
         // 判断该用户是否已经验证
         checkAuth(user.getUserId(), auth_code);
 
-        String realName = request.getRealName();
+        String realName = request.getRealName().trim();
         // 姓名中多个空格替换成1个空格
-        realName = realName.replaceAll("\\s+", " ");
+//        realName = realName.replaceAll("\\s+", " ");
         String idCardNo = request.getIdCardNo();
         Integer gender = request.getGender();
         // 查询身份证是否已存在

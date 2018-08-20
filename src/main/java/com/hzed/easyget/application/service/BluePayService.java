@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hzed.easyget.application.enums.EnvEnum;
 import com.hzed.easyget.application.enums.MobileEnum;
 import com.hzed.easyget.application.enums.RepayMentEnum;
+import com.hzed.easyget.controller.model.CheckAccountRequest;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
 import com.hzed.easyget.controller.model.PaymentCodeRequest;
 import com.hzed.easyget.controller.model.RepaymentCompleRequest;
@@ -116,6 +117,31 @@ public class BluePayService {
         // 判断返回状态 0000 0001 0002
         if (!LISTCODE.contains(response.getCode())) {
             log.error("请求放款服务放款失败，请求报文：{}，返回报文：{}", JSONObject.toJSONString(request), result);
+        }
+        return response;
+    }
+
+    /**
+     * 校验用户银行卡信息
+     */
+    public PayResponse checkAccount(String bankName,String accountNo, String phoneNum, String CustomerName) {
+
+        CheckAccountRequest checkAccountRequest = new CheckAccountRequest();
+        checkAccountRequest.setPhoneNum(phoneNum);
+        checkAccountRequest.setCustomerName(CustomerName);
+        checkAccountRequest.setAccountNo(accountNo);
+        checkAccountRequest.setBankName(bankName);
+        checkAccountRequest.setTransactionId(IDGenerator.nextSeqNo());
+
+        log.info("========校验用户银行卡信息===========请求bluePay开始========================");
+        log.info("请求地址：{}", prop.getAbsCheckAccountUrl());
+        log.info("请求报文：{}", JSONObject.toJSONString(checkAccountRequest));
+        String result = restService.doPostJson(prop.getAbsCheckAccountUrl(), JSON.toJSONString(checkAccountRequest));
+        log.info("返回报文：{}", result);
+        log.info("========校验用户银行卡信息===========请求bluePay结束========================");
+        PayResponse response = JSON.parseObject(result, PayResponse.class);
+        if (!BizCodeEnum.SUCCESS.getCode().equals(response.getCode())) {
+            throw new ComBizException(BizCodeEnum.CHECK_ACCOUNT_ERROR);
         }
         return response;
     }

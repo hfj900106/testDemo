@@ -1,12 +1,17 @@
 package com.hzed.easyget.application.service;
 
+import com.alibaba.fastjson.JSON;
 import com.hzed.easyget.application.enums.BidEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
+import com.hzed.easyget.application.enums.CheckAccountStatusEnum;
 import com.hzed.easyget.application.enums.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.SystemProp;
+import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.exception.WarnException;
+import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
@@ -47,6 +52,8 @@ public class LoanService {
     private RiskService riskService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private BluePayService bluePayService;
 
     public LoanDetailResponse loanDetail(LoanDetailRequest request) {
         LoanDetailResponse loanDetailResponse = new LoanDetailResponse();
@@ -78,7 +85,23 @@ public class LoanService {
         SubmitLoanResponse submitLoanResponse = new SubmitLoanResponse();
         Long userId = RequestUtil.getGlobalUser().getUserId();
         User user = userRepository.findById(userId);
-
+        // 调bluePay
+        PayResponse response = bluePayService.checkAccount(request.getInBank(), request.getInAccount(), user.getMobileAccount(), user.getRealName());
+        String status = JSON.parseObject(response.getData()).getString("status");
+        if (!CheckAccountStatusEnum.OK.getKey().equals(status)) {
+            if (CheckAccountStatusEnum.BANK_NOT_EXISTS.getKey().equals(status)) {
+                throw new WarnException(BizCodeEnum.BANK_NOT_EXISTS);
+            } else if (CheckAccountStatusEnum.CUSTOMER_NAME_NOT_EXISTS.getKey().equals(status)) {
+                throw new WarnException(BizCodeEnum.CUSTOMER_NAME_NOT_EXISTS);
+            } else if (CheckAccountStatusEnum.ACCOUNT_NOT_EXISTS.getKey().equals(status)) {
+                throw new WarnException(BizCodeEnum.ACCOUNT_NOT_EXISTS);
+            } else if (CheckAccountStatusEnum.ACCOUNT_ERROR.getKey().equals(status)) {
+                throw new WarnException(BizCodeEnum.ACCOUNT_ERROR);
+            } else {
+                throw new WarnException(BizCodeEnum.SYSTEM_ERROR);
+            }
+        }
+        log.info("================提交贷款=======校验用户银行卡信息通过===================");
         // 调风控
         riskService.checkRiskEnableBorrow(user.getMobileAccount(), RequestUtil.getGlobalHead().getImei(), "1");
 
@@ -92,7 +115,7 @@ public class LoanService {
         bid.setApplyAmount(request.getApplyAmount());
         bid.setPeriod(request.getPeriod());
         bid.setInBank(request.getInBank());
-        bid.setInAccount(request.getInAccount().replaceAll(" ", ""));
+        bid.setInAccount(request.getInAccount());
         bid.setPurposeCode(request.getPurposeId());
         bid.setClient(BidEnum.INDONESIA_APP.getCode());
         bid.setStatus(BidStatusEnum.RISK_ING.getCode().byteValue());

@@ -6,13 +6,11 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.head.IgnoreH5;
+import com.hzed.easyget.infrastructure.annotation.head.IgnoreHeader;
 import com.hzed.easyget.infrastructure.annotation.head.TokenIgnore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -44,6 +42,13 @@ public class LoginController {
     @PostMapping("/loginByCode")
     public LoginByCodeResponse loginByCode(@Valid @RequestBody LoginByCodeRequest request) {
         return loginService.loginByCode(request);
+    }
+
+    @TokenIgnore
+    @ModuleFunc("facebook短信登录")
+    @PostMapping("/loginByFacebook")
+    public LoginByCodeResponse loginByCode(@Valid @RequestBody LoginByFacebookRequest request) {
+        return loginService.loginByFacebook(request);
     }
 
     @IgnoreH5
@@ -86,5 +91,12 @@ public class LoginController {
     @PostMapping("/checkPictureCodeH5")
     public void checkPictureCodeH5(@Valid @RequestBody CheckPictureCodeRequest request) {
         loginService.checkPictureCode(request.getMobile(), request.getCode());
+    }
+
+    @IgnoreHeader
+    @ModuleFunc("获取facebook发送短信标识")
+    @GetMapping("/getFacebookSms")
+    public FacebookSmsResponse getFacebookSms() {
+        return loginService.getFacebookSms();
     }
 }

@@ -16,10 +16,7 @@ import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.repository.UserTokenRepository;
 import com.hzed.easyget.infrastructure.utils.*;
 import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
-import com.hzed.easyget.persistence.auto.entity.User;
-import com.hzed.easyget.persistence.auto.entity.UserLogin;
-import com.hzed.easyget.persistence.auto.entity.UserStatus;
-import com.hzed.easyget.persistence.auto.entity.UserToken;
+import com.hzed.easyget.persistence.auto.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,9 +77,79 @@ public class LoginService {
 
         // 用户是否存在,不存在去注册
         User user = userRepository.findByMobile(mobile);
-        Long userId;
-        String token;
+        Long userId = 0L;
+        String token = "";
         boolean isNew = false;
+        // 登录或注册
+        beforeLogin(user, userId, token, isNew, mobile, platform, imei, ip, device);
+
+        saService.saLogin(userId, anonymousId);
+        //放入redis 3个小时
+        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 10800L);
+        //验证SmsCode之后删除掉
+        redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
+        //重新查询用户，取出client
+        User userQuery = userRepository.findByMobile(mobile);
+        // 查询登录记录标，只有一条登录记录就算首次登录
+        List<UserLogin> userLoginList = userRepository.getUserLoginsByUserId(userQuery.getId());
+        String client = "";
+        if (!ObjectUtils.isEmpty(userLoginList) && userLoginList.size() == 1) {
+            client = userQuery.getClient();
+        }
+        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(client).build();
+    }
+
+    /**
+     * 用户facebook登录注册
+     *
+     * @param request
+     * @return
+     */
+    public LoginByCodeResponse loginByFacebook(LoginByFacebookRequest request) {
+        // 解密校验是否我们平台发来的请求，是-通过 否-拦截
+        String mobile = request.getMobile();
+        String aesString = request.getAesString();
+        // 秘钥 easyget
+        String aesKey = "easyget";
+
+
+        GlobalHead globalHead = RequestUtil.getGlobalHead();
+        log.info("登录注册手机号：{}", mobile);
+        // 格式化手机号
+        mobile = mobileFormat(mobile);
+
+        String platform = globalHead.getPlatform();
+        String imei = globalHead.getImei();
+        String device = request.getDevice();
+        String ip = RequestUtil.getIp();
+        //用户匿名id
+        String anonymousId = request.getAnonymousId();
+
+        // 用户是否存在,不存在去注册
+        User user = userRepository.findByMobile(mobile);
+        Long userId = 0L;
+        String token = "";
+        boolean isNew = false;
+        // 登录或注册
+        beforeLogin(user, userId, token, isNew, mobile, platform, imei, ip, device);
+
+        saService.saLogin(userId, anonymousId);
+        //重新查询用户，取出client
+        User userQuery = userRepository.findByMobile(mobile);
+        // 查询登录记录标，只有一条登录记录就算首次登录
+        List<UserLogin> userLoginList = userRepository.getUserLoginsByUserId(userQuery.getId());
+        String client = "";
+        if (!ObjectUtils.isEmpty(userLoginList) && userLoginList.size() == 1) {
+            client = userQuery.getClient();
+        }
+        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(client).build();
+    }
+
+
+    /**
+     * 注册登录前
+     */
+    public void beforeLogin(User user, Long userId, String token, boolean isNew, String mobile, String platform, String imei, String ip, String device) {
         //用户为空，那么该用户的token表数据肯定也为空
         if (user == null) {
             isNew = true;
@@ -124,21 +191,8 @@ public class LoginService {
                 userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
             }
         }
-        saService.saLogin(userId, anonymousId);
-        //放入redis 3个小时
-        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 10800L);
-        //验证SmsCode之后删除掉
-        redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
-        //重新查询用户，取出client
-        User userQuery = userRepository.findByMobile(mobile);
-        // 查询登录记录标，只有一条登录记录就算首次登录
-        List<UserLogin> userLoginList = userRepository.getUserLoginsByUserId(userQuery.getId());
-        String client = "";
-        if (!ObjectUtils.isEmpty(userLoginList) && userLoginList.size() == 1) {
-            client = userQuery.getClient();
-        }
-        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(client).build();
     }
+
 
 
     /**
@@ -363,5 +417,23 @@ public class LoginService {
         log.info("格式化后手机号：{}", mobile);
         return mobile;
     }
+
+    /**
+     * 返回Facebook发短信标识
+     */
+    public FacebookSmsResponse getFacebookSms() {
+        // 获取字典配置
+        Dict dict = dictService.getDictByCode("facebook_sms");
+        if (ObjectUtils.isEmpty(dict)) {
+            log.error("没有配置facebook_sms");
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
+        boolean facebook_sms = Boolean.valueOf(dict.getDicValue());
+        log.info("当前facebook_sms为：{}", facebook_sms);
+        FacebookSmsResponse response = new FacebookSmsResponse();
+        response.setFacebookSms(facebook_sms);
+        return response;
+    }
+
 
 }

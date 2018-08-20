@@ -35,4 +35,7 @@ version: 1.1.0
 	"anonymousId":"123"
 }
 
+### 获取facebook_sms
+GET http://localhost:8150/hzed/easy-get/api/login/getFacebookSms
+
 ###

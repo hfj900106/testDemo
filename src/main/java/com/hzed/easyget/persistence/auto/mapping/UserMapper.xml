@@ -10,6 +10,7 @@
     <result column="gender" jdbcType="TINYINT" property="gender" />
     <result column="real_name" jdbcType="VARCHAR" property="realName" />
     <result column="id_card_no" jdbcType="VARCHAR" property="idCardNo" />
+    <result column="religion" jdbcType="VARCHAR" property="religion" />
     <result column="platform" jdbcType="VARCHAR" property="platform" />
     <result column="client" jdbcType="VARCHAR" property="client" />
     <result column="imei" jdbcType="VARCHAR" property="imei" />
@@ -79,7 +80,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, mobile_account, password, profile_photo, nick_name, gender, real_name, id_card_no, 
-    platform, client, imei, create_by, create_time, update_by, update_time, remark
+    religion, platform, client, imei, create_by, create_time, update_by, update_time, 
+    remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.UserExample" resultMap="BaseResultMap">
     select
@@ -146,16 +148,16 @@
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.User">
     insert into t_loan_user (id, mobile_account, password, 
       profile_photo, nick_name, gender, 
-      real_name, id_card_no, platform, 
-      client, imei, create_by, 
-      create_time, update_by, update_time, 
-      remark)
+      real_name, id_card_no, religion, 
+      platform, client, imei, 
+      create_by, create_time, update_by, 
+      update_time, remark)
     values (#{id,jdbcType=BIGINT}, #{mobileAccount,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{profilePhoto,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, #{gender,jdbcType=TINYINT}, 
-      #{realName,jdbcType=VARCHAR}, #{idCardNo,jdbcType=VARCHAR}, #{platform,jdbcType=VARCHAR}, 
-      #{client,jdbcType=VARCHAR}, #{imei,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{remark,jdbcType=VARCHAR})
+      #{realName,jdbcType=VARCHAR}, #{idCardNo,jdbcType=VARCHAR}, #{religion,jdbcType=VARCHAR}, 
+      #{platform,jdbcType=VARCHAR}, #{client,jdbcType=VARCHAR}, #{imei,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.User">
     insert into t_loan_user
@@ -183,6 +185,9 @@
       </if>
       <if test="idCardNo != null">
         id_card_no,
+      </if>
+      <if test="religion != null">
+        religion,
       </if>
       <if test="platform != null">
         platform,
@@ -233,6 +238,9 @@
       </if>
       <if test="idCardNo != null">
         #{idCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="religion != null">
+        #{religion,jdbcType=VARCHAR},
       </if>
       <if test="platform != null">
         #{platform,jdbcType=VARCHAR},
@@ -293,6 +301,9 @@
       <if test="record.idCardNo != null">
         id_card_no = #{record.idCardNo,jdbcType=VARCHAR},
       </if>
+      <if test="record.religion != null">
+        religion = #{record.religion,jdbcType=VARCHAR},
+      </if>
       <if test="record.platform != null">
         platform = #{record.platform,jdbcType=VARCHAR},
       </if>
@@ -332,6 +343,7 @@
       gender = #{record.gender,jdbcType=TINYINT},
       real_name = #{record.realName,jdbcType=VARCHAR},
       id_card_no = #{record.idCardNo,jdbcType=VARCHAR},
+      religion = #{record.religion,jdbcType=VARCHAR},
       platform = #{record.platform,jdbcType=VARCHAR},
       client = #{record.client,jdbcType=VARCHAR},
       imei = #{record.imei,jdbcType=VARCHAR},
@@ -367,6 +379,9 @@
       </if>
       <if test="idCardNo != null">
         id_card_no = #{idCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="religion != null">
+        religion = #{religion,jdbcType=VARCHAR},
       </if>
       <if test="platform != null">
         platform = #{platform,jdbcType=VARCHAR},
@@ -404,6 +419,7 @@
       gender = #{gender,jdbcType=TINYINT},
       real_name = #{realName,jdbcType=VARCHAR},
       id_card_no = #{idCardNo,jdbcType=VARCHAR},
+      religion = #{religion,jdbcType=VARCHAR},
       platform = #{platform,jdbcType=VARCHAR},
       client = #{client,jdbcType=VARCHAR},
       imei = #{imei,jdbcType=VARCHAR},
@@ -443,15 +459,16 @@
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_user
     (id, mobile_account, password, profile_photo, nick_name, gender, real_name, id_card_no, 
-      platform, client, imei, create_by, create_time, update_by, update_time, remark)
+      religion, platform, client, imei, create_by, create_time, update_by, update_time, 
+      remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.mobileAccount,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, 
         #{item.profilePhoto,jdbcType=VARCHAR}, #{item.nickName,jdbcType=VARCHAR}, #{item.gender,jdbcType=TINYINT}, 
-        #{item.realName,jdbcType=VARCHAR}, #{item.idCardNo,jdbcType=VARCHAR}, #{item.platform,jdbcType=VARCHAR}, 
-        #{item.client,jdbcType=VARCHAR}, #{item.imei,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, 
-        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
-        #{item.remark,jdbcType=VARCHAR})
+        #{item.realName,jdbcType=VARCHAR}, #{item.idCardNo,jdbcType=VARCHAR}, #{item.religion,jdbcType=VARCHAR}, 
+        #{item.platform,jdbcType=VARCHAR}, #{item.client,jdbcType=VARCHAR}, #{item.imei,jdbcType=VARCHAR}, 
+        #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -487,6 +504,9 @@
         </if>
         <if test="'id_card_no' == column.value">
           #{item.idCardNo,jdbcType=VARCHAR}
+        </if>
+        <if test="'religion' == column.value">
+          #{item.religion,jdbcType=VARCHAR}
         </if>
         <if test="'platform' == column.value">
           #{item.platform,jdbcType=VARCHAR}

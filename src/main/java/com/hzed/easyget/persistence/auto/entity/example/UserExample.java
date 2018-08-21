@@ -701,6 +701,76 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andReligionIsNull() {
+            addCriterion("religion is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionIsNotNull() {
+            addCriterion("religion is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionEqualTo(String value) {
+            addCriterion("religion =", value, "religion");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionNotEqualTo(String value) {
+            addCriterion("religion <>", value, "religion");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionGreaterThan(String value) {
+            addCriterion("religion >", value, "religion");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionGreaterThanOrEqualTo(String value) {
+            addCriterion("religion >=", value, "religion");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionLessThan(String value) {
+            addCriterion("religion <", value, "religion");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionLessThanOrEqualTo(String value) {
+            addCriterion("religion <=", value, "religion");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionLike(String value) {
+            addCriterion("religion like", value, "religion");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionNotLike(String value) {
+            addCriterion("religion not like", value, "religion");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionIn(List<String> values) {
+            addCriterion("religion in", values, "religion");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionNotIn(List<String> values) {
+            addCriterion("religion not in", values, "religion");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionBetween(String value1, String value2) {
+            addCriterion("religion between", value1, value2, "religion");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionNotBetween(String value1, String value2) {
+            addCriterion("religion not between", value1, value2, "religion");
+            return (Criteria) this;
+        }
+
         public Criteria andPlatformIsNull() {
             addCriterion("platform is null");
             return (Criteria) this;
@@ -1248,6 +1318,11 @@ public class UserExample {
 
         public Criteria andIdCardNoLikeInsensitive(String value) {
             addCriterion("upper(id_card_no) like", value.toUpperCase(), "idCardNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andReligionLikeInsensitive(String value) {
+            addCriterion("upper(religion) like", value.toUpperCase(), "religion");
             return (Criteria) this;
         }
 

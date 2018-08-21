@@ -45,12 +45,17 @@ public class User implements Serializable {
     private String idCardNo;
 
     /**
-     * 注册平台 android、ios等等
+     * 宗教
+     */
+    private String religion;
+
+    /**
+     * 注册平台 android、ios、H5等等
      */
     private String platform;
 
     /**
-     * 注册渠道 Rupiah Get 表示印尼APP
+     * 注册渠道 Rupiah Get-app注册
      */
     private String client;
 
@@ -146,6 +151,14 @@ public class User implements Serializable {
         this.idCardNo = idCardNo == null ? null : idCardNo.trim();
     }
 
+    public String getReligion() {
+        return religion;
+    }
+
+    public void setReligion(String religion) {
+        this.religion = religion == null ? null : religion.trim();
+    }
+
     public String getPlatform() {
         return platform;
     }
@@ -224,6 +237,7 @@ public class User implements Serializable {
         sb.append(", gender=").append(gender);
         sb.append(", realName=").append(realName);
         sb.append(", idCardNo=").append(idCardNo);
+        sb.append(", religion=").append(religion);
         sb.append(", platform=").append(platform);
         sb.append(", client=").append(client);
         sb.append(", imei=").append(imei);
@@ -288,6 +302,11 @@ public class User implements Serializable {
             return this;
         }
 
+        public Builder religion(String religion) {
+            obj.setReligion(religion);
+            return this;
+        }
+
         public Builder platform(String platform) {
             obj.setPlatform(platform);
             return this;
@@ -342,6 +361,7 @@ public class User implements Serializable {
         gender("gender"),
         realName("real_name"),
         idCardNo("id_card_no"),
+        religion("religion"),
         platform("platform"),
         client("client"),
         imei("imei"),

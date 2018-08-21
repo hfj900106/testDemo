@@ -1,22 +1,22 @@
 ### 测试还款接口
-POST http://10.10.30.92:8150/hzed/easy-get/api/test/testRepayment
+POST http://10.10.30.133:8160/hzed/easy-get/api/test/testRepayment
 #POST http://localhost:8150/hzed/easy-get/api/test/manMadeMqCallback
 Accept: application/json;charset=UTF-8;
 Content-Type: application/json
 
 {
-    "transactionId": "116061068727820288hzed",
-    "payType": "atm",
-    "bankType": "permata",
-    "paymentCode": "8359180711750264",
-    "msisdn": "8615926633889",
-    "price": "506000.00",
-    "cardNo": "21934189228383587872"
+    "transactionId":"128716291312984064hzed",
+    "payType":"atm",
+    "bankType":"permata",
+    "paymentCode":"8359180815498245",
+    "msisdn":"08771111102",
+    "price":"100000.00",
+    "cardNo":"21934189228383587872"
 }
 
 ### 人工处理MQ回调
-#POST http://10.10.30.92:8150/hzed/easy-get/api/test/manMadeMqCallback
-POST https://rupiahget.id/hzed/easy-get/api/test/manMadeMqCallback
+POST http://10.10.30.133:8160/hzed/easy-get/api/test/manMadeMqCallback
+#POST https://rupiahget.id/hzed/easy-get/api/test/manMadeMqCallback
 #POST http://localhost:8150/hzed/easy-get/api/test/manMadeMqCallback
 Accept: application/json;charset=UTF-8;
 Content-Type: application/json
@@ -33,7 +33,7 @@ Content-Type: application/json
     "price": 480000,
     "productid": 1673,
     "status": "200",
-    "t_id": "126239442070712320hzed"
+    "t_id": "130874477595860992hzed"
 }
 
 ###

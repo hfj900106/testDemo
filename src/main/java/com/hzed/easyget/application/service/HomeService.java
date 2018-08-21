@@ -168,7 +168,9 @@ public class HomeService {
 
             newsResponse.setTitle(news.getTitle());
             newsResponse.setSummary(news.getSummary());
-            newsResponse.setToUrl(systemProp.getH5MessageUrl() + news.getId() + "&type=news");
+            String toUrl = systemProp.getH5MessageUrl() + news.getId() + "&type=news" + "&i18n=" + i18n;
+            log.info("跳转H5获取公告内容链接：{}", toUrl);
+            newsResponse.setToUrl(toUrl);
             newsResponse.setCreateTime(DateUtil.localDateTimeToTimestamp(news.getCreateTime()));
             newsResponse.setId(news.getId());
         }

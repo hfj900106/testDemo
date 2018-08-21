@@ -31,7 +31,7 @@ system:
   job:
     # 风控审核
     pushBid: true
-    pushBidCron: 0/5 * * * * ?
+    pushBidCron: 0 */1 * * * ?
     # 放款
     bankLoan: true
     bankLoanCron: 0 */2 * * * ?

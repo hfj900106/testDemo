@@ -98,7 +98,7 @@ public class LoanService {
             } else if (CheckAccountStatusEnum.ACCOUNT_ERROR.getKey().equals(status)) {
                 throw new WarnException(BizCodeEnum.ACCOUNT_ERROR);
             } else {
-                throw new WarnException(BizCodeEnum.SYSTEM_ERROR);
+                throw new WarnException(BizCodeEnum.CHECK_ACCOUNT_ERROR);
             }
         }
         log.info("================申请借款=======校验用户银行卡信息通过===================");

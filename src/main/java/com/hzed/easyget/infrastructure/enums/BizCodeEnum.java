@@ -35,7 +35,6 @@ public enum BizCodeEnum {
     CUSTOMER_NAME_NOT_EXISTS("8011", "校验失败，用户名称不匹配。"),
     ACCOUNT_NOT_EXISTS("8012", "校验失败，没有找到这个账户。"),
     ACCOUNT_ERROR("8013", "校验失败，银行账户异常。"),
-    SYSTEM_ERROR("8014","校验银行卡信息异常，请稍后重试！"),
 
     // 1-请求业务校验
     ILLEGAL_PARAM("1000", "请求参数非法"),

@@ -14,6 +14,7 @@ import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
@@ -141,7 +142,8 @@ public class BluePayService {
         log.info("========校验用户银行卡信息===========请求bluePay结束========================");
         PayResponse response = JSON.parseObject(result, PayResponse.class);
         if (!BizCodeEnum.SUCCESS.getCode().equals(response.getCode())) {
-            throw new ComBizException(BizCodeEnum.CHECK_ACCOUNT_ERROR);
+            log.error("校验用户银行卡信息，调用服务异常");
+            throw new WarnException(BizCodeEnum.CHECK_ACCOUNT_ERROR);
         }
         return response;
     }

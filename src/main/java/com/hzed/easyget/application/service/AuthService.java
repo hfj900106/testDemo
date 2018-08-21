@@ -367,7 +367,7 @@ public class AuthService {
         try {
             //照片上传
             String employeeCardPhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(), request.getPicSuffix());
-            String workplacePhotoPath = getPhotoPath(request.getEmployeeCardBase64ImgStr(), request.getPicSuffix());
+            String workplacePhotoPath = getPhotoPath(request.getWorkplaceBase64ImgStr(), request.getPicSuffix());
             Work work = new Work();
 
             work.setId(IDGenerator.nextId());

@@ -13,7 +13,7 @@ public class LoginByFacebookRequest {
     @NotBlank(message = "{param.login.mobile.isNotEmpty}")
     private String mobile;
     @NotBlank(message = "{param.login.aesString.isNotEmpty}")
-    private String aesString;
+    private String md5;
     @NotBlank(message = "{param.login.device.isNotEmpty}")
     private String device;
     @NotBlank

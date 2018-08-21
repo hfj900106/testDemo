@@ -23,7 +23,9 @@ import java.util.Optional;
 @Slf4j
 public class MainTest {
     public static void main(String[] args) throws InvocationTargetException, IllegalAccessException {
-
+            String str = "";
+            test(str);
+        System.out.println(str);
 
 //        optionalTest();
 //        jsonTest();
@@ -37,10 +39,15 @@ public class MainTest {
 //        System.out.println(System.nanoTime());
 //        System.out.println(System.nanoTime());
 //        System.out.println(System.nanoTime());
-        System.out.println("BANK TABUNGAN PENSIUNAN NASIONAL/BTPN".length());
+//        System.out.println("BANK TABUNGAN PENSIUNAN NASIONAL/BTPN".length());
 //        System.out.println(String.valueOf(IDGenerator.nextId()).length());
 
 
+    }
+
+    public static  void test(String str) {
+        str = "12321";
+        System.out.println(str);
     }
 
     public static void jsonTest() {

@@ -77,90 +77,10 @@ public class LoginService {
 
         // 用户是否存在,不存在去注册
         User user = userRepository.findByMobile(mobile);
-        Long userId = 0L;
-        String token = "";
+        Long userId;
+        String token;
         boolean isNew = false;
         // 登录或注册
-        beforeLogin(user, userId, token, isNew, mobile, platform, imei, ip, device);
-
-        saService.saLogin(userId, anonymousId);
-        //放入redis 3个小时
-        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 10800L);
-        //验证SmsCode之后删除掉
-        redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
-        //重新查询用户，取出client
-        User userQuery = userRepository.findByMobile(mobile);
-        // 查询登录记录标，只有一条登录记录就算首次登录
-        List<UserLogin> userLoginList = userRepository.getUserLoginsByUserId(userQuery.getId());
-        String client = "";
-        if (!ObjectUtils.isEmpty(userLoginList) && userLoginList.size() == 1) {
-            client = userQuery.getClient();
-        }
-        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(client).build();
-    }
-
-    /**
-     * 用户facebook登录注册
-     *
-     * @param request
-     * @return
-     */
-    public LoginByCodeResponse loginByFacebook(LoginByFacebookRequest request) {
-        // 解密校验是否我们平台发来的请求，是-通过 否-拦截
-        String mobile = request.getMobile();
-        String aesString = request.getAesString();
-        // 秘钥 easyget
-        String aesKey = "easyget";
-
-        // 解密后的手机号
-        String mobileDecode;
-        try {
-            mobileDecode = AesUtil.aesDncode(aesKey,aesString);
-        } catch (Exception e) {
-            log.error("手机号{}登录注册解密失败", mobile);
-            e.printStackTrace();
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
-        }
-        if (ObjectUtils.isEmpty(mobileDecode) || (!mobileDecode.equals(mobile))) {
-            throw new WarnException(BizCodeEnum.ILLEGAL_PARAM);
-        }
-        GlobalHead globalHead = RequestUtil.getGlobalHead();
-        log.info("登录注册手机号：{}", mobile);
-        // 格式化手机号
-        mobile = mobileFormat(mobile);
-
-        String platform = globalHead.getPlatform();
-        String imei = globalHead.getImei();
-        String device = request.getDevice();
-        String ip = RequestUtil.getIp();
-        //用户匿名id
-        String anonymousId = request.getAnonymousId();
-
-        // 用户是否存在,不存在去注册
-        User user = userRepository.findByMobile(mobile);
-        Long userId = 0L;
-        String token = "";
-        boolean isNew = false;
-        // 登录或注册
-        beforeLogin(user, userId, token, isNew, mobile, platform, imei, ip, device);
-
-        saService.saLogin(userId, anonymousId);
-        //重新查询用户，取出client
-        User userQuery = userRepository.findByMobile(mobile);
-        // 查询登录记录标，只有一条登录记录就算首次登录
-        List<UserLogin> userLoginList = userRepository.getUserLoginsByUserId(userQuery.getId());
-        String client = "";
-        if (!ObjectUtils.isEmpty(userLoginList) && userLoginList.size() == 1) {
-            client = userQuery.getClient();
-        }
-        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(client).build();
-    }
-
-
-    /**
-     * 注册登录前
-     */
-    public void beforeLogin(User user, Long userId, String token, boolean isNew, String mobile, String platform, String imei, String ip, String device) {
         //用户为空，那么该用户的token表数据肯定也为空
         if (user == null) {
             isNew = true;
@@ -202,8 +122,107 @@ public class LoginService {
                 userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
             }
         }
+
+        saService.saLogin(userId, anonymousId);
+        //放入redis 3个小时
+        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 10800L);
+        //验证SmsCode之后删除掉
+        redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
+        //重新查询用户，取出client
+        User userQuery = userRepository.findByMobile(mobile);
+        // 查询登录记录标，只有一条登录记录就算首次登录
+        List<UserLogin> userLoginList = userRepository.getUserLoginsByUserId(userQuery.getId());
+        String client = "";
+        if (!ObjectUtils.isEmpty(userLoginList) && userLoginList.size() == 1) {
+            client = userQuery.getClient();
+        }
+        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(client).build();
     }
 
+    /**
+     * 用户facebook登录注册
+     */
+    public LoginByCodeResponse loginByFacebook(LoginByFacebookRequest request) {
+        // 解密校验是否我们平台发来的请求，是-通过 否-拦截
+        String mobile = request.getMobile();
+        String md5 = request.getMd5();
+
+        if(!MD5Utils.verify(mobile, md5)) {
+            log.error("请求校验失败，手机号：", mobile);
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
+
+        GlobalHead globalHead = RequestUtil.getGlobalHead();
+        log.info("登录注册手机号：{}", mobile);
+        // 格式化手机号
+        mobile = mobileFormat(mobile);
+
+        String platform = globalHead.getPlatform();
+        String imei = globalHead.getImei();
+        String device = request.getDevice();
+        String ip = RequestUtil.getIp();
+        //用户匿名id
+        String anonymousId = request.getAnonymousId();
+
+        // 用户是否存在,不存在去注册
+        User user = userRepository.findByMobile(mobile);
+        Long userId = 0L;
+        String token = "";
+        boolean isNew = false;
+        // 登录或注册
+        //用户为空，那么该用户的token表数据肯定也为空
+        if (user == null) {
+            isNew = true;
+            userId = IDGenerator.nextId();
+            //build User
+            user = User.builder().id(userId).mobileAccount(mobile).platform(platform).client(BidEnum.INDONESIA_APP.getCode()).imei(imei).build();
+            // 生成token
+            GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
+            token = JwtUtil.createToken(newUserToken);
+            //build UserToken
+            UserToken userToken = buildUserToken(IDGenerator.nextId(), userId, token, imei);
+            userToken.setCreateTime(LocalDateTime.now());
+            // UserLogin
+            UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
+            //UserStatus
+            UserStatus userStatus = buildUserStatus(user.getId());
+            userRepository.insertUserAndTokenAndLoginAndStatus(user, userToken, userLogin, userStatus);
+        } else {
+            userId = user.getId();
+            // 生成token
+            GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
+            token = JwtUtil.createToken(newUserToken);
+            //token统一校验时已经校验了过期时间（7天），所以这里不考虑过期
+            UserToken userToken = userTokenRepository.findByUserIdAndImei(userId, imei);
+            if (ObjectUtils.isEmpty(userToken)) {
+                //说明用户换了设备 新增token
+                //build UserToken
+                UserToken userToken2 = buildUserToken(IDGenerator.nextId(), userId, token, imei);
+                userToken2.setCreateTime(LocalDateTime.now());
+                // UserLogin
+                UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
+                userRepository.insertTokenAndLogin(userToken2, userLogin);
+            } else {
+                // UserToken 老用户登录都要刷新token表，刷新过期时间
+                UserToken userTokenUpdate = buildUserToken(userToken.getId(), userId, token, imei);
+                userTokenUpdate.setUpdateTime(LocalDateTime.now());
+                // UserLogin
+                UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
+                userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
+            }
+        }
+
+        saService.saLogin(userId, anonymousId);
+        //重新查询用户，取出client
+        User userQuery = userRepository.findByMobile(mobile);
+        // 查询登录记录标，只有一条登录记录就算首次登录
+        List<UserLogin> userLoginList = userRepository.getUserLoginsByUserId(userQuery.getId());
+        String client = "";
+        if (!ObjectUtils.isEmpty(userLoginList) && userLoginList.size() == 1) {
+            client = userQuery.getClient();
+        }
+        return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(client).build();
+    }
 
     /**
      * H5页面注册

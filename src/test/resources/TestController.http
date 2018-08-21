@@ -15,8 +15,8 @@ Content-Type: application/json
 }
 
 ### 人工处理MQ回调
-#POST http://10.10.30.92:8150/hzed/easy-get/api/test/manMadeMqCallback
-POST https://rupiahget.id/hzed/easy-get/api/test/manMadeMqCallback
+POST http://10.10.30.133:8160/hzed/easy-get/api/test/manMadeMqCallback
+#POST https://rupiahget.id/hzed/easy-get/api/test/manMadeMqCallback
 #POST http://localhost:8150/hzed/easy-get/api/test/manMadeMqCallback
 Accept: application/json;charset=UTF-8;
 Content-Type: application/json
@@ -33,7 +33,7 @@ Content-Type: application/json
     "price": 480000,
     "productid": 1673,
     "status": "200",
-    "t_id": "126239442070712320hzed"
+    "t_id": "130874477595860992hzed"
 }
 
 ###

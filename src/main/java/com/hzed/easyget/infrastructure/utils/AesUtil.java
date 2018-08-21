@@ -160,9 +160,9 @@ public class AesUtil {
     }
 
     public static void main(String[] args) {
-        Long timeStamp = System.currentTimeMillis();
-        System.out.println(aesEncode(105534315668316160L, 1529057739659L));
-        System.out.println(timeStamp);
+        System.out.println(aesEncode("easyget","18825196282"));
+        System.out.println(aesDncode("easyget","doZORjkcml8U03J1Ct+9xw=="));
+
     }
 
 }

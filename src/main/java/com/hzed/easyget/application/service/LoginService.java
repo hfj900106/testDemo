@@ -112,7 +112,18 @@ public class LoginService {
         // 秘钥 easyget
         String aesKey = "easyget";
 
-
+        // 解密后的手机号
+        String mobileDecode;
+        try {
+            mobileDecode = AesUtil.aesDncode(aesKey,aesString);
+        } catch (Exception e) {
+            log.error("手机号{}登录注册解密失败", mobile);
+            e.printStackTrace();
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
+        if (ObjectUtils.isEmpty(mobileDecode) || (!mobileDecode.equals(mobile))) {
+            throw new WarnException(BizCodeEnum.ILLEGAL_PARAM);
+        }
         GlobalHead globalHead = RequestUtil.getGlobalHead();
         log.info("登录注册手机号：{}", mobile);
         // 格式化手机号
@@ -192,7 +203,6 @@ public class LoginService {
             }
         }
     }
-
 
 
     /**
@@ -434,6 +444,5 @@ public class LoginService {
         response.setFacebookSms(facebook_sms);
         return response;
     }
-
 
 }

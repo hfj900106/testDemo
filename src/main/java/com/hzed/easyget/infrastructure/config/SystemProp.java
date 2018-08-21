@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.math.BigDecimal;
+
 /**
  * 系统参数配置
  * @author guichang
@@ -27,6 +29,9 @@ public class SystemProp {
     private String[] XLMobilePrefix;
     private String[] IndosatMobilePrefix;
     private MobilePrefix mobilePrefix;
+    private BigDecimal authFee;
+    private BigDecimal reviewFee;
+    private BigDecimal handlingFee;
 
     @Data
     @Configuration

@@ -3,6 +3,7 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 预提交贷款返回参数
@@ -21,4 +22,6 @@ public class PreSubmitLoanResponse {
     private String bankCode;
     private String bankName;
     private String inAccount;
+    private BigDecimal serviceFee;
+    private List<BidDetailFeeResponse> bidDetailFeeList;
 }

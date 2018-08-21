@@ -1,5 +1,6 @@
 package com.hzed.easyget.application.service;
 
+import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.BidEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.ProductEnum;
@@ -35,8 +36,6 @@ public class LoanService {
     private BidRepository bidRepository;
     @Autowired
     private SystemProp systemProp;
-    @Autowired
-    private ComService comService;
     @Autowired
     private UserLoanVisitRepository userVisitRecordRepository;
     @Autowired
@@ -116,10 +115,8 @@ public class LoanService {
 
     public PreSubmitLoanResponse preSubmitLoan(PreSubmitLoanRequest request) {
         PreSubmitLoanResponse subLoanResponse = new PreSubmitLoanResponse();
-
         BigDecimal loanAmount = request.getLoanAmount();
         Integer period = request.getPeriod();
-
         Long userId = RequestUtil.getGlobalUser().getUserId();
         List<UserBank> userBankList = userBankRepository.findByUserId(userId);
         if (!ObjectUtils.isEmpty(userBankList)) {
@@ -139,6 +136,14 @@ public class LoanService {
         subLoanResponse.setReceiveAmount(loanAmount.subtract(headFee));
         subLoanResponse.setPeriod(period);
         subLoanResponse.setLoanAmount(loanAmount);
+        subLoanResponse.setServiceFee(productInfo.getTailFee());
+        BidDetailFeeResponse bidDetailFeeResponse = new BidDetailFeeResponse();
+        List<BidDetailFeeResponse> bidDetailFeeList = Lists.newArrayList();
+        bidDetailFeeResponse.setAuthFee(systemProp.getAuthFee());
+        bidDetailFeeResponse.setReviewFee(systemProp.getReviewFee());
+        bidDetailFeeResponse.setHandlingFee(systemProp.getHandlingFee());
+        bidDetailFeeList.add(bidDetailFeeResponse);
+        subLoanResponse.setBidDetailFeeList(bidDetailFeeList);
         return subLoanResponse;
     }
 }

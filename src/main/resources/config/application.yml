@@ -79,6 +79,9 @@ system:
   expected_audit_time_interval: 1440 # 预计审核时间间隔 单位分
   expected_lending_time_interval: 60 # 预计放款时间间隔 单位分
   expiredDay: 30 # 公告未读有效时间 单位天
+  authFee: 50000 # 信息认证费
+  reviewFee: 50000 # 信息审核费
+  handlingFee: 20000 # 手续费
   # 地区 id-ID：印尼
   local: id-ID
   # 短信催账提前天数

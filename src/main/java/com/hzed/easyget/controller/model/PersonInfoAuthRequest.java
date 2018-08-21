@@ -26,7 +26,7 @@ public class PersonInfoAuthRequest {
     private String email;
     @NotBlank(message = "{param.auth.parentName.isNotEmpty}")
     private String parentName;
-    @NotBlank(message = "{param.auth.parentTel.isNotEmpty}")
+    @Length(min = 1,max = 64,message = "{param.auth.parentTel.extraLong}")
     private String parentTel;
     @NotBlank(message = "{param.auth.relationship.isNotEmpty}")
     private String relationship;

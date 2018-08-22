@@ -249,7 +249,7 @@ public class HomeService {
         }
 
         // 贷款金额 贷款期限
-        bidProgressResponse.setLoanAmount(bid.getLoanAmount());
+        bidProgressResponse.setLoanAmount(bid.getApplyAmount());
         bidProgressResponse.setPeriod(bid.getPeriod());
         Long bidId = bid.getId();
         // 已放款

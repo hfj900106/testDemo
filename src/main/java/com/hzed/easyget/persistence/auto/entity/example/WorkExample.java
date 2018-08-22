@@ -351,6 +351,76 @@ public class WorkExample {
             return (Criteria) this;
         }
 
+        public Criteria andIndustryIsNull() {
+            addCriterion("industry is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndustryIsNotNull() {
+            addCriterion("industry is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndustryEqualTo(String value) {
+            addCriterion("industry =", value, "industry");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndustryNotEqualTo(String value) {
+            addCriterion("industry <>", value, "industry");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndustryGreaterThan(String value) {
+            addCriterion("industry >", value, "industry");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndustryGreaterThanOrEqualTo(String value) {
+            addCriterion("industry >=", value, "industry");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndustryLessThan(String value) {
+            addCriterion("industry <", value, "industry");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndustryLessThanOrEqualTo(String value) {
+            addCriterion("industry <=", value, "industry");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndustryLike(String value) {
+            addCriterion("industry like", value, "industry");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndustryNotLike(String value) {
+            addCriterion("industry not like", value, "industry");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndustryIn(List<String> values) {
+            addCriterion("industry in", values, "industry");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndustryNotIn(List<String> values) {
+            addCriterion("industry not in", values, "industry");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndustryBetween(String value1, String value2) {
+            addCriterion("industry between", value1, value2, "industry");
+            return (Criteria) this;
+        }
+
+        public Criteria andIndustryNotBetween(String value1, String value2) {
+            addCriterion("industry not between", value1, value2, "industry");
+            return (Criteria) this;
+        }
+
         public Criteria andMonthlyIncomeIsNull() {
             addCriterion("monthly_income is null");
             return (Criteria) this;
@@ -421,143 +491,213 @@ public class WorkExample {
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardIsNull() {
-            addCriterion("employee_card is null");
+        public Criteria andPaydayIsNull() {
+            addCriterion("payday is null");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardIsNotNull() {
-            addCriterion("employee_card is not null");
+        public Criteria andPaydayIsNotNull() {
+            addCriterion("payday is not null");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardEqualTo(String value) {
-            addCriterion("employee_card =", value, "employeeCard");
+        public Criteria andPaydayEqualTo(String value) {
+            addCriterion("payday =", value, "payday");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardNotEqualTo(String value) {
-            addCriterion("employee_card <>", value, "employeeCard");
+        public Criteria andPaydayNotEqualTo(String value) {
+            addCriterion("payday <>", value, "payday");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardGreaterThan(String value) {
-            addCriterion("employee_card >", value, "employeeCard");
+        public Criteria andPaydayGreaterThan(String value) {
+            addCriterion("payday >", value, "payday");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardGreaterThanOrEqualTo(String value) {
-            addCriterion("employee_card >=", value, "employeeCard");
+        public Criteria andPaydayGreaterThanOrEqualTo(String value) {
+            addCriterion("payday >=", value, "payday");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardLessThan(String value) {
-            addCriterion("employee_card <", value, "employeeCard");
+        public Criteria andPaydayLessThan(String value) {
+            addCriterion("payday <", value, "payday");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardLessThanOrEqualTo(String value) {
-            addCriterion("employee_card <=", value, "employeeCard");
+        public Criteria andPaydayLessThanOrEqualTo(String value) {
+            addCriterion("payday <=", value, "payday");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardLike(String value) {
-            addCriterion("employee_card like", value, "employeeCard");
+        public Criteria andPaydayLike(String value) {
+            addCriterion("payday like", value, "payday");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardNotLike(String value) {
-            addCriterion("employee_card not like", value, "employeeCard");
+        public Criteria andPaydayNotLike(String value) {
+            addCriterion("payday not like", value, "payday");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardIn(List<String> values) {
-            addCriterion("employee_card in", values, "employeeCard");
+        public Criteria andPaydayIn(List<String> values) {
+            addCriterion("payday in", values, "payday");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardNotIn(List<String> values) {
-            addCriterion("employee_card not in", values, "employeeCard");
+        public Criteria andPaydayNotIn(List<String> values) {
+            addCriterion("payday not in", values, "payday");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardBetween(String value1, String value2) {
-            addCriterion("employee_card between", value1, value2, "employeeCard");
+        public Criteria andPaydayBetween(String value1, String value2) {
+            addCriterion("payday between", value1, value2, "payday");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardNotBetween(String value1, String value2) {
-            addCriterion("employee_card not between", value1, value2, "employeeCard");
+        public Criteria andPaydayNotBetween(String value1, String value2) {
+            addCriterion("payday not between", value1, value2, "payday");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceIsNull() {
-            addCriterion("workplace is null");
+        public Criteria andPicTypeIsNull() {
+            addCriterion("pic_type is null");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceIsNotNull() {
-            addCriterion("workplace is not null");
+        public Criteria andPicTypeIsNotNull() {
+            addCriterion("pic_type is not null");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceEqualTo(String value) {
-            addCriterion("workplace =", value, "workplace");
+        public Criteria andPicTypeEqualTo(String value) {
+            addCriterion("pic_type =", value, "picType");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceNotEqualTo(String value) {
-            addCriterion("workplace <>", value, "workplace");
+        public Criteria andPicTypeNotEqualTo(String value) {
+            addCriterion("pic_type <>", value, "picType");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceGreaterThan(String value) {
-            addCriterion("workplace >", value, "workplace");
+        public Criteria andPicTypeGreaterThan(String value) {
+            addCriterion("pic_type >", value, "picType");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceGreaterThanOrEqualTo(String value) {
-            addCriterion("workplace >=", value, "workplace");
+        public Criteria andPicTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("pic_type >=", value, "picType");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceLessThan(String value) {
-            addCriterion("workplace <", value, "workplace");
+        public Criteria andPicTypeLessThan(String value) {
+            addCriterion("pic_type <", value, "picType");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceLessThanOrEqualTo(String value) {
-            addCriterion("workplace <=", value, "workplace");
+        public Criteria andPicTypeLessThanOrEqualTo(String value) {
+            addCriterion("pic_type <=", value, "picType");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceLike(String value) {
-            addCriterion("workplace like", value, "workplace");
+        public Criteria andPicTypeLike(String value) {
+            addCriterion("pic_type like", value, "picType");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceNotLike(String value) {
-            addCriterion("workplace not like", value, "workplace");
+        public Criteria andPicTypeNotLike(String value) {
+            addCriterion("pic_type not like", value, "picType");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceIn(List<String> values) {
-            addCriterion("workplace in", values, "workplace");
+        public Criteria andPicTypeIn(List<String> values) {
+            addCriterion("pic_type in", values, "picType");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceNotIn(List<String> values) {
-            addCriterion("workplace not in", values, "workplace");
+        public Criteria andPicTypeNotIn(List<String> values) {
+            addCriterion("pic_type not in", values, "picType");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceBetween(String value1, String value2) {
-            addCriterion("workplace between", value1, value2, "workplace");
+        public Criteria andPicTypeBetween(String value1, String value2) {
+            addCriterion("pic_type between", value1, value2, "picType");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceNotBetween(String value1, String value2) {
-            addCriterion("workplace not between", value1, value2, "workplace");
+        public Criteria andPicTypeNotBetween(String value1, String value2) {
+            addCriterion("pic_type not between", value1, value2, "picType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathIsNull() {
+            addCriterion("pic_path is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathIsNotNull() {
+            addCriterion("pic_path is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathEqualTo(String value) {
+            addCriterion("pic_path =", value, "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathNotEqualTo(String value) {
+            addCriterion("pic_path <>", value, "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathGreaterThan(String value) {
+            addCriterion("pic_path >", value, "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathGreaterThanOrEqualTo(String value) {
+            addCriterion("pic_path >=", value, "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathLessThan(String value) {
+            addCriterion("pic_path <", value, "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathLessThanOrEqualTo(String value) {
+            addCriterion("pic_path <=", value, "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathLike(String value) {
+            addCriterion("pic_path like", value, "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathNotLike(String value) {
+            addCriterion("pic_path not like", value, "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathIn(List<String> values) {
+            addCriterion("pic_path in", values, "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathNotIn(List<String> values) {
+            addCriterion("pic_path not in", values, "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathBetween(String value1, String value2) {
+            addCriterion("pic_path between", value1, value2, "picPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathNotBetween(String value1, String value2) {
+            addCriterion("pic_path not between", value1, value2, "picPath");
             return (Criteria) this;
         }
 
@@ -876,18 +1016,28 @@ public class WorkExample {
             return (Criteria) this;
         }
 
+        public Criteria andIndustryLikeInsensitive(String value) {
+            addCriterion("upper(industry) like", value.toUpperCase(), "industry");
+            return (Criteria) this;
+        }
+
         public Criteria andMonthlyIncomeLikeInsensitive(String value) {
             addCriterion("upper(monthly_income) like", value.toUpperCase(), "monthlyIncome");
             return (Criteria) this;
         }
 
-        public Criteria andEmployeeCardLikeInsensitive(String value) {
-            addCriterion("upper(employee_card) like", value.toUpperCase(), "employeeCard");
+        public Criteria andPaydayLikeInsensitive(String value) {
+            addCriterion("upper(payday) like", value.toUpperCase(), "payday");
             return (Criteria) this;
         }
 
-        public Criteria andWorkplaceLikeInsensitive(String value) {
-            addCriterion("upper(workplace) like", value.toUpperCase(), "workplace");
+        public Criteria andPicTypeLikeInsensitive(String value) {
+            addCriterion("upper(pic_type) like", value.toUpperCase(), "picType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicPathLikeInsensitive(String value) {
+            addCriterion("upper(pic_path) like", value.toUpperCase(), "picPath");
             return (Criteria) this;
         }
 

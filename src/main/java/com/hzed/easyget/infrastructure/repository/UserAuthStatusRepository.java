@@ -16,9 +16,9 @@ public class UserAuthStatusRepository {
     @Autowired
     private UserAuthStatusMapper userAuthStatusMapper;
 
-    public UserAuthStatus findEnableAuthStatusByUserId(Long userId, String authCode) {
+    public UserAuthStatus findEnableAuthStatusByUserId(Long userId, String authCode,Integer status) {
         UserAuthStatusExample example = new UserAuthStatusExample();
-        example.createCriteria().andUserIdEqualTo(userId).andAuthCodeEqualTo(authCode);
+        example.createCriteria().andUserIdEqualTo(userId).andAuthCodeEqualTo(authCode).andAuthStatusEqualTo(status);
         return userAuthStatusMapper.selectOneByExample(example);
     }
 

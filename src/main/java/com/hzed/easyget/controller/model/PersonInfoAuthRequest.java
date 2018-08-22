@@ -4,6 +4,8 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 个人信息认证
  *
@@ -34,5 +36,14 @@ public class PersonInfoAuthRequest {
     private String relatedPersonName;
     @NotBlank(message = "{param.auth.relatedPersonTel.isNotEmpty}")
     private String relatedPersonTel;
+
+    @NotBlank(message = "{param.auth.companyTel.isNotEmpty}")
+    private String companyTel;
+    @NotNull(message = "{param.auth.childrenNumber.isNotEmpty}")
+    private Integer childrenNumber;
+    @NotBlank(message = "{param.auth.maritalStatus.isNotEmpty}")
+    private String maritalStatus;
+    @NotBlank(message = "{param.auth.birthMotherName.isNotEmpty}")
+    private String birthMotherName;
 
 }

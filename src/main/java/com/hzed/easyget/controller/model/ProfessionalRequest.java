@@ -3,8 +3,6 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 交易记录
  * @author hfj
@@ -18,21 +16,30 @@ public class ProfessionalRequest {
     @NotBlank(message = "{param.auth.jobType.isNotEmpty}")
     private String jobType ;
     /**
+     * 行业
+     */
+    @NotBlank(message = "{param.auth.industry.isNotEmpty}")
+    private String industry ;
+    /**
+     * 发薪日
+     */
+    @NotBlank(message = "{param.auth.payday.isNotEmpty}")
+    private String payday;
+    /**
      * 月收入
      */
     @NotBlank(message = "{param.auth.monthlyIncome.isNotEmpty}")
     private String monthlyIncome ;
-    /**
-     * 工作证
-     */
-    @NotBlank(message = "{param.auth.employeeCardBase64ImgStr.isNotEmpty}")
-    private String employeeCardBase64ImgStr ;
-    /**
-     * 工作场所照片
-     */
-    @NotBlank(message = "{param.auth.workplaceBase64ImgStr.isNotEmpty}")
-    private String workplaceBase64ImgStr ;
 
+    /**
+     * 图片后缀
+     */
     @NotBlank(message = "{param.auth.picSuffix.isNotEmpty}")
     private String picSuffix;
+
+    /**
+     * 图片类型拼接base64字符串
+     */
+    @NotBlank(message = "{param.auth.picPathBase64Str.isNotEmpty}")
+    private String picTypeAndPathBase64Str;
 }

@@ -5,9 +5,11 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="job_type" jdbcType="VARCHAR" property="jobType" />
+    <result column="industry" jdbcType="VARCHAR" property="industry" />
     <result column="monthly_income" jdbcType="VARCHAR" property="monthlyIncome" />
-    <result column="employee_card" jdbcType="VARCHAR" property="employeeCard" />
-    <result column="workplace" jdbcType="VARCHAR" property="workplace" />
+    <result column="payday" jdbcType="VARCHAR" property="payday" />
+    <result column="pic_type" jdbcType="VARCHAR" property="picType" />
+    <result column="pic_path" jdbcType="VARCHAR" property="picPath" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -73,8 +75,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, job_type, monthly_income, employee_card, workplace, create_by, create_time, 
-    update_by, update_time, remark
+    id, user_id, job_type, industry, monthly_income, payday, pic_type, pic_path, create_by, 
+    create_time, update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.WorkExample" resultMap="BaseResultMap">
     select
@@ -140,13 +142,15 @@
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.Work">
     insert into t_loan_work (id, user_id, job_type, 
-      monthly_income, employee_card, workplace, 
-      create_by, create_time, update_by, 
-      update_time, remark)
+      industry, monthly_income, payday, 
+      pic_type, pic_path, create_by, 
+      create_time, update_by, update_time, 
+      remark)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{jobType,jdbcType=VARCHAR}, 
-      #{monthlyIncome,jdbcType=VARCHAR}, #{employeeCard,jdbcType=VARCHAR}, #{workplace,jdbcType=VARCHAR}, 
-      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+      #{industry,jdbcType=VARCHAR}, #{monthlyIncome,jdbcType=VARCHAR}, #{payday,jdbcType=VARCHAR}, 
+      #{picType,jdbcType=VARCHAR}, #{picPath,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.Work">
     insert into t_loan_work
@@ -160,14 +164,20 @@
       <if test="jobType != null">
         job_type,
       </if>
+      <if test="industry != null">
+        industry,
+      </if>
       <if test="monthlyIncome != null">
         monthly_income,
       </if>
-      <if test="employeeCard != null">
-        employee_card,
+      <if test="payday != null">
+        payday,
       </if>
-      <if test="workplace != null">
-        workplace,
+      <if test="picType != null">
+        pic_type,
+      </if>
+      <if test="picPath != null">
+        pic_path,
       </if>
       <if test="createBy != null">
         create_by,
@@ -195,14 +205,20 @@
       <if test="jobType != null">
         #{jobType,jdbcType=VARCHAR},
       </if>
+      <if test="industry != null">
+        #{industry,jdbcType=VARCHAR},
+      </if>
       <if test="monthlyIncome != null">
         #{monthlyIncome,jdbcType=VARCHAR},
       </if>
-      <if test="employeeCard != null">
-        #{employeeCard,jdbcType=VARCHAR},
+      <if test="payday != null">
+        #{payday,jdbcType=VARCHAR},
       </if>
-      <if test="workplace != null">
-        #{workplace,jdbcType=VARCHAR},
+      <if test="picType != null">
+        #{picType,jdbcType=VARCHAR},
+      </if>
+      <if test="picPath != null">
+        #{picPath,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -239,14 +255,20 @@
       <if test="record.jobType != null">
         job_type = #{record.jobType,jdbcType=VARCHAR},
       </if>
+      <if test="record.industry != null">
+        industry = #{record.industry,jdbcType=VARCHAR},
+      </if>
       <if test="record.monthlyIncome != null">
         monthly_income = #{record.monthlyIncome,jdbcType=VARCHAR},
       </if>
-      <if test="record.employeeCard != null">
-        employee_card = #{record.employeeCard,jdbcType=VARCHAR},
+      <if test="record.payday != null">
+        payday = #{record.payday,jdbcType=VARCHAR},
       </if>
-      <if test="record.workplace != null">
-        workplace = #{record.workplace,jdbcType=VARCHAR},
+      <if test="record.picType != null">
+        pic_type = #{record.picType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.picPath != null">
+        pic_path = #{record.picPath,jdbcType=VARCHAR},
       </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
@@ -273,9 +295,11 @@
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
       job_type = #{record.jobType,jdbcType=VARCHAR},
+      industry = #{record.industry,jdbcType=VARCHAR},
       monthly_income = #{record.monthlyIncome,jdbcType=VARCHAR},
-      employee_card = #{record.employeeCard,jdbcType=VARCHAR},
-      workplace = #{record.workplace,jdbcType=VARCHAR},
+      payday = #{record.payday,jdbcType=VARCHAR},
+      pic_type = #{record.picType,jdbcType=VARCHAR},
+      pic_path = #{record.picPath,jdbcType=VARCHAR},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -294,14 +318,20 @@
       <if test="jobType != null">
         job_type = #{jobType,jdbcType=VARCHAR},
       </if>
+      <if test="industry != null">
+        industry = #{industry,jdbcType=VARCHAR},
+      </if>
       <if test="monthlyIncome != null">
         monthly_income = #{monthlyIncome,jdbcType=VARCHAR},
       </if>
-      <if test="employeeCard != null">
-        employee_card = #{employeeCard,jdbcType=VARCHAR},
+      <if test="payday != null">
+        payday = #{payday,jdbcType=VARCHAR},
       </if>
-      <if test="workplace != null">
-        workplace = #{workplace,jdbcType=VARCHAR},
+      <if test="picType != null">
+        pic_type = #{picType,jdbcType=VARCHAR},
+      </if>
+      <if test="picPath != null">
+        pic_path = #{picPath,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
@@ -325,9 +355,11 @@
     update t_loan_work
     set user_id = #{userId,jdbcType=BIGINT},
       job_type = #{jobType,jdbcType=VARCHAR},
+      industry = #{industry,jdbcType=VARCHAR},
       monthly_income = #{monthlyIncome,jdbcType=VARCHAR},
-      employee_card = #{employeeCard,jdbcType=VARCHAR},
-      workplace = #{workplace,jdbcType=VARCHAR},
+      payday = #{payday,jdbcType=VARCHAR},
+      pic_type = #{picType,jdbcType=VARCHAR},
+      pic_path = #{picPath,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
@@ -363,15 +395,15 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_work
-    (id, user_id, job_type, monthly_income, employee_card, workplace, create_by, create_time, 
-      update_by, update_time, remark)
+    (id, user_id, job_type, industry, monthly_income, payday, pic_type, pic_path, create_by, 
+      create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.jobType,jdbcType=VARCHAR}, 
-        #{item.monthlyIncome,jdbcType=VARCHAR}, #{item.employeeCard,jdbcType=VARCHAR}, 
-        #{item.workplace,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
-        )
+        #{item.industry,jdbcType=VARCHAR}, #{item.monthlyIncome,jdbcType=VARCHAR}, #{item.payday,jdbcType=VARCHAR}, 
+        #{item.picType,jdbcType=VARCHAR}, #{item.picPath,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, 
+        #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -393,14 +425,20 @@
         <if test="'job_type' == column.value">
           #{item.jobType,jdbcType=VARCHAR}
         </if>
+        <if test="'industry' == column.value">
+          #{item.industry,jdbcType=VARCHAR}
+        </if>
         <if test="'monthly_income' == column.value">
           #{item.monthlyIncome,jdbcType=VARCHAR}
         </if>
-        <if test="'employee_card' == column.value">
-          #{item.employeeCard,jdbcType=VARCHAR}
+        <if test="'payday' == column.value">
+          #{item.payday,jdbcType=VARCHAR}
         </if>
-        <if test="'workplace' == column.value">
-          #{item.workplace,jdbcType=VARCHAR}
+        <if test="'pic_type' == column.value">
+          #{item.picType,jdbcType=VARCHAR}
+        </if>
+        <if test="'pic_path' == column.value">
+          #{item.picPath,jdbcType=VARCHAR}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

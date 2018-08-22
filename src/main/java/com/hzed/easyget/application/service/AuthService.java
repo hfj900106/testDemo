@@ -74,7 +74,7 @@ public class AuthService {
         List<Dict> dictList = dictRepository.findEnableByModuleCodeAndLanguage(request.getCode(), i18n);
         dictList.forEach(dict -> {
             // 查出认证成功的数据
-            UserAuthStatus userAuthStatus = authStatusRepository.findEnableAuthStatusByUserId(userId, dict.getDicCode(),AuthStatusEnum.HAS_AUTH.getCode());
+            UserAuthStatus userAuthStatus = authStatusRepository.findEnableAuthStatusByUserId(userId, dict.getDicCode(), AuthStatusEnum.HAS_AUTH.getCode());
             AuthStatusResponse authStatusResponse = new AuthStatusResponse();
             authStatusResponse.setAuthCode(dict.getDicCode());
             authStatusResponse.setAuthName(dict.getDicValue());
@@ -366,29 +366,31 @@ public class AuthService {
         GlobalUser user = getGlobalUser();
         // 判断该用户是否已经验证
         checkAuth(user.getUserId(), AuthCodeEnum.PROFESSIONAL.getCode());
-         String picTypeAndPathBase64Str = request.getPicTypeAndPathBase64Str();
-        try {
-            //照片上传
-            String workplacePhotoPath = getPhotoPath(picTypeAndPathBase64Str.substring(11), request.getPicSuffix());
-            Work work = new Work();
+        List<String> listBase64 = request.getPicTypeAndPathBase64Str();
 
-            work.setId(IDGenerator.nextId());
-            work.setUserId(user.getUserId());
-            work.setJobType(request.getJobType());
-            work.setMonthlyIncome(request.getMonthlyIncome());
-            work.setIndustry(request.getIndustry());
-            work.setPicType(picTypeAndPathBase64Str.substring(0,11));
-            work.setPicPath(workplacePhotoPath);
-            work.setPayday(request.getPayday());
-            work.setRemark("专业信息认证");
-            //获取UserAuthStatus对象
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.PROFESSIONAL.getCode(), "专业信息认证");
-            professionalRepository.insertProfessionalAndUserAuthStatus(work, userAuthStatus);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new ComBizException(BizCodeEnum.FAIL_PROFESSIONAL_AUTH);
-        }
+        //组装pic对象
+        List<UserPic> listPic = Lists.newArrayList();
+        String suffix = request.getPicSuffix();
 
+        listBase64.forEach(base64Str -> {
+            String workplacePhotoPath = getPhotoPath(base64Str.substring(11), suffix);
+            listPic.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type(base64Str.substring(0,11)).picUrl(workplacePhotoPath).build());
+
+        });
+
+        // 组建Work对象
+        Work work = new Work();
+        work.setId(IDGenerator.nextId());
+        work.setUserId(user.getUserId());
+        work.setJobType(request.getJobType());
+        work.setMonthlyIncome(request.getMonthlyIncome());
+        work.setIndustry(request.getIndustry());
+        work.setPayday(request.getPayday());
+        work.setRemark("专业信息认证");
+
+        // 组建UserAuthStatus对象
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(user.getUserId(), AuthCodeEnum.PROFESSIONAL.getCode(), "专业信息认证");
+        professionalRepository.insertProfessionalAndUserAuthStatus(listPic,work, userAuthStatus);
     }
 
     private void afterResponse(RiskResponse response, Long userId, String code, String remark) {
@@ -472,7 +474,7 @@ public class AuthService {
      */
     public void checkAuth(Long userId, String authCode) {
         // 判断该用户是否已经验证
-        UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode,AuthStatusEnum.HAS_AUTH.getCode());
+        UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode, AuthStatusEnum.HAS_AUTH.getCode());
         if (!ObjectUtils.isEmpty(userAuthStatusHas)) {
             log.info("该用户已认证");
             throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);

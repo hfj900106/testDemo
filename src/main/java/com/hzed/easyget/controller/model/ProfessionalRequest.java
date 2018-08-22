@@ -3,6 +3,9 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+import java.util.List;
+
 /**
  * 交易记录
  * @author hfj
@@ -38,8 +41,8 @@ public class ProfessionalRequest {
     private String picSuffix;
 
     /**
-     * 图片类型拼接base64字符串
+     * 图片类型拼接base64字符串list
      */
-    @NotBlank(message = "{param.auth.picPathBase64Str.isNotEmpty}")
-    private String picTypeAndPathBase64Str;
+    @NotNull(message = "{param.auth.picPathBase64Str.isNotEmpty}")
+    private List<String> picTypeAndPathBase64Str;
 }

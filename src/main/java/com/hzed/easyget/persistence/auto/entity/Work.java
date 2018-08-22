@@ -20,29 +20,19 @@ public class Work implements Serializable {
     private String jobType;
 
     /**
-     * 行业
-     */
-    private String industry;
-
-    /**
      * 月收入
      */
     private String monthlyIncome;
 
     /**
-     * 发薪日
+     * 工作证照片保存路径
      */
-    private String payday;
+    private String employeeCard;
 
     /**
-     * 照片类型
+     * 工作场所照片保存路径
      */
-    private String picType;
-
-    /**
-     * 图片路径
-     */
-    private String picPath;
+    private String workplace;
 
     /**
      */
@@ -90,14 +80,6 @@ public class Work implements Serializable {
         this.jobType = jobType == null ? null : jobType.trim();
     }
 
-    public String getIndustry() {
-        return industry;
-    }
-
-    public void setIndustry(String industry) {
-        this.industry = industry == null ? null : industry.trim();
-    }
-
     public String getMonthlyIncome() {
         return monthlyIncome;
     }
@@ -106,28 +88,20 @@ public class Work implements Serializable {
         this.monthlyIncome = monthlyIncome == null ? null : monthlyIncome.trim();
     }
 
-    public String getPayday() {
-        return payday;
+    public String getEmployeeCard() {
+        return employeeCard;
     }
 
-    public void setPayday(String payday) {
-        this.payday = payday == null ? null : payday.trim();
+    public void setEmployeeCard(String employeeCard) {
+        this.employeeCard = employeeCard == null ? null : employeeCard.trim();
     }
 
-    public String getPicType() {
-        return picType;
+    public String getWorkplace() {
+        return workplace;
     }
 
-    public void setPicType(String picType) {
-        this.picType = picType == null ? null : picType.trim();
-    }
-
-    public String getPicPath() {
-        return picPath;
-    }
-
-    public void setPicPath(String picPath) {
-        this.picPath = picPath == null ? null : picPath.trim();
+    public void setWorkplace(String workplace) {
+        this.workplace = workplace == null ? null : workplace.trim();
     }
 
     public Long getCreateBy() {
@@ -179,11 +153,9 @@ public class Work implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
         sb.append(", jobType=").append(jobType);
-        sb.append(", industry=").append(industry);
         sb.append(", monthlyIncome=").append(monthlyIncome);
-        sb.append(", payday=").append(payday);
-        sb.append(", picType=").append(picType);
-        sb.append(", picPath=").append(picPath);
+        sb.append(", employeeCard=").append(employeeCard);
+        sb.append(", workplace=").append(workplace);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -220,28 +192,18 @@ public class Work implements Serializable {
             return this;
         }
 
-        public Builder industry(String industry) {
-            obj.setIndustry(industry);
-            return this;
-        }
-
         public Builder monthlyIncome(String monthlyIncome) {
             obj.setMonthlyIncome(monthlyIncome);
             return this;
         }
 
-        public Builder payday(String payday) {
-            obj.setPayday(payday);
+        public Builder employeeCard(String employeeCard) {
+            obj.setEmployeeCard(employeeCard);
             return this;
         }
 
-        public Builder picType(String picType) {
-            obj.setPicType(picType);
-            return this;
-        }
-
-        public Builder picPath(String picPath) {
-            obj.setPicPath(picPath);
+        public Builder workplace(String workplace) {
+            obj.setWorkplace(workplace);
             return this;
         }
 
@@ -279,11 +241,9 @@ public class Work implements Serializable {
         id("id"),
         userId("user_id"),
         jobType("job_type"),
-        industry("industry"),
         monthlyIncome("monthly_income"),
-        payday("payday"),
-        picType("pic_type"),
-        picPath("pic_path"),
+        employeeCard("employee_card"),
+        workplace("workplace"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

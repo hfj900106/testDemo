@@ -120,6 +120,13 @@ public class LoanService {
         bid.setClient(BidEnum.INDONESIA_APP.getCode());
         bid.setStatus(BidStatusEnum.RISK_ING.getCode().byteValue());
         submitLoanResponse.setBid(bidId);
+        // 借款对象列表
+        List<BidDetailFeeResponse> bidDetailFeeList = Lists.newArrayList();
+        BidDetailFeeResponse bidDetailFee = new BidDetailFeeResponse();
+        bidDetailFee.setAuthFee(request.getAuthFee());
+        bidDetailFee.setReviewFee(request.getReviewFee());
+        bidDetailFee.setHandlingFee(request.getHandlingFee());
+        bidDetailFeeList.add(bidDetailFee);
         // 用户银行卡信息不存在则插入
         List<UserBank> userBankList = userBankRepository.findByUserIdAndInbankAndInAccount(userId, request.getInBank(), request.getInAccount());
         if (ObjectUtils.isEmpty(userBankList)) {

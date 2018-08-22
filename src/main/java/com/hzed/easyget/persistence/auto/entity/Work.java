@@ -20,19 +20,19 @@ public class Work implements Serializable {
     private String jobType;
 
     /**
+     * 行业
+     */
+    private String industry;
+
+    /**
      * 月收入
      */
     private String monthlyIncome;
 
     /**
-     * 工作证照片保存路径
+     * 发薪日
      */
-    private String employeeCard;
-
-    /**
-     * 工作场所照片保存路径
-     */
-    private String workplace;
+    private String payday;
 
     /**
      */
@@ -80,6 +80,14 @@ public class Work implements Serializable {
         this.jobType = jobType == null ? null : jobType.trim();
     }
 
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry == null ? null : industry.trim();
+    }
+
     public String getMonthlyIncome() {
         return monthlyIncome;
     }
@@ -88,20 +96,12 @@ public class Work implements Serializable {
         this.monthlyIncome = monthlyIncome == null ? null : monthlyIncome.trim();
     }
 
-    public String getEmployeeCard() {
-        return employeeCard;
+    public String getPayday() {
+        return payday;
     }
 
-    public void setEmployeeCard(String employeeCard) {
-        this.employeeCard = employeeCard == null ? null : employeeCard.trim();
-    }
-
-    public String getWorkplace() {
-        return workplace;
-    }
-
-    public void setWorkplace(String workplace) {
-        this.workplace = workplace == null ? null : workplace.trim();
+    public void setPayday(String payday) {
+        this.payday = payday == null ? null : payday.trim();
     }
 
     public Long getCreateBy() {
@@ -153,9 +153,9 @@ public class Work implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
         sb.append(", jobType=").append(jobType);
+        sb.append(", industry=").append(industry);
         sb.append(", monthlyIncome=").append(monthlyIncome);
-        sb.append(", employeeCard=").append(employeeCard);
-        sb.append(", workplace=").append(workplace);
+        sb.append(", payday=").append(payday);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -192,18 +192,18 @@ public class Work implements Serializable {
             return this;
         }
 
+        public Builder industry(String industry) {
+            obj.setIndustry(industry);
+            return this;
+        }
+
         public Builder monthlyIncome(String monthlyIncome) {
             obj.setMonthlyIncome(monthlyIncome);
             return this;
         }
 
-        public Builder employeeCard(String employeeCard) {
-            obj.setEmployeeCard(employeeCard);
-            return this;
-        }
-
-        public Builder workplace(String workplace) {
-            obj.setWorkplace(workplace);
+        public Builder payday(String payday) {
+            obj.setPayday(payday);
             return this;
         }
 
@@ -241,9 +241,9 @@ public class Work implements Serializable {
         id("id"),
         userId("user_id"),
         jobType("job_type"),
+        industry("industry"),
         monthlyIncome("monthly_income"),
-        employeeCard("employee_card"),
-        workplace("workplace"),
+        payday("payday"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

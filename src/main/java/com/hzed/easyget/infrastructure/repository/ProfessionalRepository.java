@@ -2,8 +2,10 @@ package com.hzed.easyget.infrastructure.repository;
 
 import com.hzed.easyget.persistence.auto.entity.UserAuthStatus;
 import com.hzed.easyget.persistence.auto.entity.UserPic;
+import com.hzed.easyget.persistence.auto.entity.Work;
 import com.hzed.easyget.persistence.auto.mapper.UserAuthStatusMapper;
 import com.hzed.easyget.persistence.auto.mapper.UserPicMapper;
+import com.hzed.easyget.persistence.auto.mapper.WorkMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

@@ -35,8 +35,6 @@ import java.util.Map;
 @Slf4j
 @Service
 public class LoginService {
-    private static final String DEFAULT_SMS_CODE = "0000";
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -46,7 +44,7 @@ public class LoginService {
     @Autowired
     private SystemProp systemProp;
     @Autowired
-    SaService saService;
+    private SaService saService;
     @Autowired
     private SmsService smsService;
     @Autowired
@@ -54,88 +52,31 @@ public class LoginService {
 
     /**
      * 用户登录注册
-     *
-     * @param request
-     * @return
      */
     public LoginByCodeResponse loginByCode(LoginByCodeRequest request) {
-        GlobalHead globalHead = RequestUtil.getGlobalHead();
         String mobile = request.getMobile();
-        log.info("登录注册手机号：{}", mobile);
+        String smsCode = request.getSmsCode();
         // 格式化手机号
         mobile = mobileFormat(mobile);
-
-        String smsCode = request.getSmsCode();
-        String platform = globalHead.getPlatform();
-        String imei = globalHead.getImei();
-        String device = request.getDevice();
-        String ip = RequestUtil.getIp();
-        //用户匿名id
-        String anonymousId = request.getAnonymousId();
-        //校验验证码
+        // 校验验证码
         checkSmsCode(mobile, smsCode);
-
         // 用户是否存在,不存在去注册
         User user = userRepository.findByMobile(mobile);
-        Long userId;
-        String token;
-        boolean isNew = false;
-        // 登录或注册
-        //用户为空，那么该用户的token表数据肯定也为空
-        if (user == null) {
-            isNew = true;
-            userId = IDGenerator.nextId();
-            //build User
-            user = User.builder().id(userId).mobileAccount(mobile).platform(platform).client(BidEnum.INDONESIA_APP.getCode()).imei(imei).build();
-            // 生成token
-            GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
-            token = JwtUtil.createToken(newUserToken);
-            //build UserToken
-            UserToken userToken = buildUserToken(IDGenerator.nextId(), userId, token, imei);
-            userToken.setCreateTime(LocalDateTime.now());
-            // UserLogin
-            UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
-            //UserStatus
-            UserStatus userStatus = buildUserStatus(user.getId());
-            userRepository.insertUserAndTokenAndLoginAndStatus(user, userToken, userLogin, userStatus);
-        } else {
-            userId = user.getId();
-            // 生成token
-            GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
-            token = JwtUtil.createToken(newUserToken);
-            //token统一校验时已经校验了过期时间（7天），所以这里不考虑过期
-            UserToken userToken = userTokenRepository.findByUserIdAndImei(userId, imei);
-            if (ObjectUtils.isEmpty(userToken)) {
-                //说明用户换了设备 新增token
-                //build UserToken
-                UserToken userToken2 = buildUserToken(IDGenerator.nextId(), userId, token, imei);
-                userToken2.setCreateTime(LocalDateTime.now());
-                // UserLogin
-                UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
-                userRepository.insertTokenAndLogin(userToken2, userLogin);
-            } else {
-                // UserToken 老用户登录都要刷新token表，刷新过期时间
-                UserToken userTokenUpdate = buildUserToken(userToken.getId(), userId, token, imei);
-                userTokenUpdate.setUpdateTime(LocalDateTime.now());
-                // UserLogin
-                UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
-                userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
-            }
-        }
-
-        saService.saLogin(userId, anonymousId);
-        //放入redis 3个小时
-        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 10800L);
-        //验证SmsCode之后删除掉
+        // 新用户标志
+        boolean isNew = user == null ? true : false;
+        // 用户ID
+        Long userId = isNew ? IDGenerator.nextId() : user.getId();
+        // 生成token
+        String token = JwtUtil.createToken(GlobalUser.builder().userId(userId).mobile(mobile).build());
+        // 登录操作
+        login(mobile, request.getDevice(), isNew, userId, token);
+        // 神策记录
+        saService.saLogin(userId, request.getAnonymousId());
+        // 删除验证码缓存
         redisService.clearCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile);
-        //重新查询用户，取出client
-        User userQuery = userRepository.findByMobile(mobile);
-        // 查询登录记录标，只有一条登录记录就算首次登录
-        List<UserLogin> userLoginList = userRepository.getUserLoginsByUserId(userQuery.getId());
-        String client = "";
-        if (!ObjectUtils.isEmpty(userLoginList) && userLoginList.size() == 1) {
-            client = userQuery.getClient();
-        }
+        // 获取首次登录的client
+        String client = getFirstLoginClient(mobile);
+
         return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(client).build();
     }
 
@@ -143,118 +84,98 @@ public class LoginService {
      * 用户facebook登录注册
      */
     public LoginByCodeResponse loginByFacebook(LoginByFacebookRequest request) {
-        // 解密校验是否我们平台发来的请求，是-通过 否-拦截
         String mobile = request.getMobile();
         String md5 = request.getMd5();
 
-        if(!MD5Utils.verify(mobile, md5)) {
+        // 校验是否我们平台发来的请求，是-通过 否-拦截
+        if (!MD5Utils.verify(mobile, md5)) {
             log.error("请求校验失败，手机号：", mobile);
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
 
-        GlobalHead globalHead = RequestUtil.getGlobalHead();
-        log.info("登录注册手机号：{}", mobile);
         // 格式化手机号
         mobile = mobileFormat(mobile);
-
-        String platform = globalHead.getPlatform();
-        String imei = globalHead.getImei();
-        String device = request.getDevice();
-        String ip = RequestUtil.getIp();
-        //用户匿名id
-        String anonymousId = request.getAnonymousId();
-
-        // 用户是否存在,不存在去注册
+        // 用户是否存在，不存在去注册
         User user = userRepository.findByMobile(mobile);
-        Long userId = 0L;
-        String token = "";
-        boolean isNew = false;
-        // 登录或注册
-        //用户为空，那么该用户的token表数据肯定也为空
-        if (user == null) {
-            isNew = true;
-            userId = IDGenerator.nextId();
-            //build User
-            user = User.builder().id(userId).mobileAccount(mobile).platform(platform).client(BidEnum.INDONESIA_APP.getCode()).imei(imei).build();
-            // 生成token
-            GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
-            token = JwtUtil.createToken(newUserToken);
-            //build UserToken
-            UserToken userToken = buildUserToken(IDGenerator.nextId(), userId, token, imei);
-            userToken.setCreateTime(LocalDateTime.now());
-            // UserLogin
-            UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
-            //UserStatus
-            UserStatus userStatus = buildUserStatus(user.getId());
-            userRepository.insertUserAndTokenAndLoginAndStatus(user, userToken, userLogin, userStatus);
-        } else {
-            userId = user.getId();
-            // 生成token
-            GlobalUser newUserToken = GlobalUser.builder().userId(userId).mobile(mobile).build();
-            token = JwtUtil.createToken(newUserToken);
-            //token统一校验时已经校验了过期时间（7天），所以这里不考虑过期
-            UserToken userToken = userTokenRepository.findByUserIdAndImei(userId, imei);
-            if (ObjectUtils.isEmpty(userToken)) {
-                //说明用户换了设备 新增token
-                //build UserToken
-                UserToken userToken2 = buildUserToken(IDGenerator.nextId(), userId, token, imei);
-                userToken2.setCreateTime(LocalDateTime.now());
-                // UserLogin
-                UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
-                userRepository.insertTokenAndLogin(userToken2, userLogin);
-            } else {
-                // UserToken 老用户登录都要刷新token表，刷新过期时间
-                UserToken userTokenUpdate = buildUserToken(userToken.getId(), userId, token, imei);
-                userTokenUpdate.setUpdateTime(LocalDateTime.now());
-                // UserLogin
-                UserLogin userLogin = buildUserLogin(userId, platform, ip, device);
-                userRepository.updateTokenAndInsertLogin(userTokenUpdate, userLogin);
-            }
-        }
+        // 新用户标志
+        boolean isNew = user == null ? true : false;
+        // 用户ID
+        Long userId = isNew ? IDGenerator.nextId() : user.getId();
+        // 生成token
+        String token = JwtUtil.createToken(GlobalUser.builder().userId(userId).mobile(mobile).build());
+        // 登录操作
+        login(mobile, request.getDevice(), isNew, userId, token);
+        // 神策记录
+        saService.saLogin(userId, request.getAnonymousId());
+        // 获取首次登录的client
+        String client = getFirstLoginClient(mobile);
 
-        saService.saLogin(userId, anonymousId);
-        //重新查询用户，取出client
-        User userQuery = userRepository.findByMobile(mobile);
-        // 查询登录记录标，只有一条登录记录就算首次登录
-        List<UserLogin> userLoginList = userRepository.getUserLoginsByUserId(userQuery.getId());
-        String client = "";
-        if (!ObjectUtils.isEmpty(userLoginList) && userLoginList.size() == 1) {
-            client = userQuery.getClient();
-        }
         return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(client).build();
     }
 
     /**
+     * 登录
+     */
+    private void login(String mobile, String device, Boolean isNew, Long userId, String token) {
+        GlobalHead globalHead = RequestUtil.getGlobalHead();
+        String platform = globalHead.getPlatform();
+        String imei = globalHead.getImei();
+        String ip = RequestUtil.getIp();
+        // token失效周期
+        LocalDateTime expireTime = DateUtil.addDays(LocalDateTime.now(), systemProp.getTokenExpire());
+        // 用户为空，那么该用户的token表数据肯定也为空
+        if (isNew) {
+            User user = User.builder().id(userId).mobileAccount(mobile).platform(platform).client(BidEnum.INDONESIA_APP.getCode()).imei(imei).build();
+            UserToken uTokenInsert = UserToken.builder().id(IDGenerator.nextId()).userId(userId).token(token).imei(imei).expireTime(expireTime).createTime(LocalDateTime.now()).build();
+            UserLogin uLoginInsert = buildUserLogin(userId, platform, ip, device);
+            UserStatus uStatusInsert = UserStatus.builder().id(IDGenerator.nextId()).userId(userId).isBlacklist(false).isLock(false).remark("注册").build();
+            userRepository.insertUserAndTokenAndLoginAndStatus(user, uTokenInsert, uLoginInsert, uStatusInsert);
+        } else {
+            UserToken userToken = userTokenRepository.findByUserIdAndImei(userId, imei);
+            if (ObjectUtils.isEmpty(userToken)) {
+                // 说明用户换了设备 新增token
+                UserToken uTokenInsert = UserToken.builder().id(IDGenerator.nextId()).userId(userId).token(token).imei(imei).expireTime(expireTime).createTime(LocalDateTime.now()).build();
+                UserLogin uLoginInsert = buildUserLogin(userId, platform, ip, device);
+                userRepository.insertTokenAndLogin(uTokenInsert, uLoginInsert);
+            } else {
+                // 老用户登录都要刷新token表，刷新过期时间
+                UserToken uTokenUpdate = UserToken.builder().id(IDGenerator.nextId()).userId(userId).token(token).imei(imei).expireTime(expireTime).updateTime(LocalDateTime.now()).build();
+                UserLogin uLoginInsert = buildUserLogin(userId, platform, ip, device);
+                userRepository.updateTokenAndInsertLogin(uTokenUpdate, uLoginInsert);
+            }
+        }
+        // token放入redis 3个小时
+        redisService.setCache(RedisConsts.TOKEN + RedisConsts.SPLIT + String.valueOf(userId) + RedisConsts.SPLIT + imei, token, 10800L);
+    }
+
+    private String getFirstLoginClient(String mobile) {
+        User userQuery = userRepository.findByMobile(mobile);
+        // 查询登录记录标，只有一条登录记录就算首次登录
+        List<UserLogin> userLoginList = userRepository.getUserLoginsByUserId(userQuery.getId());
+        return userLoginList.size() == 1 ? userQuery.getClient() : "";
+    }
+
+    /**
      * H5页面注册
-     *
-     * @param request
      */
     public void registerH5(RegisterH5Request request) {
         GlobalHead globalHead = RequestUtil.getGlobalHead();
+        String smsCode = request.getSmsCode();
+        String clinet = request.getFromCode();
         String mobile = request.getMobile();
+
         // 格式化手机号
         mobile = mobileFormat(mobile);
-        String smsCode = request.getSmsCode();
-        String platform = globalHead.getPlatform();
-        String clinet = request.getFromCode();
-        User user = userRepository.findByMobile(mobile);
-        if (user != null) {
+        if (userRepository.findByMobile(mobile) != null) {
             throw new WarnException(BizCodeEnum.EXIST_USER);
         }
         //校验验证码
         checkSmsCode(mobile, smsCode);
 
         Long userId = IDGenerator.nextId();
-        //build User
-        user = new User();
-        user.setId(userId);
-        user.setMobileAccount(mobile);
-        user.setPlatform(platform);
-        user.setClient(clinet);
-        user.setImei(RequestUtil.getGlobalHead().getImei());
-        //UserStatus
-        UserStatus userStatus = buildUserStatus(userId);
-        userRepository.insertUserAndStatus(user, userStatus);
+        User userInsert = User.builder().id(userId).mobileAccount(mobile).platform(globalHead.getPlatform()).client(clinet).imei(globalHead.getImei()).remark("H5注册").build();
+        UserStatus uStatusInsert = UserStatus.builder().id(IDGenerator.nextId()).userId(userId).isBlacklist(false).isLock(false).remark("注册").build();
+        userRepository.insertUserAndStatus(userInsert, uStatusInsert);
     }
 
     private UserLogin buildUserLogin(Long userId, String platform, String ip, String device) {
@@ -270,32 +191,12 @@ public class LoginService {
         return userLogin;
     }
 
-    private UserToken buildUserToken(Long id, Long userId, String token, String imei) {
-        UserToken userToken = new UserToken();
-        userToken.setId(id);
-        userToken.setUserId(userId);
-        userToken.setToken(token);
-        userToken.setImei(imei);
-        userToken.setExpireTime(DateUtil.addDays(LocalDateTime.now(), systemProp.getTokenExpire()));
-        return userToken;
-    }
-
-    private UserStatus buildUserStatus(Long userId) {
-        UserStatus userStatus = new UserStatus();
-        userStatus.setId(IDGenerator.nextId());
-        userStatus.setUserId(userId);
-        userStatus.setIsBlacklist(false);
-        userStatus.setIsLock(false);
-        userStatus.setRemark("注册");
-        return userStatus;
-    }
-
     /**
      * 校验验证码
      */
     private void checkSmsCode(String mobile, String smsCode) {
 
-        if (EnvEnum.isTestEnv(systemProp.getEnv()) && DEFAULT_SMS_CODE.equals(smsCode)) {
+        if (EnvEnum.isTestEnv(systemProp.getEnv()) && "0000".equals(smsCode)) {
             return;
         }
 

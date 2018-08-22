@@ -7,9 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @description：bluepay返回实体
- * @author：[zhangruilin]
- * @time：2018/6/20-10:48
+ * bluepay返回实体
+ *
+ * @author zhangruilin
+ * @time 2018/6/20-10:48
  **/
 @Data
 @AllArgsConstructor

@@ -24,11 +24,11 @@ public class SubmitLoanRequest {
     private String inAccount;
     @NotBlank(message = "{param.loan.purposeId.isNotEmpty}")
     private String purposeId;
-    @NotBlank(message = "{param.loan.authFee.isNotEmpty}")
+    @NotNull(message = "{param.loan.authFee.isNotEmpty}")
     private BigDecimal authFee;
-    @NotBlank(message = "{param.loan.reviewFee.isNotEmpty}")
+    @NotNull(message = "{param.loan.reviewFee.isNotEmpty}")
     private BigDecimal reviewFee;
-    @NotBlank(message = "{param.loan.handlingFee.isNotEmpty}")
+    @NotNull(message = "{param.loan.handlingFee.isNotEmpty}")
     private BigDecimal handlingFee;
 
 

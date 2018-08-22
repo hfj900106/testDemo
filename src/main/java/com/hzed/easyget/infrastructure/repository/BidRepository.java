@@ -4,10 +4,12 @@ import com.hzed.easyget.controller.model.LoanTransactionRequest;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.persistence.auto.entity.Bid;
+import com.hzed.easyget.persistence.auto.entity.BidDetailFee;
 import com.hzed.easyget.persistence.auto.entity.UserBank;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.auto.entity.example.BidExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
+import com.hzed.easyget.persistence.auto.mapper.BidDetailFeeMapper;
 import com.hzed.easyget.persistence.auto.mapper.BidMapper;
 import com.hzed.easyget.persistence.auto.mapper.UserBankMapper;
 import com.hzed.easyget.persistence.auto.mapper.UserTransactionMapper;
@@ -34,6 +36,8 @@ public class BidRepository {
     private UserBankMapper userBankMapper;
     @Autowired
     private UserTransactionMapper userTransactionMapper;
+    @Autowired
+    private BidDetailFeeMapper bidDetailFeeMapper;
 
     public List<Bid> findByUserIdAndStatus(Long userId, List<Byte> statuses) {
         BidExample example = new BidExample();
@@ -67,9 +71,10 @@ public class BidRepository {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void insertBidAndUserBank(Bid bid, UserBank userBank) {
+    public void insertBidAndUserBankAndBidDetailFee(Bid bid, UserBank userBank, List<BidDetailFee> bidDetailFeeList) {
         bidMapper.insertSelective(bid);
         userBankMapper.insertSelective(userBank);
+        bidDetailFeeMapper.batchInsert(bidDetailFeeList);
     }
 
     public List<BidExt> selectBidsToPushOrBankLoan(Byte status, Byte times, String jobName) {
@@ -107,7 +112,8 @@ public class BidRepository {
         return bidMapper.selectByPrimaryKey(bidId);
     }
 
-    public void insertBid(Bid bid) {
+    public void insertBidAndBidDetailFee(Bid bid, List<BidDetailFee> bidDetailFeeList) {
         bidMapper.insertSelective(bid);
+        bidDetailFeeMapper.batchInsert(bidDetailFeeList);
     }
 }

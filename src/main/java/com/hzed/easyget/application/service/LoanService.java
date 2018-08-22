@@ -2,10 +2,7 @@ package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
-import com.hzed.easyget.application.enums.BidEnum;
-import com.hzed.easyget.application.enums.BidStatusEnum;
-import com.hzed.easyget.application.enums.CheckAccountStatusEnum;
-import com.hzed.easyget.application.enums.ProductEnum;
+import com.hzed.easyget.application.enums.*;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.*;
@@ -121,12 +118,7 @@ public class LoanService {
         bid.setStatus(BidStatusEnum.RISK_ING.getCode().byteValue());
         submitLoanResponse.setBid(bidId);
         // 借款对象列表
-        List<BidDetailFeeResponse> bidDetailFeeList = Lists.newArrayList();
-        BidDetailFeeResponse bidDetailFee = new BidDetailFeeResponse();
-        bidDetailFee.setAuthFee(request.getAuthFee());
-        bidDetailFee.setReviewFee(request.getReviewFee());
-        bidDetailFee.setHandlingFee(request.getHandlingFee());
-        bidDetailFeeList.add(bidDetailFee);
+        List<BidDetailFee> bidDetailFeeList = getBidDetailFeeList(request,bidId);
         // 用户银行卡信息不存在则插入
         List<UserBank> userBankList = userBankRepository.findByUserIdAndInbankAndInAccount(userId, request.getInBank(), request.getInAccount());
         if (ObjectUtils.isEmpty(userBankList)) {
@@ -135,13 +127,41 @@ public class LoanService {
             userBank.setUserId(userId);
             userBank.setInBank(request.getInBank());
             userBank.setInAccount(request.getInAccount());
-            bidRepository.insertBidAndUserBank(bid, userBank);
+            bidRepository.insertBidAndUserBankAndBidDetailFee(bid, userBank, bidDetailFeeList);
             return submitLoanResponse;
         }
 
-        bidRepository.insertBid(bid);
+        bidRepository.insertBidAndBidDetailFee(bid, bidDetailFeeList);
 
         return submitLoanResponse;
+    }
+
+    private List<BidDetailFee> getBidDetailFeeList(SubmitLoanRequest request, Long bidId) {
+        List<BidDetailFee> bidDetailFeeList = Lists.newArrayList();
+
+        BidDetailFee authFee = new BidDetailFee();
+        authFee.setId(IDGenerator.nextId());
+        authFee.setBidId(bidId);
+        authFee.setFeeType(BidDetailFeeTypeEnum.AUTH_TYPE.getCode().byteValue());
+        authFee.setFee(request.getAuthFee());
+
+        BidDetailFee reviewFee = new BidDetailFee();
+        reviewFee.setId(IDGenerator.nextId());
+        reviewFee.setBidId(bidId);
+        reviewFee.setFeeType(BidDetailFeeTypeEnum.REVIEW_TYPE.getCode().byteValue());
+        reviewFee.setFee(request.getAuthFee());
+
+        BidDetailFee handlingFee = new BidDetailFee();
+        handlingFee.setId(IDGenerator.nextId());
+        handlingFee.setBidId(bidId);
+        handlingFee.setFeeType(BidDetailFeeTypeEnum.HANDLING_TYPE.getCode().byteValue());
+        handlingFee.setFee(request.getAuthFee());
+
+        bidDetailFeeList.add(authFee);
+        bidDetailFeeList.add(reviewFee);
+        bidDetailFeeList.add(handlingFee);
+
+        return bidDetailFeeList;
     }
 
     public PreSubmitLoanResponse preSubmitLoan(PreSubmitLoanRequest request) {

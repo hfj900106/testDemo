@@ -89,6 +89,7 @@ public class LoanService {
         PayResponse response = bluePayService.checkAccount(request.getInBank(), request.getInAccount(), user.getMobileAccount(), user.getRealName());
         String status = JSON.parseObject(response.getData()).getString("status");
         if (!CheckAccountStatusEnum.OK.getKey().equals(status)) {
+            log.error("银行卡信息校验失败");
             if (CheckAccountStatusEnum.BANK_NOT_EXISTS.getKey().equals(status)) {
                 throw new WarnException(BizCodeEnum.BANK_NOT_EXISTS);
             } else if (CheckAccountStatusEnum.CUSTOMER_NAME_NOT_EXISTS.getKey().equals(status)) {

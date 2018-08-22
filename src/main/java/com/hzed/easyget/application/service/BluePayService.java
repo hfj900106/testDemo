@@ -72,9 +72,11 @@ public class BluePayService {
         if (mode.equals(RepayMentEnum.OTC.getMode())) {
             paymentRequest.setBankType(null);
         }
+        log.info("========获取还款码===========请求bluePay开始========================");
         log.info("获取还款码，bluepay请求地址{}，参数：{}", prop.getAbsGetPaymentCodeUrl(), JSON.toJSONString(paymentRequest));
         String result = restService.doPostJson(prop.getAbsGetPaymentCodeUrl(), JSON.toJSONString(paymentRequest));
         log.info("获取还款码，bluepay返回数据：{}", result);
+        log.info("========获取还款码===========请求bluePay结束========================");
         PayResponse response = JSON.parseObject(result, PayResponse.class);
         if (!response.getCode().equals(BizCodeEnum.SUCCESS.getCode())) {
             throw new ComBizException(BizCodeEnum.PAYMENTCODE_ERROR);
@@ -110,10 +112,12 @@ public class BluePayService {
         }
         String payeeMsisdn = EnvEnum.isTestEnv(env) ? MobileEnum.CHINA.getMobile() + mobile : MobileEnum.IDR.getMobile() + mobile;
         request.setPayeeMsisdn(payeeMsisdn);
+        log.info("========放款请求接口===========请求bluePay开始========================");
         log.info("请求放款地址：{}", prop.getAbsLoanTransactionUrl());
         log.info("请求报文：{}", JSONObject.toJSONString(request));
         String result = restService.doPostJson(prop.getAbsLoanTransactionUrl(), JSON.toJSONString(request));
         log.info("返回报文：{}", result);
+        log.info("========放款请求接口===========请求bluePay结束========================");
         PayResponse response = JSON.parseObject(result, PayResponse.class);
         // 判断返回状态 0000 0001 0002
         if (!LISTCODE.contains(response.getCode())) {

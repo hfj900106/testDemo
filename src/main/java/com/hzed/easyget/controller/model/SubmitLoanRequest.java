@@ -25,4 +25,7 @@ public class SubmitLoanRequest {
     @NotBlank(message = "{param.loan.purposeId.isNotEmpty}")
     private String purposeId;
 
+    public String getInAccount() {
+        return inAccount.replaceAll(" ", "");
+    }
 }

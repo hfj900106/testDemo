@@ -30,6 +30,11 @@ public enum BizCodeEnum {
     USERTRANSACTION_ERROR("8006","没有待交易的账单"),
     LOANVOUCHER_ERROR("8007","还款凭证错误"),
     REPAYMENT_INFORMATION_ERROR("8008","必要信息错误"),
+    CHECK_ACCOUNT_ERROR("8009","校验用户银行卡信息接口异常"),
+    BANK_NOT_EXISTS("8010", "校验失败，找不到匹配的银行。"),
+    CUSTOMER_NAME_NOT_EXISTS("8011", "校验失败，用户名称不匹配。"),
+    ACCOUNT_NOT_EXISTS("8012", "校验失败，没有找到这个账户。"),
+    ACCOUNT_ERROR("8013", "校验失败，银行账户异常。"),
 
     // 1-请求业务校验
     ILLEGAL_PARAM("1000", "请求参数非法"),

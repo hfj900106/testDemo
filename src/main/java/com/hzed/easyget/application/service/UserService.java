@@ -27,8 +27,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
-
 /**
  * 我的
  *
@@ -67,8 +65,7 @@ public class UserService {
      */
     public TransactionRecordResponse getTransactionRecord(TransactionRecordRequest request) {
         TransactionRecordResponse response = new TransactionRecordResponse();
-        GlobalUser user = getGlobalUser();
-        List<UserTransaction> list = userRepository.findTransactionRecordByUserId(user.getUserId(), request.getPageNo(), request.getPageSize());
+        List<UserTransaction> list = userRepository.findTransactionRecordByUserId(RequestUtil.getGlobalUser().getUserId(), request.getPageModel());
         List<TransactionVO> listResponse = new ArrayList<>();
         if (!ObjectUtils.isEmpty(list)) {
             list.forEach(userTransaction -> {
@@ -153,7 +150,6 @@ public class UserService {
         } else {
             throw new WarnException(BizCodeEnum.ILLEGAL_PARAM);
         }
-
 
 
         return messageContentH5Response;

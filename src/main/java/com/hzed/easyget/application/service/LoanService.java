@@ -47,6 +47,8 @@ public class LoanService {
     private RiskService riskService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private BluePayService bluePayService;
 
     public LoanDetailResponse loanDetail(LoanDetailRequest request) {
         LoanDetailResponse loanDetailResponse = new LoanDetailResponse();
@@ -78,7 +80,24 @@ public class LoanService {
         SubmitLoanResponse submitLoanResponse = new SubmitLoanResponse();
         Long userId = RequestUtil.getGlobalUser().getUserId();
         User user = userRepository.findById(userId);
-
+        // 调bluePay
+       /* PayResponse response = bluePayService.checkAccount(request.getInBank(), request.getInAccount(), user.getMobileAccount(), user.getRealName());
+        String status = JSON.parseObject(response.getData()).getString("status");
+        if (!CheckAccountStatusEnum.OK.getKey().equals(status)) {
+            log.error("银行卡信息校验失败");
+            if (CheckAccountStatusEnum.BANK_NOT_EXISTS.getKey().equals(status)) {
+                throw new WarnException(BizCodeEnum.BANK_NOT_EXISTS);
+            } else if (CheckAccountStatusEnum.CUSTOMER_NAME_NOT_EXISTS.getKey().equals(status)) {
+                throw new WarnException(BizCodeEnum.CUSTOMER_NAME_NOT_EXISTS);
+            } else if (CheckAccountStatusEnum.ACCOUNT_NOT_EXISTS.getKey().equals(status)) {
+                throw new WarnException(BizCodeEnum.ACCOUNT_NOT_EXISTS);
+            } else if (CheckAccountStatusEnum.ACCOUNT_ERROR.getKey().equals(status)) {
+                throw new WarnException(BizCodeEnum.ACCOUNT_ERROR);
+            } else {
+                throw new WarnException(BizCodeEnum.CHECK_ACCOUNT_ERROR);
+            }
+        }
+        log.info("================申请借款=======校验用户银行卡信息通过===================");*/
         // 调风控
         riskService.checkRiskEnableBorrow(user.getMobileAccount(), RequestUtil.getGlobalHead().getImei(), "1");
 
@@ -92,7 +111,7 @@ public class LoanService {
         bid.setApplyAmount(request.getApplyAmount());
         bid.setPeriod(request.getPeriod());
         bid.setInBank(request.getInBank());
-        bid.setInAccount(request.getInAccount().replaceAll(" ", ""));
+        bid.setInAccount(request.getInAccount());
         bid.setPurposeCode(request.getPurposeId());
         bid.setClient(BidEnum.INDONESIA_APP.getCode());
         bid.setStatus(BidStatusEnum.RISK_ING.getCode().byteValue());

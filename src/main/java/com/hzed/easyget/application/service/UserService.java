@@ -18,13 +18,11 @@ import com.hzed.easyget.persistence.auto.entity.UserMessage;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.ext.entity.UserMessageExt;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,24 +64,25 @@ public class UserService {
     public TransactionRecordResponse getTransactionRecord(TransactionRecordRequest request) {
         TransactionRecordResponse response = new TransactionRecordResponse();
         List<UserTransaction> list = userRepository.findTransactionRecordByUserId(RequestUtil.getGlobalUser().getUserId(), request.getPageModel());
-        List<TransactionVO> listResponse = new ArrayList<>();
         if (!ObjectUtils.isEmpty(list)) {
+            List<TransactionRecordResponse.TransactionVO> listResponse = Lists.newArrayList();
             list.forEach(userTransaction -> {
                 String account = userTransaction.getAccount();
-                if (!StringUtils.isBlank(account)) {
-                    account = account.substring(account.length() - 4, account.length());
-                }
-                TransactionVO transactionVO = new TransactionVO();
+                // 取账号后四位
+                account = account.substring(account.length() - 4, account.length());
+
+                TransactionRecordResponse.TransactionVO transactionVO = new TransactionRecordResponse.TransactionVO();
                 transactionVO.setBidId(userTransaction.getBidId());
                 transactionVO.setAmount(userTransaction.getAmount());
                 transactionVO.setType(userTransaction.getType());
                 transactionVO.setStatus(userTransaction.getStatus());
                 transactionVO.setBankAccount(account);
                 transactionVO.setUpdateTime(DateUtil.localDateTimeToTimestamp(userTransaction.getUpdateTime()));
+
                 listResponse.add(transactionVO);
             });
+            response.setList(listResponse);
         }
-        response.setList(listResponse);
         return response;
     }
 

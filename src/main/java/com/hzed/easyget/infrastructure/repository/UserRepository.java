@@ -55,7 +55,6 @@ public class UserRepository {
     }
 
     public void insert(User user) {
-
         userMapper.insertSelective(user);
     }
 

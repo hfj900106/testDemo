@@ -88,6 +88,30 @@ public class AuthService {
     }
 
     /**
+     * 获取用户认证状态
+     */
+    public List<AuthGroupStatusResponse> getAuthGroupStatus(AuthStatusRequest request) {
+        List<AuthGroupStatusResponse> authStatusList = Lists.newArrayList();
+        Long userId = RequestUtil.getGlobalUser().getUserId();
+        String i18n = RequestUtil.getGlobalHead().getI18n();
+        List<Dict> dictList = dictRepository.findGroupByModuleCodeAndLanguage(request.getCode(), i18n);
+        dictList.forEach(dict -> {
+            // 查出认证成功的数据
+            UserAuthStatus userAuthStatus = authStatusRepository.findEnableAuthStatusByUserId(userId, dict.getDicCode(), AuthStatusEnum.HAS_AUTH.getCode());
+            AuthGroupStatusResponse authStatusResponse = new AuthGroupStatusResponse();
+            authStatusResponse.setAuthCode(dict.getDicCode());
+            authStatusResponse.setAuthName(dict.getDicValue());
+            authStatusResponse.setAuthGroup(dict.getRemark());
+            if (!ObjectUtils.isEmpty(userAuthStatus)) {
+                authStatusResponse.setAuthStatus(String.valueOf(userAuthStatus.getAuthStatus()));
+            }
+            authStatusList.add(authStatusResponse);
+        });
+
+        return authStatusList;
+    }
+
+    /**
      * 通讯录认证通讯录和通话记录都可能为空
      */
     public void authContacts(ContactsRequest request) {

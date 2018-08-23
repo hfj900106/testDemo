@@ -72,6 +72,12 @@ public class AuthController {
         return authService.getAuthStatus(request);
     }
 
+    @ModuleFunc("获取用户认证分组信息")
+    @PostMapping("/getAuthGroupStatus")
+    public List<AuthGroupStatusResponse> getAuthGroupStatus(@Valid @RequestBody AuthStatusRequest request) {
+        return authService.getAuthGroupStatus(request);
+    }
+
     @ModuleFunc("运营商认证-发送验证码")
     @PostMapping("/operatorSendSmsCode")
     public void operatorSendSmsCode() {

@@ -3,6 +3,7 @@ package com.hzed.easyget.infrastructure.repository;
 import com.hzed.easyget.controller.model.LoanTransactionRequest;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
+import com.hzed.easyget.infrastructure.model.PageModel;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.UserBank;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
@@ -41,11 +42,11 @@ public class BidRepository {
         return bidMapper.selectByExample(example);
     }
 
-    public List<Bid> findPageByUserIdAndStatus(Long userId, List<Byte> statuses, Integer pageNo, Integer pageSize) {
+    public List<Bid> findPageByUserIdAndStatus(Long userId, List<Byte> statuses, PageModel pageModel) {
         BidExample example = new BidExample();
         example.createCriteria().andUserIdEqualTo(userId).andStatusIn(statuses);
         example.setOrderByClause(Bid.Column.createTime.desc());
-        example.page(pageNo, pageSize);
+        example.page(pageModel.getPageNo(), pageModel.getPageSize());
         return bidMapper.selectByExample(example);
     }
 

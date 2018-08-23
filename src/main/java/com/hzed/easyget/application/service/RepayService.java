@@ -77,12 +77,10 @@ public class RepayService {
     public RepayListResponse repaidList(RepayListRequest request) {
         RepayListResponse repayListResponse = new RepayListResponse();
 
-        Integer pageNo = request.getPageNo();
-        Integer pageSize = request.getPageSize();
 
         GlobalUser globalUser = RequestUtil.getGlobalUser();
         Long userId = globalUser.getUserId();
-        List<Bid> bidList = bidRepository.findPageByUserIdAndStatus(userId, Lists.newArrayList(BidStatusEnum.REPAYMENT.getCode().byteValue(), BidStatusEnum.CLEARED.getCode().byteValue()), pageNo, pageSize);
+        List<Bid> bidList = bidRepository.findPageByUserIdAndStatus(userId, Lists.newArrayList(BidStatusEnum.REPAYMENT.getCode().byteValue(), BidStatusEnum.CLEARED.getCode().byteValue()), request.getPageModel());
         // 没有借款记录
         if (bidList == null || bidList.isEmpty()) {
             return repayListResponse;

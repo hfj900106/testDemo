@@ -7,6 +7,7 @@ import com.hzed.easyget.persistence.auto.entity.example.UserLoginExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.mapper.*;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
+import com.hzed.easyget.persistence.ext.entity.UserTransactionExt;
 import com.hzed.easyget.persistence.ext.mapper.UserExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -73,6 +74,10 @@ public class UserRepository {
         example.page(pageModel.getPageNo(), pageModel.getPageSize());
         List<UserTransaction> transactionRecords = userTransactionMapper.selectByExample(example);
         return transactionRecords;
+    }
+
+    public List<UserTransactionExt> findTransactionRecordByUserId2(Long userId, PageModel pageModel) {
+        return userExtMapper.listUserTransaction(userId);
     }
 
     @Transactional(rollbackFor = Exception.class)

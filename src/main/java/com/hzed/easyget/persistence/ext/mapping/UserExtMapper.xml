@@ -9,5 +9,9 @@
         AND bid.user_id = #{id}
     </select>
 
+    <select id="listUserTransaction" resultType="com.hzed.easyget.persistence.ext.entity.UserTransactionExt" >
+
+    </select>
+
 </mapper>
 

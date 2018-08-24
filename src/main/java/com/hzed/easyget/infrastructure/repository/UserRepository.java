@@ -77,7 +77,7 @@ public class UserRepository {
     }
 
     public List<UserTransactionExt> findTransactionRecordByUserId2(Long userId, PageModel pageModel) {
-        return userExtMapper.listUserTransaction(userId);
+        return userExtMapper.listUserTransaction(userId, pageModel.getOffset() , pageModel.getPageSize());
     }
 
     @Transactional(rollbackFor = Exception.class)

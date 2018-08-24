@@ -21,7 +21,7 @@ public class PageModel {
     private Integer pageSize;
 
     public Integer getPageNo() {
-        return (pageNo == null || pageNo < 0) ? 0 : pageNo;
+        return (pageNo == null || pageNo < 1) ? 1 : pageNo;
     }
 
     public Integer getPageSize() {
@@ -30,5 +30,9 @@ public class PageModel {
 
     public PageModel getPageModel() {
         return this;
+    }
+
+    public Integer getOffset() {
+        return (getPageNo() - 1) * getPageSize();
     }
 }

@@ -41,14 +41,14 @@ public class CallbackService {
         Long bidId = request.getBidId();
         Bid bid = bidRepository.findById(bidId);
         if (ObjectUtils.isEmpty(bid)) {
-            log.error("回调处理的标ID：{} 不存在标的表中", bidId);
+            log.error("回调处理标ID：{} 不存在标的表中", bidId);
             return PushBidCallbackResponse.getSuccessResponse();
         }
         byte bidStatus = bid.getStatus();
         // 待机审核待人审的都可以处理
         if (bidStatus == BidStatusEnum.RISK_ING.getCode().byteValue() || bidStatus == BidStatusEnum.MANMADE_ING.getCode().byteValue()) {
         } else {
-            log.error("回调处理的标ID：{}状态为{}，不处理", bidId, bidStatus);
+            log.error("回调处理标ID：{} 状态为：{}，不处理", bidId, bidStatus);
             return PushBidCallbackResponse.getSuccessResponse();
         }
         // 人审标志
@@ -74,19 +74,19 @@ public class CallbackService {
         // 失败
         else if (ComConsts.RISK_3.equals(code)) {
             status = BidStatusEnum.AUDIT_FAIL.getCode().byteValue();
-            log.info(remark + "-审核不通过,标id：{}，原因：{}", bidId, request.getMessage());
+            log.info(remark + "-审核不通过，标id：{}，原因：{}", bidId, request.getMessage());
             // 发送短信
             asyncService.sendSmsOfPushResult(bidId, false);
         }
         // 人审
         else if (ComConsts.RISK_2.equals(code)) {
             status = BidStatusEnum.MANMADE_ING.getCode().byteValue();
-            log.info("标id：{}进入人审，原因：{}", bidId, request.getMessage());
+            log.info("标id：{} 进入人审，原因：{}", bidId, request.getMessage());
         }
         // 撤销
         else if (ComConsts.RISK_8.equals(code)) {
             status = BidStatusEnum.CANCEL.getCode().byteValue();
-            log.info("标id：{}撤销，原因：{}", bidId, request.getMessage());
+            log.info("标id：{} 撤销，原因：{}", bidId, request.getMessage());
         }
 
         LocalDateTime dateTime = DateUtil.timestampToLocalDateTimeTo(request.getHandleTime());

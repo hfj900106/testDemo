@@ -87,7 +87,7 @@ public class UserService {
         return response;
     }
 
-    public TransactionRecordResponse getTransactionRecord2(TransactionRecordRequest request) {
+    public TransactionRecordResponse getTransactionList(TransactionRecordRequest request) {
         TransactionRecordResponse response = new TransactionRecordResponse();
         List<UserTransactionExt> transactionRecords = userRepository.findTransactionRecordByUserId2(RequestUtil.getGlobalUser().getUserId(), request.getPageModel());
         if (!ObjectUtils.isEmpty(transactionRecords)) {
@@ -100,7 +100,6 @@ public class UserService {
                 transactionVO.setStatus(ut.getStatus());
                 transactionVO.setBankAccount(org.apache.commons.lang3.StringUtils.right(ut.getAccount(), 4));
                 transactionVO.setUpdateTime(DateUtil.localDateTimeToTimestamp(ut.getUpdateTime()));
-
                 listResponse.add(transactionVO);
             });
             response.setList(listResponse);

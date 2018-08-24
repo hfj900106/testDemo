@@ -41,8 +41,8 @@ public class UserController {
 
     @ModuleFunc("交易记录")
     @PostMapping("/getTransactionRecord")
-    public TransactionRecordResponse getTransactionRecord(@RequestBody(required = false) TransactionRecordRequest request) {
-        return userService.getTransactionRecord(request);
+    public TransactionRecordResponse getTransactionRecord(@RequestBody TransactionRecordRequest request) {
+        return userService.getTransactionList(request);
     }
 
     @IgnoreH5

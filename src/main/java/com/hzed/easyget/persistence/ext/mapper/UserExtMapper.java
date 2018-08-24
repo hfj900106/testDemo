@@ -16,7 +16,7 @@ public interface UserExtMapper {
      */
     UserExt queryUnRepayment(@Param("id") Long id);
 
-    List<UserTransactionExt> listUserTransaction(@Param("userId") Long userId);
+    List<UserTransactionExt> listUserTransaction(@Param("userId") Long userId, @Param("offset") Integer offset, @Param("pageSize") Integer pageSize);
 }
 
 

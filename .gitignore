@@ -8,3 +8,4 @@
 /target
 /src/main/resources/config/generator/generatorConfig.xml
 /log/
+/src/test/resources/AdsController.http

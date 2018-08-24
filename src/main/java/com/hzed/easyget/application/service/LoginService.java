@@ -164,8 +164,6 @@ public class LoginService {
      */
     public void registerH5(RegisterH5Request request) {
         GlobalHead globalHead = RequestUtil.getGlobalHead();
-        String smsCode = request.getSmsCode();
-        String clinet = request.getFromCode();
         String mobile = request.getMobile();
 
         // 格式化手机号
@@ -173,11 +171,13 @@ public class LoginService {
         if (userRepository.findByMobile(mobile) != null) {
             throw new WarnException(BizCodeEnum.EXIST_USER);
         }
+        // 校验是否三大运营商手机号
+        checkMobile(mobile);
         //校验验证码
-        checkSmsCode(mobile, smsCode);
+        checkSmsCode(mobile, request.getSmsCode());
 
         Long userId = IDGenerator.nextId();
-        User userInsert = User.builder().id(userId).mobileAccount(mobile).platform(globalHead.getPlatform()).client(clinet).imei(globalHead.getImei()).remark("H5注册").build();
+        User userInsert = User.builder().id(userId).mobileAccount(mobile).platform(globalHead.getPlatform()).client(request.getFromCode()).imei(globalHead.getImei()).remark("H5注册").build();
         UserStatus uStatusInsert = UserStatus.builder().id(IDGenerator.nextId()).userId(userId).isBlacklist(false).isLock(false).remark("注册").build();
         userRepository.insertUserAndStatus(userInsert, uStatusInsert);
     }
@@ -262,7 +262,6 @@ public class LoginService {
 
     /**
      * 检验3大运营商手机号
-     * @param request
      */
     public void checkMobileBeforeSend(SmsCodeRequest request) {
         String mobile = request.getMobile();
@@ -275,8 +274,6 @@ public class LoginService {
 
     /**
      * 校验手机号是否三大运营商手机号
-     *
-     * @param mobile
      */
     private void checkMobile(String mobile) {
         if (mobile.length() < 4) {
@@ -302,7 +299,6 @@ public class LoginService {
         // 不在则直接抛异常
         throw new WarnException(BizCodeEnum.MOBILE_ILLEGAL, mobilePrefixMap);
     }
-
 
     /**
      * 生成随机图片
@@ -337,9 +333,6 @@ public class LoginService {
 
     /**
      * 格式化印尼手机号，将前缀为0062、62、+62 改为 0 ，没有前缀的加 0
-     *
-     * @param mobile
-     * @return
      */
     public String mobileFormat(String mobile) {
         log.info("格式化前手机号：{}", mobile);

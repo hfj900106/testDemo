@@ -51,6 +51,13 @@ public class LoginController {
         return loginService.loginByFacebook(request);
     }
 
+    @TokenIgnore
+    @ModuleFunc("检验手机号是否三大运营商")
+    @PostMapping("/checkMobile")
+    public void checkMobile(@Valid @RequestBody SmsCodeRequest request) {
+        loginService.checkMobileBeforeSend(request);
+    }
+
     @IgnoreH5
     @ModuleFunc("H5发送短信验证码")
     @PostMapping("/sendSmsCodeH5")

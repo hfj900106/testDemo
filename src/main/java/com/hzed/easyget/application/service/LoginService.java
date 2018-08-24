@@ -257,6 +257,19 @@ public class LoginService {
     }
 
     /**
+     * 检验3大运营商手机号
+     * @param request
+     */
+    public void checkMobileBeforeSend(SmsCodeRequest request) {
+        String mobile = request.getMobile();
+        log.info("发送验证码手机号：{}", mobile);
+        // 格式化手机号
+        mobile = mobileFormat(mobile);
+        // 校验是否三大运营商手机号
+        checkMobile(mobile);
+    }
+
+    /**
      * 校验手机号是否三大运营商手机号
      *
      * @param mobile

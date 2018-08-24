@@ -10,7 +10,9 @@
     </select>
 
     <select id="listUserTransaction" resultType="com.hzed.easyget.persistence.ext.entity.UserTransactionExt" >
-
+        SELECT ut.bid_id bidId,ut.amount,ut.status,ut.update_time updateTime,ut.account,ut.type FROM t_loan_user_transaction ut WHERE ut.user_id=#{userId, jdbcType=BIGINT} AND STATUS=2
+        UNION
+        SELECT o.bid_id bidId,o.amount_real+o.amount_reduction amount,2 STATUS,o.create_time updateTime,NULL account,2 TYPE FROM t_loan_offline_repayment o JOIN t_loan_bid b ON o.bid_id=b.id WHERE b.user_id=#{userId, jdbcType=BIGINT}
     </select>
 
 </mapper>

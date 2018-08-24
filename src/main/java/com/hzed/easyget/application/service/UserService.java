@@ -17,6 +17,7 @@ import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserMessage;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.ext.entity.UserMessageExt;
+import com.hzed.easyget.persistence.ext.entity.UserTransactionExt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,6 +87,26 @@ public class UserService {
         return response;
     }
 
+    public TransactionRecordResponse getTransactionRecord2(TransactionRecordRequest request) {
+        TransactionRecordResponse response = new TransactionRecordResponse();
+        List<UserTransactionExt> transactionRecords = userRepository.findTransactionRecordByUserId2(RequestUtil.getGlobalUser().getUserId(), request.getPageModel());
+        if (!ObjectUtils.isEmpty(transactionRecords)) {
+            List<TransactionRecordResponse.TransactionVO> listResponse = Lists.newArrayList();
+            transactionRecords.forEach(ut -> {
+                TransactionRecordResponse.TransactionVO transactionVO = new TransactionRecordResponse.TransactionVO();
+                transactionVO.setBidId(ut.getBidId());
+                transactionVO.setAmount(ut.getAmount());
+                transactionVO.setType(ut.getType());
+                transactionVO.setStatus(ut.getStatus());
+                transactionVO.setBankAccount(org.apache.commons.lang3.StringUtils.right(ut.getAccount(), 4));
+                transactionVO.setUpdateTime(DateUtil.localDateTimeToTimestamp(ut.getUpdateTime()));
+
+                listResponse.add(transactionVO);
+            });
+            response.setList(listResponse);
+        }
+        return response;
+    }
 
     public List<NewsAndMessageResponse> getNewsAndMessageList(NewsRequest request) {
 

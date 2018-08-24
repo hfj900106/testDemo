@@ -3,6 +3,7 @@ package com.hzed.easyget.persistence.ext.entity;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * @author guichang
@@ -25,11 +26,11 @@ public class UserTransactionExt {
     /**
      * 交易完成时间
      */
-    private Long updateTime;
+    private LocalDateTime updateTime;
     /**
      * 银行卡后四位
      */
-    private String bankAccount;
+    private String account;
     /**
      * 交易类型 1-入账 2-出账 3-其他
      */

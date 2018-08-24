@@ -60,6 +60,8 @@ public class LoginService {
         mobile = mobileFormat(mobile);
         // 校验验证码
         checkSmsCode(mobile, smsCode);
+        // 校验是否三大运营商手机号
+        checkMobile(mobile);
         // 用户是否存在,不存在去注册
         User user = userRepository.findByMobile(mobile);
         // 新用户标志
@@ -95,6 +97,8 @@ public class LoginService {
 
         // 格式化手机号
         mobile = mobileFormat(mobile);
+        // 校验是否三大运营商手机号
+        checkMobile(mobile);
         // 用户是否存在，不存在去注册
         User user = userRepository.findByMobile(mobile);
         // 新用户标志

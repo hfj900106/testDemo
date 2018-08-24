@@ -4,15 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.BidEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
-import com.hzed.easyget.application.enums.CheckAccountStatusEnum;
 import com.hzed.easyget.application.enums.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.SystemProp;
-import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
-import com.hzed.easyget.infrastructure.exception.WarnException;
-import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.repository.*;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
@@ -85,7 +81,7 @@ public class LoanService {
         Long userId = RequestUtil.getGlobalUser().getUserId();
         User user = userRepository.findById(userId);
         // 调bluePay
-        PayResponse response = bluePayService.checkAccount(request.getInBank(), request.getInAccount(), user.getMobileAccount(), user.getRealName());
+       /* PayResponse response = bluePayService.checkAccount(request.getInBank(), request.getInAccount(), user.getMobileAccount(), user.getRealName());
         String status = JSON.parseObject(response.getData()).getString("status");
         if (!CheckAccountStatusEnum.OK.getKey().equals(status)) {
             log.error("银行卡信息校验失败");
@@ -101,7 +97,7 @@ public class LoanService {
                 throw new WarnException(BizCodeEnum.CHECK_ACCOUNT_ERROR);
             }
         }
-        log.info("================申请借款=======校验用户银行卡信息通过===================");
+        log.info("================申请借款=======校验用户银行卡信息通过===================");*/
         // 调风控
         riskService.checkRiskEnableBorrow(user.getMobileAccount(), RequestUtil.getGlobalHead().getImei(), "1");
 

@@ -45,38 +45,55 @@ public class CallbackService {
             return PushBidCallbackResponse.getSuccessResponse();
         }
         byte bidStatus = bid.getStatus();
-        if (bidStatus != BidStatusEnum.RISK_ING.getCode().byteValue()) {
+        // 待机审核待人审的都可以处理
+        if (bidStatus == BidStatusEnum.RISK_ING.getCode().byteValue() || bidStatus == BidStatusEnum.MANMADE_ING.getCode().byteValue()) {
+        } else {
             log.error("回调处理的标ID：{}状态为{}，不处理", bidId, bidStatus);
             return PushBidCallbackResponse.getSuccessResponse();
         }
-
+        // 人审标志
+        Integer manual = request.getManual();
         BigDecimal loanAmount = request.getLoanAmount();
         byte status = (byte) 0;
+        String remark;
+        // 人审
+        if (!ObjectUtils.isEmpty(manual) && manual == 1) {
+            remark = "人审";
+        } else {
+            remark = "机审";
+        }
+
+        String code = request.getResultCode();
         //通过
-        if (ComConsts.RISK_4.equals(request.getResultCode())) {
+        if (ComConsts.RISK_4.equals(code)) {
             status = BidStatusEnum.AUDIT_PASS.getCode().byteValue();
-            log.info("审核通过标id：{}，金额：{}", bidId, loanAmount);
+            log.info(remark + "-审核通过，标id：{}，金额：{}", bidId, loanAmount);
             // 发送短信
             asyncService.sendSmsOfPushResult(bidId, true);
         }
         // 失败
-        else if (ComConsts.RISK_3.equals(request.getResultCode())) {
+        else if (ComConsts.RISK_3.equals(code)) {
             status = BidStatusEnum.AUDIT_FAIL.getCode().byteValue();
-            log.info("审核失败标id：{}，原因：{}", bidId, request.getMessage());
+            log.info(remark + "-审核不通过,标id：{}，原因：{}", bidId, request.getMessage());
             // 发送短信
             asyncService.sendSmsOfPushResult(bidId, false);
         }
         // 人审
-        else if (ComConsts.RISK_2.equals(request.getResultCode())) {
+        else if (ComConsts.RISK_2.equals(code)) {
             status = BidStatusEnum.MANMADE_ING.getCode().byteValue();
-            log.info("人审标id：{}，原因：{}", bidId, request.getMessage());
+            log.info("标id：{}进入人审，原因：{}", bidId, request.getMessage());
+        }
+        // 撤销
+        else if (ComConsts.RISK_8.equals(code)) {
+            status = BidStatusEnum.CANCEL.getCode().byteValue();
+            log.info("标id：{}撤销，原因：{}", bidId, request.getMessage());
         }
 
         LocalDateTime dateTime = DateUtil.timestampToLocalDateTimeTo(request.getHandleTime());
 
         AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
         tempTableRepository.pushBidCallback(
-                Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(LocalDateTime.now()).auditFee(absProduct.getHeadFee()).status(status).build(),
+                Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(LocalDateTime.now()).auditFee(absProduct.getHeadFee()).status(status).updateBy(request.getUpdateBy()).remark(remark).build(),
                 BidProgress.builder().id(System.nanoTime()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue()).handleResult(request.getMessage())
                         .handleTime(dateTime).build(),
                 bidId);

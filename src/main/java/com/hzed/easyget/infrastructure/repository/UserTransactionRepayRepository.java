@@ -23,7 +23,7 @@ public class UserTransactionRepayRepository {
         UserTransactionRepayExample repayExample = new UserTransactionRepayExample();
         repayExample.createCriteria().andBidIdEqualTo(request.getBidId());
         repayExample.orderBy(UserTransactionRepay.Column.createTime.desc());
-        repayExample.page(request.getPageNo(),request.getPageSize());
+        repayExample.page(request.getMysqlPageNo(),request.getPageSize());
         return userTransactionRepayMapper.selectByExample(repayExample);
     }
 }

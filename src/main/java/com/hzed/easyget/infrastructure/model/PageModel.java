@@ -32,6 +32,10 @@ public class PageModel {
         return this;
     }
 
+    public Integer getMysqlPageNo() {
+        return getPageNo() - 1;
+    }
+
     public Integer getOffset() {
         return (getPageNo() - 1) * getPageSize();
     }

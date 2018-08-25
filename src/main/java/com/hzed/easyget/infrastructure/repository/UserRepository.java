@@ -71,7 +71,7 @@ public class UserRepository {
         UserTransactionExample example = new UserTransactionExample();
         example.createCriteria().andUserIdEqualTo(userId).andStatusEqualTo((byte) 2);
         example.setOrderByClause(UserTransaction.Column.createTime.desc());
-        example.page(pageModel.getPageNo(), pageModel.getPageSize());
+        example.page(pageModel.getMysqlPageNo(), pageModel.getPageSize());
         List<UserTransaction> transactionRecords = userTransactionMapper.selectByExample(example);
         return transactionRecords;
     }

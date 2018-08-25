@@ -16,14 +16,18 @@ public class UserAuthStatusRepository {
     @Autowired
     private UserAuthStatusMapper userAuthStatusMapper;
 
-    public UserAuthStatus findEnableAuthStatusByUserId(Long userId, String authCode,Integer status) {
+    public UserAuthStatus findEnableAuthStatusByUserId(Long userId, String authCode) {
         UserAuthStatusExample example = new UserAuthStatusExample();
-        example.createCriteria().andUserIdEqualTo(userId).andAuthCodeEqualTo(authCode).andAuthStatusEqualTo(status);
+        example.createCriteria().andUserIdEqualTo(userId).andAuthCodeEqualTo(authCode);
         return userAuthStatusMapper.selectOneByExample(example);
     }
 
     public void insertSelective(UserAuthStatus userAuthStatus) {
         userAuthStatusMapper.insertSelective(userAuthStatus);
+    }
+
+    public void updateSelective(UserAuthStatus userAuthStatus) {
+        userAuthStatusMapper.updateByPrimaryKeySelective(userAuthStatus);
     }
 
 }

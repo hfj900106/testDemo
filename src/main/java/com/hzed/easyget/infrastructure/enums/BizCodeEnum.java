@@ -89,6 +89,7 @@ public enum BizCodeEnum {
     CLEAR_ONCE("1047","需要一次性结清"),
     MOBILE_ILLEGAL("1048","尊敬的用户，目前部分号码暂不支持Rupiah Get，请换个号码试试！"),
     MOBILE_INCORRECT("1049","手机号格式不正确"),
+    AUTH_RISK_ING("1050","认证中"),
 
     // 首页还款检测
     MSG_BID_OVERDUE_TODAY("2001","您的借款于今天到期，请尽快还款，以免逾期"),

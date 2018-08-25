@@ -281,7 +281,7 @@ public class RepayService {
         BillLedger corpusLedger = billLedgerRepository.findBillLedgerItemByBillIdWithExp(billId, BillLedgerItemEnum.CORPUS.getCode().byteValue());
         // 本金没有待还表示已结清
         if (corpusLedger.getRepaymentAmount().compareTo(corpusLedger.getRealRepaymentAmount()) == 0) {
-            billUpdate.setSettlementTime(LocalDateTime.now());
+            billUpdate.setSettlementTime(realRepaymentTime);
             // 逾期结清还是正常结清
             billUpdate.setStatus(DateUtil.compare(realRepaymentTime, bill.getRepaymentTime()) ?
                     BillStatusEnum.OVERDUE_CLEAR.getCode().byteValue() : BillStatusEnum.NORMAL_CLEAR.getCode().byteValue());

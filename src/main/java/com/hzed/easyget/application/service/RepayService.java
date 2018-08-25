@@ -211,7 +211,7 @@ public class RepayService {
         // 待还账单
         Bill billBefore = billRepository.findAllBillByBidIdWithExp(bidId).get(0);
         // 还账单操作
-        repayBill(billBefore, repayAmount, transactionId, LocalDateTime.now());
+        repayBill(billBefore, repayAmount, transactionId, realRepaymentTime);
         // 查询用户手机
         Bid bid = bidRepository.findByIdWithExp(bidId);
         User user = userRepository.findById(bid.getUserId());

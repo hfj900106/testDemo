@@ -23,7 +23,7 @@ public class AdsProductRepository {
         AdsProductExample example = new AdsProductExample();
         example.setOrderByClause(AdsProduct.Column.weights.desc());
         example.createCriteria().andIsUseEqualTo(true);
-        example.page(pageModel.getPageNo(),pageModel.getPageSize());
+        example.page(pageModel.getMysqlPageNo(),pageModel.getPageSize());
         return adsProductMapper.selectByExample(example);
     }
 

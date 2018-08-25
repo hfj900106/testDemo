@@ -46,7 +46,7 @@ public class BidRepository {
         BidExample example = new BidExample();
         example.createCriteria().andUserIdEqualTo(userId).andStatusIn(statuses);
         example.setOrderByClause(Bid.Column.createTime.desc());
-        example.page(pageModel.getPageNo(), pageModel.getPageSize());
+        example.page(pageModel.getMysqlPageNo(), pageModel.getPageSize());
         return bidMapper.selectByExample(example);
     }
 

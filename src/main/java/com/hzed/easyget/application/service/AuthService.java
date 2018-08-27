@@ -334,8 +334,7 @@ public class AuthService {
      */
     public IdCardRecognitionResponse idCardRecognition(IdCardRecognitionRequest request) {
         IdCardRecognitionResponse recognitionResponse = new IdCardRecognitionResponse();
-        String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
-        RiskResponse response = riskService.idCardRecognition(idCardBase64ImgStr);
+        RiskResponse response = riskService.idCardRecognition(request);
 
         if (ObjectUtils.isEmpty(response.getBody())) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);

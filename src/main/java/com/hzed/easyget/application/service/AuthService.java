@@ -212,9 +212,10 @@ public class AuthService {
      */
     public void operatorAuth(PeratorAuthRequest request) {
         GlobalUser user = getGlobalUser();
+        Long userId = user.getUserId();
 
         // 判断该用户是否已经验证或者认证中、失败
-        Long authId = checkAuth(user.getUserId(), AuthCodeEnum.SMS.getCode());
+        Long authId = checkAuth(userId, AuthCodeEnum.SMS.getCode());
         // 有认证失败记录
         boolean isNewAuth = false;
         // 未认证
@@ -223,12 +224,23 @@ public class AuthService {
         }
         RiskResponse response = riskService.operatorAuth(request.getSmsCode());
 
-        afterResponse(authId, response, user.getUserId(), AuthCodeEnum.SMS.getCode(), isNewAuth);
+        String code = AuthCodeEnum.SMS.getCode();
+        Integer statusCode = AuthStatusEnum.TO_AUTH.getCode();
+        // 只负责认证中，等风控回调才会修改认证结果 失败或者成功
+        if (isNewAuth) {
+            // 新增认证表的状态
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, code, statusCode, response.getHead().getError_msg());
+            authStatusRepository.insertSelective(userAuthStatus);
+        } else {
+            // 修改认证表的状态
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, code, statusCode, response.getHead().getError_msg());
+            authStatusRepository.updateSelective(userAuthStatus);
+        }
 
         saService.saOperator(user, true, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
 
         //认证成功，删除重发标志
-        redisService.clearCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
+        redisService.clearCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + userId);
     }
 
     /**
@@ -352,9 +364,9 @@ public class AuthService {
      */
     public void identityInfoAuth(IdentityInfoAuthRequest request) {
         GlobalUser user = getGlobalUser();
-        String auth_code = AuthCodeEnum.ID_CARD.getCode();
+        String authCode = AuthCodeEnum.ID_CARD.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + user.getUserId();
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
 
         // 判断该用户是否已经验证或者认证中、失败
@@ -365,11 +377,8 @@ public class AuthService {
             // 未认证
             isNewAuth = true;
         }
-        // TODO
 
         String realName = request.getRealName().trim();
-        // 姓名中多个空格替换成1个空格
-//        realName = realName.replaceAll("\\s+", " ");
         String idCardNo = request.getIdCardNo();
         Integer gender = request.getGender();
         // 查询身份证是否已存在
@@ -377,34 +386,45 @@ public class AuthService {
         if (!ObjectUtils.isEmpty(user1)) {
             throw new WarnException(BizCodeEnum.IDCARD_EXIST);
         }
-        // 调风控身份认证接口，认证通过记录表数据
-        riskService.identityInfoAuth();
+        // 本次认证-风控是否认证成功
+        Integer statusCode = riskService.identityInfoAuth();
+
         String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
         String faceBase64ImgStr = request.getFaceBase64ImgStr();
         String picSuffix = request.getPicSuffix();
-        try {
-            String idCardPhotoPath = getPhotoPath(idCardBase64ImgStr, picSuffix);
-            String facePhotoPath = getPhotoPath(faceBase64ImgStr, picSuffix);
+        String idCardPhotoPath = getPhotoPath(idCardBase64ImgStr, picSuffix);
+        String facePhotoPath = getPhotoPath(faceBase64ImgStr, picSuffix);
 
-            //根据拿到json串组装对象
-            User userObj = new User();
-            //组装user对象
-            userObj.setId(user.getUserId());
-            userObj.setRealName(realName);
-            userObj.setIdCardNo(idCardNo);
-            userObj.setGender(gender.byteValue());
-            userObj.setUpdateTime(LocalDateTime.now());
-            //组装pic对象
-            List<UserPic> list = Lists.newArrayList();
+        //根据拿到json串组装对象
+        User userObj = new User();
+        //组装user对象
+        userObj.setId(user.getUserId());
+        userObj.setRealName(realName);
+        userObj.setIdCardNo(idCardNo);
+        userObj.setGender(gender.byteValue());
+        userObj.setUpdateTime(LocalDateTime.now());
+
+        // 获取UserAuthStatus对象
+        UserAuthStatus userAuthStatus ;
+
+        // 组装pic对象
+        List<UserPic> list = Lists.newArrayList();
+        if(isNewAuth){
+            // 新认证
             list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
             list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
-            //获取UserAuthStatus对象
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), user.getUserId(), auth_code, AuthStatusEnum.HAS_AUTH.getCode(), "身份信息认证");
+            // 获取UserAuthStatus对象，创建
+            userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), user.getUserId(), authCode, statusCode, "身份信息认证");
             workRepository.insertIdentityInfo(list, userAuthStatus, userObj);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ComBizException(BizCodeEnum.FAIL_IDENTITY_AUTH);
+        }else {
+            // 更新认证
+            list.add(UserPic.builder().id(authId).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
+            list.add(UserPic.builder().id(authId).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
+            // 获取UserAuthStatus对象，更新
+            userAuthStatus = buildUserAuthStatus(authId, user.getUserId(), authCode, statusCode, "身份信息认证");
+            workRepository.updateIdentityInfo(list, userAuthStatus, userObj);
         }
+
     }
 
     /**

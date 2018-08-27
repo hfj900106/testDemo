@@ -3,6 +3,7 @@ package com.hzed.easyget.application.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.infrastructure.config.RiskProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
@@ -242,7 +243,10 @@ public class RiskService {
         redisService.setCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile(), "face", 7200L);
     }
 
-    public void identityInfoAuth() {
+    public Integer identityInfoAuth() {
+
+        // 默认成功
+        Integer status = AuthStatusEnum.HAS_AUTH.getCode();
         GlobalUser user = getGlobalUser();
         String face = redisService.getCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
         if (StringUtils.isBlank(face)) {
@@ -265,11 +269,14 @@ public class RiskService {
         if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
+
+        // 认证失败
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
-            throw new WarnException(BizCodeEnum.FAIL_AUTH);
+            status =  AuthStatusEnum.FAIl_AUTH.getCode();
         }
         // 成功后删除redis标志
         redisService.clearCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
+        return status;
     }
 
     /**

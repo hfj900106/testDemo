@@ -5,6 +5,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 /**
  * rabbitmq相关配置
@@ -12,7 +13,7 @@ import org.springframework.context.annotation.Bean;
  * @author guichang
  * @date 2018/7/3
  */
-
+@Profile({"test","prod"})
 public class RabbitConfig {
 
     @Bean

@@ -177,7 +177,28 @@ public class LoginService {
         checkSmsCode(mobile, request.getSmsCode());
 
         Long userId = IDGenerator.nextId();
-        User userInsert = User.builder().id(userId).mobileAccount(mobile).platform(globalHead.getPlatform()).client(request.getFromCode()).imei(globalHead.getImei()).remark("H5注册").build();
+        User userInsert = User.builder().id(userId).mobileAccount(mobile).platform(globalHead.getPlatform()).client(request.getFromCode()).remark("H5注册").build();
+        UserStatus uStatusInsert = UserStatus.builder().id(IDGenerator.nextId()).userId(userId).isBlacklist(false).isLock(false).remark("注册").build();
+        userRepository.insertUserAndStatus(userInsert, uStatusInsert);
+    }
+
+    /**
+     * H5页面注册，facebook短信
+     */
+    public void registerH5FB(RegisterH5FbRequest request) {
+        GlobalHead globalHead = RequestUtil.getGlobalHead();
+        String mobile = request.getMobile();
+
+        // 格式化手机号
+        mobile = mobileFormat(mobile);
+        if (userRepository.findByMobile(mobile) != null) {
+            throw new WarnException(BizCodeEnum.EXIST_USER);
+        }
+        // 校验是否三大运营商手机号
+        checkMobile(mobile);
+
+        Long userId = IDGenerator.nextId();
+        User userInsert = User.builder().id(userId).mobileAccount(mobile).platform(globalHead.getPlatform()).client(request.getFromCode()).remark("H5注册").build();
         UserStatus uStatusInsert = UserStatus.builder().id(IDGenerator.nextId()).userId(userId).isBlacklist(false).isLock(false).remark("注册").build();
         userRepository.insertUserAndStatus(userInsert, uStatusInsert);
     }

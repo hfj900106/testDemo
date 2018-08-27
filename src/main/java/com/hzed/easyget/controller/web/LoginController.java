@@ -31,6 +31,13 @@ public class LoginController {
     private LoginService loginService;
 
     @TokenIgnore
+    @ModuleFunc("检验手机号是否三大运营商")
+    @PostMapping("/checkMobile")
+    public void checkMobile(@Valid @RequestBody SmsCodeRequest request) {
+        loginService.checkMobileBeforeSend(request);
+    }
+
+    @TokenIgnore
     @ModuleFunc("发送短信验证码")
     @PostMapping("/sendSmsCode")
     public void sendSmsCode(@Valid @RequestBody SmsCodeRequest request) {
@@ -51,13 +58,6 @@ public class LoginController {
         return loginService.loginByFacebook(request);
     }
 
-    @TokenIgnore
-    @ModuleFunc("检验手机号是否三大运营商")
-    @PostMapping("/checkMobile")
-    public void checkMobile(@Valid @RequestBody SmsCodeRequest request) {
-        loginService.checkMobileBeforeSend(request);
-    }
-
     @IgnoreH5
     @ModuleFunc("H5发送短信验证码")
     @PostMapping("/sendSmsCodeH5")
@@ -70,6 +70,13 @@ public class LoginController {
     @PostMapping("/registerH5")
     public void registerH5(@Valid @RequestBody RegisterH5Request request) {
         loginService.registerH5(request);
+    }
+
+    @IgnoreH5
+    @ModuleFunc("facebook短信登录H5")
+    @PostMapping("/registerByFacebookH5")
+    public void registerByFacebookH5(@Valid @RequestBody RegisterH5FbRequest request) {
+        loginService.registerH5FB(request);
     }
 
     @TokenIgnore

@@ -17,17 +17,14 @@ import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.auto.entity.UserMessage;
 import com.hzed.easyget.persistence.auto.entity.UserTransaction;
 import com.hzed.easyget.persistence.ext.entity.UserMessageExt;
+import com.hzed.easyget.persistence.ext.entity.UserTransactionExt;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 
 /**
  * 我的
@@ -67,29 +64,48 @@ public class UserService {
      */
     public TransactionRecordResponse getTransactionRecord(TransactionRecordRequest request) {
         TransactionRecordResponse response = new TransactionRecordResponse();
-        GlobalUser user = getGlobalUser();
-        List<UserTransaction> list = userRepository.findTransactionRecordByUserId(user.getUserId(), request.getPageNo(), request.getPageSize());
-        List<TransactionVO> listResponse = new ArrayList<>();
+        List<UserTransaction> list = userRepository.findTransactionRecordByUserId(RequestUtil.getGlobalUser().getUserId(), request.getPageModel());
         if (!ObjectUtils.isEmpty(list)) {
+            List<TransactionRecordResponse.TransactionVO> listResponse = Lists.newArrayList();
             list.forEach(userTransaction -> {
                 String account = userTransaction.getAccount();
-                if (!StringUtils.isBlank(account)) {
-                    account = account.substring(account.length() - 4, account.length());
-                }
-                TransactionVO transactionVO = new TransactionVO();
+                // 取账号后四位
+                account = account.substring(account.length() - 4, account.length());
+
+                TransactionRecordResponse.TransactionVO transactionVO = new TransactionRecordResponse.TransactionVO();
                 transactionVO.setBidId(userTransaction.getBidId());
                 transactionVO.setAmount(userTransaction.getAmount());
                 transactionVO.setType(userTransaction.getType());
                 transactionVO.setStatus(userTransaction.getStatus());
                 transactionVO.setBankAccount(account);
                 transactionVO.setUpdateTime(DateUtil.localDateTimeToTimestamp(userTransaction.getUpdateTime()));
+
                 listResponse.add(transactionVO);
             });
+            response.setList(listResponse);
         }
-        response.setList(listResponse);
         return response;
     }
 
+    public TransactionRecordResponse getTransactionList(TransactionRecordRequest request) {
+        TransactionRecordResponse response = new TransactionRecordResponse();
+        List<UserTransactionExt> transactionRecords = userRepository.findTransactionRecordByUserId2(RequestUtil.getGlobalUser().getUserId(), request.getPageModel());
+        if (!ObjectUtils.isEmpty(transactionRecords)) {
+            List<TransactionRecordResponse.TransactionVO> listResponse = Lists.newArrayList();
+            transactionRecords.forEach(ut -> {
+                TransactionRecordResponse.TransactionVO transactionVO = new TransactionRecordResponse.TransactionVO();
+                transactionVO.setBidId(ut.getBidId());
+                transactionVO.setAmount(ut.getAmount());
+                transactionVO.setType(ut.getType());
+                transactionVO.setStatus(ut.getStatus());
+                transactionVO.setBankAccount(org.apache.commons.lang3.StringUtils.right(ut.getAccount(), 4));
+                transactionVO.setUpdateTime(DateUtil.localDateTimeToTimestamp(ut.getUpdateTime()));
+                listResponse.add(transactionVO);
+            });
+            response.setList(listResponse);
+        }
+        return response;
+    }
 
     public List<NewsAndMessageResponse> getNewsAndMessageList(NewsRequest request) {
 
@@ -153,7 +169,6 @@ public class UserService {
         } else {
             throw new WarnException(BizCodeEnum.ILLEGAL_PARAM);
         }
-
 
 
         return messageContentH5Response;

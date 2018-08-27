@@ -26,4 +26,8 @@ public class UserAuthStatusRepository {
         userAuthStatusMapper.insertSelective(userAuthStatus);
     }
 
+    public void updateSelective(UserAuthStatus userAuthStatus) {
+        userAuthStatusMapper.updateByPrimaryKeySelective(userAuthStatus);
+    }
+
 }

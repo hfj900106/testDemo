@@ -6,9 +6,13 @@
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="education" jdbcType="VARCHAR" property="education" />
     <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="company_tel" jdbcType="VARCHAR" property="companyTel" />
     <result column="company_addr" jdbcType="VARCHAR" property="companyAddr" />
     <result column="company_addr_detail" jdbcType="VARCHAR" property="companyAddrDetail" />
     <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="children_number" jdbcType="TINYINT" property="childrenNumber" />
+    <result column="marital_status" jdbcType="VARCHAR" property="maritalStatus" />
+    <result column="birth_mother_name" jdbcType="VARCHAR" property="birthMotherName" />
     <result column="parent_name" jdbcType="VARCHAR" property="parentName" />
     <result column="parent_tel" jdbcType="VARCHAR" property="parentTel" />
     <result column="relationship" jdbcType="VARCHAR" property="relationship" />
@@ -79,9 +83,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, education, company_name, company_addr, company_addr_detail, email, parent_name, 
-    parent_tel, relationship, related_person_name, related_person_tel, create_by, create_time, 
-    update_by, update_time, remark
+    id, user_id, education, company_name, company_tel, company_addr, company_addr_detail, 
+    email, children_number, marital_status, birth_mother_name, parent_name, parent_tel, 
+    relationship, related_person_name, related_person_tel, create_by, create_time, update_by, 
+    update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProfileExample" resultMap="BaseResultMap">
     select
@@ -147,17 +152,21 @@
   </delete>
   <insert id="insert" parameterType="com.hzed.easyget.persistence.auto.entity.Profile">
     insert into t_loan_profile (id, user_id, education, 
-      company_name, company_addr, company_addr_detail, 
-      email, parent_name, parent_tel, 
-      relationship, related_person_name, related_person_tel, 
-      create_by, create_time, update_by, 
-      update_time, remark)
+      company_name, company_tel, company_addr, 
+      company_addr_detail, email, children_number, 
+      marital_status, birth_mother_name, parent_name, 
+      parent_tel, relationship, related_person_name, 
+      related_person_tel, create_by, create_time, 
+      update_by, update_time, remark
+      )
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{education,jdbcType=VARCHAR}, 
-      #{companyName,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, #{companyAddrDetail,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{parentName,jdbcType=VARCHAR}, #{parentTel,jdbcType=VARCHAR}, 
-      #{relationship,jdbcType=VARCHAR}, #{relatedPersonName,jdbcType=VARCHAR}, #{relatedPersonTel,jdbcType=VARCHAR}, 
-      #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=BIGINT}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+      #{companyName,jdbcType=VARCHAR}, #{companyTel,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, 
+      #{companyAddrDetail,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{childrenNumber,jdbcType=TINYINT}, 
+      #{maritalStatus,jdbcType=VARCHAR}, #{birthMotherName,jdbcType=VARCHAR}, #{parentName,jdbcType=VARCHAR}, 
+      #{parentTel,jdbcType=VARCHAR}, #{relationship,jdbcType=VARCHAR}, #{relatedPersonName,jdbcType=VARCHAR}, 
+      #{relatedPersonTel,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hzed.easyget.persistence.auto.entity.Profile">
     insert into t_loan_profile
@@ -174,6 +183,9 @@
       <if test="companyName != null">
         company_name,
       </if>
+      <if test="companyTel != null">
+        company_tel,
+      </if>
       <if test="companyAddr != null">
         company_addr,
       </if>
@@ -182,6 +194,15 @@
       </if>
       <if test="email != null">
         email,
+      </if>
+      <if test="childrenNumber != null">
+        children_number,
+      </if>
+      <if test="maritalStatus != null">
+        marital_status,
+      </if>
+      <if test="birthMotherName != null">
+        birth_mother_name,
       </if>
       <if test="parentName != null">
         parent_name,
@@ -227,6 +248,9 @@
       <if test="companyName != null">
         #{companyName,jdbcType=VARCHAR},
       </if>
+      <if test="companyTel != null">
+        #{companyTel,jdbcType=VARCHAR},
+      </if>
       <if test="companyAddr != null">
         #{companyAddr,jdbcType=VARCHAR},
       </if>
@@ -235,6 +259,15 @@
       </if>
       <if test="email != null">
         #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="childrenNumber != null">
+        #{childrenNumber,jdbcType=TINYINT},
+      </if>
+      <if test="maritalStatus != null">
+        #{maritalStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="birthMotherName != null">
+        #{birthMotherName,jdbcType=VARCHAR},
       </if>
       <if test="parentName != null">
         #{parentName,jdbcType=VARCHAR},
@@ -289,6 +322,9 @@
       <if test="record.companyName != null">
         company_name = #{record.companyName,jdbcType=VARCHAR},
       </if>
+      <if test="record.companyTel != null">
+        company_tel = #{record.companyTel,jdbcType=VARCHAR},
+      </if>
       <if test="record.companyAddr != null">
         company_addr = #{record.companyAddr,jdbcType=VARCHAR},
       </if>
@@ -297,6 +333,15 @@
       </if>
       <if test="record.email != null">
         email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.childrenNumber != null">
+        children_number = #{record.childrenNumber,jdbcType=TINYINT},
+      </if>
+      <if test="record.maritalStatus != null">
+        marital_status = #{record.maritalStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.birthMotherName != null">
+        birth_mother_name = #{record.birthMotherName,jdbcType=VARCHAR},
       </if>
       <if test="record.parentName != null">
         parent_name = #{record.parentName,jdbcType=VARCHAR},
@@ -339,9 +384,13 @@
       user_id = #{record.userId,jdbcType=BIGINT},
       education = #{record.education,jdbcType=VARCHAR},
       company_name = #{record.companyName,jdbcType=VARCHAR},
+      company_tel = #{record.companyTel,jdbcType=VARCHAR},
       company_addr = #{record.companyAddr,jdbcType=VARCHAR},
       company_addr_detail = #{record.companyAddrDetail,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
+      children_number = #{record.childrenNumber,jdbcType=TINYINT},
+      marital_status = #{record.maritalStatus,jdbcType=VARCHAR},
+      birth_mother_name = #{record.birthMotherName,jdbcType=VARCHAR},
       parent_name = #{record.parentName,jdbcType=VARCHAR},
       parent_tel = #{record.parentTel,jdbcType=VARCHAR},
       relationship = #{record.relationship,jdbcType=VARCHAR},
@@ -368,6 +417,9 @@
       <if test="companyName != null">
         company_name = #{companyName,jdbcType=VARCHAR},
       </if>
+      <if test="companyTel != null">
+        company_tel = #{companyTel,jdbcType=VARCHAR},
+      </if>
       <if test="companyAddr != null">
         company_addr = #{companyAddr,jdbcType=VARCHAR},
       </if>
@@ -376,6 +428,15 @@
       </if>
       <if test="email != null">
         email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="childrenNumber != null">
+        children_number = #{childrenNumber,jdbcType=TINYINT},
+      </if>
+      <if test="maritalStatus != null">
+        marital_status = #{maritalStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="birthMotherName != null">
+        birth_mother_name = #{birthMotherName,jdbcType=VARCHAR},
       </if>
       <if test="parentName != null">
         parent_name = #{parentName,jdbcType=VARCHAR},
@@ -415,9 +476,13 @@
     set user_id = #{userId,jdbcType=BIGINT},
       education = #{education,jdbcType=VARCHAR},
       company_name = #{companyName,jdbcType=VARCHAR},
+      company_tel = #{companyTel,jdbcType=VARCHAR},
       company_addr = #{companyAddr,jdbcType=VARCHAR},
       company_addr_detail = #{companyAddrDetail,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
+      children_number = #{childrenNumber,jdbcType=TINYINT},
+      marital_status = #{maritalStatus,jdbcType=VARCHAR},
+      birth_mother_name = #{birthMotherName,jdbcType=VARCHAR},
       parent_name = #{parentName,jdbcType=VARCHAR},
       parent_tel = #{parentTel,jdbcType=VARCHAR},
       relationship = #{relationship,jdbcType=VARCHAR},
@@ -458,18 +523,20 @@
   </select>
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_profile
-    (id, user_id, education, company_name, company_addr, company_addr_detail, email, 
-      parent_name, parent_tel, relationship, related_person_name, related_person_tel, 
-      create_by, create_time, update_by, update_time, remark)
+    (id, user_id, education, company_name, company_tel, company_addr, company_addr_detail, 
+      email, children_number, marital_status, birth_mother_name, parent_name, parent_tel, 
+      relationship, related_person_name, related_person_tel, create_by, create_time, 
+      update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.education,jdbcType=VARCHAR}, 
-        #{item.companyName,jdbcType=VARCHAR}, #{item.companyAddr,jdbcType=VARCHAR}, #{item.companyAddrDetail,jdbcType=VARCHAR}, 
-        #{item.email,jdbcType=VARCHAR}, #{item.parentName,jdbcType=VARCHAR}, #{item.parentTel,jdbcType=VARCHAR}, 
-        #{item.relationship,jdbcType=VARCHAR}, #{item.relatedPersonName,jdbcType=VARCHAR}, 
-        #{item.relatedPersonTel,jdbcType=VARCHAR}, #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, 
-        #{item.updateBy,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR}
-        )
+        #{item.companyName,jdbcType=VARCHAR}, #{item.companyTel,jdbcType=VARCHAR}, #{item.companyAddr,jdbcType=VARCHAR}, 
+        #{item.companyAddrDetail,jdbcType=VARCHAR}, #{item.email,jdbcType=VARCHAR}, #{item.childrenNumber,jdbcType=TINYINT}, 
+        #{item.maritalStatus,jdbcType=VARCHAR}, #{item.birthMotherName,jdbcType=VARCHAR}, 
+        #{item.parentName,jdbcType=VARCHAR}, #{item.parentTel,jdbcType=VARCHAR}, #{item.relationship,jdbcType=VARCHAR}, 
+        #{item.relatedPersonName,jdbcType=VARCHAR}, #{item.relatedPersonTel,jdbcType=VARCHAR}, 
+        #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <insert id="batchInsertSelective" parameterType="map">
@@ -494,6 +561,9 @@
         <if test="'company_name' == column.value">
           #{item.companyName,jdbcType=VARCHAR}
         </if>
+        <if test="'company_tel' == column.value">
+          #{item.companyTel,jdbcType=VARCHAR}
+        </if>
         <if test="'company_addr' == column.value">
           #{item.companyAddr,jdbcType=VARCHAR}
         </if>
@@ -502,6 +572,15 @@
         </if>
         <if test="'email' == column.value">
           #{item.email,jdbcType=VARCHAR}
+        </if>
+        <if test="'children_number' == column.value">
+          #{item.childrenNumber,jdbcType=TINYINT}
+        </if>
+        <if test="'marital_status' == column.value">
+          #{item.maritalStatus,jdbcType=VARCHAR}
+        </if>
+        <if test="'birth_mother_name' == column.value">
+          #{item.birthMotherName,jdbcType=VARCHAR}
         </if>
         <if test="'parent_name' == column.value">
           #{item.parentName,jdbcType=VARCHAR}

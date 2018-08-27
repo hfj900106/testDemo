@@ -1,16 +1,16 @@
-package com.hzed.easyget.controller.model;
+package com.hzed.easyget.persistence.ext.entity;
 
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
- * 返回交易记录
- * @author hfj
- * @date 2018/06/19
+ * @author guichang
+ * @since 2018/8/23
  */
 @Data
-public class TransactionVO {
+public class UserTransactionExt {
     /**
      * 标id
      */
@@ -26,11 +26,11 @@ public class TransactionVO {
     /**
      * 交易完成时间
      */
-    private Long updateTime;
+    private LocalDateTime updateTime;
     /**
      * 银行卡后四位
      */
-    private String bankAccount;
+    private String account;
     /**
      * 交易类型 1-入账 2-出账 3-其他
      */

@@ -421,6 +421,76 @@ public class ProfileExample {
             return (Criteria) this;
         }
 
+        public Criteria andCompanyTelIsNull() {
+            addCriterion("company_tel is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyTelIsNotNull() {
+            addCriterion("company_tel is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyTelEqualTo(String value) {
+            addCriterion("company_tel =", value, "companyTel");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyTelNotEqualTo(String value) {
+            addCriterion("company_tel <>", value, "companyTel");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyTelGreaterThan(String value) {
+            addCriterion("company_tel >", value, "companyTel");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyTelGreaterThanOrEqualTo(String value) {
+            addCriterion("company_tel >=", value, "companyTel");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyTelLessThan(String value) {
+            addCriterion("company_tel <", value, "companyTel");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyTelLessThanOrEqualTo(String value) {
+            addCriterion("company_tel <=", value, "companyTel");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyTelLike(String value) {
+            addCriterion("company_tel like", value, "companyTel");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyTelNotLike(String value) {
+            addCriterion("company_tel not like", value, "companyTel");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyTelIn(List<String> values) {
+            addCriterion("company_tel in", values, "companyTel");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyTelNotIn(List<String> values) {
+            addCriterion("company_tel not in", values, "companyTel");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyTelBetween(String value1, String value2) {
+            addCriterion("company_tel between", value1, value2, "companyTel");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyTelNotBetween(String value1, String value2) {
+            addCriterion("company_tel not between", value1, value2, "companyTel");
+            return (Criteria) this;
+        }
+
         public Criteria andCompanyAddrIsNull() {
             addCriterion("company_addr is null");
             return (Criteria) this;
@@ -628,6 +698,206 @@ public class ProfileExample {
 
         public Criteria andEmailNotBetween(String value1, String value2) {
             addCriterion("email not between", value1, value2, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberIsNull() {
+            addCriterion("children_number is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberIsNotNull() {
+            addCriterion("children_number is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberEqualTo(Byte value) {
+            addCriterion("children_number =", value, "childrenNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberNotEqualTo(Byte value) {
+            addCriterion("children_number <>", value, "childrenNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberGreaterThan(Byte value) {
+            addCriterion("children_number >", value, "childrenNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberGreaterThanOrEqualTo(Byte value) {
+            addCriterion("children_number >=", value, "childrenNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberLessThan(Byte value) {
+            addCriterion("children_number <", value, "childrenNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberLessThanOrEqualTo(Byte value) {
+            addCriterion("children_number <=", value, "childrenNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberIn(List<Byte> values) {
+            addCriterion("children_number in", values, "childrenNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberNotIn(List<Byte> values) {
+            addCriterion("children_number not in", values, "childrenNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberBetween(Byte value1, Byte value2) {
+            addCriterion("children_number between", value1, value2, "childrenNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberNotBetween(Byte value1, Byte value2) {
+            addCriterion("children_number not between", value1, value2, "childrenNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusIsNull() {
+            addCriterion("marital_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusIsNotNull() {
+            addCriterion("marital_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusEqualTo(String value) {
+            addCriterion("marital_status =", value, "maritalStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusNotEqualTo(String value) {
+            addCriterion("marital_status <>", value, "maritalStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusGreaterThan(String value) {
+            addCriterion("marital_status >", value, "maritalStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusGreaterThanOrEqualTo(String value) {
+            addCriterion("marital_status >=", value, "maritalStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusLessThan(String value) {
+            addCriterion("marital_status <", value, "maritalStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusLessThanOrEqualTo(String value) {
+            addCriterion("marital_status <=", value, "maritalStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusLike(String value) {
+            addCriterion("marital_status like", value, "maritalStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusNotLike(String value) {
+            addCriterion("marital_status not like", value, "maritalStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusIn(List<String> values) {
+            addCriterion("marital_status in", values, "maritalStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusNotIn(List<String> values) {
+            addCriterion("marital_status not in", values, "maritalStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusBetween(String value1, String value2) {
+            addCriterion("marital_status between", value1, value2, "maritalStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusNotBetween(String value1, String value2) {
+            addCriterion("marital_status not between", value1, value2, "maritalStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameIsNull() {
+            addCriterion("birth_mother_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameIsNotNull() {
+            addCriterion("birth_mother_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameEqualTo(String value) {
+            addCriterion("birth_mother_name =", value, "birthMotherName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameNotEqualTo(String value) {
+            addCriterion("birth_mother_name <>", value, "birthMotherName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameGreaterThan(String value) {
+            addCriterion("birth_mother_name >", value, "birthMotherName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameGreaterThanOrEqualTo(String value) {
+            addCriterion("birth_mother_name >=", value, "birthMotherName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameLessThan(String value) {
+            addCriterion("birth_mother_name <", value, "birthMotherName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameLessThanOrEqualTo(String value) {
+            addCriterion("birth_mother_name <=", value, "birthMotherName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameLike(String value) {
+            addCriterion("birth_mother_name like", value, "birthMotherName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameNotLike(String value) {
+            addCriterion("birth_mother_name not like", value, "birthMotherName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameIn(List<String> values) {
+            addCriterion("birth_mother_name in", values, "birthMotherName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameNotIn(List<String> values) {
+            addCriterion("birth_mother_name not in", values, "birthMotherName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameBetween(String value1, String value2) {
+            addCriterion("birth_mother_name between", value1, value2, "birthMotherName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameNotBetween(String value1, String value2) {
+            addCriterion("birth_mother_name not between", value1, value2, "birthMotherName");
             return (Criteria) this;
         }
 
@@ -1301,6 +1571,11 @@ public class ProfileExample {
             return (Criteria) this;
         }
 
+        public Criteria andCompanyTelLikeInsensitive(String value) {
+            addCriterion("upper(company_tel) like", value.toUpperCase(), "companyTel");
+            return (Criteria) this;
+        }
+
         public Criteria andCompanyAddrLikeInsensitive(String value) {
             addCriterion("upper(company_addr) like", value.toUpperCase(), "companyAddr");
             return (Criteria) this;
@@ -1313,6 +1588,16 @@ public class ProfileExample {
 
         public Criteria andEmailLikeInsensitive(String value) {
             addCriterion("upper(email) like", value.toUpperCase(), "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andMaritalStatusLikeInsensitive(String value) {
+            addCriterion("upper(marital_status) like", value.toUpperCase(), "maritalStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andBirthMotherNameLikeInsensitive(String value) {
+            addCriterion("upper(birth_mother_name) like", value.toUpperCase(), "birthMotherName");
             return (Criteria) this;
         }
 

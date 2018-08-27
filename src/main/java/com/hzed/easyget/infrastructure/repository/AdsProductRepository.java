@@ -1,5 +1,6 @@
 package com.hzed.easyget.infrastructure.repository;
 
+import com.hzed.easyget.infrastructure.model.PageModel;
 import com.hzed.easyget.persistence.auto.entity.AdsProduct;
 import com.hzed.easyget.persistence.auto.entity.example.AdsProductExample;
 import com.hzed.easyget.persistence.auto.mapper.AdsProductMapper;
@@ -18,11 +19,11 @@ public class AdsProductRepository {
     @Autowired
     private AdsProductMapper adsProductMapper;
 
-    public List<AdsProduct> getAdsProductList(Integer pageNo,Integer pageSize) {
+    public List<AdsProduct> getAdsProductList(PageModel pageModel) {
         AdsProductExample example = new AdsProductExample();
         example.setOrderByClause(AdsProduct.Column.weights.desc());
         example.createCriteria().andIsUseEqualTo(true);
-        example.page(pageNo,pageSize);
+        example.page(pageModel.getMysqlPageNo(),pageModel.getPageSize());
         return adsProductMapper.selectByExample(example);
     }
 

@@ -65,6 +65,13 @@ public class DictRepository {
         return dictMapper.selectByExample(example);
     }
 
+    public List<Dict> findGroupByModuleCodeAndLanguage(String moduleCode, String language) {
+        DictExample example = new DictExample();
+        example.setOrderByClause(Dict.Column.orderby.asc());
+        example.createCriteria().andModuleCodeEqualTo(moduleCode).andLanguageEqualTo(language).andRemarkBetween("基本认证","社交认证");
+        return dictMapper.selectByExample(example);
+    }
+
     public List<Dict> findByModuleCodeAndLanguage(String moduleCode, String language) {
         DictExample example = new DictExample();
         example.setOrderByClause(Dict.Column.orderby.asc());

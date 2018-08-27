@@ -27,10 +27,8 @@ public class AdsService {
     public List<AdsProductResponse> getAdsProductList(AdsProductListRequest request) {
         ArrayList<AdsProductResponse> adsProductResponseList = Lists.newArrayList();
 
-        Integer pageNo = request.getPageNo();
-        Integer pageSize = request.getPageSize();
 
-        List<AdsProduct> adsProductList = adsProductRepository.getAdsProductList(pageNo,pageSize);
+        List<AdsProduct> adsProductList = adsProductRepository.getAdsProductList(request.getPageModel());
 
         adsProductList.forEach(adsProduct -> {
             AdsProductResponse adsProductResponse = new AdsProductResponse();

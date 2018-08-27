@@ -25,6 +25,11 @@ public class Profile implements Serializable {
     private String companyName;
 
     /**
+     * 公司电话
+     */
+    private String companyTel;
+
+    /**
      * 单位地址
      */
     private String companyAddr;
@@ -38,6 +43,21 @@ public class Profile implements Serializable {
      * 个人邮件
      */
     private String email;
+
+    /**
+     * 孩子个数
+     */
+    private Integer childrenNumber;
+
+    /**
+     * 婚姻状态
+     */
+    private String maritalStatus;
+
+    /**
+     * 亲生母亲姓名
+     */
+    private String birthMotherName;
 
     /**
      * 父母姓名
@@ -118,6 +138,14 @@ public class Profile implements Serializable {
         this.companyName = companyName == null ? null : companyName.trim();
     }
 
+    public String getCompanyTel() {
+        return companyTel;
+    }
+
+    public void setCompanyTel(String companyTel) {
+        this.companyTel = companyTel == null ? null : companyTel.trim();
+    }
+
     public String getCompanyAddr() {
         return companyAddr;
     }
@@ -140,6 +168,30 @@ public class Profile implements Serializable {
 
     public void setEmail(String email) {
         this.email = email == null ? null : email.trim();
+    }
+
+    public Integer getChildrenNumber() {
+        return childrenNumber;
+    }
+
+    public void setChildrenNumber(Integer childrenNumber) {
+        this.childrenNumber = childrenNumber;
+    }
+
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus == null ? null : maritalStatus.trim();
+    }
+
+    public String getBirthMotherName() {
+        return birthMotherName;
+    }
+
+    public void setBirthMotherName(String birthMotherName) {
+        this.birthMotherName = birthMotherName == null ? null : birthMotherName.trim();
     }
 
     public String getParentName() {
@@ -232,9 +284,13 @@ public class Profile implements Serializable {
         sb.append(", userId=").append(userId);
         sb.append(", education=").append(education);
         sb.append(", companyName=").append(companyName);
+        sb.append(", companyTel=").append(companyTel);
         sb.append(", companyAddr=").append(companyAddr);
         sb.append(", companyAddrDetail=").append(companyAddrDetail);
         sb.append(", email=").append(email);
+        sb.append(", childrenNumber=").append(childrenNumber);
+        sb.append(", maritalStatus=").append(maritalStatus);
+        sb.append(", birthMotherName=").append(birthMotherName);
         sb.append(", parentName=").append(parentName);
         sb.append(", parentTel=").append(parentTel);
         sb.append(", relationship=").append(relationship);
@@ -281,6 +337,11 @@ public class Profile implements Serializable {
             return this;
         }
 
+        public Builder companyTel(String companyTel) {
+            obj.setCompanyTel(companyTel);
+            return this;
+        }
+
         public Builder companyAddr(String companyAddr) {
             obj.setCompanyAddr(companyAddr);
             return this;
@@ -293,6 +354,21 @@ public class Profile implements Serializable {
 
         public Builder email(String email) {
             obj.setEmail(email);
+            return this;
+        }
+
+        public Builder childrenNumber(Integer childrenNumber) {
+            obj.setChildrenNumber(childrenNumber);
+            return this;
+        }
+
+        public Builder maritalStatus(String maritalStatus) {
+            obj.setMaritalStatus(maritalStatus);
+            return this;
+        }
+
+        public Builder birthMotherName(String birthMotherName) {
+            obj.setBirthMotherName(birthMotherName);
             return this;
         }
 
@@ -356,9 +432,13 @@ public class Profile implements Serializable {
         userId("user_id"),
         education("education"),
         companyName("company_name"),
+        companyTel("company_tel"),
         companyAddr("company_addr"),
         companyAddrDetail("company_addr_detail"),
         email("email"),
+        childrenNumber("children_number"),
+        maritalStatus("marital_status"),
+        birthMotherName("birth_mother_name"),
         parentName("parent_name"),
         parentTel("parent_tel"),
         relationship("relationship"),

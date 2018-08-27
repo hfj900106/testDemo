@@ -1,11 +1,13 @@
 package com.hzed.easyget.infrastructure.repository;
 
+import com.hzed.easyget.infrastructure.model.PageModel;
 import com.hzed.easyget.persistence.auto.entity.*;
 import com.hzed.easyget.persistence.auto.entity.example.UserExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserLoginExample;
 import com.hzed.easyget.persistence.auto.entity.example.UserTransactionExample;
 import com.hzed.easyget.persistence.auto.mapper.*;
 import com.hzed.easyget.persistence.ext.entity.UserExt;
+import com.hzed.easyget.persistence.ext.entity.UserTransactionExt;
 import com.hzed.easyget.persistence.ext.mapper.UserExtMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -54,7 +56,6 @@ public class UserRepository {
     }
 
     public void insert(User user) {
-
         userMapper.insertSelective(user);
     }
 
@@ -66,13 +67,17 @@ public class UserRepository {
         return userMapper.selectByPrimaryKey(id);
     }
 
-    public List<UserTransaction> findTransactionRecordByUserId(Long userId, Integer pageNo, Integer pageSize) {
+    public List<UserTransaction> findTransactionRecordByUserId(Long userId, PageModel pageModel) {
         UserTransactionExample example = new UserTransactionExample();
         example.createCriteria().andUserIdEqualTo(userId).andStatusEqualTo((byte) 2);
         example.setOrderByClause(UserTransaction.Column.createTime.desc());
-        example.page(pageNo,pageSize);
+        example.page(pageModel.getMysqlPageNo(), pageModel.getPageSize());
         List<UserTransaction> transactionRecords = userTransactionMapper.selectByExample(example);
         return transactionRecords;
+    }
+
+    public List<UserTransactionExt> findTransactionRecordByUserId2(Long userId, PageModel pageModel) {
+        return userExtMapper.listUserTransaction(userId, pageModel.getOffset() , pageModel.getPageSize());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -105,9 +110,9 @@ public class UserRepository {
         return userExtMapper.queryUnRepayment(userId);
     }
 
-    public List<UserLogin> getUserLoginsByUserId(Long userId){
+    public List<UserLogin> getUserLoginsByUserId(Long userId) {
         UserLoginExample userLoginExample = new UserLoginExample();
         userLoginExample.createCriteria().andUserIdEqualTo(userId);
-        return loginMapper.selectByExampleSelective(userLoginExample,UserLogin.Column.userId);
+        return loginMapper.selectByExampleSelective(userLoginExample, UserLogin.Column.userId);
     }
 }

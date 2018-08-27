@@ -18,7 +18,7 @@ public class PushBidCallbackRequest {
     /** 审核金额，不通过设为0 */
     @NotNull(message = "{param.callback.loanAmount.isNotEmpty}")
     private BigDecimal loanAmount;
-    /** 4-通过    3-失败   2-人审 8-撤销 */
+    /** 4-通过 3-失败 2-人审 8-撤销 */
     @NotBlank(message = "{param.callback.resultCode.isNotEmpty}")
     private String resultCode;
     @NotNull(message = "{param.callback.handleTime.isNotEmpty}")

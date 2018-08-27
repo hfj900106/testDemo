@@ -1,8 +1,7 @@
 package com.hzed.easyget.controller.model;
 
+import com.hzed.easyget.infrastructure.model.PageModel;
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * 交易记录请求参数
@@ -10,7 +9,6 @@ import javax.validation.constraints.NotNull;
  * @date 2018/6/22
  */
 @Data
-public class TransactionRecordRequest {
-    private Integer pageNo = 0;
-    private Integer pageSize = 5;
+public class TransactionRecordRequest extends PageModel {
+
 }

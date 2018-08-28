@@ -47,7 +47,7 @@ public class Profile implements Serializable {
     /**
      * 孩子个数
      */
-    private Integer childrenNumber;
+    private Byte childrenNumber;
 
     /**
      * 婚姻状态
@@ -60,29 +60,14 @@ public class Profile implements Serializable {
     private String birthMotherName;
 
     /**
-     * 父母姓名
+     * 父亲/母亲/兄弟/配偶
      */
-    private String parentName;
+    private String relationship1;
 
     /**
-     * 父母电话
+     * 同学/同事/朋友
      */
-    private String parentTel;
-
-    /**
-     * 亲戚/同学/同事/朋友 人际关系
-     */
-    private String relationship;
-
-    /**
-     * 亲戚/同学/同事/朋友 姓名
-     */
-    private String relatedPersonName;
-
-    /**
-     * 亲戚/同学/同事/朋友 电话
-     */
-    private String relatedPersonTel;
+    private String relationship2;
 
     /**
      */
@@ -170,11 +155,11 @@ public class Profile implements Serializable {
         this.email = email == null ? null : email.trim();
     }
 
-    public Integer getChildrenNumber() {
+    public Byte getChildrenNumber() {
         return childrenNumber;
     }
 
-    public void setChildrenNumber(Integer childrenNumber) {
+    public void setChildrenNumber(Byte childrenNumber) {
         this.childrenNumber = childrenNumber;
     }
 
@@ -194,44 +179,20 @@ public class Profile implements Serializable {
         this.birthMotherName = birthMotherName == null ? null : birthMotherName.trim();
     }
 
-    public String getParentName() {
-        return parentName;
+    public String getRelationship1() {
+        return relationship1;
     }
 
-    public void setParentName(String parentName) {
-        this.parentName = parentName == null ? null : parentName.trim();
+    public void setRelationship1(String relationship1) {
+        this.relationship1 = relationship1 == null ? null : relationship1.trim();
     }
 
-    public String getParentTel() {
-        return parentTel;
+    public String getRelationship2() {
+        return relationship2;
     }
 
-    public void setParentTel(String parentTel) {
-        this.parentTel = parentTel == null ? null : parentTel.trim();
-    }
-
-    public String getRelationship() {
-        return relationship;
-    }
-
-    public void setRelationship(String relationship) {
-        this.relationship = relationship == null ? null : relationship.trim();
-    }
-
-    public String getRelatedPersonName() {
-        return relatedPersonName;
-    }
-
-    public void setRelatedPersonName(String relatedPersonName) {
-        this.relatedPersonName = relatedPersonName == null ? null : relatedPersonName.trim();
-    }
-
-    public String getRelatedPersonTel() {
-        return relatedPersonTel;
-    }
-
-    public void setRelatedPersonTel(String relatedPersonTel) {
-        this.relatedPersonTel = relatedPersonTel == null ? null : relatedPersonTel.trim();
+    public void setRelationship2(String relationship2) {
+        this.relationship2 = relationship2 == null ? null : relationship2.trim();
     }
 
     public Long getCreateBy() {
@@ -291,11 +252,8 @@ public class Profile implements Serializable {
         sb.append(", childrenNumber=").append(childrenNumber);
         sb.append(", maritalStatus=").append(maritalStatus);
         sb.append(", birthMotherName=").append(birthMotherName);
-        sb.append(", parentName=").append(parentName);
-        sb.append(", parentTel=").append(parentTel);
-        sb.append(", relationship=").append(relationship);
-        sb.append(", relatedPersonName=").append(relatedPersonName);
-        sb.append(", relatedPersonTel=").append(relatedPersonTel);
+        sb.append(", relationship1=").append(relationship1);
+        sb.append(", relationship2=").append(relationship2);
         sb.append(", createBy=").append(createBy);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateBy=").append(updateBy);
@@ -357,7 +315,7 @@ public class Profile implements Serializable {
             return this;
         }
 
-        public Builder childrenNumber(Integer childrenNumber) {
+        public Builder childrenNumber(Byte childrenNumber) {
             obj.setChildrenNumber(childrenNumber);
             return this;
         }
@@ -372,28 +330,13 @@ public class Profile implements Serializable {
             return this;
         }
 
-        public Builder parentName(String parentName) {
-            obj.setParentName(parentName);
+        public Builder relationship1(String relationship1) {
+            obj.setRelationship1(relationship1);
             return this;
         }
 
-        public Builder parentTel(String parentTel) {
-            obj.setParentTel(parentTel);
-            return this;
-        }
-
-        public Builder relationship(String relationship) {
-            obj.setRelationship(relationship);
-            return this;
-        }
-
-        public Builder relatedPersonName(String relatedPersonName) {
-            obj.setRelatedPersonName(relatedPersonName);
-            return this;
-        }
-
-        public Builder relatedPersonTel(String relatedPersonTel) {
-            obj.setRelatedPersonTel(relatedPersonTel);
+        public Builder relationship2(String relationship2) {
+            obj.setRelationship2(relationship2);
             return this;
         }
 
@@ -439,11 +382,8 @@ public class Profile implements Serializable {
         childrenNumber("children_number"),
         maritalStatus("marital_status"),
         birthMotherName("birth_mother_name"),
-        parentName("parent_name"),
-        parentTel("parent_tel"),
-        relationship("relationship"),
-        relatedPersonName("related_person_name"),
-        relatedPersonTel("related_person_tel"),
+        relationship1("relationship_1"),
+        relationship2("relationship_2"),
         createBy("create_by"),
         createTime("create_time"),
         updateBy("update_by"),

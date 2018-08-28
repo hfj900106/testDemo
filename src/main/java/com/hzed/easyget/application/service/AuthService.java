@@ -286,11 +286,13 @@ public class AuthService {
 
         UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PERSON_INFO.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), "个人信息认证");
 
-        String parentName = request.getParentName();
-        String parentTel = request.getParentTel().replaceAll("\\s*", "");
+        String relationship1 = request.getRelationship1();
+        String personName1 = request.getPersonName1();
+        String personTel1 = request.getPersonTel1().replaceAll("\\s*", "");
 
-        String relatedPersonName = request.getRelatedPersonName();
-        String relatedPersonTel = request.getRelatedPersonTel().replaceAll("\\s*", "");
+        String relationship2 = request.getRelationship2();
+        String personName2 = request.getPersonName2();
+        String personTel2 = request.getPersonTel2().replaceAll("\\s*", "");
 
         Profile profile = new Profile();
 
@@ -304,27 +306,24 @@ public class AuthService {
         profile.setCompanyTel(request.getCompanyTel());
         profile.setEmail(request.getEmail());
         profile.setBirthMotherName(request.getBirthMotherName());
-        profile.setChildrenNumber(request.getChildrenNumber());
+        profile.setChildrenNumber(request.getChildrenNumber().byteValue());
         profile.setMaritalStatus(request.getMaritalStatus());
-        profile.setParentName(parentName);
-        profile.setParentTel(parentTel);
-        profile.setRelationship(request.getRelationship());
-        profile.setRelatedPersonName(relatedPersonName);
-        profile.setRelatedPersonTel(relatedPersonTel);
+        profile.setRelationship1(relationship1+":"+personName1+":"+personTel1);
+        profile.setRelationship2(relationship2+":"+personName2+":"+personTel2);
         profile.setRemark("个人信息认证");
         personInfoRepository.insertPersonInfoAndUserAuthStatus(profile, userAuthStatus);
 
         List<Map<String, String>> objectList = Lists.newArrayList();
         Map<String, String> stringMap1 = Maps.newHashMap();
-        stringMap1.put("relationship", "parent");
-        stringMap1.put("contact", parentName);
-        stringMap1.put("phone", parentTel);
+        stringMap1.put("relationship", relationship1);
+        stringMap1.put("contact", personName1);
+        stringMap1.put("phone", personTel1);
         objectList.add(stringMap1);
 
         Map<String, String> stringMap2 = Maps.newHashMap();
-        stringMap2.put("relationship", request.getRelationship());
-        stringMap2.put("contact", relatedPersonName);
-        stringMap2.put("phone", relatedPersonTel);
+        stringMap2.put("relationship", relationship2);
+        stringMap2.put("contact", personName2);
+        stringMap2.put("phone", personTel2);
         objectList.add(stringMap2);
         riskService.pushProfile(objectList, userId);
     }

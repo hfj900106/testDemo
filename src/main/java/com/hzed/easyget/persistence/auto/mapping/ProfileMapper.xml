@@ -13,11 +13,8 @@
     <result column="children_number" jdbcType="TINYINT" property="childrenNumber" />
     <result column="marital_status" jdbcType="VARCHAR" property="maritalStatus" />
     <result column="birth_mother_name" jdbcType="VARCHAR" property="birthMotherName" />
-    <result column="parent_name" jdbcType="VARCHAR" property="parentName" />
-    <result column="parent_tel" jdbcType="VARCHAR" property="parentTel" />
-    <result column="relationship" jdbcType="VARCHAR" property="relationship" />
-    <result column="related_person_name" jdbcType="VARCHAR" property="relatedPersonName" />
-    <result column="related_person_tel" jdbcType="VARCHAR" property="relatedPersonTel" />
+    <result column="relationship_1" jdbcType="VARCHAR" property="relationship1" />
+    <result column="relationship_2" jdbcType="VARCHAR" property="relationship2" />
     <result column="create_by" jdbcType="BIGINT" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_by" jdbcType="BIGINT" property="updateBy" />
@@ -84,9 +81,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, user_id, education, company_name, company_tel, company_addr, company_addr_detail, 
-    email, children_number, marital_status, birth_mother_name, parent_name, parent_tel, 
-    relationship, related_person_name, related_person_tel, create_by, create_time, update_by, 
-    update_time, remark
+    email, children_number, marital_status, birth_mother_name, relationship_1, relationship_2, 
+    create_by, create_time, update_by, update_time, remark
   </sql>
   <select id="selectByExample" parameterType="com.hzed.easyget.persistence.auto.entity.example.ProfileExample" resultMap="BaseResultMap">
     select
@@ -154,17 +150,15 @@
     insert into t_loan_profile (id, user_id, education, 
       company_name, company_tel, company_addr, 
       company_addr_detail, email, children_number, 
-      marital_status, birth_mother_name, parent_name, 
-      parent_tel, relationship, related_person_name, 
-      related_person_tel, create_by, create_time, 
+      marital_status, birth_mother_name, relationship_1, 
+      relationship_2, create_by, create_time, 
       update_by, update_time, remark
       )
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{education,jdbcType=VARCHAR}, 
       #{companyName,jdbcType=VARCHAR}, #{companyTel,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, 
       #{companyAddrDetail,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{childrenNumber,jdbcType=TINYINT}, 
-      #{maritalStatus,jdbcType=VARCHAR}, #{birthMotherName,jdbcType=VARCHAR}, #{parentName,jdbcType=VARCHAR}, 
-      #{parentTel,jdbcType=VARCHAR}, #{relationship,jdbcType=VARCHAR}, #{relatedPersonName,jdbcType=VARCHAR}, 
-      #{relatedPersonTel,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{maritalStatus,jdbcType=VARCHAR}, #{birthMotherName,jdbcType=VARCHAR}, #{relationship1,jdbcType=VARCHAR}, 
+      #{relationship2,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
       )
   </insert>
@@ -204,20 +198,11 @@
       <if test="birthMotherName != null">
         birth_mother_name,
       </if>
-      <if test="parentName != null">
-        parent_name,
+      <if test="relationship1 != null">
+        relationship_1,
       </if>
-      <if test="parentTel != null">
-        parent_tel,
-      </if>
-      <if test="relationship != null">
-        relationship,
-      </if>
-      <if test="relatedPersonName != null">
-        related_person_name,
-      </if>
-      <if test="relatedPersonTel != null">
-        related_person_tel,
+      <if test="relationship2 != null">
+        relationship_2,
       </if>
       <if test="createBy != null">
         create_by,
@@ -269,20 +254,11 @@
       <if test="birthMotherName != null">
         #{birthMotherName,jdbcType=VARCHAR},
       </if>
-      <if test="parentName != null">
-        #{parentName,jdbcType=VARCHAR},
+      <if test="relationship1 != null">
+        #{relationship1,jdbcType=VARCHAR},
       </if>
-      <if test="parentTel != null">
-        #{parentTel,jdbcType=VARCHAR},
-      </if>
-      <if test="relationship != null">
-        #{relationship,jdbcType=VARCHAR},
-      </if>
-      <if test="relatedPersonName != null">
-        #{relatedPersonName,jdbcType=VARCHAR},
-      </if>
-      <if test="relatedPersonTel != null">
-        #{relatedPersonTel,jdbcType=VARCHAR},
+      <if test="relationship2 != null">
+        #{relationship2,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=BIGINT},
@@ -343,20 +319,11 @@
       <if test="record.birthMotherName != null">
         birth_mother_name = #{record.birthMotherName,jdbcType=VARCHAR},
       </if>
-      <if test="record.parentName != null">
-        parent_name = #{record.parentName,jdbcType=VARCHAR},
+      <if test="record.relationship1 != null">
+        relationship_1 = #{record.relationship1,jdbcType=VARCHAR},
       </if>
-      <if test="record.parentTel != null">
-        parent_tel = #{record.parentTel,jdbcType=VARCHAR},
-      </if>
-      <if test="record.relationship != null">
-        relationship = #{record.relationship,jdbcType=VARCHAR},
-      </if>
-      <if test="record.relatedPersonName != null">
-        related_person_name = #{record.relatedPersonName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.relatedPersonTel != null">
-        related_person_tel = #{record.relatedPersonTel,jdbcType=VARCHAR},
+      <if test="record.relationship2 != null">
+        relationship_2 = #{record.relationship2,jdbcType=VARCHAR},
       </if>
       <if test="record.createBy != null">
         create_by = #{record.createBy,jdbcType=BIGINT},
@@ -391,11 +358,8 @@
       children_number = #{record.childrenNumber,jdbcType=TINYINT},
       marital_status = #{record.maritalStatus,jdbcType=VARCHAR},
       birth_mother_name = #{record.birthMotherName,jdbcType=VARCHAR},
-      parent_name = #{record.parentName,jdbcType=VARCHAR},
-      parent_tel = #{record.parentTel,jdbcType=VARCHAR},
-      relationship = #{record.relationship,jdbcType=VARCHAR},
-      related_person_name = #{record.relatedPersonName,jdbcType=VARCHAR},
-      related_person_tel = #{record.relatedPersonTel,jdbcType=VARCHAR},
+      relationship_1 = #{record.relationship1,jdbcType=VARCHAR},
+      relationship_2 = #{record.relationship2,jdbcType=VARCHAR},
       create_by = #{record.createBy,jdbcType=BIGINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=BIGINT},
@@ -438,20 +402,11 @@
       <if test="birthMotherName != null">
         birth_mother_name = #{birthMotherName,jdbcType=VARCHAR},
       </if>
-      <if test="parentName != null">
-        parent_name = #{parentName,jdbcType=VARCHAR},
+      <if test="relationship1 != null">
+        relationship_1 = #{relationship1,jdbcType=VARCHAR},
       </if>
-      <if test="parentTel != null">
-        parent_tel = #{parentTel,jdbcType=VARCHAR},
-      </if>
-      <if test="relationship != null">
-        relationship = #{relationship,jdbcType=VARCHAR},
-      </if>
-      <if test="relatedPersonName != null">
-        related_person_name = #{relatedPersonName,jdbcType=VARCHAR},
-      </if>
-      <if test="relatedPersonTel != null">
-        related_person_tel = #{relatedPersonTel,jdbcType=VARCHAR},
+      <if test="relationship2 != null">
+        relationship_2 = #{relationship2,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=BIGINT},
@@ -483,11 +438,8 @@
       children_number = #{childrenNumber,jdbcType=TINYINT},
       marital_status = #{maritalStatus,jdbcType=VARCHAR},
       birth_mother_name = #{birthMotherName,jdbcType=VARCHAR},
-      parent_name = #{parentName,jdbcType=VARCHAR},
-      parent_tel = #{parentTel,jdbcType=VARCHAR},
-      relationship = #{relationship,jdbcType=VARCHAR},
-      related_person_name = #{relatedPersonName,jdbcType=VARCHAR},
-      related_person_tel = #{relatedPersonTel,jdbcType=VARCHAR},
+      relationship_1 = #{relationship1,jdbcType=VARCHAR},
+      relationship_2 = #{relationship2,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=BIGINT},
@@ -524,17 +476,15 @@
   <insert id="batchInsert" parameterType="map">
     insert into t_loan_profile
     (id, user_id, education, company_name, company_tel, company_addr, company_addr_detail, 
-      email, children_number, marital_status, birth_mother_name, parent_name, parent_tel, 
-      relationship, related_person_name, related_person_tel, create_by, create_time, 
-      update_by, update_time, remark)
+      email, children_number, marital_status, birth_mother_name, relationship_1, relationship_2, 
+      create_by, create_time, update_by, update_time, remark)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.education,jdbcType=VARCHAR}, 
         #{item.companyName,jdbcType=VARCHAR}, #{item.companyTel,jdbcType=VARCHAR}, #{item.companyAddr,jdbcType=VARCHAR}, 
         #{item.companyAddrDetail,jdbcType=VARCHAR}, #{item.email,jdbcType=VARCHAR}, #{item.childrenNumber,jdbcType=TINYINT}, 
         #{item.maritalStatus,jdbcType=VARCHAR}, #{item.birthMotherName,jdbcType=VARCHAR}, 
-        #{item.parentName,jdbcType=VARCHAR}, #{item.parentTel,jdbcType=VARCHAR}, #{item.relationship,jdbcType=VARCHAR}, 
-        #{item.relatedPersonName,jdbcType=VARCHAR}, #{item.relatedPersonTel,jdbcType=VARCHAR}, 
+        #{item.relationship1,jdbcType=VARCHAR}, #{item.relationship2,jdbcType=VARCHAR}, 
         #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
         #{item.updateTime,jdbcType=TIMESTAMP}, #{item.remark,jdbcType=VARCHAR})
     </foreach>
@@ -582,20 +532,11 @@
         <if test="'birth_mother_name' == column.value">
           #{item.birthMotherName,jdbcType=VARCHAR}
         </if>
-        <if test="'parent_name' == column.value">
-          #{item.parentName,jdbcType=VARCHAR}
+        <if test="'relationship_1' == column.value">
+          #{item.relationship1,jdbcType=VARCHAR}
         </if>
-        <if test="'parent_tel' == column.value">
-          #{item.parentTel,jdbcType=VARCHAR}
-        </if>
-        <if test="'relationship' == column.value">
-          #{item.relationship,jdbcType=VARCHAR}
-        </if>
-        <if test="'related_person_name' == column.value">
-          #{item.relatedPersonName,jdbcType=VARCHAR}
-        </if>
-        <if test="'related_person_tel' == column.value">
-          #{item.relatedPersonTel,jdbcType=VARCHAR}
+        <if test="'relationship_2' == column.value">
+          #{item.relationship2,jdbcType=VARCHAR}
         </if>
         <if test="'create_by' == column.value">
           #{item.createBy,jdbcType=BIGINT}

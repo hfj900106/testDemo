@@ -26,16 +26,18 @@ public class PersonInfoAuthRequest {
     private String companyAddrDetail;
     @Length(min = 1,max = 64,message = "{param.auth.email.extraLong}")
     private String email;
-    @NotBlank(message = "{param.auth.parentName.isNotEmpty}")
-    private String parentName;
-    @Length(min = 1,max = 64,message = "{param.auth.parentTel.extraLong}")
-    private String parentTel;
-    @NotBlank(message = "{param.auth.relationship.isNotEmpty}")
-    private String relationship;
-    @NotBlank(message = "{param.auth.relatedPersonName.isNotEmpty}")
-    private String relatedPersonName;
-    @NotBlank(message = "{param.auth.relatedPersonTel.isNotEmpty}")
-    private String relatedPersonTel;
+    @NotBlank(message = "{param.auth.relationship1.isNotEmpty}")
+    private String relationship1;
+    @NotBlank(message = "{param.auth.personName1.isNotEmpty}")
+    private String personName1;
+    @NotBlank(message = "{param.auth.personTel1.isNotEmpty}")
+    private String personTel1;
+    @NotBlank(message = "{param.auth.relationship2.isNotEmpty}")
+    private String relationship2;
+    @NotBlank(message = "{param.auth.personName2.isNotEmpty}")
+    private String personName2;
+    @NotBlank(message = "{param.auth.personTel2.isNotEmpty}")
+    private String personTel2;
 
     @NotBlank(message = "{param.auth.companyTel.isNotEmpty}")
     private String companyTel;

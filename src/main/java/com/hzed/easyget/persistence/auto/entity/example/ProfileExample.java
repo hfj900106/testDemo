@@ -901,353 +901,143 @@ public class ProfileExample {
             return (Criteria) this;
         }
 
-        public Criteria andParentNameIsNull() {
-            addCriterion("parent_name is null");
+        public Criteria andRelationship1IsNull() {
+            addCriterion("relationship_1 is null");
             return (Criteria) this;
         }
 
-        public Criteria andParentNameIsNotNull() {
-            addCriterion("parent_name is not null");
+        public Criteria andRelationship1IsNotNull() {
+            addCriterion("relationship_1 is not null");
             return (Criteria) this;
         }
 
-        public Criteria andParentNameEqualTo(String value) {
-            addCriterion("parent_name =", value, "parentName");
+        public Criteria andRelationship1EqualTo(String value) {
+            addCriterion("relationship_1 =", value, "relationship1");
             return (Criteria) this;
         }
 
-        public Criteria andParentNameNotEqualTo(String value) {
-            addCriterion("parent_name <>", value, "parentName");
+        public Criteria andRelationship1NotEqualTo(String value) {
+            addCriterion("relationship_1 <>", value, "relationship1");
             return (Criteria) this;
         }
 
-        public Criteria andParentNameGreaterThan(String value) {
-            addCriterion("parent_name >", value, "parentName");
+        public Criteria andRelationship1GreaterThan(String value) {
+            addCriterion("relationship_1 >", value, "relationship1");
             return (Criteria) this;
         }
 
-        public Criteria andParentNameGreaterThanOrEqualTo(String value) {
-            addCriterion("parent_name >=", value, "parentName");
+        public Criteria andRelationship1GreaterThanOrEqualTo(String value) {
+            addCriterion("relationship_1 >=", value, "relationship1");
             return (Criteria) this;
         }
 
-        public Criteria andParentNameLessThan(String value) {
-            addCriterion("parent_name <", value, "parentName");
+        public Criteria andRelationship1LessThan(String value) {
+            addCriterion("relationship_1 <", value, "relationship1");
             return (Criteria) this;
         }
 
-        public Criteria andParentNameLessThanOrEqualTo(String value) {
-            addCriterion("parent_name <=", value, "parentName");
+        public Criteria andRelationship1LessThanOrEqualTo(String value) {
+            addCriterion("relationship_1 <=", value, "relationship1");
             return (Criteria) this;
         }
 
-        public Criteria andParentNameLike(String value) {
-            addCriterion("parent_name like", value, "parentName");
+        public Criteria andRelationship1Like(String value) {
+            addCriterion("relationship_1 like", value, "relationship1");
             return (Criteria) this;
         }
 
-        public Criteria andParentNameNotLike(String value) {
-            addCriterion("parent_name not like", value, "parentName");
+        public Criteria andRelationship1NotLike(String value) {
+            addCriterion("relationship_1 not like", value, "relationship1");
             return (Criteria) this;
         }
 
-        public Criteria andParentNameIn(List<String> values) {
-            addCriterion("parent_name in", values, "parentName");
+        public Criteria andRelationship1In(List<String> values) {
+            addCriterion("relationship_1 in", values, "relationship1");
             return (Criteria) this;
         }
 
-        public Criteria andParentNameNotIn(List<String> values) {
-            addCriterion("parent_name not in", values, "parentName");
+        public Criteria andRelationship1NotIn(List<String> values) {
+            addCriterion("relationship_1 not in", values, "relationship1");
             return (Criteria) this;
         }
 
-        public Criteria andParentNameBetween(String value1, String value2) {
-            addCriterion("parent_name between", value1, value2, "parentName");
+        public Criteria andRelationship1Between(String value1, String value2) {
+            addCriterion("relationship_1 between", value1, value2, "relationship1");
             return (Criteria) this;
         }
 
-        public Criteria andParentNameNotBetween(String value1, String value2) {
-            addCriterion("parent_name not between", value1, value2, "parentName");
+        public Criteria andRelationship1NotBetween(String value1, String value2) {
+            addCriterion("relationship_1 not between", value1, value2, "relationship1");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelIsNull() {
-            addCriterion("parent_tel is null");
+        public Criteria andRelationship2IsNull() {
+            addCriterion("relationship_2 is null");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelIsNotNull() {
-            addCriterion("parent_tel is not null");
+        public Criteria andRelationship2IsNotNull() {
+            addCriterion("relationship_2 is not null");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelEqualTo(String value) {
-            addCriterion("parent_tel =", value, "parentTel");
+        public Criteria andRelationship2EqualTo(String value) {
+            addCriterion("relationship_2 =", value, "relationship2");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelNotEqualTo(String value) {
-            addCriterion("parent_tel <>", value, "parentTel");
+        public Criteria andRelationship2NotEqualTo(String value) {
+            addCriterion("relationship_2 <>", value, "relationship2");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelGreaterThan(String value) {
-            addCriterion("parent_tel >", value, "parentTel");
+        public Criteria andRelationship2GreaterThan(String value) {
+            addCriterion("relationship_2 >", value, "relationship2");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelGreaterThanOrEqualTo(String value) {
-            addCriterion("parent_tel >=", value, "parentTel");
+        public Criteria andRelationship2GreaterThanOrEqualTo(String value) {
+            addCriterion("relationship_2 >=", value, "relationship2");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelLessThan(String value) {
-            addCriterion("parent_tel <", value, "parentTel");
+        public Criteria andRelationship2LessThan(String value) {
+            addCriterion("relationship_2 <", value, "relationship2");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelLessThanOrEqualTo(String value) {
-            addCriterion("parent_tel <=", value, "parentTel");
+        public Criteria andRelationship2LessThanOrEqualTo(String value) {
+            addCriterion("relationship_2 <=", value, "relationship2");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelLike(String value) {
-            addCriterion("parent_tel like", value, "parentTel");
+        public Criteria andRelationship2Like(String value) {
+            addCriterion("relationship_2 like", value, "relationship2");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelNotLike(String value) {
-            addCriterion("parent_tel not like", value, "parentTel");
+        public Criteria andRelationship2NotLike(String value) {
+            addCriterion("relationship_2 not like", value, "relationship2");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelIn(List<String> values) {
-            addCriterion("parent_tel in", values, "parentTel");
+        public Criteria andRelationship2In(List<String> values) {
+            addCriterion("relationship_2 in", values, "relationship2");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelNotIn(List<String> values) {
-            addCriterion("parent_tel not in", values, "parentTel");
+        public Criteria andRelationship2NotIn(List<String> values) {
+            addCriterion("relationship_2 not in", values, "relationship2");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelBetween(String value1, String value2) {
-            addCriterion("parent_tel between", value1, value2, "parentTel");
+        public Criteria andRelationship2Between(String value1, String value2) {
+            addCriterion("relationship_2 between", value1, value2, "relationship2");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelNotBetween(String value1, String value2) {
-            addCriterion("parent_tel not between", value1, value2, "parentTel");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipIsNull() {
-            addCriterion("relationship is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipIsNotNull() {
-            addCriterion("relationship is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipEqualTo(String value) {
-            addCriterion("relationship =", value, "relationship");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipNotEqualTo(String value) {
-            addCriterion("relationship <>", value, "relationship");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipGreaterThan(String value) {
-            addCriterion("relationship >", value, "relationship");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipGreaterThanOrEqualTo(String value) {
-            addCriterion("relationship >=", value, "relationship");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipLessThan(String value) {
-            addCriterion("relationship <", value, "relationship");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipLessThanOrEqualTo(String value) {
-            addCriterion("relationship <=", value, "relationship");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipLike(String value) {
-            addCriterion("relationship like", value, "relationship");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipNotLike(String value) {
-            addCriterion("relationship not like", value, "relationship");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipIn(List<String> values) {
-            addCriterion("relationship in", values, "relationship");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipNotIn(List<String> values) {
-            addCriterion("relationship not in", values, "relationship");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipBetween(String value1, String value2) {
-            addCriterion("relationship between", value1, value2, "relationship");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipNotBetween(String value1, String value2) {
-            addCriterion("relationship not between", value1, value2, "relationship");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameIsNull() {
-            addCriterion("related_person_name is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameIsNotNull() {
-            addCriterion("related_person_name is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameEqualTo(String value) {
-            addCriterion("related_person_name =", value, "relatedPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameNotEqualTo(String value) {
-            addCriterion("related_person_name <>", value, "relatedPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameGreaterThan(String value) {
-            addCriterion("related_person_name >", value, "relatedPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameGreaterThanOrEqualTo(String value) {
-            addCriterion("related_person_name >=", value, "relatedPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameLessThan(String value) {
-            addCriterion("related_person_name <", value, "relatedPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameLessThanOrEqualTo(String value) {
-            addCriterion("related_person_name <=", value, "relatedPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameLike(String value) {
-            addCriterion("related_person_name like", value, "relatedPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameNotLike(String value) {
-            addCriterion("related_person_name not like", value, "relatedPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameIn(List<String> values) {
-            addCriterion("related_person_name in", values, "relatedPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameNotIn(List<String> values) {
-            addCriterion("related_person_name not in", values, "relatedPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameBetween(String value1, String value2) {
-            addCriterion("related_person_name between", value1, value2, "relatedPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameNotBetween(String value1, String value2) {
-            addCriterion("related_person_name not between", value1, value2, "relatedPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelIsNull() {
-            addCriterion("related_person_tel is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelIsNotNull() {
-            addCriterion("related_person_tel is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelEqualTo(String value) {
-            addCriterion("related_person_tel =", value, "relatedPersonTel");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelNotEqualTo(String value) {
-            addCriterion("related_person_tel <>", value, "relatedPersonTel");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelGreaterThan(String value) {
-            addCriterion("related_person_tel >", value, "relatedPersonTel");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelGreaterThanOrEqualTo(String value) {
-            addCriterion("related_person_tel >=", value, "relatedPersonTel");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelLessThan(String value) {
-            addCriterion("related_person_tel <", value, "relatedPersonTel");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelLessThanOrEqualTo(String value) {
-            addCriterion("related_person_tel <=", value, "relatedPersonTel");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelLike(String value) {
-            addCriterion("related_person_tel like", value, "relatedPersonTel");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelNotLike(String value) {
-            addCriterion("related_person_tel not like", value, "relatedPersonTel");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelIn(List<String> values) {
-            addCriterion("related_person_tel in", values, "relatedPersonTel");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelNotIn(List<String> values) {
-            addCriterion("related_person_tel not in", values, "relatedPersonTel");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelBetween(String value1, String value2) {
-            addCriterion("related_person_tel between", value1, value2, "relatedPersonTel");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelNotBetween(String value1, String value2) {
-            addCriterion("related_person_tel not between", value1, value2, "relatedPersonTel");
+        public Criteria andRelationship2NotBetween(String value1, String value2) {
+            addCriterion("relationship_2 not between", value1, value2, "relationship2");
             return (Criteria) this;
         }
 
@@ -1601,28 +1391,13 @@ public class ProfileExample {
             return (Criteria) this;
         }
 
-        public Criteria andParentNameLikeInsensitive(String value) {
-            addCriterion("upper(parent_name) like", value.toUpperCase(), "parentName");
+        public Criteria andRelationship1LikeInsensitive(String value) {
+            addCriterion("upper(relationship_1) like", value.toUpperCase(), "relationship1");
             return (Criteria) this;
         }
 
-        public Criteria andParentTelLikeInsensitive(String value) {
-            addCriterion("upper(parent_tel) like", value.toUpperCase(), "parentTel");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelationshipLikeInsensitive(String value) {
-            addCriterion("upper(relationship) like", value.toUpperCase(), "relationship");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonNameLikeInsensitive(String value) {
-            addCriterion("upper(related_person_name) like", value.toUpperCase(), "relatedPersonName");
-            return (Criteria) this;
-        }
-
-        public Criteria andRelatedPersonTelLikeInsensitive(String value) {
-            addCriterion("upper(related_person_tel) like", value.toUpperCase(), "relatedPersonTel");
+        public Criteria andRelationship2LikeInsensitive(String value) {
+            addCriterion("upper(relationship_2) like", value.toUpperCase(), "relationship2");
             return (Criteria) this;
         }
 

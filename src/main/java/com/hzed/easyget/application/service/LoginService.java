@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author wuchengwu
@@ -86,8 +87,13 @@ public class LoginService {
      * 用户facebook登录注册
      */
     public LoginByCodeResponse loginByFacebook(LoginByFacebookRequest request) {
+
         String mobile = request.getMobile();
         String md5 = request.getMd5();
+
+        // 请求防重
+        String key = RedisConsts.FACEBOOK_LOGIN + RedisConsts.SPLIT + mobile;
+        redisService.defensiveRepet(key, BizCodeEnum.ILLEGAL_REQUEST);
 
         // 校验是否我们平台发来的请求，是-通过 否-拦截
         if (!MD5Utils.verify(mobile, md5)) {
@@ -114,6 +120,8 @@ public class LoginService {
         // 获取首次登录的client
         String client = getFirstLoginClient(mobile);
 
+        // 清除缓存key
+        redisService.clearCache(key);
         return LoginByCodeResponse.builder().token(token).userId(userId).isNew(isNew).client(client).build();
     }
 
@@ -191,16 +199,25 @@ public class LoginService {
 
         // 格式化手机号
         mobile = mobileFormat(mobile);
+        // 校验是否新用户
         if (userRepository.findByMobile(mobile) != null) {
             throw new WarnException(BizCodeEnum.EXIST_USER);
         }
         // 校验是否三大运营商手机号
         checkMobile(mobile);
 
+        String key = RedisConsts.FACEBOOK_H5 + RedisConsts.SPLIT + mobile + RedisConsts.SPLIT + request.getFbH5Flag();
+        if (StringUtils.isBlank(redisService.getCache(key))) {
+            log.error("key：{}，返回为空", key);
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+        }
+
         Long userId = IDGenerator.nextId();
         User userInsert = User.builder().id(userId).mobileAccount(mobile).platform(globalHead.getPlatform()).client(request.getFromCode()).remark("H5注册").build();
         UserStatus uStatusInsert = UserStatus.builder().id(IDGenerator.nextId()).userId(userId).isBlacklist(false).isLock(false).remark("注册").build();
         userRepository.insertUserAndStatus(userInsert, uStatusInsert);
+        // 清除缓存
+        redisService.clearCache(key);
     }
 
     private UserLogin buildUserLogin(Long userId, String platform, String ip, String device) {
@@ -282,15 +299,31 @@ public class LoginService {
     }
 
     /**
-     * 检验3大运营商手机号
+     * 检验三大运营商手机号
      */
-    public void checkMobileBeforeSend(SmsCodeRequest request) {
-        String mobile = request.getMobile();
+    public void checkMobileBeforeSend(String mobile) {
         log.info("发送验证码手机号：{}", mobile);
         // 格式化手机号
         mobile = mobileFormat(mobile);
         // 校验是否三大运营商手机号
         checkMobile(mobile);
+    }
+
+    /**
+     * 检验三大运营商手机号，且校验是否新用户
+     */
+    public CheckMobileResponse checkMobileBeforeSendH5(String mobile) {
+        // 检验三大运营商手机号
+        checkMobileBeforeSend(mobile);
+        // 校验是否新用户
+        if (userRepository.findByMobile(mobile) != null) {
+            throw new WarnException(BizCodeEnum.EXIST_USER);
+        }
+        String value = UUID.randomUUID().toString().replaceAll("-", "").substring(3, 20);
+        String key = RedisConsts.FACEBOOK_H5 + RedisConsts.SPLIT + mobile + RedisConsts.SPLIT + value;
+        // 生成随机码并放缓存，后续验证
+        redisService.setCache(key, value, 600L);
+        return new CheckMobileResponse(value);
     }
 
     /**

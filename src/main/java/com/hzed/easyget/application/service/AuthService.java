@@ -102,6 +102,8 @@ public class AuthService {
             authStatusResponse.setAuthGroup(dict.getRemark());
             if (!ObjectUtils.isEmpty(userAuthStatus)) {
                 authStatusResponse.setAuthStatus(String.valueOf(userAuthStatus.getAuthStatus()));
+            }else{
+                authStatusResponse.setAuthStatus(String.valueOf(AuthStatusEnum.UN_AUTH.getCode()));
             }
             authStatusList.add(authStatusResponse);
         });

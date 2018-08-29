@@ -267,9 +267,7 @@ public class HomeService {
                 BidProgress bidProgress = bidProgressRepository.findByBidIdAndType(bidId, BidProgressTypeEnum.LOAN.getCode().byteValue());
                 bidProgressResponse.setLoanTime(DateUtil.localDateTimeToTimestamp(bidProgress.getHandleTime()));
                 bidProgressResponse.setPopupChoice(1);
-                // 计算是否在弹窗日期之内，当前日期减去放款日期，小于等于3，要弹，反之不弹
-                int popupDay = DateUtil.daysBetweenNoHMS(bidProgress.getHandleTime(), LocalDateTime.now());
-                bidProgressResponse.setPopup(popupDay <= 3 ? true : false);
+
             }
             return bidProgressResponse;
         }
@@ -281,13 +279,10 @@ public class HomeService {
         }
         bidProgressResponse.setReviewStatus(Integer.valueOf(bid.getStatus()));
 
-        bidProgressResponse.setPopup(true);
         BidProgress bidProgresses = bidProgressRepository.findByBidIdAndType(bidId, BidProgressTypeEnum.AUDIT.getCode().byteValue());
         if (!ObjectUtils.isEmpty(bidProgresses)) {
 
             bidProgressResponse.setReviewTime(DateUtil.localDateTimeToTimestamp(bidProgresses.getHandleTime()));
-            int popupDay = DateUtil.daysBetweenNoHMS(bidProgresses.getHandleTime(), LocalDateTime.now());
-            bidProgressResponse.setPopup(popupDay <= 3 ? true : false);
         }
         bidProgressResponse.setPopupChoice(2);
         return bidProgressResponse;

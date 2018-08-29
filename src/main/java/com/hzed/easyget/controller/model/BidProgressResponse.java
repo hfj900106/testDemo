@@ -22,7 +22,6 @@ public class BidProgressResponse {
     private Long repayTime;
     private Integer reviewStatus;
     private Integer popupChoice;
-    private boolean isPopup;
 
 
 

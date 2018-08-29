@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Profile;
  * @author guichang
  * @date 2018/7/3
  */
-@Profile({"test","prod"})
+@Profile({"test", "prod"})
 public class RabbitConfig {
 
     @Bean

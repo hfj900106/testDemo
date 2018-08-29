@@ -27,6 +27,7 @@ public class RedisConsts {
 
     public static final String FACEBOOK_H5 = "facebook_H5";
     public static final String FACEBOOK_LOGIN = "facebook_login";
+    public static final String BLUEPAY_MQ = "bluepay_mq";
 
 
 }

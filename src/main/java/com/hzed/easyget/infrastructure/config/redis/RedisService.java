@@ -77,14 +77,26 @@ public class RedisService {
      * @param expEnum 重复后抛异常的枚举
      */
     public void defensiveRepet(String key, BizCodeEnum expEnum) {
-        // 插入成功
+        if (exists(key)) {
+            // 插入失败直接抛异常
+            throw new WarnException(expEnum);
+        }
+    }
+
+    /**
+     * redis中key是否存在
+     *
+     * @param key
+     * @return true-存在 false-不存在
+     */
+    public boolean exists(String key) {
         if (setIfAbsent(key, String.valueOf(0))) {
             // 设置超时时间
             expire(key, 3, TimeUnit.MINUTES);
-            return;
+            return false;
         }
-        // 插入失败直接抛异常
-        throw new WarnException(expEnum);
+        return true;
+
     }
 
 }

@@ -65,10 +65,10 @@ public class DictRepository {
         return dictMapper.selectByExample(example);
     }
 
-    public List<Dict> findGroupByModuleCodeAndLanguage(String moduleCode, String language) {
+    public List<Dict> findGroupByModuleCodeAndLanguage(String moduleCode, String language,String remark1,String remark2) {
         DictExample example = new DictExample();
         example.setOrderByClause(Dict.Column.orderby.asc());
-        example.createCriteria().andModuleCodeEqualTo(moduleCode).andLanguageEqualTo(language).andRemarkBetween("基本认证","社交认证");
+        example.createCriteria().andModuleCodeEqualTo(moduleCode).andLanguageEqualTo(language).andRemarkBetween(remark1,remark2);
         return dictMapper.selectByExample(example);
     }
 

@@ -10,6 +10,7 @@ import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
+import com.hzed.easyget.infrastructure.enums.LocaleEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
@@ -92,18 +93,35 @@ public class AuthService {
         List<AuthGroupStatusResponse> authStatusList = Lists.newArrayList();
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String i18n = RequestUtil.getGlobalHead().getI18n();
-        List<Dict> dictList = dictRepository.findGroupByModuleCodeAndLanguage(request.getCode(), i18n);
+        String remark1;
+        String remark2;
+        if(LocaleEnum.en_US.getI18n().equals(i18n)){
+            remark1 = "Basic certification";
+            remark2 = "Social authentication";
+        }else if(LocaleEnum.zh_CN.getI18n().equals(i18n)){
+            remark1 = "基本认证";
+            remark2 = "社交认证";
+        }else {
+            remark1 = "Sertifikasi dasar";
+            remark2 = "Stratifikasi sosial";
+        }
+        List<Dict> dictList = dictRepository.findGroupByModuleCodeAndLanguage(request.getCode(), i18n,remark1,remark2);
         String personAuth = AuthCodeEnum.PERSON_INFO.getCode();
         String workAuth = AuthCodeEnum.PROFESSIONAL.getCode();
         Integer authStatus = AuthStatusEnum.HAS_AUTH.getCode();
         // 合并认证结果
-        for (Dict dict : dictList) {
-            String code = dict.getDicCode();
-            if ((personAuth.equals(code) || workAuth.equals(code))) {
-                if(code.equals(AuthStatusEnum.TO_AUTH.getCode())){
-                    authStatus = AuthStatusEnum.TO_AUTH.getCode();
-                }else if(code.equals(AuthStatusEnum.FAIl_AUTH.getCode())){
-                    authStatus = AuthStatusEnum.FAIl_AUTH.getCode();
+        for (Dict dict1 : dictList) {
+            String code1 = dict1.getDicCode();
+            if ((personAuth.equals(code1) || workAuth.equals(code1))) {
+                UserAuthStatus userAuthStatus = authStatusRepository.findEnableAuthStatusByUserId(userId, code1);
+                if (!ObjectUtils.isEmpty(userAuthStatus)) {
+                    if (userAuthStatus.getAuthStatus().equals(AuthStatusEnum.TO_AUTH.getCode())) {
+                        authStatus = AuthStatusEnum.TO_AUTH.getCode();
+                        break;
+                    } else if (userAuthStatus.getAuthStatus().equals(AuthStatusEnum.FAIl_AUTH.getCode())) {
+                        authStatus = AuthStatusEnum.FAIl_AUTH.getCode();
+                        break;
+                    }
                 }
             }
         }

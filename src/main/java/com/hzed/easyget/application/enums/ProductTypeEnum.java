@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 
 @Getter
-public enum ProductEnum {
+public enum ProductTypeEnum {
     /**
      * 过规则
      */
@@ -17,7 +17,7 @@ public enum ProductEnum {
     private String code;
     private String msg;
 
-    ProductEnum(String code, String msg) {
+    ProductTypeEnum(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }

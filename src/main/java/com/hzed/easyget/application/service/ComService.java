@@ -168,7 +168,7 @@ public class ComService {
 
         Bid bid = bidRepository.findByIdWithExp(bill.getBidId());
 
-        AbstractProduct product = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(bid.getLoanAmount(), bid.getPeriod());
+        AbstractProduct product = ProductFactory.getProduct().createProduct(bid.getLoanAmount(), bid.getPeriod());
         // 总逾期费
         BigDecimal allOverFee = product.getOverFee(overDays);
         // 已还逾期费

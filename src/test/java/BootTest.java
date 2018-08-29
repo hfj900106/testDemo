@@ -1,7 +1,6 @@
 import com.hzed.BootApplication;
 import com.hzed.easyget.application.service.FileService;
 import com.hzed.easyget.application.service.LoginService;
-import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.PictureCodeResponse;
@@ -70,7 +69,7 @@ public class BootTest {
 
     @Test
     public void factoryTest() {
-        AbstractProduct product = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(new BigDecimal(60000), 14);
+        AbstractProduct product = ProductFactory.getProduct().createProduct(new BigDecimal(60000), 14);
         System.out.println(product.getHeadFee());
         System.out.println(product.getInterest());
     }

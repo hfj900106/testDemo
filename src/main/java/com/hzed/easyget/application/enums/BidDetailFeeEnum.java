@@ -7,7 +7,7 @@ import lombok.Getter;
  * @date 2018/8/22
  */
 @Getter
-public enum BidDetailFeeTypeEnum {
+public enum BidDetailFeeEnum {
     /**
      * 过规则
      */
@@ -18,7 +18,7 @@ public enum BidDetailFeeTypeEnum {
     private Integer code;
     private String msg;
 
-    BidDetailFeeTypeEnum(Integer code, String msg) {
+    BidDetailFeeEnum(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
     }

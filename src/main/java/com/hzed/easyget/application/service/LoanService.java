@@ -1,11 +1,10 @@
 package com.hzed.easyget.application.service;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
+import com.hzed.easyget.application.enums.BidDetailFeeEnum;
 import com.hzed.easyget.application.enums.BidEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
-import com.hzed.easyget.application.enums.ProductEnum;
-import com.hzed.easyget.application.enums.*;
+import com.hzed.easyget.application.enums.ProductTypeEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.*;
@@ -55,7 +54,7 @@ public class LoanService {
         LoanDetailResponse loanDetailResponse = new LoanDetailResponse();
         Bid bid = bidRepository.findByIdWithExp(request.getBid());
         Byte status = bid.getStatus();
-        AbstractProduct product = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(bid.getApplyAmount(), bid.getPeriod());
+        AbstractProduct product = ProductFactory.getProduct().createProduct(bid.getApplyAmount(), bid.getPeriod());
         loanDetailResponse.setApplyAmount(product.getArrivalAmount().toString());
         loanDetailResponse.setApplyTime(DateUtil.localDateTimeToStr1(bid.getCreateTime()));
         loanDetailResponse.setInBank(bid.getInBank());
@@ -78,6 +77,9 @@ public class LoanService {
     }
 
     public SubmitLoanResponse submitLoan(SubmitLoanRequest request) {
+        String inBank = request.getInBank();
+        String inAccount = request.getInAccount();
+
         SubmitLoanResponse submitLoanResponse = new SubmitLoanResponse();
         Long userId = RequestUtil.getGlobalUser().getUserId();
         User user = userRepository.findById(userId);
@@ -108,25 +110,25 @@ public class LoanService {
         bid.setUserId(userId);
         bid.setBidNo(String.valueOf(IDGenerator.nextId()));
         bid.setTitle("消费贷");
-        bid.setProductCode(ProductEnum.PRODUCT_CODE.getCode());
+        bid.setProductCode(ProductTypeEnum.PRODUCT_CODE.getCode());
         bid.setApplyAmount(request.getApplyAmount());
         bid.setPeriod(request.getPeriod());
-        bid.setInBank(request.getInBank());
-        bid.setInAccount(request.getInAccount());
+        bid.setInBank(inBank);
+        bid.setInAccount(inAccount);
         bid.setPurposeCode(request.getPurposeId());
         bid.setClient(BidEnum.INDONESIA_APP.getCode());
         bid.setStatus(BidStatusEnum.RISK_ING.getCode().byteValue());
         submitLoanResponse.setBid(bidId);
-        // 借款对象列表
-        List<BidDetailFee> bidDetailFeeList = getBidDetailFeeList(request,bidId);
+        // 借款费用详情列表
+        List<BidDetailFee> bidDetailFeeList = getBidDetailFeeList(request, bidId);
         // 用户银行卡信息不存在则插入
-        List<UserBank> userBankList = userBankRepository.findByUserIdAndInbankAndInAccount(userId, request.getInBank(), request.getInAccount());
+        List<UserBank> userBankList = userBankRepository.findByUserIdAndInbankAndInAccount(userId, inBank, inAccount);
         if (ObjectUtils.isEmpty(userBankList)) {
             UserBank userBank = new UserBank();
             userBank.setId(IDGenerator.nextId());
             userBank.setUserId(userId);
-            userBank.setInBank(request.getInBank());
-            userBank.setInAccount(request.getInAccount());
+            userBank.setInBank(inBank);
+            userBank.setInAccount(inAccount);
             bidRepository.insertBidAndUserBankAndBidDetailFee(bid, userBank, bidDetailFeeList);
             return submitLoanResponse;
         }
@@ -142,20 +144,20 @@ public class LoanService {
         BidDetailFee authFee = new BidDetailFee();
         authFee.setId(IDGenerator.nextId());
         authFee.setBidId(bidId);
-        authFee.setFeeType(BidDetailFeeTypeEnum.AUTH_TYPE.getCode().byteValue());
+        authFee.setFeeType(BidDetailFeeEnum.AUTH_TYPE.getCode().byteValue());
         authFee.setFee(request.getAuthFee());
 
         BidDetailFee reviewFee = new BidDetailFee();
         reviewFee.setId(IDGenerator.nextId());
         reviewFee.setBidId(bidId);
-        reviewFee.setFeeType(BidDetailFeeTypeEnum.REVIEW_TYPE.getCode().byteValue());
-        reviewFee.setFee(request.getAuthFee());
+        reviewFee.setFeeType(BidDetailFeeEnum.REVIEW_TYPE.getCode().byteValue());
+        reviewFee.setFee(request.getReviewFee());
 
         BidDetailFee handlingFee = new BidDetailFee();
         handlingFee.setId(IDGenerator.nextId());
         handlingFee.setBidId(bidId);
-        handlingFee.setFeeType(BidDetailFeeTypeEnum.HANDLING_TYPE.getCode().byteValue());
-        handlingFee.setFee(request.getAuthFee());
+        handlingFee.setFeeType(BidDetailFeeEnum.HANDLING_TYPE.getCode().byteValue());
+        handlingFee.setFee(request.getHandlingFee());
 
         bidDetailFeeList.add(authFee);
         bidDetailFeeList.add(reviewFee);
@@ -166,9 +168,11 @@ public class LoanService {
 
     public PreSubmitLoanResponse preSubmitLoan(PreSubmitLoanRequest request) {
         PreSubmitLoanResponse subLoanResponse = new PreSubmitLoanResponse();
+
         BigDecimal loanAmount = request.getLoanAmount();
         Integer period = request.getPeriod();
         Long userId = RequestUtil.getGlobalUser().getUserId();
+
         List<UserBank> userBankList = userBankRepository.findByUserId(userId);
         if (!ObjectUtils.isEmpty(userBankList)) {
             Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
@@ -179,7 +183,7 @@ public class LoanService {
             }
         }
 
-        AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
+        AbstractProduct productInfo = ProductFactory.getProduct().createProduct(loanAmount, period);
 
         subLoanResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());
         BigDecimal headFee = productInfo.getHeadFee();

@@ -28,4 +28,11 @@ public class ProductFactory {
         }
         return productService;
     }
+
+    /**
+     * 默认印尼产品
+     */
+    public static ProductService getProduct() {
+        return getProduct(ProductEnum.EasyGet);
+    }
 }

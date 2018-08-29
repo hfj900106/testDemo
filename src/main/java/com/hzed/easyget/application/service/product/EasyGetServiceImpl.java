@@ -3,7 +3,7 @@ package com.hzed.easyget.application.service.product;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.BillLedgerItemEnum;
 import com.hzed.easyget.application.enums.BillStatusEnum;
-import com.hzed.easyget.application.enums.ProductEnum;
+import com.hzed.easyget.application.enums.ProductTypeEnum;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.application.service.product.model.EasyGetProduct;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
@@ -88,7 +88,7 @@ public class EasyGetServiceImpl implements ProductService {
 
     @Override
     public AbstractProduct createProduct(BigDecimal amount, Integer days) {
-        Product productConf = productRepository.findByCode(ProductEnum.PRODUCT_CODE.getCode());
+        Product productConf = productRepository.findByCode(ProductTypeEnum.PRODUCT_CODE.getCode());
 
         EasyGetProduct product = new EasyGetProduct(amount);
         product.setHeadFeeRate(productConf.getHeadFeeRate());

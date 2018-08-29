@@ -188,17 +188,18 @@ public class LoanService {
         subLoanResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());
         BigDecimal headFee = productInfo.getHeadFee();
         subLoanResponse.setCost(headFee);
-        subLoanResponse.setReceiveAmount(loanAmount.subtract(headFee));
+        subLoanResponse.setReceiveAmount(productInfo.getArrivalAmount());
         subLoanResponse.setPeriod(period);
         subLoanResponse.setLoanAmount(loanAmount);
         subLoanResponse.setServiceFee(productInfo.getTailFee());
+
+        // 费用明细
         BidDetailFeeResponse bidDetailFeeResponse = new BidDetailFeeResponse();
-        List<BidDetailFeeResponse> bidDetailFeeList = Lists.newArrayList();
         bidDetailFeeResponse.setAuthFee(systemProp.getAuthFee());
         bidDetailFeeResponse.setReviewFee(systemProp.getReviewFee());
         bidDetailFeeResponse.setHandlingFee(systemProp.getHandlingFee());
-        bidDetailFeeList.add(bidDetailFeeResponse);
-        subLoanResponse.setBidDetailFeeList(bidDetailFeeList);
+
+        subLoanResponse.setBidDetailFeeResponse(bidDetailFeeResponse);
         return subLoanResponse;
     }
 }

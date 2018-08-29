@@ -93,19 +93,43 @@ public class AuthService {
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String i18n = RequestUtil.getGlobalHead().getI18n();
         List<Dict> dictList = dictRepository.findGroupByModuleCodeAndLanguage(request.getCode(), i18n);
+        String personAuth = AuthCodeEnum.PERSON_INFO.getCode();
+        String workAuth = AuthCodeEnum.PROFESSIONAL.getCode();
+        Integer authStatus = AuthStatusEnum.HAS_AUTH.getCode();
+        // 合并认证结果
+        for (Dict dict : dictList) {
+            String code = dict.getDicCode();
+            if ((personAuth.equals(code) || workAuth.equals(code))) {
+                if(code.equals(AuthStatusEnum.TO_AUTH.getCode())){
+                    authStatus = AuthStatusEnum.TO_AUTH.getCode();
+                }else if(code.equals(AuthStatusEnum.FAIl_AUTH.getCode())){
+                    authStatus = AuthStatusEnum.FAIl_AUTH.getCode();
+                }
+            }
+        }
+
+        final String authStatus2 = String.valueOf(authStatus);
         dictList.forEach(dict -> {
             // 查出认证的数据
-            UserAuthStatus userAuthStatus = authStatusRepository.findEnableAuthStatusByUserId(userId, dict.getDicCode());
+            String code = dict.getDicCode();
+            UserAuthStatus userAuthStatus = authStatusRepository.findEnableAuthStatusByUserId(userId, code);
             AuthGroupStatusResponse authStatusResponse = new AuthGroupStatusResponse();
-            authStatusResponse.setAuthCode(dict.getDicCode());
+            authStatusResponse.setAuthCode(code);
             authStatusResponse.setAuthName(dict.getDicValue());
             authStatusResponse.setAuthGroup(dict.getRemark());
             if (!ObjectUtils.isEmpty(userAuthStatus)) {
-                authStatusResponse.setAuthStatus(String.valueOf(userAuthStatus.getAuthStatus()));
-            }else{
+                if(personAuth.equals(code) || workAuth.equals(code)){
+                    authStatusResponse.setAuthStatus(String.valueOf(authStatus2));
+                }else {
+                    authStatusResponse.setAuthStatus(String.valueOf(userAuthStatus.getAuthStatus()));
+                }
+            } else {
                 authStatusResponse.setAuthStatus(String.valueOf(AuthStatusEnum.UN_AUTH.getCode()));
             }
-            authStatusList.add(authStatusResponse);
+            // 去掉专业信息认证
+            if(!authStatusResponse.getAuthCode().equals(workAuth)){
+                authStatusList.add(authStatusResponse);
+            }
         });
 
         return authStatusList;
@@ -231,7 +255,7 @@ public class AuthService {
             authStatusRepository.insertSelective(userAuthStatus);
         }
         // 认证失败，可重新认证，重新改为认证中
-        else{
+        else {
             // 修改 认证表的状态
             UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, code, statusCode, response.getHead().getError_msg());
             authStatusRepository.updateSelective(userAuthStatus);
@@ -310,8 +334,8 @@ public class AuthService {
         profile.setBirthMotherName(request.getBirthMotherName());
         profile.setChildrenNumber(request.getChildrenNumber().byteValue());
         profile.setMaritalStatus(request.getMaritalStatus());
-        profile.setRelationship1(relationship1+":"+personName1+":"+personTel1);
-        profile.setRelationship2(relationship2+":"+personName2+":"+personTel2);
+        profile.setRelationship1(relationship1 + ":" + personName1 + ":" + personTel1);
+        profile.setRelationship2(relationship2 + ":" + personName2 + ":" + personTel2);
         profile.setRemark("个人信息认证");
         personInfoRepository.insertPersonInfoAndUserAuthStatus(profile, userAuthStatus);
 
@@ -433,18 +457,18 @@ public class AuthService {
         userObj.setUpdateTime(LocalDateTime.now());
 
         // 获取UserAuthStatus对象
-        UserAuthStatus userAuthStatus ;
+        UserAuthStatus userAuthStatus;
 
         // 组装pic对象
         List<UserPic> list = Lists.newArrayList();
-        if(isNewAuth){
+        if (isNewAuth) {
             // 新认证
             list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
             list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
             // 获取UserAuthStatus对象，创建
             userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), user.getUserId(), authCode, statusCode, "身份信息认证");
             workRepository.insertIdentityInfo(list, userAuthStatus, userObj);
-        }else {
+        } else {
             // 更新认证
             list.add(UserPic.builder().id(authId).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
             list.add(UserPic.builder().id(authId).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
@@ -492,6 +516,7 @@ public class AuthService {
 
     /**
      * 短信认证和通讯录认证用到
+     *
      * @param authId
      * @param response
      * @param userId
@@ -503,13 +528,13 @@ public class AuthService {
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
 
-        Integer statusCode ;
+        Integer statusCode;
         // 认证成功
         if (response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             statusCode = AuthStatusEnum.HAS_AUTH.getCode();
         }
         // 认证失败
-        else{
+        else {
             statusCode = AuthStatusEnum.FAIl_AUTH.getCode();
         }
         // 保存失败原因，成功的为null
@@ -620,7 +645,7 @@ public class AuthService {
         Long authId = checkAuth(userId, authCode);
         Integer statusCode = AuthStatusEnum.TO_AUTH.getCode();
         // 没有认证记录
-        if(ObjectUtils.isEmpty(authId)){
+        if (ObjectUtils.isEmpty(authId)) {
             // 插入 认证中 状态
             UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, statusCode, "");
             authStatusRepository.insertSelective(userAuthStatus);
@@ -644,10 +669,10 @@ public class AuthService {
         if (!ObjectUtils.isEmpty(userAuthStatusHas)) {
             String code = userAuthStatusHas.getAuthCode();
             if (code.equals(String.valueOf(AuthStatusEnum.HAS_AUTH.getCode()))) {
-                log.info("该用户id，{} 已认证，不能重新认证",userId);
+                log.info("该用户id，{} 已认证，不能重新认证", userId);
                 throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
             } else if (code.equals(String.valueOf(AuthStatusEnum.TO_AUTH.getCode()))) {
-                log.info("该用户id，{} 在认证中，不能重新认证",userId);
+                log.info("该用户id，{} 在认证中，不能重新认证", userId);
                 throw new WarnException(BizCodeEnum.AUTH_RISK_ING);
             }
             // 认证失败，可以重新认证
@@ -664,11 +689,10 @@ public class AuthService {
     public Long isInAuth(Long userId, String authCode) {
         // 判断该用户是否已经验证
         UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
-        if(ObjectUtils.isEmpty(userAuthStatusHas)){
+        if (ObjectUtils.isEmpty(userAuthStatusHas)) {
             log.info("该用户id，{} ，未认证，不能处理回调");
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
-        }
-        else if(!(userAuthStatusHas.getAuthCode().equals(String.valueOf(AuthStatusEnum.TO_AUTH.getCode())))){
+        } else if (!(userAuthStatusHas.getAuthCode().equals(String.valueOf(AuthStatusEnum.TO_AUTH.getCode())))) {
             log.info("该用户id，{} ，不在认证中，不能处理回调");
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }

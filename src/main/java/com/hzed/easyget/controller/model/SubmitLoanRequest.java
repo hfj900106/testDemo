@@ -24,6 +24,13 @@ public class SubmitLoanRequest {
     private String inAccount;
     @NotBlank(message = "{param.loan.purposeId.isNotEmpty}")
     private String purposeId;
+    @NotNull(message = "{param.loan.authFee.isNotEmpty}")
+    private BigDecimal authFee;
+    @NotNull(message = "{param.loan.reviewFee.isNotEmpty}")
+    private BigDecimal reviewFee;
+    @NotNull(message = "{param.loan.handlingFee.isNotEmpty}")
+    private BigDecimal handlingFee;
+
 
     public String getInAccount() {
         return inAccount.replaceAll(" ", "");

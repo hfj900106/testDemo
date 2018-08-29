@@ -197,8 +197,13 @@
         </table>-->
 
         <table tableName="t_loan_work" domainObjectName="Work" >
+        <!--<table tableName="t_loan_user_message" domainObjectName="UserMessage" >
             <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
             <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        </table>-->
+
+        <table tableName="t_loan_bid_detail_fee" domainObjectName="BidDetailFee" >
+            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
         </table>
 
 

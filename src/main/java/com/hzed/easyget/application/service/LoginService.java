@@ -97,10 +97,10 @@ public class LoginService {
 
         // 校验是否我们平台发来的请求，是-通过 否-拦截
         if (!MD5Utils.verify(mobile, md5)) {
-            log.error("请求校验失败，手机号：", mobile);
+            log.error("DM5校验不通过，手机号：", mobile);
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
-
+        log.info("DM5校验通过");
         // 格式化手机号
         mobile = mobileFormat(mobile);
         // 校验是否三大运营商手机号

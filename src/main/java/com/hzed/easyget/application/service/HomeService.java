@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.AppVersionEnum;
 import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
-import com.hzed.easyget.application.enums.ProductEnum;
+import com.hzed.easyget.application.enums.ProductTypeEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.*;
@@ -72,7 +72,7 @@ public class HomeService {
     public ProductInfoResponse getProductInfo() {
 
         ProductInfoResponse productInfoResponse = new ProductInfoResponse();
-        Product product = productRepository.findByCode(ProductEnum.PRODUCT_CODE.getCode());
+        Product product = productRepository.findByCode(ProductTypeEnum.PRODUCT_CODE.getCode());
         if (Objects.isNull(product)) {
             throw new ComBizException(BizCodeEnum.NO_USEFUL_PRODUCT);
         }
@@ -120,7 +120,7 @@ public class HomeService {
         BigDecimal loanAmount = request.getLoanAmount();
         Integer period = request.getPeriod();
 
-        AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
+        AbstractProduct productInfo = ProductFactory.getProduct().createProduct(loanAmount, period);
         loanCalculateResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());
 
         loanCalculateResponse.setPeriod(period);

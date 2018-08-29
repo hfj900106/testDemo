@@ -27,10 +27,10 @@ spring:
     cacheSeconds: 86400 # 24小时
   # rabbitmq配置
   rabbitmq:
-    host: 10.10.30.114
+    host: 10.10.30.139
     port: 5672
-    username: user
-    password: password
+    username: guest
+    password: guest
     publisher-confirms: true
     virtual-host: /
     listener:
@@ -58,7 +58,7 @@ logging:
 # 第三方
 thirdParty:
   pay:
-    domain:                   http://10.10.30.112:8082 # 请求架构组bulepay域名地址
+    domain:                   http://10.10.30.112:8081 # 请求架构组bulepay域名地址
     loanTransactionUrl:       /bluepay/transferBalance  # 放款接口链接
     receiverTransactionUrl:   /bluepay/gatherDr # 收款接口链接
     getPaymentCodeUrl:        /bluepay/getPaymentCode #获取还款码接口

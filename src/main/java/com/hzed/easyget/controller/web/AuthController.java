@@ -90,6 +90,12 @@ public class AuthController {
         authService.operatorAuth(request);
     }
 
+    @ModuleFunc("运营商认证-风控回调")
+    @PostMapping("/operatorAuthCallback")
+    public void operatorAuthCallback(@Valid @RequestBody PeratorAuthCallbackRequest request) {
+        authService.operatorAuthCallback(request);
+    }
+
     @ModuleFunc(value = "专业信息认证", printParameterLength = 300)
     @PostMapping("/professional")
     public void professionalAuth(@Valid @RequestBody ProfessionalRequest request) {

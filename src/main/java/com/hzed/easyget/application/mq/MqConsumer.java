@@ -6,6 +6,7 @@ import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.handler.annotation.Payload;
 
 /**
@@ -15,6 +16,7 @@ import org.springframework.messaging.handler.annotation.Payload;
  * @date 2018年6月13日 下午6:10:40
  */
 @Slf4j
+@Profile({"test","prod"})
 public class MqConsumer {
 
     @Autowired

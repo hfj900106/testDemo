@@ -3,6 +3,8 @@ package com.hzed.easyget.application.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import com.hzed.easyget.application.enums.AuthStatusEnum;
+import com.hzed.easyget.controller.model.IdCardRecognitionRequest;
 import com.hzed.easyget.infrastructure.config.RiskProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.config.rest.RestService;
@@ -190,14 +192,16 @@ public class RiskService {
         return response;
     }
 
-    public RiskResponse idCardRecognition(String idCardBase64ImgStr) {
+    public RiskResponse idCardRecognition(IdCardRecognitionRequest request) {
         GlobalUser user = getGlobalUser();
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
         map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
-        map.put("imageFile", idCardBase64ImgStr);
+        map.put("imageFile", request.getIdCardBase64ImgStr());
+        map.put("faceImageFile", request.getFaceBase64ImgStr());
+        map.put("bizToken", request.getBizToken());
 
         String url = riskProp.getIdCardRecognitionUrl();
         log.info("============================请求风控开始===============================");
@@ -242,7 +246,10 @@ public class RiskService {
         redisService.setCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile(), "face", 7200L);
     }
 
-    public void identityInfoAuth() {
+    public Integer identityInfoAuth() {
+
+        // 默认成功
+        Integer status = AuthStatusEnum.HAS_AUTH.getCode();
         GlobalUser user = getGlobalUser();
         String face = redisService.getCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
         if (StringUtils.isBlank(face)) {
@@ -265,11 +272,14 @@ public class RiskService {
         if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
+
+        // 认证失败
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
-            throw new WarnException(BizCodeEnum.FAIL_AUTH);
+            status =  AuthStatusEnum.FAIl_AUTH.getCode();
         }
         // 成功后删除redis标志
         redisService.clearCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
+        return status;
     }
 
     /**

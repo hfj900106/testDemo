@@ -25,4 +25,8 @@ public class RedisConsts {
     public static final String FACE = "face";
     public static final String AUTH = "auth";
 
+    public static final String FACEBOOK_H5 = "facebook_H5";
+    public static final String FACEBOOK_LOGIN = "facebook_login";
+
+
 }

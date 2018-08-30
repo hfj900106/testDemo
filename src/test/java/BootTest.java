@@ -2,15 +2,12 @@ import com.hzed.BootApplication;
 import com.hzed.easyget.application.service.FileService;
 import com.hzed.easyget.application.service.LoginService;
 import com.hzed.easyget.application.service.product.ProductFactory;
-import com.hzed.easyget.application.service.product.ProductService;
+import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.PictureCodeResponse;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.utils.PicUtil;
 import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
-import com.hzed.easyget.persistence.auto.entity.Bid;
-import com.hzed.easyget.persistence.auto.entity.Bill;
-import com.hzed.easyget.persistence.auto.entity.BillLedger;
 import org.apache.commons.codec.binary.Base64;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
@@ -23,7 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.List;
+import java.math.BigDecimal;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BootApplication.class)

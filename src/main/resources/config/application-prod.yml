@@ -62,7 +62,7 @@ system:
     saRepaymentSuccess: true
     saRepaymentSuccessCron: 0 */2 * * * ?
     # 催账短信
-    checkBill: true
+    checkBill: false
     checkBillCron: 0 0 15 * * ?
 #======================================= 系统参数 结束 =======================================#
 

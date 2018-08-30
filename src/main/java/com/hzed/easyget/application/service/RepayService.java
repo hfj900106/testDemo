@@ -3,7 +3,6 @@ package com.hzed.easyget.application.service;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
-import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
@@ -383,7 +382,7 @@ public class RepayService {
         // 相关账单
         Bid bid = bidRepository.findByIdWithExp(bidId);
         //获取产品最小还款值
-        BigDecimal minRepayAmount = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(bid.getLoanAmount(), bid.getPeriod()).getMinRepayAmount();
+        BigDecimal minRepayAmount = ProductFactory.getProduct().createProduct(bid.getLoanAmount(), bid.getPeriod()).getMinRepayAmount();
         if (ObjectUtils.isEmpty(minRepayAmount)) {
             log.error("找不到产品的最小还款金额");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
@@ -410,7 +409,7 @@ public class RepayService {
         // 部分还款
         if (!flag) {
             // 获取产品最小还款值
-            BigDecimal minRepayAmount = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(bid.getLoanAmount(), bid.getPeriod()).getMinRepayAmount();
+            BigDecimal minRepayAmount = ProductFactory.getProduct().createProduct(bid.getLoanAmount(), bid.getPeriod()).getMinRepayAmount();
             if (ObjectUtils.isEmpty(minRepayAmount)) {
                 log.error("找不到产品的最小还款金额");
                 throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);

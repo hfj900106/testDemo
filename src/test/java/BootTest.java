@@ -70,7 +70,7 @@ public class BootTest {
 
     @Test
     public void factoryTest() {
-        AbstractProduct product = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(new BigDecimal(60000), 14);
+        AbstractProduct product = ProductFactory.getProduct().createProduct(new BigDecimal(60000), 14);
         System.out.println(product.getHeadFee());
         System.out.println(product.getInterest());
     }

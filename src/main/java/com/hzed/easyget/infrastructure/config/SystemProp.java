@@ -20,7 +20,6 @@ public class SystemProp {
     private Long expectedAuditTimeInterval;
     private Long expectedLendingTimeInterval;
     private String local;
-    private Integer daysInAdvance;
     private Integer expiredDay;
     private String H5MessageUrl;
     private String[] TelkomselMobilePrefix;

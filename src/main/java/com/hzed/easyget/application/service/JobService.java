@@ -262,8 +262,7 @@ public class JobService {
     }
 
     public void checkBill() {
-        Integer daysInAdvance = systemProp.getDaysInAdvance();
-        List<BillExt> billExts = billRepository.findUnRepayBillExt(daysInAdvance);
+        List<BillExt> billExts = billRepository.findUnRepayBillExt(3);
         if (ObjectUtils.isEmpty(billExts)) {
             return;
         }
@@ -296,5 +295,15 @@ public class JobService {
                 }
             }
         }
+    }
+
+    public void checkBillD2(int i) {
+
+    }
+
+    public void checkBillD1(int i) {
+    }
+
+    public void checkBillD0(int i) {
     }
 }

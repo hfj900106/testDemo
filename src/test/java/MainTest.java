@@ -2,6 +2,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hzed.easyget.infrastructure.model.AppVersionModel;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -23,10 +27,6 @@ import java.util.Optional;
 @Slf4j
 public class MainTest {
     public static void main(String[] args) throws InvocationTargetException, IllegalAccessException {
-            String str = "";
-            test(str);
-        System.out.println(str);
-
 //        optionalTest();
 //        jsonTest();
 //        stringCompareTest();
@@ -41,11 +41,17 @@ public class MainTest {
 //        System.out.println(System.nanoTime());
 //        System.out.println("BANK TABUNGAN PENSIUNAN NASIONAL/BTPN".length());
 //        System.out.println(String.valueOf(IDGenerator.nextId()).length());
-
+        testDaysBetween();
 
     }
 
-    public static  void test(String str) {
+    public static void testDaysBetween() {
+        LocalDateTime localDateTime = DateUtil.addDays(LocalDateTime.of(LocalDate.now(), LocalTime.MIN), 1);
+        System.out.println(localDateTime);
+
+    }
+
+    public static void test(String str) {
         str = "12321";
         System.out.println(str);
     }
@@ -120,9 +126,9 @@ public class MainTest {
         User u = new User("gui");
 
         Method[] methods = User.class.getDeclaredMethods();
-        for(Method method:methods) {
+        for (Method method : methods) {
             String name = method.getName();
-            if(name.startsWith("get")) {
+            if (name.startsWith("get")) {
                 System.out.println(name);
                 String invoke = (String) method.invoke(u, null);
                 System.out.println(invoke);

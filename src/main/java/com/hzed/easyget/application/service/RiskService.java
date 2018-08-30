@@ -260,6 +260,7 @@ public class RiskService {
         map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
+        map.put("mobile", getGlobalUser().getMobile());
 
         String url = riskProp.getIdentityInfoUrl();
         log.info("============================请求风控开始===============================");

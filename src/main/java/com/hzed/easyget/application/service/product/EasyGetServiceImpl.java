@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -43,7 +45,7 @@ public class EasyGetServiceImpl implements ProductService {
         bill.setId(IDGenerator.nextId());
         bill.setBidId(bid.getId());
         bill.setIndexPeriods(1);
-        bill.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), bid.getPeriod()));
+        bill.setRepaymentTime(getRepaymentTime(bid.getPeriod()));
         bill.setRepaymentAmount(createProduct(bid.getLoanAmount(), bid.getPeriod()).getTotalRepaymentAmount());
         bill.setRealRepaymentAmount(new BigDecimal(0));
         bill.setStatus(BillStatusEnum.WAIT_CLEAR.getCode().byteValue());
@@ -62,7 +64,7 @@ public class EasyGetServiceImpl implements ProductService {
             // 本金台账
             BillLedger billLedger1 = new BillLedger();
             billLedger1.setBillId(bill.getId());
-            billLedger1.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), period));
+            billLedger1.setRepaymentTime(getRepaymentTime(period));
             billLedger1.setId(IDGenerator.nextId());
             billLedger1.setRepaymentAmount(amount);
             billLedger1.setRepaymentItem(BillLedgerItemEnum.CORPUS.getCode().byteValue());
@@ -70,7 +72,7 @@ public class EasyGetServiceImpl implements ProductService {
             // 尾款台账
             BillLedger billLedger2 = new BillLedger();
             billLedger2.setBillId(bill.getId());
-            billLedger2.setRepaymentTime(DateUtil.addDays(LocalDateTime.now(), period));
+            billLedger2.setRepaymentTime(getRepaymentTime(period));
             billLedger2.setId(IDGenerator.nextId());
             billLedger2.setRepaymentAmount(product.getTailFee());
             billLedger2.setRepaymentItem(BillLedgerItemEnum.TAIL_FEE.getCode().byteValue());
@@ -97,6 +99,11 @@ public class EasyGetServiceImpl implements ProductService {
         product.setMinRepayAmount(productConf.getMinRepayAmount());
 
         return product;
+    }
+
+    @Override
+    public LocalDateTime getRepaymentTime(Integer period) {
+        return DateUtil.addDays(LocalDateTime.of(LocalDate.now(), LocalTime.MIN), period - 1);
     }
 
 }

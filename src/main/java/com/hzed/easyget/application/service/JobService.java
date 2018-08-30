@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -142,11 +143,19 @@ public class JobService {
 
         jobList.forEach(repayjob -> {
             MdcUtil.putTrace();
+            // 标ID
+            Long bidId = repayjob.getBidId();
+            // 还款金额
+            BigDecimal repaymentAmount = repayjob.getRepaymentAmount();
+            // 实际还款时间
+            LocalDateTime realRepaymentTime = repayjob.getRealRepaymentTime();
+            // 本地交易ID
+            Long transactionId = repayjob.getTransactionId();
             try {
                 // 走信息流
-                repayService.repayInformationFlow(repayjob.getBidId(), repayjob.getRepaymentAmount(), repayjob.getRealRepaymentTime(), repayjob.getTransactionId(), repayjob);
+                repayService.repayInformationFlow(bidId, repaymentAmount, realRepaymentTime, transactionId, repayjob);
             } catch (Exception ex) {
-                log.error("标的：{} 走还款信息流失败", repayjob.getBidId(), ex);
+                log.error("标的：{} 走还款信息流失败", bidId, ex);
 
                 RepayInfoFlowJob jobUpdate = new RepayInfoFlowJob();
                 jobUpdate.setId(repayjob.getId());

@@ -685,16 +685,16 @@ public class AuthService {
         UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
         Long authId = null;
         if (!ObjectUtils.isEmpty(userAuthStatusHas)) {
-            String code = userAuthStatusHas.getAuthCode();
-            if (code.equals(String.valueOf(AuthStatusEnum.HAS_AUTH.getCode()))) {
+            Integer code = userAuthStatusHas.getAuthStatus();
+            if (code.equals(AuthStatusEnum.HAS_AUTH.getCode())) {
                 log.info("该用户id，{} 已认证，不能重新认证", userId);
                 throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
-            } else if (code.equals(String.valueOf(AuthStatusEnum.TO_AUTH.getCode()))) {
+            } else if (code.equals(AuthStatusEnum.TO_AUTH.getCode())) {
                 log.info("该用户id，{} 在认证中，不能重新认证", userId);
                 throw new WarnException(BizCodeEnum.AUTH_RISK_ING);
             }
             // 认证失败，可以重新认证
-            else if (code.equals(String.valueOf(AuthStatusEnum.FAIl_AUTH.getCode()))) {
+            else if (code.equals(AuthStatusEnum.FAIl_AUTH.getCode())) {
                 authId = userAuthStatusHas.getId();
             }
         }
@@ -710,7 +710,7 @@ public class AuthService {
         if (ObjectUtils.isEmpty(userAuthStatusHas)) {
             log.info("该用户id，{} ，未认证，不能处理回调");
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
-        } else if (!(userAuthStatusHas.getAuthCode().equals(String.valueOf(AuthStatusEnum.TO_AUTH.getCode())))) {
+        } else if (!(userAuthStatusHas.getAuthStatus().equals(AuthStatusEnum.TO_AUTH.getCode()))) {
             log.info("该用户id，{} ，不在认证中，不能处理回调");
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }

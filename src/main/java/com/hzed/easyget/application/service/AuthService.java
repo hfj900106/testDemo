@@ -65,7 +65,7 @@ public class AuthService {
     private DictRepository dictRepository;
 
     /**
-     * 获取用户认证状态
+     * 获取用户认证项信息
      */
     public List<AuthStatusResponse> getAuthStatus(AuthStatusRequest request) {
         List<AuthStatusResponse> authStatusList = Lists.newArrayList();
@@ -87,7 +87,7 @@ public class AuthService {
     }
 
     /**
-     * 获取用户认证状态
+     * 获取用户认证组状态
      */
     public List<AuthGroupStatusResponse> getAuthGroupStatus(AuthStatusRequest request) {
         List<AuthGroupStatusResponse> authStatusList = Lists.newArrayList();

@@ -200,7 +200,6 @@ public class RiskService {
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
         map.put("imageFile", request.getIdCardBase64ImgStr());
-        map.put("faceImageFile", request.getFaceBase64ImgStr());
         map.put("bizToken", request.getBizToken());
 
         String url = riskProp.getIdCardRecognitionUrl();

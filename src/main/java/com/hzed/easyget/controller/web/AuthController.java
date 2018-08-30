@@ -3,8 +3,8 @@ package com.hzed.easyget.controller.web;
 import com.hzed.easyget.application.service.AuthService;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
-import com.hzed.easyget.infrastructure.annotation.head.IgnoreHeader;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
+import com.hzed.easyget.infrastructure.annotation.head.IgnoreHeader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +30,18 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @ModuleFunc("获取用户认证信息")
+    @PostMapping("/getAuthStatus")
+    public List<AuthStatusResponse> getAuthStatus(@Valid @RequestBody AuthStatusRequest request) {
+        return authService.getAuthStatus(request);
+    }
+
+    @ModuleFunc("获取用户认证分组信息")
+    @PostMapping("/getAuthGroupStatus")
+    public List<AuthGroupStatusResponse> getAuthGroupStatus(@Valid @RequestBody AuthStatusRequest request) {
+        return authService.getAuthGroupStatus(request);
+    }
+
     @ModuleFunc(value = "通讯录认证", printParameterLength = 300)
     @PostMapping("/contacts")
     public void contacts(@Valid @RequestBody ContactsRequest request) {
@@ -46,6 +58,12 @@ public class AuthController {
     @PostMapping("/personInfo")
     public void personInfoAuth(@Valid @RequestBody PersonInfoAuthRequest request) {
         authService.authPersonInfo(request);
+    }
+
+    @ModuleFunc(value = "专业信息认证", printParameterLength = 300)
+    @PostMapping("/professional")
+    public void professionalAuth(@Valid @RequestBody ProfessionalRequest request) {
+        authService.professionalAuth(request);
     }
 
     @ModuleFunc(value = "身份证识别", printParameterLength = 300)
@@ -94,12 +112,6 @@ public class AuthController {
     @PostMapping("/operatorAuthCallback")
     public void operatorAuthCallback(@Valid @RequestBody PeratorAuthCallbackRequest request) {
         authService.operatorAuthCallback(request);
-    }
-
-    @ModuleFunc(value = "专业信息认证", printParameterLength = 300)
-    @PostMapping("/professional")
-    public void professionalAuth(@Valid @RequestBody ProfessionalRequest request) {
-        authService.professionalAuth(request);
     }
 
     @IgnoreHeader

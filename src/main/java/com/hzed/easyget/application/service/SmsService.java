@@ -102,68 +102,93 @@ public class SmsService {
     }
 
     public void sendSms(String mobile, String content, String smsIdStr) {
-
         Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
         if (ObjectUtils.isEmpty(dictSms)) {
             log.error("没有配置短信渠道");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
         String dicValue = dictSms.getDicValue();
+        log.info("发送短信渠道：{}", dicValue);
         if (!ObjectUtils.isEmpty(dicValue) && ComConsts.NX.equalsIgnoreCase(dicValue)) {
             // 使用牛信发送短信
-            NxSmsSendRequest smsSendRequest = new NxSmsSendRequest();
-            smsSendRequest.setPhone("62" + mobile);
-            smsSendRequest.setTaskTime(DateUtil.localDateTimeToStr1(LocalDateTime.now()));
-            smsSendRequest.setContent(content);
-            log.info("发送短信渠道：{},请求参数：{}", dicValue, JSONObject.toJSONString(smsSendRequest));
-            NxSmsSendResponse smsSendResponse = NxSmsUtil.smsSend(smsSendRequest);
-            if (ObjectUtils.isEmpty(smsSendResponse)) {
-                log.error("返回空的数据对象");
-                throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
-            }
-            log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsSendResponse));
-            // 发送失败
-            if (!SmsCodeEnum.OK.getKey().equals(smsSendResponse.getCode())) {
-                log.error("NX发送失败：{}", smsSendResponse.getResult());
-                throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
-            }
+            nxSend(mobile, content);
         } else {
-            // bulk短信下发请求bean
-            BulkSmsDownRequest smsDownRequest = new BulkSmsDownRequest();
-            // 短信请求body
-            BulkSmsDownRequest.MsgBody msgBody = new BulkSmsDownRequest.MsgBody();
-            // 短信来源
-            msgBody.setFrom("easyget");
-            // 消息标识id 短信表的id作为短信的唯一标识发给渠道商
-            msgBody.setReference(smsIdStr);
-            // 短信内容实体
-            BulkSmsDownRequest.MsgBody.SmsBody smsBody = new BulkSmsDownRequest.MsgBody.SmsBody();
-            smsBody.setContent(content);
-            // 设置短信内容实体
-            msgBody.setBody(smsBody);
-            // 短信接收者
-            BulkSmsDownRequest.MsgBody.Member member = new BulkSmsDownRequest.MsgBody.Member();
-            // 00加国家代码中国为0086
-            member.setNumber("0062" + mobile);
-            //设置短信接收列表
-            msgBody.setTo(Lists.newArrayList(member));
-            // bulk短信下发请求消息
-            BulkSmsDownRequest.Message message = new BulkSmsDownRequest.Message();
-            // bulk短信下发请求消息body列表
-            message.setMsg(Lists.newArrayList(msgBody));
-            smsDownRequest.setMessages(message);
-            log.info("发送短信渠道：{},请求参数：{}", dicValue, JSONObject.toJSONString(smsDownRequest));
-            BulkSmsDownResponse smsDownResponse = BulkSmsUtil.smsSend(smsDownRequest);
-            if (ObjectUtils.isEmpty(smsDownResponse)) {
-                log.error("返回空的数据对象");
-                throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
-            }
-            log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
-            if (ComConsts.BULK_SMS_OK != smsDownResponse.getErrorCode()) {
-                log.error("CM发送失败：{}", JSONObject.toJSONString(smsDownResponse.getMessages()));
-                throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
-            }
+            cnSend(mobile, content, smsIdStr);
+
         }
+    }
+
+    /**
+     * 国际发短信
+     */
+    public void cnSend(String mobile, String content, String smsIdStr) {
+        // bulk短信下发请求bean
+        BulkSmsDownRequest smsDownRequest = new BulkSmsDownRequest();
+        // 短信请求body
+        BulkSmsDownRequest.MsgBody msgBody = new BulkSmsDownRequest.MsgBody();
+        // 短信来源
+        msgBody.setFrom("easyget");
+        // 消息标识id 短信表的id作为短信的唯一标识发给渠道商
+        msgBody.setReference(smsIdStr);
+        // 短信内容实体
+        BulkSmsDownRequest.MsgBody.SmsBody smsBody = new BulkSmsDownRequest.MsgBody.SmsBody();
+        smsBody.setContent(content);
+        // 设置短信内容实体
+        msgBody.setBody(smsBody);
+        // 短信接收者
+        BulkSmsDownRequest.MsgBody.Member member = new BulkSmsDownRequest.MsgBody.Member();
+        // 00加国家代码中国为0086
+        member.setNumber("0062" + mobile);
+        //设置短信接收列表
+        msgBody.setTo(Lists.newArrayList(member));
+        // bulk短信下发请求消息
+        BulkSmsDownRequest.Message message = new BulkSmsDownRequest.Message();
+        // bulk短信下发请求消息body列表
+        message.setMsg(Lists.newArrayList(msgBody));
+        smsDownRequest.setMessages(message);
+        log.info("请求参数：{}", JSONObject.toJSONString(smsDownRequest));
+        BulkSmsDownResponse smsDownResponse = BulkSmsUtil.smsSend(smsDownRequest);
+        if (ObjectUtils.isEmpty(smsDownResponse)) {
+            log.error("返回空的数据对象");
+            throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
+        }
+        log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
+        if (ComConsts.BULK_SMS_OK != smsDownResponse.getErrorCode()) {
+            log.error("CM发送失败：{}", JSONObject.toJSONString(smsDownResponse.getMessages()));
+            throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
+        }
+    }
+
+    /**
+     * 牛信发短信
+     * @param channel 通道 0-验证通道 1-营销账号
+     */
+    public void nxSend(String mobile, String content, Integer channel) {
+        NxSmsSendRequest smsSendRequest = new NxSmsSendRequest();
+        smsSendRequest.setPhone("62" + mobile);
+        smsSendRequest.setTaskTime(DateUtil.localDateTimeToStr1(LocalDateTime.now()));
+        smsSendRequest.setContent(content);
+        smsSendRequest.setSmsChannelType(channel);
+        log.info("请求参数：{}", JSONObject.toJSONString(smsSendRequest));
+        NxSmsSendResponse smsSendResponse = NxSmsUtil.smsSend(smsSendRequest);
+        if (ObjectUtils.isEmpty(smsSendResponse)) {
+            log.error("返回空的数据对象");
+            throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
+        }
+        log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsSendResponse));
+        // 发送失败
+        if (!SmsCodeEnum.OK.getKey().equals(smsSendResponse.getCode())) {
+            log.error("NX发送失败：{}", smsSendResponse.getResult());
+            throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
+        }
+    }
+
+    /**
+     * 牛信发短信
+     * 默认通道 0-验证通道
+     */
+    public void nxSend(String mobile, String content) {
+        nxSend(mobile, content, 0);
     }
 
     public void sendAndSaveSms(String mobile, String content, String remark) {
@@ -179,12 +204,6 @@ public class SmsService {
 
     /**
      * 保存短信记录
-     *
-     * @param id
-     * @param content
-     * @param mobile
-     * @param status
-     * @param remark
      */
     public void saveSmsLog(Long id, String content, String mobile, byte status, String remark) {
         Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
@@ -207,8 +226,6 @@ public class SmsService {
 
     /**
      * 获取验证码
-     *
-     * @return
      */
     public String getCode() {
         SystemProp systemProp = SpringContextUtil.getBean(SystemProp.class);

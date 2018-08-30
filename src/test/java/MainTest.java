@@ -2,7 +2,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hzed.easyget.infrastructure.model.AppVersionModel;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
-import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.JwtUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,9 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -46,8 +43,11 @@ public class MainTest {
     }
 
     public static void testDaysBetween() {
-        LocalDateTime localDateTime = DateUtil.addDays(LocalDateTime.of(LocalDate.now(), LocalTime.MIN), 1);
-        System.out.println(localDateTime);
+        LocalDateTime nowTime = LocalDateTime.now();
+        LocalDateTime nowDate = LocalDateTime.of(nowTime.getYear(), nowTime.getMonth(), nowTime.getDayOfMonth(), 0, 0);
+        System.out.println(nowDate);
+//        LocalDateTime localDateTime = DateUtil.addDays(LocalDateTime.of(LocalDate.now(), LocalTime.MIN), 1);
+//        System.out.println(localDateTime);
 
     }
 

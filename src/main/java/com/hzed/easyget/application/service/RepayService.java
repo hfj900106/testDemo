@@ -281,7 +281,7 @@ public class RepayService {
         if (corpusLedger.getRepaymentAmount().compareTo(corpusLedger.getRealRepaymentAmount()) == 0) {
             billUpdate.setSettlementTime(realRepaymentTime);
             // 逾期结清还是正常结清
-            billUpdate.setStatus(DateUtil.compare(realRepaymentTime, bill.getRepaymentTime()) ?
+            billUpdate.setStatus(DateUtil.daysBetweenNoHMS(bill.getRepaymentTime(), realRepaymentTime) > 0 ?
                     BillStatusEnum.OVERDUE_CLEAR.getCode().byteValue() : BillStatusEnum.NORMAL_CLEAR.getCode().byteValue());
         } else {
             // 部分还款

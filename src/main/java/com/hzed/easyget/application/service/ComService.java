@@ -2,7 +2,6 @@ package com.hzed.easyget.application.service;
 
 import com.hzed.easyget.application.enums.BillLedgerItemEnum;
 import com.hzed.easyget.application.enums.BillStatusEnum;
-import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;

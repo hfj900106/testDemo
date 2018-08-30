@@ -30,18 +30,6 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @ModuleFunc("获取用户认证信息")
-    @PostMapping("/getAuthStatus")
-    public List<AuthStatusResponse> getAuthStatus(@Valid @RequestBody AuthStatusRequest request) {
-        return authService.getAuthStatus(request);
-    }
-
-    @ModuleFunc("获取用户认证分组信息")
-    @PostMapping("/getAuthGroupStatus")
-    public List<AuthGroupStatusResponse> getAuthGroupStatus(@Valid @RequestBody AuthStatusRequest request) {
-        return authService.getAuthGroupStatus(request);
-    }
-
     @ModuleFunc(value = "通讯录认证", printParameterLength = 300)
     @PostMapping("/contacts")
     public void contacts(@Valid @RequestBody ContactsRequest request) {

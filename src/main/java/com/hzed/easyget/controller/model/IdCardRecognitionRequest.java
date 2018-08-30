@@ -15,8 +15,6 @@ public class IdCardRecognitionRequest {
 
     @NotBlank(message = "{param.auth.idCardBase64ImgStr.isNotEmpty}")
     private String idCardBase64ImgStr;
-    @NotBlank(message = "{param.auth.faceBase64ImgStr.isNotEmpty}")
-    private String faceBase64ImgStr;
     @NotBlank(message = "{param.auth.bizToken.isNotEmpty}")
     private String bizToken;
 }

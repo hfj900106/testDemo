@@ -399,16 +399,16 @@ public class AuthService {
         }
         String name = data.getString("name");
         String gender = data.getString("gender");
-        String idNumber = data.getString("idNumber");
-        String birthPlaceBirthday = data.getString("birthPlaceBirthday");
-        if (!StringUtils.isBlank(birthPlaceBirthday)) {
+        String idNumber = data.getString("idcardNumber");
+        String birthday = data.getString("birthday");
+        if (!StringUtils.isBlank(birthday)) {
             // 注意有空格
-            int strLength = birthPlaceBirthday.length();
+            int strLength = birthday.length();
             if (strLength < 10) {
                 // 识别生日数据有错则直接给空串
                 recognitionResponse.setBirthday("");
             } else {
-                recognitionResponse.setBirthday(birthPlaceBirthday.substring(strLength - 10, strLength));
+                recognitionResponse.setBirthday(birthday.substring(strLength - 10, strLength));
             }
         }
         recognitionResponse.setName(name);

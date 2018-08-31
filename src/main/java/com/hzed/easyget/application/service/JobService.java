@@ -261,49 +261,62 @@ public class JobService {
         saService.saRepaymentSuccess();
     }
 
-    public void checkBill() {
-        List<BillExt> billExts = billRepository.findUnRepayBillExt(3);
-        if (ObjectUtils.isEmpty(billExts)) {
+    /**
+     * D-2：每天1条，12点半发
+     * D-1：每天2条，早上7点半，中午12点半
+     */
+    public void checkBillD1AndD2(int day) {
+        String template = dictRepository.findByCodeAndLanguage(ComConsts.SMS_CONTENT_4, systemProp.getLocal()).getDicValue();
+        List<BillExt> bills = billRepository.findUnRepayBillExt(day);
+        if (ObjectUtils.isEmpty(bills)) {
             return;
         }
-        String template = dictRepository.findByCodeAndLanguage(ComConsts.SMS_CONTENT_4, systemProp.getLocal()).getDicValue();
+        bills.forEach(billExt -> {
+            smsNX(day, billExt.getMobile(), template, 0);
+        });
+
+    }
+
+    /**
+     * D-0:每天5条，4点、10点、12点半、4点、8点
+     */
+    public void checkBillD0(int day) {
+        String template = dictRepository.findByCodeAndLanguage(ComConsts.SMS_CONTENT_7, systemProp.getLocal()).getDicValue();
+        List<BillExt> bills = billRepository.findUnRepayBillExt(day);
+        if (ObjectUtils.isEmpty(bills)) {
+            return;
+        }
+        bills.forEach(billExt -> {
+            smsNX(day, billExt.getMobile(), template, 1);
+        });
+
+    }
+
+    private void smsNX(int day, String mobile, String template, int channel) {
         String title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
         if (StringUtils.isBlank(template)) {
             log.error("没有配置短信模板");
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+            throw new WarnException(BizCodeEnum.DICT_NOTEXISTS);
         }
         if (StringUtils.isBlank(title)) {
             log.error("没有配置信息title");
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+            throw new WarnException(BizCodeEnum.DICT_NOTEXISTS);
         }
-        for (BillExt billExt : billExts) {
-            Integer day = billExt.getDay();
-            if (day != null) {
-                String msg = StringUtils.replace(template, "{0}", String.valueOf(day));
-                String mobile = billExt.getMobile();
-                try {
-                    log.info("发送催账短信-成功，手机号码{}", mobile);
+        String content = StringUtils.replace(template, "{0}", String.valueOf(day));
+        try {
+            log.info("发送催账短信-成功，手机号码{}", mobile);
 
-                    // 发送及保存短信
-                    smsService.sendAndSaveSms(mobile, msg, "短信催账");
+            // 发送及保存短信
+            //smsService.sendAndSaveSms(mobile, msg, "短信催账");
+            //smsService.sendNX(mobile, content, "短信催账", channel);
 
-                    // 通过手机号获取用户id
-                    Long userId = userRepository.findByMobile(mobile).getId();
-                    messageRepository.addUserMessage(userId, title, msg, "短信催账");
-                } catch (Exception ex) {
-                    log.info("发送催账短信-失败，手机号码{}", mobile);
-                }
-            }
+            // 通过手机号获取用户id
+            Long userId = userRepository.findByMobile(mobile).getId();
+            messageRepository.addUserMessage(userId, title, content, "短信催账");
+        } catch (Exception ex) {
+            log.info("发送催账短信-失败，手机号码{}", mobile);
         }
     }
 
-    public void checkBillD2(int i) {
 
-    }
-
-    public void checkBillD1(int i) {
-    }
-
-    public void checkBillD0(int i) {
-    }
 }

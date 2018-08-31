@@ -48,6 +48,7 @@ public class ComConsts {
     public static final String SMS_CONTENT_4 = "sms_templete_4";
     public static final String SMS_CONTENT_5 = "sms_templete_5";
     public static final String SMS_CONTENT_6 = "sms_templete_6";
+    public static final String SMS_CONTENT_7 = "sms_templete_7";
 
     /**
      * 消息title

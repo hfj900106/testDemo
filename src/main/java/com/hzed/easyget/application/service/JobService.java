@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -271,9 +272,7 @@ public class JobService {
         if (ObjectUtils.isEmpty(bills)) {
             return;
         }
-        bills.forEach(billExt -> {
-            smsNX(day, billExt.getMobile(), template, 0);
-        });
+        bills.forEach(billExt -> smsNX(day, billExt.getMobile(), template, 0));
 
     }
 
@@ -286,37 +285,38 @@ public class JobService {
         if (ObjectUtils.isEmpty(bills)) {
             return;
         }
-        bills.forEach(billExt -> {
-            smsNX(day, billExt.getMobile(), template, 1);
-        });
+        bills.forEach(billExt -> smsNX(day, billExt.getMobile(), template, 1));
 
     }
 
         private void smsNX(int day, String mobile, String template, Integer channel) {
-        String title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
-        if (StringUtils.isBlank(template)) {
-            log.error("没有配置短信模板");
-            throw new WarnException(BizCodeEnum.DICT_NOTEXISTS);
-        }
-        if (StringUtils.isBlank(title)) {
-            log.error("没有配置信息title");
-            throw new WarnException(BizCodeEnum.DICT_NOTEXISTS);
-        }
-        String content = StringUtils.replace(template, "{0}", String.valueOf(day));
-        try {
-            log.info("发送催账短信-成功，手机号码{}", mobile);
+            MdcUtil.putTrace();
+            try {
+                String title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
+                if (StringUtils.isBlank(template)) {
+                    log.error("没有配置短信模板");
+                    throw new WarnException(BizCodeEnum.DICT_NOTEXISTS);
+                }
+                if (StringUtils.isBlank(title)) {
+                    log.error("没有配置信息title");
+                    throw new WarnException(BizCodeEnum.DICT_NOTEXISTS);
+                }
 
-            // 发送及保存短信
-            //smsService.sendAndSaveSms(mobile, msg, "短信催账");
-            //smsService.sendNX(mobile, content, "短信催账", channel);
+                String content = MessageFormat.format(template, String.valueOf(day));
 
-            // 通过手机号获取用户id
-            Long userId = userRepository.findByMobile(mobile).getId();
-            messageRepository.addUserMessage(userId, title, content, "短信催账");
-        } catch (Exception ex) {
-            log.info("发送催账短信-失败，手机号码{}", mobile);
+                log.info("发送催账短信-成功，手机号码{}", mobile);
+
+                // 发送及保存短信
+                //smsService.sendAndSaveSms(mobile, msg, "短信催账");
+                //smsService.sendNX(mobile, content, "短信催账", channel);
+
+                // 通过手机号获取用户id
+                Long userId = userRepository.findByMobile(mobile).getId();
+                messageRepository.addUserMessage(userId, title, content, "短信催账");
+
+            } catch (WarnException e) {
+                log.error("发送催账短信-失败，手机号码{}", mobile, e);
+            }
         }
-    }
-
 
 }

@@ -50,6 +50,15 @@ system:
     # 催账短信
     checkBill: true
     checkBillCron: 0 0 15 * * ?
+    # 短信催账D_0 每天5条，4点、10点、12点半、4点、8点
+    checkBill_D0: false
+    checkBillCron_D0: 0 0 4,10,12,16,20 * * ?
+    # 短信催账D_1 每天2条，早上7点半，中午12点半
+    checkBill_D1: false
+    checkBillCron_D1: 0 30 7,12 * * ?
+    # 短信催账D_2 每天1条，12点半发
+    checkBill_D2: false
+    checkBillCron_D2: 0 30 12 * * ?
 #======================================= 系统参数 结束 =======================================#
 
 

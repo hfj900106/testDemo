@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ public class MainTest {
 //        System.out.println(System.nanoTime());
 //        System.out.println("BANK TABUNGAN PENSIUNAN NASIONAL/BTPN".length());
 //        System.out.println(String.valueOf(IDGenerator.nextId()).length());
-
+        System.out.println(LocalDateTime.now().getHour());
 
     }
 

@@ -57,7 +57,7 @@ system:
     checkBillD1: true
     checkBillCronD1: 0 30 7,12 * * ?
     # 短信催账D2 每天1条，12点半发
-    checkBillD2: ture
+    checkBillD2: true
     checkBillCronD2: 0 30 12 * * ?
 #======================================= 系统参数 结束 =======================================#
 

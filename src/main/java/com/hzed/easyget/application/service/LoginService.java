@@ -288,7 +288,7 @@ public class LoginService {
         String dicValue = smsContent1.get(0).getDictValue();
         //替换验证码
         String content = StringUtils.replace(dicValue, "{0}", code);
-        smsService.sendAndSaveSms(mobile, content, "短信验证码");
+        smsService.sendDefaultSms(mobile, content, "短信验证码");
 
         //保存到Redis，手机验证码30分钟有效
         redisService.setCache(RedisConsts.SMS_CODE + RedisConsts.SPLIT + mobile, code, 1800L);

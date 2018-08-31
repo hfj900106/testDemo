@@ -154,19 +154,18 @@ public class DictService {
     }
 
     public void switchSmsChannel(String channel) {
-        String DICT_SMS_CHANNEL = "sms_channel";
         channel = channel.toUpperCase();
-        if (!channel.equals(ComConsts.BL) && !channel.equals(ComConsts.NX)) {
+        if (!channel.equals(ComConsts.CN) && !channel.equals(ComConsts.NX)) {
             throw new NestedException(BizCodeEnum.SERVICE_EXCEPTION, "无此短信渠道");
         }
 
-        Dict smsDict = dictRepository.findOneByCodeWithExp(DICT_SMS_CHANNEL);
+        Dict smsDict = dictRepository.findOneByCodeWithExp(ComConsts.SMS_DICT_CODE);
         log.info("当前的短信通道：{}", smsDict.getDicValue());
         log.info("即将切换成{}渠道", channel);
         Dict dictUpdate = Dict.builder().id(smsDict.getId()).dicValue(channel).updateTime(LocalDateTime.now()).build();
         dictRepository.update(dictUpdate);
         // 清理缓存数据
-        clearCodeCache(DICT_SMS_CHANNEL);
+        clearCodeCache(ComConsts.SMS_DICT_CODE);
         log.info("渠道切换成功");
     }
 

@@ -15,7 +15,6 @@ import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
 import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
-import com.hzed.easyget.persistence.auto.entity.Dict;
 import com.hzed.easyget.persistence.auto.entity.SmsLog;
 import com.hzed.indonesia.sms.constants.SmsCodeEnum;
 import com.hzed.indonesia.sms.model.request.BulkSmsDownRequest;
@@ -89,64 +88,52 @@ public class SmsService {
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
         content = MessageFormat.format(content, DateUtil.localDateTimeToStr(LocalDateTime.now(), DateUtil.FORMAT6), repaymentAmount.toString(), balance.toString());
-        Long smsId = IDGenerator.nextId();
-        // 发送短信
-        this.sendSms(mobile, content, smsId);
-        // 保存短信记录
-        this.saveSmsLog(smsId, content, mobile, SmsStatusEnum.SUCCESS.getCode().byteValue(), "用户还款短信通知");
+        // 发送及保存短信
+        sendDefaultSms(mobile, content, "用户还款短信通知");
         // 通过手机号获取用户id
         Long userId = userRepository.findByMobile(mobile).getId();
         messageRepository.addUserMessage(userId, title, content, "用户还款短信通知");
         log.info("用户还款短信通知，手机号码：{},短信类容：{}", mobile, content);
     }
 
-    public void sendSms(String mobile, String content, Long smsId) {
-        Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
-        if (ObjectUtils.isEmpty(dictSms)) {
-            log.error("没有配置短信渠道");
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
-        }
-        String dicValue = dictSms.getDicValue();
-        log.info("发送短信渠道：{}", dicValue);
-        if (!ObjectUtils.isEmpty(dicValue) && ComConsts.NX.equalsIgnoreCase(dicValue)) {
-            // 使用牛信发送短信
-            nxSend(mobile, content);
-        } else {
-            cnSend(mobile, content, smsId);
-        }
-    }
-
-    public void sendAndSaveSms(String mobile, String content, String remark) {
+    /**
+     * 使用默认配置发短信并保存
+     *
+     * @param mobile  手机号
+     * @param content 短信内容
+     * @param remark  短信描述
+     */
+    public void sendDefaultSms(String mobile, String content, String remark) {
+        // 短信渠道
+        String smsChannel = dictService.getDictByCode(ComConsts.SMS_DICT_CODE).getDicValue();
+        log.info("发送短信渠道：{}", smsChannel);
+        // 短信唯一标识
         Long smsId = IDGenerator.nextId();
         if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
-            // 非测试环境发送短信
-            // 发短信时去掉 0
-            sendSms(mobile.substring(1), content, smsId);
+            // 非测试环境发送短信且去掉首位0
+            sendSms(smsId, mobile, content, smsChannel);
         }
+
         // 保存短信记录
-        saveSmsLog(smsId, content, mobile, SmsStatusEnum.SUCCESS.getCode().byteValue(), remark);
+        SmsLog smsLogInsert = SmsLog.builder()
+                .id(smsId)
+                .content(content)
+                .mobile(mobile)
+                .status(SmsStatusEnum.SUCCESS.getCode().byteValue())
+                .sendBy(smsChannel)
+                .remark(remark)
+                .build();
+        smsLogRepository.insertSelective(smsLogInsert);
     }
 
-    /**
-     * 保存短信记录
-     */
-    public void saveSmsLog(Long id, String content, String mobile, byte status, String remark) {
-        Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
-        if (ObjectUtils.isEmpty(dictSms)) {
-            log.error("没有配置短信渠道");
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+    public void sendSms(Long smsId, String mobile, String content, String smsChannel) {
+        if (ComConsts.NX.equalsIgnoreCase(smsChannel)) {
+            // 使用牛信发送短信 默认通道 0-验证通道
+            nxSend(mobile, content);
+        } else {
+            // 使用国际发短信
+            cnSend(mobile, content, smsId);
         }
-        // 保存到数据库短信记录表
-        SmsLog smsLog = new SmsLog();
-        smsLog.setId(id);
-        smsLog.setCreateTime(LocalDateTime.now());
-        smsLog.setContent(content);
-        smsLog.setMobile(mobile);
-        // 发送成功
-        smsLog.setStatus(status);
-        smsLog.setSendBy(dictSms.getDicValue());
-        smsLog.setRemark(remark);
-        smsLogRepository.insertSelective(smsLog);
     }
 
     /**
@@ -163,7 +150,7 @@ public class SmsService {
         log.info("请求参数：{}", JSONObject.toJSONString(smsSendRequest));
         NxSmsSendResponse smsSendResponse = NxSmsUtil.smsSend(smsSendRequest);
         if (ObjectUtils.isEmpty(smsSendResponse)) {
-            log.error("返回空的数据对象");
+            log.error("发送牛信短信返回空");
             throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
         }
         log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsSendResponse));
@@ -186,6 +173,7 @@ public class SmsService {
      * 国际发短信
      */
     public void cnSend(String mobile, String content, Long smsId) {
+//        mobile = mobile.indexOf("0")
         // bulk短信下发请求bean
         BulkSmsDownRequest smsDownRequest = new BulkSmsDownRequest();
         // 短信请求body

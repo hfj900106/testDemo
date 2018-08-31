@@ -84,7 +84,7 @@ public class AsyncService {
         // 替换验证码
         String content = StringUtils.replace(dicValue, "{0}", user.getRealName());
         // 发送及保存短信
-        smsService.sendAndSaveSms(mobile, content, "审核结果短信通知用户");
+        smsService.sendDefaultSms(mobile, content, "审核结果短信通知用户");
         // 保存信息记录
         if (StringUtils.isBlank(title)) {
             log.error("没有配置信息title");

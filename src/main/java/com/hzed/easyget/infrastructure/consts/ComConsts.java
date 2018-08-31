@@ -60,16 +60,11 @@ public class ComConsts {
     public static final String MESSAGE_TITLE_5 = "message_title_5";
 
     /**
-     * 牛信
+     * 短信渠道 NX-牛信 CN-国际
      */
     public static final String NX = "NX";
+    public static final String CN = "CN";
 
-    /**
-     * 国际短信
-     */
-    public static final String BL = "BL";
-
-    public static final int MOBILE_LEN = 11;
     public static final int BULK_SMS_OK = 0;
     public static final int IS_ANDROID = 1;
     public static final int IS_IOS = 2;

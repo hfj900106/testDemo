@@ -69,16 +69,18 @@ public class SmsService {
     public void repaymentNotice(BigDecimal repaymentAmount, String mobile, Long bidId) {
         MdcUtil.putTrace();
         MdcUtil.putModuleName("还款短信通知");
+
+        // 短信语言
         String local = systemProp.getLocal();
         // 默认全部结清
         String smsCode = ComConsts.SMS_CONTENT_5;
-        String title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_4, systemProp.getLocal()).getDicValue();
+        String title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_4, local).getDicValue();
         // 默认代还总额0
-        BigDecimal balance = BigDecimal.valueOf(0);
+        BigDecimal balance = BigDecimal.ZERO;
         // 部分结清
         if (!ObjectUtils.isEmpty(bidId)) {
             smsCode = ComConsts.SMS_CONTENT_6;
-            title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_5, systemProp.getLocal()).getDicValue();
+            title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_5, local).getDicValue();
             // 获取剩余代还总额
             balance = comService.getBidNoRepayFee(bidId, LocalDateTime.now());
         }

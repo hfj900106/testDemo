@@ -50,8 +50,6 @@ public class AuthService {
     @Autowired
     private UserAuthStatusRepository authStatusRepository;
     @Autowired
-    private ProfessionalRepository professionalRepository;
-    @Autowired
     private RedisService redisService;
     @Autowired
     private UserRepository userRepository;
@@ -326,9 +324,16 @@ public class AuthService {
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
 
         // 校验是否已认证或者认证中，不需要回调，只有成功状态
-        checkAuth(userId, AuthCodeEnum.SMS.getCode());
+        checkAuth(userId, AuthCodeEnum.PERSON_INFO.getCode());
+        checkAuth(userId, AuthCodeEnum.PROFESSIONAL.getCode());
 
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PERSON_INFO.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), "个人信息认证");
+        // 组建UserAuthStatus对象
+        UserAuthStatus userAuthStatus1 = buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PERSON_INFO.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), "个人信息认证");
+        UserAuthStatus userAuthStatus2 = buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PROFESSIONAL.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), "专业信息认证");
+        //组装组建UserAuthStatus对象对象
+        List<UserAuthStatus> listAuthStatus = Lists.newArrayList();
+        listAuthStatus.add(userAuthStatus1);
+        listAuthStatus.add(userAuthStatus2);
 
         String relationship1 = request.getRelationship1();
         String personName1 = request.getPersonName1();
@@ -339,9 +344,7 @@ public class AuthService {
         String personTel2 = request.getPersonTel2().replaceAll("\\s*", "");
 
         Profile profile = new Profile();
-
         profile.setId(IDGenerator.nextId());
-
         profile.setUserId(userId);
         profile.setEducation(request.getEducation());
         profile.setCompanyName(request.getCompanyName());
@@ -355,7 +358,28 @@ public class AuthService {
         profile.setRelationship1(relationship1 + ":" + personName1 + ":" + personTel1);
         profile.setRelationship2(relationship2 + ":" + personName2 + ":" + personTel2);
         profile.setRemark("个人信息认证");
-        personInfoRepository.insertPersonInfoAndUserAuthStatus(profile, userAuthStatus);
+
+
+        //组装pic对象
+        List<String> listBase64 = request.getPicTypeAndPathBase64Str();
+        List<UserPic> listPic = Lists.newArrayList();
+        String suffix = request.getPicSuffix();
+
+        listBase64.forEach(base64Str -> {
+            String workplacePhotoPath = getPhotoPath(base64Str.substring(11), suffix);
+            listPic.add(UserPic.builder().id(IDGenerator.nextId()).userId(userId).type(base64Str.substring(0, 11)).picUrl(workplacePhotoPath).build());
+        });
+
+        // 组建Work对象
+        Work work = new Work();
+        work.setId(IDGenerator.nextId());
+        work.setUserId(userId);
+        work.setJobType(request.getJobType());
+        work.setMonthlyIncome(request.getMonthlyIncome());
+        work.setIndustry(request.getIndustry());
+        work.setPayday(request.getPayday());
+        work.setRemark("专业信息认证");
+        personInfoRepository.insertPersonInfoAndUserAuthStatus(work,profile, listAuthStatus,listPic);
 
         List<Map<String, String>> objectList = Lists.newArrayList();
         Map<String, String> stringMap1 = Maps.newHashMap();
@@ -369,7 +393,9 @@ public class AuthService {
         stringMap2.put("contact", personName2);
         stringMap2.put("phone", personTel2);
         objectList.add(stringMap2);
+        // 个人信息推风控
         riskService.pushProfile(objectList, userId);
+
     }
 
     /**
@@ -379,28 +405,22 @@ public class AuthService {
         IdCardRecognitionResponse recognitionResponse = new IdCardRecognitionResponse();
         RiskResponse response = riskService.idCardRecognition(request);
 
-        if (ObjectUtils.isEmpty(response.getBody())) {
+        Object body = response.getBody();
+        if (ObjectUtils.isEmpty(body)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
 
-        String bobyStr = response.getBody().toString();
-        if (ObjectUtils.isEmpty(bobyStr)) {
-            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
-        }
-
-        JSONObject obj = JSONObject.parseObject(bobyStr, JSONObject.class);
+        JSONObject obj = JSONObject.parseObject(String.valueOf(body), JSONObject.class);
         if (ObjectUtils.isEmpty(obj)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
 
-        JSONObject data = obj.getJSONObject("data");
-        if (ObjectUtils.isEmpty(data)) {
-            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
-        }
-        String name = data.getString("name");
-        String gender = data.getString("gender");
-        String idNumber = data.getString("idcardNumber");
-        String birthday = data.getString("birthday");
+        String name = obj.getString("name");
+        String gender = obj.getString("gender");
+        String idNumber = obj.getString("idcardNumber");
+        String birthday = obj.getString("birthday");
+        String religion = obj.getString("religion");
+        String idcardImage = obj.getString("idcardImage");
         if (!StringUtils.isBlank(birthday)) {
             // 注意有空格
             int strLength = birthday.length();
@@ -408,7 +428,7 @@ public class AuthService {
                 // 识别生日数据有错则直接给空串
                 recognitionResponse.setBirthday("");
             } else {
-                recognitionResponse.setBirthday(birthday.substring(strLength - 10, strLength));
+                recognitionResponse.setBirthday(birthday);
             }
         }
         recognitionResponse.setName(name);
@@ -418,6 +438,8 @@ public class AuthService {
         }
         recognitionResponse.setGender(genderInt);
         recognitionResponse.setIdNumber(idNumber);
+        recognitionResponse.setReligion(religion);
+        recognitionResponse.setIdcardImage(idcardImage);
         return recognitionResponse;
     }
 
@@ -497,40 +519,6 @@ public class AuthService {
 
     }
 
-    /**
-     * 专业信息认证
-     */
-    public void professionalAuth(ProfessionalRequest request) {
-        Long userId = getGlobalUser().getUserId();
-
-        // 判断该用户是否已经验证，不需要回调，所以只有成功的状态
-        checkAuth(userId, AuthCodeEnum.PROFESSIONAL.getCode());
-        List<String> listBase64 = request.getPicTypeAndPathBase64Str();
-
-        //组装pic对象
-        List<UserPic> listPic = Lists.newArrayList();
-        String suffix = request.getPicSuffix();
-
-        listBase64.forEach(base64Str -> {
-            String workplacePhotoPath = getPhotoPath(base64Str.substring(11), suffix);
-            listPic.add(UserPic.builder().id(IDGenerator.nextId()).userId(userId).type(base64Str.substring(0, 11)).picUrl(workplacePhotoPath).build());
-
-        });
-
-        // 组建Work对象
-        Work work = new Work();
-        work.setId(IDGenerator.nextId());
-        work.setUserId(userId);
-        work.setJobType(request.getJobType());
-        work.setMonthlyIncome(request.getMonthlyIncome());
-        work.setIndustry(request.getIndustry());
-        work.setPayday(request.getPayday());
-        work.setRemark("专业信息认证");
-
-        // 组建UserAuthStatus对象
-        UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PROFESSIONAL.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), "专业信息认证");
-        professionalRepository.insertProfessionalAndUserAuthStatus(listPic, work, userAuthStatus);
-    }
 
     /**
      * 短信认证和通讯录认证用到
@@ -716,6 +704,5 @@ public class AuthService {
         }
         return userAuthStatusHas.getId();
     }
-
 
 }

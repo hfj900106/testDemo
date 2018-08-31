@@ -48,11 +48,6 @@ public class AuthController {
         authService.authPersonInfo(request);
     }
 
-    @ModuleFunc(value = "专业信息认证", printParameterLength = 300)
-    @PostMapping("/professional")
-    public void professionalAuth(@Valid @RequestBody ProfessionalRequest request) {
-        authService.professionalAuth(request);
-    }
 
     @ModuleFunc(value = "身份证识别", printParameterLength = 300)
     @PostMapping("/idCardRecognition")

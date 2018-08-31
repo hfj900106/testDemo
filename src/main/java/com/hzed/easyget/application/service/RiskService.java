@@ -201,6 +201,7 @@ public class RiskService {
         map.put("timeStamp", timeStamp);
         map.put("imageFile", request.getIdCardBase64ImgStr());
         map.put("bizToken", request.getBizToken());
+        map.put("ocrData", request.getOcrData());
 
         String url = riskProp.getIdCardRecognitionUrl();
         log.info("============================请求风控开始===============================");

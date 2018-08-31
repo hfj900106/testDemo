@@ -314,7 +314,7 @@ public class JobService {
                 Long userId = userRepository.findByMobile(mobile).getId();
                 messageRepository.addUserMessage(userId, title, content, "短信催账");
 
-            } catch (WarnException e) {
+            } catch (Exception e) {
                 log.error("发送催账短信-失败，手机号码{}", mobile, e);
             }
         }

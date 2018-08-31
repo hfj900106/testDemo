@@ -155,7 +155,7 @@ public class DictService {
 
     public void switchSmsChannel(String channel) {
         channel = channel.toUpperCase();
-        if (!channel.equals(ComConsts.CN) && !channel.equals(ComConsts.NX)) {
+        if (!channel.equals(ComConsts.CM) && !channel.equals(ComConsts.NX)) {
             throw new NestedException(BizCodeEnum.SERVICE_EXCEPTION, "无此短信渠道");
         }
 

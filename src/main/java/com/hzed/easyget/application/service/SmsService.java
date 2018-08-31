@@ -104,36 +104,68 @@ public class SmsService {
      * @param remark  短信描述
      */
     public void sendDefaultSms(String mobile, String content, String remark) {
+        // 测试环境不发短信
+        if (EnvEnum.isTestEnv(systemProp.getEnv())) {
+            log.info("测试环境不发短信");
+            return;
+        }
+
         // 短信渠道
         String smsChannel = dictService.getDictByCode(ComConsts.SMS_DICT_CODE).getDicValue();
         log.info("发送短信渠道：{}", smsChannel);
-        // 短信唯一标识
-        Long smsId = IDGenerator.nextId();
-        if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
-            // 非测试环境发送短信且去掉首位0
-            sendSms(smsId, mobile, content, smsChannel);
+        if (ComConsts.NX.equalsIgnoreCase(smsChannel)) {
+            // 使用牛信发送短信 默认通道 0-验证通道
+            sendNxSms(mobile, content, remark, 0);
+        } else {
+            // 使用国际发短信
+            sendCMSms(mobile, content, remark);
         }
+    }
 
-        // 保存短信记录
+    /**
+     * 牛信渠道发送短信并保存
+     *
+     * @param mobile    手机号
+     * @param content   内容
+     * @param remark    备注
+     * @param nxChannel 通道 0-验证通道 1-营销账号
+     */
+    public void sendNxSms(String mobile, String content, String remark, Integer nxChannel) {
+        // 发短信
+        nxSend(mobile, content, nxChannel);
+        // 保存短信记录 暂时默认发送成功
         SmsLog smsLogInsert = SmsLog.builder()
-                .id(smsId)
+                .id(IDGenerator.nextId())
                 .content(content)
                 .mobile(mobile)
                 .status(SmsStatusEnum.SUCCESS.getCode().byteValue())
-                .sendBy(smsChannel)
+                .sendBy(ComConsts.NX)
                 .remark(remark)
                 .build();
         smsLogRepository.insertSelective(smsLogInsert);
     }
 
-    public void sendSms(Long smsId, String mobile, String content, String smsChannel) {
-        if (ComConsts.NX.equalsIgnoreCase(smsChannel)) {
-            // 使用牛信发送短信 默认通道 0-验证通道
-            nxSend(mobile, content);
-        } else {
-            // 使用国际发短信
-            cnSend(mobile, content, smsId);
-        }
+    /**
+     * 国际短信渠道发送短信并保存
+     *
+     * @param mobile  手机号
+     * @param content 内容
+     * @param remark  备注
+     */
+    public void sendCMSms(String mobile, String content, String remark) {
+        long smsID = IDGenerator.nextId();
+        // 发短信
+        cmSend(smsID, mobile, content);
+        // 保存短信记录 暂时默认发送成功
+        SmsLog smsLogInsert = SmsLog.builder()
+                .id(smsID)
+                .content(content)
+                .mobile(mobile)
+                .status(SmsStatusEnum.SUCCESS.getCode().byteValue())
+                .sendBy(ComConsts.CM)
+                .remark(remark)
+                .build();
+        smsLogRepository.insertSelective(smsLogInsert);
     }
 
     /**
@@ -142,6 +174,8 @@ public class SmsService {
      * @param channel 通道 0-验证通道 1-营销账号
      */
     public void nxSend(String mobile, String content, Integer channel) {
+        // 手机号去掉开始的0
+        mobile = mobile.replaceAll("^0+", "");
         NxSmsSendRequest smsSendRequest = new NxSmsSendRequest();
         smsSendRequest.setPhone("62" + mobile);
         smsSendRequest.setTaskTime(DateUtil.localDateTimeToStr1(LocalDateTime.now()));
@@ -162,18 +196,11 @@ public class SmsService {
     }
 
     /**
-     * 牛信发短信
-     * 默认通道 0-验证通道
-     */
-    public void nxSend(String mobile, String content) {
-        nxSend(mobile, content, 0);
-    }
-
-    /**
      * 国际发短信
      */
-    public void cnSend(String mobile, String content, Long smsId) {
-//        mobile = mobile.indexOf("0")
+    public void cmSend(Long smsId, String mobile, String content) {
+        // 手机号去掉开始的0
+        mobile = mobile.replaceAll("^0+", "");
         // bulk短信下发请求bean
         BulkSmsDownRequest smsDownRequest = new BulkSmsDownRequest();
         // 短信请求body

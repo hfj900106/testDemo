@@ -60,21 +60,21 @@ public class LoanJob {
         jobService.saRepaymentSuccess();
     }
 
-    @JobAnnotation("短信催账D2")
-    @Scheduled(cron = "${system.job.checkBillCron_D2}")
-    public void checkBill_D2() {
-        jobService.checkBillD1AndD2(2);
+    @JobAnnotation("短信催账D0")
+    @Scheduled(cron = "${system.job.checkBillCronD0}")
+    public void checkBillD0() {
+        jobService.checkBillD0(0);
     }
 
     @JobAnnotation("短信催账D1")
-    @Scheduled(cron = "${system.job.checkBillCron_D1}")
-    public void checkBill_D1() {
+    @Scheduled(cron = "${system.job.checkBillCronD1}")
+    public void checkBillD1() {
         jobService.checkBillD1AndD2(1);
     }
 
-    @JobAnnotation("短信催账D0")
-    @Scheduled(cron = "${system.job.checkBillCron_D0}")
-    public void checkBill_D0() {
-        jobService.checkBillD0(0);
+    @JobAnnotation("短信催账D2")
+    @Scheduled(cron = "${system.job.checkBillCronD2}")
+    public void checkBillD2() {
+        jobService.checkBillD1AndD2(2);
     }
 }

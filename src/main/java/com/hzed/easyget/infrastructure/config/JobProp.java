@@ -19,8 +19,8 @@ public class JobProp {
     private boolean saInData;
     private boolean saLoanSuccess;
     private boolean saRepaymentSuccess;
-    private boolean checkBill_D0;
-    private boolean checkBill_D1;
-    private boolean checkBill_D2;
+    private boolean checkBillD0;
+    private boolean checkBillD1;
+    private boolean checkBillD2;
 
 }

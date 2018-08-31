@@ -292,7 +292,7 @@ public class JobService {
 
     }
 
-    private void smsNX(int day, String mobile, String template, int channel) {
+        private void smsNX(int day, String mobile, String template, Integer channel) {
         String title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
         if (StringUtils.isBlank(template)) {
             log.error("没有配置短信模板");

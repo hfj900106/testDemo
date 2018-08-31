@@ -44,7 +44,7 @@ import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 @Service
 public class AuthService {
     @Autowired
-    private PersonInfoRepository personInfoRepository;
+    private ProfileRepository profileRepository;
     @Autowired
     private WorkRepository workRepository;
     @Autowired
@@ -93,17 +93,17 @@ public class AuthService {
         String i18n = RequestUtil.getGlobalHead().getI18n();
         String remark1;
         String remark2;
-        if(LocaleEnum.en_US.getI18n().equals(i18n)){
+        if (LocaleEnum.en_US.getI18n().equals(i18n)) {
             remark1 = "Basic certification";
             remark2 = "Social authentication";
-        }else if(LocaleEnum.zh_CN.getI18n().equals(i18n)){
+        } else if (LocaleEnum.zh_CN.getI18n().equals(i18n)) {
             remark1 = "基本认证";
             remark2 = "社交认证";
-        }else {
+        } else {
             remark1 = "Sertifikasi dasar";
             remark2 = "Stratifikasi sosial";
         }
-        List<Dict> dictList = dictRepository.findGroupByModuleCodeAndLanguage(request.getCode(), i18n,remark1,remark2);
+        List<Dict> dictList = dictRepository.findGroupByModuleCodeAndLanguage(request.getCode(), i18n, remark1, remark2);
         String personAuth = AuthCodeEnum.PERSON_INFO.getCode();
         String workAuth = AuthCodeEnum.PROFESSIONAL.getCode();
         Integer authStatus = AuthStatusEnum.HAS_AUTH.getCode();
@@ -134,16 +134,16 @@ public class AuthService {
             authStatusResponse.setAuthName(dict.getDicValue());
             authStatusResponse.setAuthGroup(dict.getRemark());
             if (!ObjectUtils.isEmpty(userAuthStatus)) {
-                if(personAuth.equals(code) || workAuth.equals(code)){
+                if (personAuth.equals(code) || workAuth.equals(code)) {
                     authStatusResponse.setAuthStatus(String.valueOf(authStatus2));
-                }else {
+                } else {
                     authStatusResponse.setAuthStatus(String.valueOf(userAuthStatus.getAuthStatus()));
                 }
             } else {
                 authStatusResponse.setAuthStatus(String.valueOf(AuthStatusEnum.UN_AUTH.getCode()));
             }
             // 去掉专业信息认证
-            if(!authStatusResponse.getAuthCode().equals(workAuth)){
+            if (!authStatusResponse.getAuthCode().equals(workAuth)) {
                 authStatusList.add(authStatusResponse);
             }
         });
@@ -327,21 +327,17 @@ public class AuthService {
         checkAuth(userId, AuthCodeEnum.PERSON_INFO.getCode());
         checkAuth(userId, AuthCodeEnum.PROFESSIONAL.getCode());
 
-        // 组建UserAuthStatus对象
-        UserAuthStatus userAuthStatus1 = buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PERSON_INFO.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), "个人信息认证");
-        UserAuthStatus userAuthStatus2 = buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PROFESSIONAL.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), "专业信息认证");
-        //组装组建UserAuthStatus对象对象
         List<UserAuthStatus> listAuthStatus = Lists.newArrayList();
-        listAuthStatus.add(userAuthStatus1);
-        listAuthStatus.add(userAuthStatus2);
+        listAuthStatus.add(buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PERSON_INFO.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), "个人信息认证"));
+        listAuthStatus.add(buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PROFESSIONAL.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), "专业信息认证"));
 
         String relationship1 = request.getRelationship1();
         String personName1 = request.getPersonName1();
-        String personTel1 = request.getPersonTel1().replaceAll("\\s*", "");
+        String personTel1 = request.getPersonTel1().replaceAll("\\s+", "");
 
         String relationship2 = request.getRelationship2();
         String personName2 = request.getPersonName2();
-        String personTel2 = request.getPersonTel2().replaceAll("\\s*", "");
+        String personTel2 = request.getPersonTel2().replaceAll("\\s+", "");
 
         Profile profile = new Profile();
         profile.setId(IDGenerator.nextId());
@@ -358,7 +354,6 @@ public class AuthService {
         profile.setRelationship1(relationship1 + ":" + personName1 + ":" + personTel1);
         profile.setRelationship2(relationship2 + ":" + personName2 + ":" + personTel2);
         profile.setRemark("个人信息认证");
-
 
         //组装pic对象
         List<String> listBase64 = request.getPicTypeAndPathBase64Str();
@@ -379,7 +374,7 @@ public class AuthService {
         work.setIndustry(request.getIndustry());
         work.setPayday(request.getPayday());
         work.setRemark("专业信息认证");
-        personInfoRepository.insertPersonInfoAndUserAuthStatus(work,profile, listAuthStatus,listPic);
+        profileRepository.insertProfileAuth(work, profile, listAuthStatus, listPic);
 
         List<Map<String, String>> objectList = Lists.newArrayList();
         Map<String, String> stringMap1 = Maps.newHashMap();
@@ -395,7 +390,6 @@ public class AuthService {
         objectList.add(stringMap2);
         // 个人信息推风控
         riskService.pushProfile(objectList, userId);
-
     }
 
     /**

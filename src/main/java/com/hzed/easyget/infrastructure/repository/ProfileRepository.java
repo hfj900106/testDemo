@@ -19,7 +19,7 @@ import java.util.List;
  * @date 2018/5/23
  */
 @Repository
-public class PersonInfoRepository {
+public class ProfileRepository {
     @Autowired
     private ProfileMapper profileMapper;
     @Autowired
@@ -30,7 +30,7 @@ public class PersonInfoRepository {
     private UserPicMapper userPicMapper;
 
     @Transactional(rollbackFor = Exception.class)
-    public void insertPersonInfoAndUserAuthStatus(Work work, Profile profile, List<UserAuthStatus> userAuthStatus,List<UserPic> list) {
+    public void insertProfileAuth(Work work, Profile profile, List<UserAuthStatus> userAuthStatus, List<UserPic> list) {
         userPicMapper.batchInsertSelective(list,UserPic.Column.id,UserPic.Column.userId,UserPic.Column.type,UserPic.Column.picUrl);
         workMapper.insertSelective(work);
         profileMapper.insertSelective(profile);

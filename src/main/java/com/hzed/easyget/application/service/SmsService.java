@@ -8,7 +8,6 @@ import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
-import com.hzed.easyget.infrastructure.repository.DictRepository;
 import com.hzed.easyget.infrastructure.repository.SmsLogRepository;
 import com.hzed.easyget.infrastructure.repository.UserMessageRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
@@ -45,8 +44,6 @@ import java.util.Random;
 public class SmsService {
     @Autowired
     private SystemProp systemProp;
-    @Autowired
-    private DictRepository dictRepository;
     @Autowired
     private ComService comService;
     @Autowired
@@ -90,9 +87,9 @@ public class SmsService {
             balance = comService.getBidNoRepayFee(bidId, LocalDateTime.now());
         }
         // 短信标题
-        String title = dictRepository.findByCodeAndLanguage(titleCode, local).getDicValue();
+        String title = dictService.getDictByCodeAndLanguage(titleCode, local).getDicValue();
         // 短信内容
-        String content = dictRepository.findByCodeAndLanguage(contentCode, local).getDicValue();
+        String content = dictService.getDictByCodeAndLanguage(contentCode, local).getDicValue();
         // 短信内容占位取代
         content = MessageFormat.format(content, DateUtil.localDateTimeToStr6(LocalDateTime.now()), repaymentAmount.toString(), balance.toString());
         // 发送及保存短信

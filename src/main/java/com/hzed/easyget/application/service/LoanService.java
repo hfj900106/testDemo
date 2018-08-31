@@ -142,7 +142,7 @@ public class LoanService {
         Long userId = RequestUtil.getGlobalUser().getUserId();
         List<UserBank> userBankList = userBankRepository.findByUserId(userId);
         if (!ObjectUtils.isEmpty(userBankList)) {
-            Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
+            Dict dict = dictRepository.findOneByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
             if (!ObjectUtils.isEmpty(dict)) {
                 subLoanResponse.setBankCode(dict.getDicCode());
                 subLoanResponse.setBankName(dict.getDicValue());

@@ -90,7 +90,7 @@ public class DictRepository {
         return dictMapper.selectByExample(example);
     }
 
-    public Dict findByCodeAndLanguage(String dicCode,String language) {
+    public Dict findOneByCodeAndLanguage(String dicCode, String language) {
         DictExample example = new DictExample();
         example.createCriteria().andDicCodeEqualTo(dicCode).andLanguageEqualTo(language);
         return dictMapper.selectOneByExample(example);

@@ -267,7 +267,7 @@ public class JobService {
      * D-1：每天2条，早上7点半，中午12点半
      */
     public void checkBillD1AndD2(int day) {
-        String template = dictRepository.findByCodeAndLanguage(ComConsts.SMS_CONTENT_4, systemProp.getLocal()).getDicValue();
+        String template = dictRepository.findOneByCodeAndLanguage(ComConsts.SMS_CONTENT_4, systemProp.getLocal()).getDicValue();
         List<BillExt> bills = billRepository.findUnRepayBillExt(day);
         if (ObjectUtils.isEmpty(bills)) {
             return;
@@ -280,7 +280,7 @@ public class JobService {
      * D-0:每天5条，4点、10点、12点半、4点、8点
      */
     public void checkBillD0(int day) {
-        String template = dictRepository.findByCodeAndLanguage(ComConsts.SMS_CONTENT_7, systemProp.getLocal()).getDicValue();
+        String template = dictRepository.findOneByCodeAndLanguage(ComConsts.SMS_CONTENT_7, systemProp.getLocal()).getDicValue();
         List<BillExt> bills = billRepository.findUnRepayBillExt(day);
         if (ObjectUtils.isEmpty(bills)) {
             return;
@@ -292,7 +292,7 @@ public class JobService {
         private void smsNX(int day, String mobile, String template, Integer channel) {
             MdcUtil.putTrace();
             try {
-                String title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
+                String title = dictRepository.findOneByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
                 if (StringUtils.isBlank(template)) {
                     log.error("没有配置短信模板");
                     throw new WarnException(BizCodeEnum.DICT_NOTEXISTS);

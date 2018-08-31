@@ -13,5 +13,7 @@ public class IdCardRecognitionResponse {
      private  Integer gender ;
      private  String name ;
      private  String birthday ;
+     private  String religion ;
+     private  String idcardImage ;
 
 }

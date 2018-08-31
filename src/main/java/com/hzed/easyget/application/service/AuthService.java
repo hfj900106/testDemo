@@ -379,28 +379,22 @@ public class AuthService {
         IdCardRecognitionResponse recognitionResponse = new IdCardRecognitionResponse();
         RiskResponse response = riskService.idCardRecognition(request);
 
-        if (ObjectUtils.isEmpty(response.getBody())) {
+        Object body = response.getBody();
+        if (ObjectUtils.isEmpty(body)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
 
-        String bobyStr = response.getBody().toString();
-        if (ObjectUtils.isEmpty(bobyStr)) {
-            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
-        }
-
-        JSONObject obj = JSONObject.parseObject(bobyStr, JSONObject.class);
+        JSONObject obj = JSONObject.parseObject(String.valueOf(body), JSONObject.class);
         if (ObjectUtils.isEmpty(obj)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
 
-        JSONObject data = obj.getJSONObject("data");
-        if (ObjectUtils.isEmpty(data)) {
-            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
-        }
-        String name = data.getString("name");
-        String gender = data.getString("gender");
-        String idNumber = data.getString("idcardNumber");
-        String birthday = data.getString("birthday");
+        String name = obj.getString("name");
+        String gender = obj.getString("gender");
+        String idNumber = obj.getString("idcardNumber");
+        String birthday = obj.getString("birthday");
+        String religion = obj.getString("religion");
+        String idcardImage = obj.getString("idcardImage");
         if (!StringUtils.isBlank(birthday)) {
             // 注意有空格
             int strLength = birthday.length();
@@ -408,7 +402,7 @@ public class AuthService {
                 // 识别生日数据有错则直接给空串
                 recognitionResponse.setBirthday("");
             } else {
-                recognitionResponse.setBirthday(birthday.substring(strLength - 10, strLength));
+                recognitionResponse.setBirthday(birthday);
             }
         }
         recognitionResponse.setName(name);
@@ -418,6 +412,8 @@ public class AuthService {
         }
         recognitionResponse.setGender(genderInt);
         recognitionResponse.setIdNumber(idNumber);
+        recognitionResponse.setReligion(religion);
+        recognitionResponse.setIdcardImage(idcardImage);
         return recognitionResponse;
     }
 
@@ -715,6 +711,10 @@ public class AuthService {
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
         return userAuthStatusHas.getId();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(JSONObject.parseObject(String.valueOf(null), JSONObject.class));
     }
 
 

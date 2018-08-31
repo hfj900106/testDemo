@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -23,7 +24,8 @@ import java.util.Optional;
 @Slf4j
 public class MainTest {
     public static void main(String[] args) throws InvocationTargetException, IllegalAccessException {
-        System.out.println("02013012".replaceAll("^0+", ""));
+        String str = MessageFormat.format("{1}{0}{2}", 1, 2, 3);
+        System.out.println(str);
     }
 
     public static  void test(String str) {

@@ -307,8 +307,7 @@ public class JobService {
                 log.info("发送催账短信-成功，手机号码{}", mobile);
 
             // 发送及保存短信
-            //smsService.sendDefaultSms(mobile, msg, "短信催账");
-            //smsService.sendNX(mobile, content, "短信催账", channel);
+            smsService.sendNxSms(mobile, content, "短信催账", channel);
 
                 // 通过手机号获取用户id
                 Long userId = userRepository.findByMobile(mobile).getId();

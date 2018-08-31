@@ -12,7 +12,6 @@ import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
-import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
@@ -27,7 +26,6 @@ import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
 import com.hzed.easyget.persistence.ext.entity.BillExt;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -76,6 +74,8 @@ public class JobService {
     private UserRepository userRepository;
     @Autowired
     private UserMessageRepository messageRepository;
+    @Autowired
+    private DictService dictService;
 
     /**
      * 风控审核
@@ -267,7 +267,7 @@ public class JobService {
      * D-1：每天2条，早上7点半，中午12点半
      */
     public void checkBillD1AndD2(int day) {
-        String template = dictRepository.findOneByCodeAndLanguage(ComConsts.SMS_CONTENT_4, systemProp.getLocal()).getDicValue();
+        String template = dictService.getDictByCodeAndLanguage(ComConsts.SMS_CONTENT_4, systemProp.getLocal()).getDicValue();
         List<BillExt> bills = billRepository.findUnRepayBillExt(day);
         if (ObjectUtils.isEmpty(bills)) {
             return;
@@ -280,7 +280,7 @@ public class JobService {
      * D-0:每天5条，4点、10点、12点半、4点、8点
      */
     public void checkBillD0(int day) {
-        String template = dictRepository.findOneByCodeAndLanguage(ComConsts.SMS_CONTENT_7, systemProp.getLocal()).getDicValue();
+        String template = dictService.getDictByCodeAndLanguage(ComConsts.SMS_CONTENT_7, systemProp.getLocal()).getDicValue();
         List<BillExt> bills = billRepository.findUnRepayBillExt(day);
         if (ObjectUtils.isEmpty(bills)) {
             return;
@@ -289,33 +289,24 @@ public class JobService {
 
     }
 
-        private void smsNX(int day, String mobile, String template, Integer channel) {
-            MdcUtil.putTrace();
-            try {
-                String title = dictRepository.findOneByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
-                if (StringUtils.isBlank(template)) {
-                    log.error("没有配置短信模板");
-                    throw new WarnException(BizCodeEnum.DICT_NOTEXISTS);
-                }
-                if (StringUtils.isBlank(title)) {
-                    log.error("没有配置信息title");
-                    throw new WarnException(BizCodeEnum.DICT_NOTEXISTS);
-                }
+    private void smsNX(int day, String mobile, String template, Integer channel) {
+        MdcUtil.putTrace();
+        try {
+            String title = dictService.getDictByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
+            String content = MessageFormat.format(template, String.valueOf(day));
 
-                String content = MessageFormat.format(template, String.valueOf(day));
-
-                log.info("发送催账短信-成功，手机号码{}", mobile);
+            log.info("发送催账短信-成功，手机号码：{}", mobile);
 
             // 发送及保存短信
             smsService.sendNxSms(mobile, content, "短信催账", channel);
 
-                // 通过手机号获取用户id
-                Long userId = userRepository.findByMobile(mobile).getId();
-                messageRepository.addUserMessage(userId, title, content, "短信催账");
+            // 通过手机号获取用户id
+            Long userId = userRepository.findByMobile(mobile).getId();
+            messageRepository.addUserMessage(userId, title, content, "短信催账");
 
-            } catch (Exception e) {
-                log.error("发送催账短信-失败，手机号码{}", mobile, e);
-            }
+        } catch (Exception e) {
+            log.error("发送催账短信-失败，手机号码{}", mobile, e);
         }
+    }
 
 }

@@ -12,7 +12,7 @@
         LEFT JOIN t_loan_bid bid ON bid.id = bill.bid_id
         LEFT JOIN t_loan_user USER ON user.id = bid.user_id
         WHERE bid.status = 5 AND bill.status = 1
-        AND TO_DAYS(bill.repayment_time) - TO_DAYS(NOW()) = #{days}
+        AND TO_DAYS(bill.repayment_time) - TO_DAYS(NOW()) = #{day}
     </select>
 
 

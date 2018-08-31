@@ -67,35 +67,40 @@ public class SmsService {
      */
     @Async
     public void repaymentNotice(BigDecimal repaymentAmount, String mobile, Long bidId) {
+        String remark = "用户还款短信通知";
         MdcUtil.putTrace();
-        MdcUtil.putModuleName("还款短信通知");
+        MdcUtil.putModuleName(remark);
 
         // 短信语言
         String local = systemProp.getLocal();
-        // 默认全部结清
-        String smsCode = ComConsts.SMS_CONTENT_5;
-        String title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_4, local).getDicValue();
-        // 默认代还总额0
+
+        String contentCode;
+        String titleCode;
+        // 默认待还总额0
         BigDecimal balance = BigDecimal.ZERO;
-        // 部分结清
-        if (!ObjectUtils.isEmpty(bidId)) {
-            smsCode = ComConsts.SMS_CONTENT_6;
-            title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_5, local).getDicValue();
-            // 获取剩余代还总额
+
+        // 全部结清
+        if (bidId == null) {
+            contentCode = ComConsts.SMS_CONTENT_5;
+            titleCode = ComConsts.MESSAGE_TITLE_4;
+        } else {
+            contentCode = ComConsts.SMS_CONTENT_6;
+            titleCode = ComConsts.MESSAGE_TITLE_5;
+            // 获取剩余待还总额
             balance = comService.getBidNoRepayFee(bidId, LocalDateTime.now());
         }
-        String content = dictRepository.findByCodeAndLoacl(local, smsCode).getDicValue();
-        if (StringUtils.isBlank(content)) {
-            log.error("没有配置短信模板");
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
-        }
-        content = MessageFormat.format(content, DateUtil.localDateTimeToStr(LocalDateTime.now(), DateUtil.FORMAT6), repaymentAmount.toString(), balance.toString());
+        // 短信标题
+        String title = dictRepository.findByCodeAndLanguage(titleCode, local).getDicValue();
+        // 短信内容
+        String content = dictRepository.findByCodeAndLanguage(contentCode, local).getDicValue();
+        // 短信内容占位取代
+        content = MessageFormat.format(content, DateUtil.localDateTimeToStr6(LocalDateTime.now()), repaymentAmount.toString(), balance.toString());
         // 发送及保存短信
-        sendDefaultSms(mobile, content, "用户还款短信通知");
+        sendDefaultSms(mobile, content, remark);
         // 通过手机号获取用户id
         Long userId = userRepository.findByMobile(mobile).getId();
-        messageRepository.addUserMessage(userId, title, content, "用户还款短信通知");
-        log.info("用户还款短信通知，手机号码：{},短信类容：{}", mobile, content);
+        messageRepository.addUserMessage(userId, title, content, remark);
+        log.info("用户还款短信通知，手机号码：{}，短信内容：{}", mobile, content);
     }
 
     /**

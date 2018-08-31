@@ -104,12 +104,6 @@ public class SmsService {
      * @param remark  短信描述
      */
     public void sendDefaultSms(String mobile, String content, String remark) {
-        // 测试环境不发短信
-        if (EnvEnum.isTestEnv(systemProp.getEnv())) {
-            log.info("测试环境不发短信");
-            return;
-        }
-
         // 短信渠道
         String smsChannel = dictService.getDictByCode(ComConsts.SMS_DICT_CODE).getDicValue();
         log.info("发送短信渠道：{}", smsChannel);
@@ -174,6 +168,12 @@ public class SmsService {
      * @param channel 通道 0-验证通道 1-营销账号
      */
     public void nxSend(String mobile, String content, Integer channel) {
+        // 测试环境不发短信
+        if (EnvEnum.isTestEnv(systemProp.getEnv())) {
+            log.info("测试环境不发短信");
+            return;
+        }
+
         // 手机号去掉开始的0
         mobile = mobile.replaceAll("^0+", "");
         NxSmsSendRequest smsSendRequest = new NxSmsSendRequest();
@@ -199,6 +199,12 @@ public class SmsService {
      * 国际发短信
      */
     public void cmSend(Long smsId, String mobile, String content) {
+        // 测试环境不发短信
+        if (EnvEnum.isTestEnv(systemProp.getEnv())) {
+            log.info("测试环境不发短信");
+            return;
+        }
+
         // 手机号去掉开始的0
         mobile = mobile.replaceAll("^0+", "");
         // bulk短信下发请求bean

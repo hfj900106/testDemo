@@ -14,7 +14,6 @@ import com.hzed.easyget.infrastructure.repository.UserMessageRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.infrastructure.utils.MdcUtil;
-import com.hzed.easyget.infrastructure.utils.SpringContextUtil;
 import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.Dict;
 import com.hzed.easyget.persistence.auto.entity.SmsLog;
@@ -92,7 +91,7 @@ public class SmsService {
         content = MessageFormat.format(content, DateUtil.localDateTimeToStr(LocalDateTime.now(), DateUtil.FORMAT6), repaymentAmount.toString(), balance.toString());
         Long smsId = IDGenerator.nextId();
         // 发送短信
-        this.sendSms(mobile, content, String.valueOf(smsId));
+        this.sendSms(mobile, content, smsId);
         // 保存短信记录
         this.saveSmsLog(smsId, content, mobile, SmsStatusEnum.SUCCESS.getCode().byteValue(), "用户还款短信通知");
         // 通过手机号获取用户id
@@ -101,7 +100,7 @@ public class SmsService {
         log.info("用户还款短信通知，手机号码：{},短信类容：{}", mobile, content);
     }
 
-    public void sendSms(String mobile, String content, String smsIdStr) {
+    public void sendSms(String mobile, String content, Long smsId) {
         Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
         if (ObjectUtils.isEmpty(dictSms)) {
             log.error("没有配置短信渠道");
@@ -113,54 +112,46 @@ public class SmsService {
             // 使用牛信发送短信
             nxSend(mobile, content);
         } else {
-            cnSend(mobile, content, smsIdStr);
-
+            cnSend(mobile, content, smsId);
         }
     }
 
+    public void sendAndSaveSms(String mobile, String content, String remark) {
+        Long smsId = IDGenerator.nextId();
+        if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
+            // 非测试环境发送短信
+            // 发短信时去掉 0
+            sendSms(mobile.substring(1), content, smsId);
+        }
+        // 保存短信记录
+        saveSmsLog(smsId, content, mobile, SmsStatusEnum.SUCCESS.getCode().byteValue(), remark);
+    }
+
     /**
-     * 国际发短信
+     * 保存短信记录
      */
-    public void cnSend(String mobile, String content, String smsIdStr) {
-        // bulk短信下发请求bean
-        BulkSmsDownRequest smsDownRequest = new BulkSmsDownRequest();
-        // 短信请求body
-        BulkSmsDownRequest.MsgBody msgBody = new BulkSmsDownRequest.MsgBody();
-        // 短信来源
-        msgBody.setFrom("easyget");
-        // 消息标识id 短信表的id作为短信的唯一标识发给渠道商
-        msgBody.setReference(smsIdStr);
-        // 短信内容实体
-        BulkSmsDownRequest.MsgBody.SmsBody smsBody = new BulkSmsDownRequest.MsgBody.SmsBody();
-        smsBody.setContent(content);
-        // 设置短信内容实体
-        msgBody.setBody(smsBody);
-        // 短信接收者
-        BulkSmsDownRequest.MsgBody.Member member = new BulkSmsDownRequest.MsgBody.Member();
-        // 00加国家代码中国为0086
-        member.setNumber("0062" + mobile);
-        //设置短信接收列表
-        msgBody.setTo(Lists.newArrayList(member));
-        // bulk短信下发请求消息
-        BulkSmsDownRequest.Message message = new BulkSmsDownRequest.Message();
-        // bulk短信下发请求消息body列表
-        message.setMsg(Lists.newArrayList(msgBody));
-        smsDownRequest.setMessages(message);
-        log.info("请求参数：{}", JSONObject.toJSONString(smsDownRequest));
-        BulkSmsDownResponse smsDownResponse = BulkSmsUtil.smsSend(smsDownRequest);
-        if (ObjectUtils.isEmpty(smsDownResponse)) {
-            log.error("返回空的数据对象");
-            throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
+    public void saveSmsLog(Long id, String content, String mobile, byte status, String remark) {
+        Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
+        if (ObjectUtils.isEmpty(dictSms)) {
+            log.error("没有配置短信渠道");
+            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
         }
-        log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
-        if (ComConsts.BULK_SMS_OK != smsDownResponse.getErrorCode()) {
-            log.error("CM发送失败：{}", JSONObject.toJSONString(smsDownResponse.getMessages()));
-            throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
-        }
+        // 保存到数据库短信记录表
+        SmsLog smsLog = new SmsLog();
+        smsLog.setId(id);
+        smsLog.setCreateTime(LocalDateTime.now());
+        smsLog.setContent(content);
+        smsLog.setMobile(mobile);
+        // 发送成功
+        smsLog.setStatus(status);
+        smsLog.setSendBy(dictSms.getDicValue());
+        smsLog.setRemark(remark);
+        smsLogRepository.insertSelective(smsLog);
     }
 
     /**
      * 牛信发短信
+     *
      * @param channel 通道 0-验证通道 1-营销账号
      */
     public void nxSend(String mobile, String content, Integer channel) {
@@ -191,44 +182,51 @@ public class SmsService {
         nxSend(mobile, content, 0);
     }
 
-    public void sendAndSaveSms(String mobile, String content, String remark) {
-        Long smsId = IDGenerator.nextId();
-        if (!EnvEnum.isTestEnv(systemProp.getEnv())) {
-            // 非测试环境发送短信
-            // 发短信时去掉 0
-            sendSms(mobile.substring(1), content, String.valueOf(smsId));
-        }
-        // 保存短信记录
-        saveSmsLog(smsId, content, mobile, SmsStatusEnum.SUCCESS.getCode().byteValue(), remark);
-    }
-
     /**
-     * 保存短信记录
+     * 国际发短信
      */
-    public void saveSmsLog(Long id, String content, String mobile, byte status, String remark) {
-        Dict dictSms = dictService.getDictByCode(ComConsts.SMS_DICT_CODE);
-        if (ObjectUtils.isEmpty(dictSms)) {
-            log.error("没有配置短信渠道");
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
+    public void cnSend(String mobile, String content, Long smsId) {
+        // bulk短信下发请求bean
+        BulkSmsDownRequest smsDownRequest = new BulkSmsDownRequest();
+        // 短信请求body
+        BulkSmsDownRequest.MsgBody msgBody = new BulkSmsDownRequest.MsgBody();
+        // 短信来源
+        msgBody.setFrom("easyget");
+        // 消息标识id 短信表的id作为短信的唯一标识发给渠道商
+        msgBody.setReference(String.valueOf(smsId));
+        // 短信内容实体
+        BulkSmsDownRequest.MsgBody.SmsBody smsBody = new BulkSmsDownRequest.MsgBody.SmsBody();
+        smsBody.setContent(content);
+        // 设置短信内容实体
+        msgBody.setBody(smsBody);
+        // 短信接收者
+        BulkSmsDownRequest.MsgBody.Member member = new BulkSmsDownRequest.MsgBody.Member();
+        // 00加国家代码中国为0086
+        member.setNumber("0062" + mobile);
+        //设置短信接收列表
+        msgBody.setTo(Lists.newArrayList(member));
+        // bulk短信下发请求消息
+        BulkSmsDownRequest.Message message = new BulkSmsDownRequest.Message();
+        // bulk短信下发请求消息body列表
+        message.setMsg(Lists.newArrayList(msgBody));
+        smsDownRequest.setMessages(message);
+        log.info("请求参数：{}", JSONObject.toJSONString(smsDownRequest));
+        BulkSmsDownResponse smsDownResponse = BulkSmsUtil.smsSend(smsDownRequest);
+        if (ObjectUtils.isEmpty(smsDownResponse)) {
+            log.error("返回空的数据对象");
+            throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
         }
-        // 保存到数据库短信记录表
-        SmsLog smsLog = new SmsLog();
-        smsLog.setId(id);
-        smsLog.setCreateTime(LocalDateTime.now());
-        smsLog.setContent(content);
-        smsLog.setMobile(mobile);
-        // 发送成功
-        smsLog.setStatus(status);
-        smsLog.setSendBy(dictSms.getDicValue());
-        smsLog.setRemark(remark);
-        smsLogRepository.insertSelective(smsLog);
+        log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
+        if (ComConsts.BULK_SMS_OK != smsDownResponse.getErrorCode()) {
+            log.error("CM发送失败：{}", JSONObject.toJSONString(smsDownResponse.getMessages()));
+            throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
+        }
     }
 
     /**
      * 获取验证码
      */
     public String getCode() {
-        SystemProp systemProp = SpringContextUtil.getBean(SystemProp.class);
         if (EnvEnum.isTestEnv(systemProp.getEnv())) {
             return "0000";
         }

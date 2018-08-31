@@ -121,7 +121,6 @@ public class UserService {
             NewsAndMessageResponse newsAndMessageResponse = new NewsAndMessageResponse();
             newsAndMessageResponse.setTitle(newsAndMessage.getTitle());
             String toNewsUrl = systemProp.getH5MessageUrl() + newsAndMessage.getId() + "&type=news" + "&i18n=" + i18n;
-            log.info("跳转H5获取公告内容链接：{}", toNewsUrl);
             newsAndMessageResponse.setToUrl(toNewsUrl);
             if (!ObjectUtils.isEmpty(newsAndMessage.isHasRead())) {
                 newsAndMessageResponse.setHasRead(newsAndMessage.isHasRead());

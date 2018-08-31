@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -28,7 +27,7 @@ public class MainTest {
         System.out.println(str);
     }
 
-    public static  void test(String str) {
+    public static void test(String str) {
         str = "12321";
         System.out.println(str);
     }
@@ -103,9 +102,9 @@ public class MainTest {
         User u = new User("gui");
 
         Method[] methods = User.class.getDeclaredMethods();
-        for(Method method:methods) {
+        for (Method method : methods) {
             String name = method.getName();
-            if(name.startsWith("get")) {
+            if (name.startsWith("get")) {
                 System.out.println(name);
                 String invoke = (String) method.invoke(u, null);
                 System.out.println(invoke);

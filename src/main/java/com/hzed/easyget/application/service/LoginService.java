@@ -310,7 +310,11 @@ public class LoginService {
      */
     public CheckMobileResponse checkMobileBeforeSendH5(String mobile) {
         // 检验三大运营商手机号
-        checkMobileBeforeSend(mobile);
+        log.info("发送验证码手机号：{}", mobile);
+        // 格式化手机号
+        mobile = mobileFormat(mobile);
+        // 校验是否三大运营商手机号
+        checkMobile(mobile);
         // 校验是否新用户
         if (userRepository.findByMobile(mobile) != null) {
             throw new WarnException(BizCodeEnum.EXIST_USER);

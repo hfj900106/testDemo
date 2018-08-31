@@ -6,6 +6,7 @@ import com.hzed.easyget.persistence.auto.entity.Bill;
 import com.hzed.easyget.persistence.auto.entity.BillLedger;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -44,4 +45,11 @@ public interface ProductService {
      * @return 产品
      */
     AbstractProduct createProduct(BigDecimal amount, Integer days);
+
+    /**
+     * 获取应还时间
+     * @param period 借款天数
+     * @return 应还时间
+     */
+    LocalDateTime getRepaymentTime(Integer period);
 }

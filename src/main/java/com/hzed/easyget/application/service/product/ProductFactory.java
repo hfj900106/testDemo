@@ -28,4 +28,8 @@ public class ProductFactory {
         }
         return productService;
     }
+
+    public static ProductService getProduct() {
+        return getProduct(ProductEnum.EasyGet);
+    }
 }

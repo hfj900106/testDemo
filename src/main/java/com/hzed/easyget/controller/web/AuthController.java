@@ -96,6 +96,7 @@ public class AuthController {
         authService.operatorAuth(request);
     }
 
+    @IgnoreHeader
     @ModuleFunc("运营商认证-风控回调")
     @PostMapping("/operatorAuthCallback")
     public void operatorAuthCallback(@Valid @RequestBody PeratorAuthCallbackRequest request) {

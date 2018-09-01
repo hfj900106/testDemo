@@ -12,7 +12,6 @@ import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
-import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
@@ -27,11 +26,12 @@ import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
 import com.hzed.easyget.persistence.ext.entity.BillExt;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -76,6 +76,8 @@ public class JobService {
     private UserRepository userRepository;
     @Autowired
     private UserMessageRepository messageRepository;
+    @Autowired
+    private DictService dictService;
 
     /**
      * 风控审核
@@ -143,11 +145,19 @@ public class JobService {
 
         jobList.forEach(repayjob -> {
             MdcUtil.putTrace();
+            // 标ID
+            Long bidId = repayjob.getBidId();
+            // 还款金额
+            BigDecimal repaymentAmount = repayjob.getRepaymentAmount();
+            // 实际还款时间
+            LocalDateTime realRepaymentTime = repayjob.getRealRepaymentTime();
+            // 本地交易ID
+            Long transactionId = repayjob.getTransactionId();
             try {
                 // 走信息流
-                repayService.repayInformationFlow(repayjob.getBidId(), repayjob.getRepaymentAmount(), repayjob.getRealRepaymentTime(), repayjob.getTransactionId(), repayjob);
+                repayService.repayInformationFlow(bidId, repaymentAmount, realRepaymentTime, transactionId, repayjob);
             } catch (Exception ex) {
-                log.error("标的：{} 走还款信息流失败", repayjob.getBidId(), ex);
+                log.error("标的：{} 走还款信息流失败", bidId, ex);
 
                 RepayInfoFlowJob jobUpdate = new RepayInfoFlowJob();
                 jobUpdate.setId(repayjob.getId());
@@ -264,35 +274,33 @@ public class JobService {
 
 
     /**
-     * D-0:每天5条，4点、10点、12点半、4点、8点
+     * 当天到期:每天5条，4点、10点、12点半、4点、8点
      */
     public void checkBillD0() {
         checkBillD012(0, ComConsts.SMS_CONTENT_7, 1);
     }
 
     /**
-     * D-1：每天2条，早上7点半，中午12点半
+     * 最后一天到期：每天2条，早上7点半，中午12点半
      */
-
     public void checkBillD1() {
         checkBillD012(1, ComConsts.SMS_CONTENT_4, 0);
     }
 
     /**
-     * D-2：每天1条，12点半发
+     * 最后两天到期：每天1条，12点半发
      */
     public void checkBillD2() {
         checkBillD012(2, ComConsts.SMS_CONTENT_4, 0);
     }
 
     /**
-     *
-     * @param day 最后到期天数
-     * @param code 短信模板code
+     * @param day     最后到期天数
+     * @param code    短信模板code
      * @param channel 牛信渠道
      */
     public void checkBillD012(int day, String code, Integer channel) {
-        String template = dictRepository.findByCodeAndLanguage(code, systemProp.getLocal()).getDicValue();
+        String template = dictService.getDictByCodeAndLanguage(code, systemProp.getLocal()).getDicValue();
         List<BillExt> bills = billRepository.findUnRepayBillExt(day);
         if (ObjectUtils.isEmpty(bills)) {
             return;
@@ -301,25 +309,16 @@ public class JobService {
 
     }
 
-    private void smsNX(int day, String mobile, String template, Integer channel) {
+
+    @Transactional(rollbackFor = Exception.class)
+    public void smsNX(int day, String mobile, String template, Integer channel) {
         MdcUtil.putTrace();
         try {
-            String title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
-            if (StringUtils.isBlank(template)) {
-                log.error("没有配置短信模板");
-                throw new WarnException(BizCodeEnum.DICT_NOTEXISTS);
-            }
-            if (StringUtils.isBlank(title)) {
-                log.error("没有配置信息title");
-                throw new WarnException(BizCodeEnum.DICT_NOTEXISTS);
-            }
-
+            String title = dictService.getDictByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
             String content = MessageFormat.format(template, String.valueOf(day));
-
-            log.info("发送催账短信-成功，手机号码{}", mobile);
-
             // 发送及保存短信
             smsService.sendNxSms(mobile, content, "短信催账", channel);
+            log.info("发送催账短信-成功，手机号码：{}", mobile);
 
             // 通过手机号获取用户id
             Long userId = userRepository.findByMobile(mobile).getId();

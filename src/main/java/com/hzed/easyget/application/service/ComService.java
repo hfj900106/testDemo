@@ -2,7 +2,6 @@ package com.hzed.easyget.application.service;
 
 import com.hzed.easyget.application.enums.BillLedgerItemEnum;
 import com.hzed.easyget.application.enums.BillStatusEnum;
-import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
@@ -168,7 +167,7 @@ public class ComService {
 
         Bid bid = bidRepository.findByIdWithExp(bill.getBidId());
 
-        AbstractProduct product = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(bid.getLoanAmount(), bid.getPeriod());
+        AbstractProduct product = ProductFactory.getProduct().createProduct(bid.getLoanAmount(), bid.getPeriod());
         // 总逾期费
         BigDecimal allOverFee = product.getOverFee(overDays);
         // 已还逾期费

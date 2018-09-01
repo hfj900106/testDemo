@@ -3,7 +3,6 @@ package com.hzed.easyget.application.service;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.hzed.easyget.application.enums.*;
-import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
@@ -205,14 +204,14 @@ public class RepayService {
         progressInsert.setId(progressId);
         progressInsert.setBidId(bidId);
         progressInsert.setType(BidProgressTypeEnum.REPAY.getCode().byteValue());
-        progressInsert.setHandleTime(LocalDateTime.now());
+        progressInsert.setHandleTime(realRepaymentTime);
         progressInsert.setHandleResult("用户还款：" + repayAmount);
         bidProgressRepository.insert(progressInsert);
 
         // 待还账单
         Bill billBefore = billRepository.findAllBillByBidIdWithExp(bidId).get(0);
         // 还账单操作
-        repayBill(billBefore, repayAmount, transactionId, LocalDateTime.now());
+        repayBill(billBefore, repayAmount, transactionId, realRepaymentTime);
         // 查询用户手机
         Bid bid = bidRepository.findByIdWithExp(bidId);
         User user = userRepository.findById(bid.getUserId());
@@ -282,9 +281,9 @@ public class RepayService {
         BillLedger corpusLedger = billLedgerRepository.findBillLedgerItemByBillIdWithExp(billId, BillLedgerItemEnum.CORPUS.getCode().byteValue());
         // 本金没有待还表示已结清
         if (corpusLedger.getRepaymentAmount().compareTo(corpusLedger.getRealRepaymentAmount()) == 0) {
-            billUpdate.setSettlementTime(LocalDateTime.now());
+            billUpdate.setSettlementTime(realRepaymentTime);
             // 逾期结清还是正常结清
-            billUpdate.setStatus(DateUtil.compare(realRepaymentTime, bill.getRepaymentTime()) ?
+            billUpdate.setStatus(DateUtil.daysBetweenNoHMS(bill.getRepaymentTime(), realRepaymentTime) > 0 ?
                     BillStatusEnum.OVERDUE_CLEAR.getCode().byteValue() : BillStatusEnum.NORMAL_CLEAR.getCode().byteValue());
         } else {
             // 部分还款
@@ -338,21 +337,20 @@ public class RepayService {
                 BillLedger ledgerInsert = new BillLedger();
                 ledgerInsert.setId(IDGenerator.nextId());
                 ledgerInsert.setBillId(billId);
-                ledgerInsert.setRepaymentTime(LocalDateTime.now());
+                ledgerInsert.setRepaymentTime(realRepaymentTime);
                 ledgerInsert.setRepaymentAmount(billItemNoRepay);
                 ledgerInsert.setRepaymentItem(item.byteValue());
-                ledgerInsert.setRealRepaymentTime(LocalDateTime.now());
+                ledgerInsert.setRealRepaymentTime(realRepaymentTime);
                 ledgerInsert.setRealRepaymentAmount(repayAmountNow);
-                ledgerInsert.setCreateTime(LocalDateTime.now());
                 billLedgerRepository.insert(ledgerInsert);
             }
             // 有逾期费记录则修改
             else {
                 BillLedger ledgerUpdate = new BillLedger();
                 ledgerUpdate.setId(ledger.getId());
-                ledgerUpdate.setRepaymentTime(LocalDateTime.now());
+                ledgerUpdate.setRepaymentTime(realRepaymentTime);
                 ledgerUpdate.setRepaymentAmount(billItemNoRepay);
-                ledgerUpdate.setRealRepaymentTime(LocalDateTime.now());
+                ledgerUpdate.setRealRepaymentTime(realRepaymentTime);
                 ledgerUpdate.setRealRepaymentAmount(repayAmountNow);
                 ledgerUpdate.setUpdateTime(LocalDateTime.now());
                 billLedgerRepository.update(ledgerUpdate);
@@ -366,7 +364,7 @@ public class RepayService {
 
             BillLedger ledgerUpdate = new BillLedger();
             ledgerUpdate.setId(ledger.getId());
-            ledgerUpdate.setRealRepaymentTime(LocalDateTime.now());
+            ledgerUpdate.setRealRepaymentTime(realRepaymentTime);
             // 实还金额累加
             ledgerUpdate.setRealRepaymentAmount(repayAmountNow.add(ledger.getRealRepaymentAmount()));
             ledgerUpdate.setUpdateTime(LocalDateTime.now());
@@ -384,7 +382,7 @@ public class RepayService {
         // 相关账单
         Bid bid = bidRepository.findByIdWithExp(bidId);
         //获取产品最小还款值
-        BigDecimal minRepayAmount = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(bid.getLoanAmount(), bid.getPeriod()).getMinRepayAmount();
+        BigDecimal minRepayAmount = ProductFactory.getProduct().createProduct(bid.getLoanAmount(), bid.getPeriod()).getMinRepayAmount();
         if (ObjectUtils.isEmpty(minRepayAmount)) {
             log.error("找不到产品的最小还款金额");
             throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
@@ -411,7 +409,7 @@ public class RepayService {
         // 部分还款
         if (!flag) {
             // 获取产品最小还款值
-            BigDecimal minRepayAmount = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(bid.getLoanAmount(), bid.getPeriod()).getMinRepayAmount();
+            BigDecimal minRepayAmount = ProductFactory.getProduct().createProduct(bid.getLoanAmount(), bid.getPeriod()).getMinRepayAmount();
             if (ObjectUtils.isEmpty(minRepayAmount)) {
                 log.error("找不到产品的最小还款金额");
                 throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);

@@ -3,7 +3,6 @@ package com.hzed.easyget.application.service;
 import com.hzed.easyget.application.enums.BidProgressTypeEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.TransactionTypeEnum;
-import com.hzed.easyget.application.service.product.ProductEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.ProductService;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
@@ -44,15 +43,15 @@ public class TransactionService {
      * @param tempId    推送放款记录的中间表id
      * @param paymentId 交易id
      */
-    public void lendingCallback(Long bidId, Long tempId, String paymentId, Byte states, LocalDateTime overTime) {
+    public void lendingCallback(Long bidId, Long tempId, String paymentId, Byte status, LocalDateTime overTime) {
         // 回调操作
         Bid bid = bidRepository.findById(bidId);
         //改标的状态,砍头息、插入账单、台账、标进度、交易记录表，删除中间表数据
         //工厂类获取bill和billLedgers
-        ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
+        ProductService product = ProductFactory.getProduct();
         List<Bill> bills = product.createBills(bid);
         List<BillLedger> billLedgers = product.createBillLedger(bills, bid.getLoanAmount(), bid.getPeriod());
-        UserTransaction transaction = buildUserTransaction(bid.getUserId(), bidId, TransactionTypeEnum.IN.getCode().byteValue(), bid.getLoanAmount().subtract(bid.getAuditFee()), paymentId, bid.getInBank(), bid.getInAccount(), states, overTime);
+        UserTransaction transaction = buildUserTransaction(bid.getUserId(), bidId, TransactionTypeEnum.IN.getCode().byteValue(), bid.getLoanAmount().subtract(bid.getAuditFee()), paymentId, bid.getInBank(), bid.getInAccount(), status, overTime);
         tempTableRepository.afterBankLoan(
                 Bid.builder().id(bidId).status(BidStatusEnum.REPAYMENT.getCode().byteValue()).updateTime(LocalDateTime.now()).build(),
                 BidProgress.builder().bidId(bidId).id(IDGenerator.nextId()).type(BidProgressTypeEnum.LOAN.getCode().byteValue()).handleResult("放款成功").createTime(LocalDateTime.now()).remark("放款").handleTime(LocalDateTime.now()).build(),
@@ -102,11 +101,11 @@ public class TransactionService {
      * @param bidNo
      * @param transactionId
      * @param overTime      交易完成时间
-     * @param states        交易状态
+     * @param status        交易状态
      */
-    public void insertUsrTransactionInfo(Long bidNo, String transactionId, Byte states, LocalDateTime overTime) {
+    public void insertUsrTransactionInfo(Long bidNo, String transactionId, Byte status, LocalDateTime overTime) {
         Bid bidInfo = bidRepository.findById(bidNo);
-        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount().subtract(bidInfo.getAuditFee()), transactionId, bidInfo.getInBank(), bidInfo.getInAccount(), states, overTime);
+        UserTransaction transaction = buildUserTransaction(bidInfo.getUserId(), bidNo, TransactionTypeEnum.IN.getCode().byteValue(), bidInfo.getLoanAmount().subtract(bidInfo.getAuditFee()), transactionId, bidInfo.getInBank(), bidInfo.getInAccount(), status, overTime);
         userTransactionRepository.insertSelective(transaction);
     }
 
@@ -135,7 +134,7 @@ public class TransactionService {
         // 待修改标
         Bid bid = bidRepository.findById(bidId);
         // 相关账单
-        ProductService product = ProductFactory.getProduct(ProductEnum.EasyGet);
+        ProductService product = ProductFactory.getProduct();
         List<Bill> bills = product.createBills(bid);
         List<BillLedger> billLedgers = product.createBillLedger(bills, bid.getLoanAmount(), bid.getPeriod());
 

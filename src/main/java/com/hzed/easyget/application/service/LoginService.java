@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -279,15 +280,10 @@ public class LoginService {
             throw new WarnException(BizCodeEnum.PIC_CODE_TO_CHECK);
         }
         String code = smsService.getCode();
-
-        List<DictResponse> smsContent1 = dictService.getDictByDicCodeAndLanguage(ComConsts.SMS_CONTENT_1, systemProp.getLocal());
-        if (ObjectUtils.isEmpty(smsContent1)) {
-            log.error("没有配置短信模板");
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
-        }
-        String dicValue = smsContent1.get(0).getDictValue();
-        //替换验证码
-        String content = StringUtils.replace(dicValue, "{0}", code);
+        // 验证码模板
+        String content = dictService.getDictByCodeAndLanguage(ComConsts.SMS_CONTENT_1, systemProp.getLocal()).getDicValue();
+        // 替换验证码
+        content = MessageFormat.format(content, code);
         smsService.sendDefaultSms(mobile, content, "短信验证码");
 
         //保存到Redis，手机验证码30分钟有效
@@ -314,7 +310,11 @@ public class LoginService {
      */
     public CheckMobileResponse checkMobileBeforeSendH5(String mobile) {
         // 检验三大运营商手机号
-        checkMobileBeforeSend(mobile);
+        log.info("发送验证码手机号：{}", mobile);
+        // 格式化手机号
+        mobile = mobileFormat(mobile);
+        // 校验是否三大运营商手机号
+        checkMobile(mobile);
         // 校验是否新用户
         if (userRepository.findByMobile(mobile) != null) {
             throw new WarnException(BizCodeEnum.EXIST_USER);

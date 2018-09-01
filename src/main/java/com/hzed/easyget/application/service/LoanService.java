@@ -2,7 +2,7 @@ package com.hzed.easyget.application.service;
 
 import com.hzed.easyget.application.enums.BidEnum;
 import com.hzed.easyget.application.enums.BidStatusEnum;
-import com.hzed.easyget.application.enums.ProductEnum;
+import com.hzed.easyget.application.enums.ProductTypeEnum;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.model.AbstractProduct;
 import com.hzed.easyget.controller.model.*;
@@ -36,8 +36,6 @@ public class LoanService {
     @Autowired
     private SystemProp systemProp;
     @Autowired
-    private ComService comService;
-    @Autowired
     private UserLoanVisitRepository userVisitRecordRepository;
     @Autowired
     private UserBankRepository userBankRepository;
@@ -54,7 +52,7 @@ public class LoanService {
         LoanDetailResponse loanDetailResponse = new LoanDetailResponse();
         Bid bid = bidRepository.findByIdWithExp(request.getBid());
         Byte status = bid.getStatus();
-        AbstractProduct product = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(bid.getApplyAmount(), bid.getPeriod());
+        AbstractProduct product = ProductFactory.getProduct().createProduct(bid.getApplyAmount(), bid.getPeriod());
         loanDetailResponse.setApplyAmount(product.getArrivalAmount().toString());
         loanDetailResponse.setApplyTime(DateUtil.localDateTimeToStr1(bid.getCreateTime()));
         loanDetailResponse.setInBank(bid.getInBank());
@@ -107,7 +105,7 @@ public class LoanService {
         bid.setUserId(userId);
         bid.setBidNo(String.valueOf(IDGenerator.nextId()));
         bid.setTitle("消费贷");
-        bid.setProductCode(ProductEnum.PRODUCT_CODE.getCode());
+        bid.setProductCode(ProductTypeEnum.PRODUCT_CODE.getCode());
         bid.setApplyAmount(request.getApplyAmount());
         bid.setPeriod(request.getPeriod());
         bid.setInBank(request.getInBank());
@@ -142,7 +140,7 @@ public class LoanService {
         Long userId = RequestUtil.getGlobalUser().getUserId();
         List<UserBank> userBankList = userBankRepository.findByUserId(userId);
         if (!ObjectUtils.isEmpty(userBankList)) {
-            Dict dict = dictRepository.findByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
+            Dict dict = dictRepository.findOneByCodeAndLanguage(userBankList.get(0).getInBank().toUpperCase(), RequestUtil.getGlobalHead().getI18n());
             if (!ObjectUtils.isEmpty(dict)) {
                 subLoanResponse.setBankCode(dict.getDicCode());
                 subLoanResponse.setBankName(dict.getDicValue());
@@ -150,7 +148,7 @@ public class LoanService {
             }
         }
 
-        AbstractProduct productInfo = ProductFactory.getProduct(com.hzed.easyget.application.service.product.ProductEnum.EasyGet).createProduct(loanAmount, period);
+        AbstractProduct productInfo = ProductFactory.getProduct().createProduct(loanAmount, period);
 
         subLoanResponse.setTotalAmount(productInfo.getTotalRepaymentAmount());
         BigDecimal headFee = productInfo.getHeadFee();

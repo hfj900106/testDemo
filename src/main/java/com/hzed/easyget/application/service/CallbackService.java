@@ -91,7 +91,7 @@ public class CallbackService {
 
         LocalDateTime dateTime = DateUtil.timestampToLocalDateTimeTo(request.getHandleTime());
 
-        AbstractProduct absProduct = ProductFactory.getProduct(ProductEnum.EasyGet).createProduct(loanAmount, bid.getPeriod());
+        AbstractProduct absProduct = ProductFactory.getProduct().createProduct(loanAmount, bid.getPeriod());
         tempTableRepository.pushBidCallback(
                 Bid.builder().id(bidId).loanAmount(loanAmount).updateTime(LocalDateTime.now()).auditFee(absProduct.getHeadFee()).status(status).updateBy(request.getUpdateBy()).remark(remark).build(),
                 BidProgress.builder().id(System.nanoTime()).bidId(bidId).type(BidProgressTypeEnum.AUDIT.getCode().byteValue()).handleResult(request.getMessage())

@@ -185,16 +185,16 @@ public class SmsService {
         smsSendRequest.setTaskTime(DateUtil.localDateTimeToStr1(LocalDateTime.now()));
         smsSendRequest.setContent(content);
         smsSendRequest.setSmsChannelType(channel);
-        log.info("请求参数：{}", JSONObject.toJSONString(smsSendRequest));
+        log.info("牛信，请求参数：{}", JSONObject.toJSONString(smsSendRequest));
         NxSmsSendResponse smsSendResponse = NxSmsUtil.smsSend(smsSendRequest);
+        log.info("牛信，返回数据：{}", JSONObject.toJSONString(smsSendResponse));
         if (ObjectUtils.isEmpty(smsSendResponse)) {
-            log.error("发送牛信短信返回空");
+            log.error("牛信，短信返回空");
             throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
         }
-        log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsSendResponse));
         // 发送失败
         if (!SmsCodeEnum.OK.getKey().equals(smsSendResponse.getCode())) {
-            log.error("NX发送失败：{}", smsSendResponse.getResult());
+            log.error("牛信，发送失败：{}", smsSendResponse.getResult());
             throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
         }
     }
@@ -235,15 +235,15 @@ public class SmsService {
         // bulk短信下发请求消息body列表
         message.setMsg(Lists.newArrayList(msgBody));
         smsDownRequest.setMessages(message);
-        log.info("请求参数：{}", JSONObject.toJSONString(smsDownRequest));
+        log.info("国际，请求参数：{}", JSONObject.toJSONString(smsDownRequest));
         BulkSmsDownResponse smsDownResponse = BulkSmsUtil.smsSend(smsDownRequest);
+        log.info("国际，返回数据：{}", JSONObject.toJSONString(smsDownResponse));
         if (ObjectUtils.isEmpty(smsDownResponse)) {
-            log.error("返回空的数据对象");
+            log.error("国际，短信返回空");
             throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
         }
-        log.info("发送短信返回数据：{}", JSONObject.toJSONString(smsDownResponse));
-        if (ComConsts.BULK_SMS_OK != smsDownResponse.getErrorCode()) {
-            log.error("CM发送失败：{}", JSONObject.toJSONString(smsDownResponse.getMessages()));
+        if (ComConsts.BULK_SMS_OK != smsDownResponse.getErrorCode().intValue()) {
+            log.error("国际，发送失败：{}", JSONObject.toJSONString(smsDownResponse.getMessages()));
             throw new WarnException(BizCodeEnum.SMS_CODE_SEND_FAIL);
         }
     }

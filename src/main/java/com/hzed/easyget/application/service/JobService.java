@@ -274,7 +274,7 @@ public class JobService {
 
 
     /**
-     * 当天到期:每天5条，4点、10点、12点半、4点、8点
+     * 当天到期：每天5条，4点、10点、12点半、4点、8点
      */
     public void checkBillD0() {
         checkBillD012(0, ComConsts.SMS_CONTENT_7, 1);
@@ -306,9 +306,7 @@ public class JobService {
             return;
         }
         bills.forEach(billExt -> smsNX(day, billExt.getMobile(), template, channel));
-
     }
-
 
     @Transactional(rollbackFor = Exception.class)
     public void smsNX(int day, String mobile, String template, Integer channel) {
@@ -325,7 +323,7 @@ public class JobService {
             messageRepository.addUserMessage(userId, title, content, "短信催账");
 
         } catch (Exception e) {
-            log.error("发送催账短信-失败，手机号码{}", mobile, e);
+            log.error("发送催账短信-失败，手机号码：{}", mobile, e);
         }
     }
 

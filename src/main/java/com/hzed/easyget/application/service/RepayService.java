@@ -669,8 +669,8 @@ public class RepayService {
         }
         // 交易失败处理
         if (!status.equals(BluePayStatusEnum.BLUE_PAY_COMPLETE.getKey())) {
-            // 修改交易记录，交易失败记录原因
-            transactionService.updateUserTranState(paymentId, TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue(), BluePayStatusEnum.getValueDesc(status));
+            // 修改交易记录，交易失败记录原因，存code
+            transactionService.updateUserTranState(paymentId, TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue(), status);
             // 还款失败 修改va码对应状态
             UserTransactionRepay repayUpdate = UserTransactionRepay.builder().paymentId(paymentId).status(TransactionTypeEnum.FAIL_RANSACTION.getCode().byteValue()).build();
             repayRepository.updateUserTransactionRepay(repayUpdate);

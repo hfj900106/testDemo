@@ -704,7 +704,7 @@ public class RepayService {
         AbstractProduct productInfo = ProductFactory.getProduct().createProduct(bid.getLoanAmount(), bid.getPeriod());
         repayProgressResponse.setTailFree(productInfo.getTailFee());
         repayProgressResponse.setLoanTime(DateUtil.localDateTimeToTimestamp(bid.getCreateTime()));
-        BigDecimal totalRepayAmount = comService.getBidNoRepayFee(bidId, LocalDateTime.now());
+        BigDecimal totalRepayAmount = productInfo.getTotalRepaymentAmount();
         repayProgressResponse.setTotalRepayAmount(totalRepayAmount);
         repayProgressResponse.setBidStatus(bid.getStatus());
         Bill bill = billRepository.findByBid(bidId);

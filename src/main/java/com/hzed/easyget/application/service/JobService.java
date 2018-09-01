@@ -305,25 +305,25 @@ public class JobService {
         if (ObjectUtils.isEmpty(bills)) {
             return;
         }
-        bills.forEach(billExt -> smsNX(day, billExt.getMobile(), template, channel));
+        bills.forEach(billExt -> sendCheckBillSms(day, billExt.getMobile(), template, channel));
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void smsNX(int day, String mobile, String template, Integer channel) {
+    public void sendCheckBillSms(int day, String mobile, String template, Integer channel) {
         MdcUtil.putTrace();
         try {
             String title = dictService.getDictByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
             String content = MessageFormat.format(template, String.valueOf(day));
             // 发送及保存短信
-            smsService.sendNxSms(mobile, content, "短信催账", channel);
-            log.info("发送催账短信-成功，手机号码：{}", mobile);
+            smsService.sendNxSms(mobile, content, "提还短信", channel);
+            log.info("发送提还短信成功，手机号码：{}", mobile);
 
             // 通过手机号获取用户id
             Long userId = userRepository.findByMobile(mobile).getId();
-            messageRepository.addUserMessage(userId, title, content, "短信催账");
+            messageRepository.addUserMessage(userId, title, content, "提还短信");
 
         } catch (Exception e) {
-            log.error("发送催账短信-失败，手机号码：{}", mobile, e);
+            log.error("发送提还短信失败，手机号码：{}", mobile, e);
         }
     }
 

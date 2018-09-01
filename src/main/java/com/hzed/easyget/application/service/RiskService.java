@@ -172,7 +172,7 @@ public class RiskService {
         map.put("timeStamp", timeStamp);
         map.put("imageFile", request.getIdCardBase64ImgStr());
         map.put("bizToken", request.getBizToken());
-        map.put("ocrData", request.getOcrData());
+        map.put("ocrData", new String(request.getOcrData()));
         RiskResponse response = getRiskResponse(map, riskProp.getIdCardRecognitionUrl());
         if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);

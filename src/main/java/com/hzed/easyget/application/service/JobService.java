@@ -28,6 +28,7 @@ import com.hzed.easyget.persistence.ext.entity.BillExt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
@@ -282,7 +283,6 @@ public class JobService {
             return;
         }
         bills.forEach(billExt -> smsNX(day, billExt.getMobile(), template, 0));
-
     }
 
     /**
@@ -295,19 +295,18 @@ public class JobService {
             return;
         }
         bills.forEach(billExt -> smsNX(day, billExt.getMobile(), template, 1));
-
     }
 
-    private void smsNX(int day, String mobile, String template, Integer channel) {
+    @Transactional(rollbackFor = Exception.class)
+    public void smsNX(int day, String mobile, String template, Integer channel) {
         MdcUtil.putTrace();
         try {
             String title = dictService.getDictByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
             String content = MessageFormat.format(template, String.valueOf(day));
 
-            log.info("发送催账短信-成功，手机号码：{}", mobile);
-
             // 发送及保存短信
             smsService.sendNxSms(mobile, content, "短信催账", channel);
+            log.info("发送催账短信-成功，手机号码：{}", mobile);
 
             // 通过手机号获取用户id
             Long userId = userRepository.findByMobile(mobile).getId();

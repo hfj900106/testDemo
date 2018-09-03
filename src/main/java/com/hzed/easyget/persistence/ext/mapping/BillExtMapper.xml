@@ -7,14 +7,12 @@
         SELECT
         user.mobile_account AS mobile,
         bill.repayment_time AS repaymentTime,
-        bill.id AS billId,
-        DATE(bill.repayment_time) - DATE(NOW()) AS day
+        bill.id AS billId
         FROM t_loan_bill bill
         LEFT JOIN t_loan_bid bid ON bid.id = bill.bid_id
-        LEFT JOIN t_loan_user user ON user.id = bid.user_id
+        LEFT JOIN t_loan_user USER ON user.id = bid.user_id
         WHERE bid.status = 5 AND bill.status = 1
-        AND (DATE(bill.repayment_time) - DATE(NOW()) >=0) and  ((DATE(bill.repayment_time) - DATE(NOW())) &lt; #{days})
-        LIMIT 60
+        AND TO_DAYS(bill.repayment_time) - TO_DAYS(NOW()) = #{day}
     </select>
 
 

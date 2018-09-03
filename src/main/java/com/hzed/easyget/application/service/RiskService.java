@@ -172,13 +172,13 @@ public class RiskService {
         map.put("timeStamp", timeStamp);
         map.put("imageFile", request.getIdCardBase64ImgStr());
         map.put("bizToken", request.getBizToken());
-        map.put("ocrData", request.getOcrData());
+        map.put("ocrData", new String(request.getOcrData()));
         RiskResponse response = getRiskResponse(map, riskProp.getIdCardRecognitionUrl());
         if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
-            throw new WarnException(BizCodeEnum.FAIL_FACE_RECOGNITION);
+            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
         return response;
     }

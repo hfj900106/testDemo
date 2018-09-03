@@ -49,6 +49,16 @@ public class DictService {
         return dict;
     }
 
+    public Dict getDictByCodeAndLanguage(String dicCode, String language) {
+        // 获取缓存数据,缓存没有，才查询数据库
+        Dict dict = redisService.getObjCache(dictKey + dicCode + RedisConsts.SPLIT + language);
+        if(dict == null) {
+            dict = dictRepository.findOneByCodeAndLanguage(dicCode, language);
+            redisService.setObjCache(dictKey + dicCode + RedisConsts.SPLIT + language, dict, 5 * 3600L);
+        }
+        return dict;
+    }
+
     public List<DictResponse> getDictByModuleCodeAndLanguage(String moduleCode, String language) {
         // 获取缓存数据，缓存没有才查询数据库
         List<DictResponse> respList = redisService.getObjCache(dictKey + moduleCode + RedisConsts.SPLIT + language);
@@ -61,22 +71,6 @@ public class DictService {
 
         // 放入缓存5小时
         redisService.setObjCache(dictKey + moduleCode + RedisConsts.SPLIT + language, dictResponseList, 5 * 3600L);
-
-        return dictResponseList;
-    }
-
-    public List<DictResponse> getDictByDicCodeAndLanguage(String dicCode, String language) {
-        // 获取缓存数据,缓存没有，才查询数据库
-        List<DictResponse> dictResponseListCache = redisService.getObjCache(dictKey + dicCode + RedisConsts.SPLIT + language);
-        if (!ObjectUtils.isEmpty(dictResponseListCache)) {
-            return dictResponseListCache;
-        }
-
-        List<Dict> dictList = dictRepository.findByDicCodeAndLanguage(dicCode, language);
-        List<DictResponse> dictResponseList = buildDictResponseList(dictList);
-
-        // 放入缓存5小时
-        redisService.setObjCache(dictKey + dicCode + RedisConsts.SPLIT + language, dictResponseList, 5 * 3600L);
 
         return dictResponseList;
     }
@@ -128,7 +122,6 @@ public class DictService {
         });
         redisService.setObjCache(dictKey + parent, idAreaResponseList, 5 * 3600L);
         return idAreaResponseList;
-
     }
 
     public void clearCodeCache(String code) {
@@ -154,19 +147,18 @@ public class DictService {
     }
 
     public void switchSmsChannel(String channel) {
-        String DICT_SMS_CHANNEL = "sms_channel";
         channel = channel.toUpperCase();
-        if (!channel.equals(ComConsts.BL) && !channel.equals(ComConsts.NX)) {
+        if (!channel.equals(ComConsts.CM) && !channel.equals(ComConsts.NX)) {
             throw new NestedException(BizCodeEnum.SERVICE_EXCEPTION, "无此短信渠道");
         }
 
-        Dict smsDict = dictRepository.findOneByCodeWithExp(DICT_SMS_CHANNEL);
+        Dict smsDict = dictRepository.findOneByCodeWithExp(ComConsts.SMS_DICT_CODE);
         log.info("当前的短信通道：{}", smsDict.getDicValue());
         log.info("即将切换成{}渠道", channel);
         Dict dictUpdate = Dict.builder().id(smsDict.getId()).dicValue(channel).updateTime(LocalDateTime.now()).build();
         dictRepository.update(dictUpdate);
         // 清理缓存数据
-        clearCodeCache(DICT_SMS_CHANNEL);
+        clearCodeCache(ComConsts.SMS_DICT_CODE);
         log.info("渠道切换成功");
     }
 

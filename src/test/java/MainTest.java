@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.time.LocalDateTime;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -24,31 +24,8 @@ import java.util.Optional;
 @Slf4j
 public class MainTest {
     public static void main(String[] args) throws InvocationTargetException, IllegalAccessException {
-//        optionalTest();
-//        jsonTest();
-//        stringCompareTest();
-//        tokenTest();
-
-//        mapIfAbsentTest();
-//        methodNameTest();
-//        System.out.println(System.currentTimeMillis());
-//        System.out.println(String.valueOf(System.currentTimeMillis()).length());
-//        System.out.println(System.nanoTime());
-//        System.out.println(System.nanoTime());
-//        System.out.println(System.nanoTime());
-//        System.out.println("BANK TABUNGAN PENSIUNAN NASIONAL/BTPN".length());
-//        System.out.println(String.valueOf(IDGenerator.nextId()).length());
-        testDaysBetween();
-
-    }
-
-    public static void testDaysBetween() {
-        LocalDateTime nowTime = LocalDateTime.now();
-        LocalDateTime nowDate = LocalDateTime.of(nowTime.getYear(), nowTime.getMonth(), nowTime.getDayOfMonth(), 0, 0);
-        System.out.println(nowDate);
-//        LocalDateTime localDateTime = DateUtil.addDays(LocalDateTime.of(LocalDate.now(), LocalTime.MIN), 1);
-//        System.out.println(localDateTime);
-
+        String str = MessageFormat.format("{1}{0}{2}", 1, 2, 3);
+        System.out.println(str);
     }
 
     public static void test(String str) {

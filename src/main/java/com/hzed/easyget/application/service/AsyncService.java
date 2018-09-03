@@ -1,12 +1,10 @@
 package com.hzed.easyget.application.service;
 
-import com.hzed.easyget.controller.model.DictResponse;
 import com.hzed.easyget.infrastructure.config.SystemProp;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
-import com.hzed.easyget.infrastructure.repository.DictRepository;
 import com.hzed.easyget.infrastructure.repository.UserMessageRepository;
 import com.hzed.easyget.infrastructure.repository.UserRepository;
 import com.hzed.easyget.persistence.auto.entity.Bid;
@@ -18,7 +16,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.List;
+import java.text.MessageFormat;
 
 /**
  * 异步操作专用
@@ -36,8 +34,6 @@ public class AsyncService {
     private SmsService smsService;
     @Autowired
     private UserMessageRepository messageRepository;
-    @Autowired
-    private DictRepository dictRepository;
     @Autowired
     private DictService dictService;
     @Autowired
@@ -64,35 +60,27 @@ public class AsyncService {
         }
         // 打印日志
         log.info("标id：{}审核结果短信通知用户：{}", bidId, mobile);
-        List<DictResponse> smsContent;
-        String title;
+        String contentCode;
+        String titleCode;
         // 通过审核
+        String local = systemProp.getLocal();
         if (isPass) {
-            title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_2, systemProp.getLocal()).getDicValue();
-            smsContent = dictService.getDictByDicCodeAndLanguage(ComConsts.SMS_CONTENT_3, systemProp.getLocal());
+            titleCode = ComConsts.MESSAGE_TITLE_2;
+            contentCode = ComConsts.SMS_CONTENT_3;
+        } else {
+            // 不通过
+            titleCode = ComConsts.MESSAGE_TITLE_1;
+            contentCode = ComConsts.SMS_CONTENT_2;
         }
-        // 不通过
-        else {
-            title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_1, systemProp.getLocal()).getDicValue();
-            smsContent = dictService.getDictByDicCodeAndLanguage(ComConsts.SMS_CONTENT_2, systemProp.getLocal());
-        }
-        if (ObjectUtils.isEmpty(smsContent)) {
-            log.error("没有配置短信模板");
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
-        }
-        String dicValue = smsContent.get(0).getDictValue();
+        String title = dictService.getDictByCodeAndLanguage(titleCode, local).getDicValue();
+        String content = dictService.getDictByCodeAndLanguage(contentCode, local).getDicValue();
         // 替换验证码
-        String content = StringUtils.replace(dicValue, "{0}", user.getRealName());
+        content = MessageFormat.format(content, user.getRealName());
         // 发送及保存短信
-        smsService.sendAndSaveSms(mobile, content, "审核结果短信通知用户");
+        smsService.sendDefaultSms(mobile, content, "审核结果短信通知用户");
         // 保存信息记录
-        if (StringUtils.isBlank(title)) {
-            log.error("没有配置信息title");
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
-        }
         messageRepository.addUserMessage(user.getId(), title, content, "审核结果短信通知用户");
     }
-
 
 
 }

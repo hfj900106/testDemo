@@ -4,6 +4,8 @@ import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.SerializationException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +20,9 @@ public class RedisService {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     public void setCache(String key, Object value, Long seconds) {
         redisTemplate.opsForValue().set(key, value, seconds, TimeUnit.SECONDS);
     }
@@ -31,7 +36,12 @@ public class RedisService {
     }
 
     public <T> T getCache(String key) {
-        return (T) redisTemplate.opsForValue().get(key);
+        try {
+            return (T) redisTemplate.opsForValue().get(key);
+        } catch (SerializationException ex) {
+            // 兼容旧数据
+            return (T) stringRedisTemplate.opsForValue().get(key);
+        }
     }
 
     public void expire(String key, long timeout, TimeUnit unit) {

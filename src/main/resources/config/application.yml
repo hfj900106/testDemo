@@ -26,16 +26,16 @@ spring:
     encoding: utf-8
     cacheSeconds: 86400 # 24小时
   # rabbitmq配置
-#  rabbitmq:
-#    host: 10.10.30.139
-#    port: 5672
-#    username: guest
-#    password: guest
-#    publisher-confirms: true
-#    virtual-host: /
-#    listener:
-#      simple:
-#        acknowledge-mode: manual
+  rabbitmq:
+    host: 10.10.30.139
+    port: 5672
+    username: guest
+    password: guest
+    publisher-confirms: true
+    virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: manual
 
 # 日志文件配置
 logging:

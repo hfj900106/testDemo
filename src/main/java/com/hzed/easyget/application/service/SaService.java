@@ -35,7 +35,7 @@ public class SaService {
         try {
             log.info("SensorsAnalytics inData begin.");
 
-            List<SaExt> list = saRepository.inDataList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+            List<SaExt> list = saRepository.inDataList(DateUtil.dayStartTime(), DateUtil.dayEndTime());
             if (!ObjectUtils.isEmpty(list)){
                 List<SaExt> insert = distinctInDataInfo(list);
                 if (!ObjectUtils.isEmpty(insert)) {
@@ -50,7 +50,7 @@ public class SaService {
                 return;
             }
 
-            List<SaExt> pushList = saRepository.pushInDataList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+            List<SaExt> pushList = saRepository.pushInDataList(DateUtil.dayStartTime(), DateUtil.dayEndTime());
             if (!ObjectUtils.isEmpty(pushList)){
                 for (SaExt info : pushList) {
                     pushInData(info);
@@ -138,10 +138,8 @@ public class SaService {
     public void saLoanSuccess() {
         try {
             log.info("SensorsAnalytics loanSuccess begin.");
-            log.info("loanSuccess begin time :{} ",  DateUtil.strDateToStartDate(DateUtil.formatToDay()));
-            log.info("loanSuccess end time :{} ",  DateUtil.strDateToEndDate(DateUtil.formatToDay()));
 
-            List<SaExt> list = saRepository.loanSuccessList(DateUtil.dateAddDay(DateUtil.strDateToStartDate(DateUtil.formatToDay()), -3), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+            List<SaExt> list = saRepository.loanSuccessList(DateUtil.addDays(DateUtil.dayStartTime(), -3), DateUtil.dayEndTime());
 
             log.info("loanSuccess list , list:{} list.size:{} " , list,  list.size());
             for (SaExt saExt : list) {
@@ -161,7 +159,7 @@ public class SaService {
                 return;
             }
 
-            List<SaExt> pushList = saRepository.pushLoanSuccessList(DateUtil.dateAddDay(DateUtil.strDateToStartDate(DateUtil.formatToDay()), -3), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+            List<SaExt> pushList = saRepository.pushLoanSuccessList(DateUtil.addDays(DateUtil.dayStartTime(), -3), DateUtil.dayEndTime());
             if (!ObjectUtils.isEmpty(pushList)){
                 for (SaExt info : pushList) {
                     pushLoanSuccess(info);
@@ -224,7 +222,7 @@ public class SaService {
     public void saRepaymentSuccess() {
         try {
             log.info("SensorsAnalytics repaymentSuccess begin.");
-            List<SaExt> list = saRepository.repaymentSuccessList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+            List<SaExt> list = saRepository.repaymentSuccessList(DateUtil.dayStartTime(), DateUtil.dayEndTime());
             if (!ObjectUtils.isEmpty(list)) {
                 List<SaExt> insert = distinctRepaymentSuccess(list);
                 if (!ObjectUtils.isEmpty(insert)) {
@@ -239,7 +237,7 @@ public class SaService {
                 return;
             }
 
-            List<SaExt> pushList = saRepository.pushRepaymentSuccessList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+            List<SaExt> pushList = saRepository.pushRepaymentSuccessList(DateUtil.dayStartTime(), DateUtil.dayEndTime());
             if (!ObjectUtils.isEmpty(pushList)){
                 for (SaExt info : pushList) {
                     pushRepaymentSuccess(info);

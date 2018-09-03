@@ -5,9 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 神策进件、借款成功、还款业务类
@@ -30,7 +29,7 @@ public class SaExt {
     /** 账单的状态：1-未结清 2-正常结清 3-逾期结清*/
     private Byte billStatus;
     /** 风控审核时间 */
-    private Date handleTime;
+    private LocalDateTime handleTime;
     /** 风控审核结果 */
     private String handleResult;
     /** 用户手机号码 */
@@ -49,7 +48,7 @@ public class SaExt {
 
     /** 神策借款成功 */
     /** 应还时间 */
-    private Date realRepaymentTime;
+    private LocalDateTime realRepaymentTime;
 
     /** 神策还款 */
     /** 账单的部分还款标志：1-是 0-否 */

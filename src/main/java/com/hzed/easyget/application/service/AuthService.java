@@ -101,7 +101,7 @@ public class AuthService {
             remark2 = "社交认证";
         } else {
             remark1 = "Sertifikasi dasar";
-            remark2 = "Stratifikasi sosial";
+            remark2 = "Sertifikasi sosial";
         }
         List<Dict> dictList = dictRepository.findGroupByModuleCodeAndLanguage(request.getCode(), i18n, remark1, remark2);
         String personAuth = AuthCodeEnum.PERSON_INFO.getCode();

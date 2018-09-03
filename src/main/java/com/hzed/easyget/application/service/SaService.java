@@ -138,7 +138,16 @@ public class SaService {
     public void saLoanSuccess() {
         try {
             log.info("SensorsAnalytics loanSuccess begin.");
+            log.info("loanSuccess begin time :{} ",  DateUtil.strDateToStartDate(DateUtil.formatToDay()));
+            log.info("loanSuccess end time :{} ",  DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+
             List<SaExt> list = saRepository.loanSuccessList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+
+            log.info("loanSuccess list , list:{} list.size:{} " , list,  list.size());
+            for (SaExt saExt : list) {
+                log.info("loanSuccess list saExt.getBidId: {}, saExt.toString:{}" , saExt.getBidId(), saExt.toString());
+            }
+
             if (!ObjectUtils.isEmpty(list)) {
                 List<SaExt> insert = distinctLoanSuccess(list);
                 if (!ObjectUtils.isEmpty(insert)) {

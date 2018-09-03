@@ -14,7 +14,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -27,7 +26,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import javax.net.ssl.SSLException;
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.Map;
@@ -155,26 +153,23 @@ public class RestService {
      * @return
      */
     public static CloseableHttpClient getHttpClient() {
-        HttpRequestRetryHandler handler = new HttpRequestRetryHandler() {
-            @Override
-            public boolean retryRequest(IOException ex, int retryTimes, HttpContext httpContext) {
-                if (retryTimes > 3) {
-                    return false;
-                }
-                if (ex instanceof UnknownHostException || ex instanceof ConnectTimeoutException
-                        || !(ex instanceof SSLException) || ex instanceof NoHttpResponseException) {
-                    return true;
-                }
-
-                HttpClientContext clientContext = HttpClientContext.adapt(httpContext);
-                HttpRequest request = clientContext.getRequest();
-                boolean idempotent = !(request instanceof HttpEntityEnclosingRequest);
-                if (idempotent) {
-                    // 如果请求被认为是幂等的，那么就重试。即重复执行不影响程序其他效果的
-                    return true;
-                }
+        HttpRequestRetryHandler handler = (ex, retryTimes, httpContext) -> {
+            if (retryTimes > 3) {
                 return false;
             }
+            if (ex instanceof UnknownHostException || ex instanceof ConnectTimeoutException
+                    || !(ex instanceof SSLException) || ex instanceof NoHttpResponseException) {
+                return true;
+            }
+
+            HttpClientContext clientContext = HttpClientContext.adapt(httpContext);
+            HttpRequest request = clientContext.getRequest();
+            boolean idempotent = !(request instanceof HttpEntityEnclosingRequest);
+            if (idempotent) {
+                // 如果请求被认为是幂等的，那么就重试。即重复执行不影响程序其他效果的
+                return true;
+            }
+            return false;
         };
 
         PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();

@@ -12,7 +12,6 @@ import com.hzed.easyget.infrastructure.config.rest.RestService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
-import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.PayResponse;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.*;
@@ -27,12 +26,13 @@ import com.hzed.easyget.persistence.auto.entity.User;
 import com.hzed.easyget.persistence.ext.entity.BidExt;
 import com.hzed.easyget.persistence.ext.entity.BillExt;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +76,8 @@ public class JobService {
     private UserRepository userRepository;
     @Autowired
     private UserMessageRepository messageRepository;
+    @Autowired
+    private DictService dictService;
 
     /**
      * 风控审核
@@ -270,40 +272,59 @@ public class JobService {
         saService.saRepaymentSuccess();
     }
 
-    public void checkBill() {
-        Integer daysInAdvance = systemProp.getDaysInAdvance();
-        List<BillExt> billExts = billRepository.findUnRepayBillExt(daysInAdvance);
-        if (ObjectUtils.isEmpty(billExts)) {
+
+    /**
+     * 当天到期：每天5条，4点、10点、12点半、4点、8点
+     */
+    public void checkBillD0() {
+        checkBillD012(0, ComConsts.SMS_CONTENT_7, 1);
+    }
+
+    /**
+     * 最后一天到期：每天2条，早上7点半，中午12点半
+     */
+    public void checkBillD1() {
+        checkBillD012(1, ComConsts.SMS_CONTENT_4, 0);
+    }
+
+    /**
+     * 最后两天到期：每天1条，12点半发
+     */
+    public void checkBillD2() {
+        checkBillD012(2, ComConsts.SMS_CONTENT_4, 0);
+    }
+
+    /**
+     * @param day     最后到期天数
+     * @param code    短信模板code
+     * @param channel 牛信渠道
+     */
+    public void checkBillD012(int day, String code, Integer channel) {
+        String template = dictService.getDictByCodeAndLanguage(code, systemProp.getLocal()).getDicValue();
+        List<BillExt> bills = billRepository.findUnRepayBillExt(day);
+        if (ObjectUtils.isEmpty(bills)) {
             return;
         }
-        String template = dictRepository.findByCodeAndLanguage(ComConsts.SMS_CONTENT_4, systemProp.getLocal()).getDicValue();
-        String title = dictRepository.findByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
-        if (StringUtils.isBlank(template)) {
-            log.error("没有配置短信模板");
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
-        }
-        if (StringUtils.isBlank(title)) {
-            log.error("没有配置信息title");
-            throw new WarnException(BizCodeEnum.UNKNOWN_EXCEPTION);
-        }
-        for (BillExt billExt : billExts) {
-            Integer day = billExt.getDay();
-            if (day != null) {
-                String msg = StringUtils.replace(template, "{0}", String.valueOf(day));
-                String mobile = billExt.getMobile();
-                try {
-                    log.info("发送催账短信-成功，手机号码{}", mobile);
+        bills.forEach(billExt -> sendCheckBillSms(day, billExt.getMobile(), template, channel));
+    }
 
-                    // 发送及保存短信
-                    smsService.sendAndSaveSms(mobile, msg, "短信催账");
+    @Transactional(rollbackFor = Exception.class)
+    public void sendCheckBillSms(int day, String mobile, String template, Integer channel) {
+        MdcUtil.putTrace();
+        try {
+            String title = dictService.getDictByCodeAndLanguage(ComConsts.MESSAGE_TITLE_3, systemProp.getLocal()).getDicValue();
+            String content = MessageFormat.format(template, String.valueOf(day));
+            // 发送及保存短信
+            smsService.sendNxSms(mobile, content, "提还短信", channel);
+            log.info("发送提还短信成功，手机号码：{}", mobile);
 
-                    // 通过手机号获取用户id
-                    Long userId = userRepository.findByMobile(mobile).getId();
-                    messageRepository.addUserMessage(userId, title, msg, "短信催账");
-                } catch (Exception ex) {
-                    log.info("发送催账短信-失败，手机号码{}", mobile);
-                }
-            }
+            // 通过手机号获取用户id
+            Long userId = userRepository.findByMobile(mobile).getId();
+            messageRepository.addUserMessage(userId, title, content, "提还短信");
+
+        } catch (Exception e) {
+            log.error("发送提还短信失败，手机号码：{}", mobile, e);
         }
     }
+
 }

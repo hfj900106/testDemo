@@ -47,9 +47,15 @@ system:
     # 神策还款
     saRepaymentSuccess: true
     saRepaymentSuccessCron: 0 */1 * * * ?
-    # 催账短信
-    checkBill: true
-    checkBillCron: 0 0 15 * * ?
+    # 提还短信D0 每天5条，4点、10点、12点半、4点、8点
+    checkBillD0: true
+    checkBillCronD0: 0 0 4,10,12,16,20 * * ?
+    # 提还短信D1 每天2条，早上7点半，中午12点半
+    checkBillD1: true
+    checkBillCronD1: 0 30 7,12 * * ?
+    # 提还短信D2 每天1条，12点半发
+    checkBillD2: true
+    checkBillCronD2: 0 30 12 * * ?
 #======================================= 系统参数 结束 =======================================#
 
 

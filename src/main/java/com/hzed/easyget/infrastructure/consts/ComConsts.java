@@ -48,6 +48,7 @@ public class ComConsts {
     public static final String SMS_CONTENT_4 = "sms_templete_4";
     public static final String SMS_CONTENT_5 = "sms_templete_5";
     public static final String SMS_CONTENT_6 = "sms_templete_6";
+    public static final String SMS_CONTENT_7 = "sms_templete_7";
 
     /**
      * 消息title
@@ -59,19 +60,15 @@ public class ComConsts {
     public static final String MESSAGE_TITLE_5 = "message_title_5";
 
     /**
-     * 牛信
+     * 短信渠道 NX-牛信 CM-国际
      */
     public static final String NX = "NX";
+    public static final String CM = "CM";
 
-    /**
-     * 国际短信
-     */
-    public static final String BL = "BL";
-
-    public static final int MOBILE_LEN = 11;
     public static final int BULK_SMS_OK = 0;
     public static final int IS_ANDROID = 1;
     public static final int IS_IOS = 2;
+
     /**
      * 推送风控定时任务名
      */

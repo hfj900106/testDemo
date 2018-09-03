@@ -141,7 +141,7 @@ public class SaService {
             log.info("loanSuccess begin time :{} ",  DateUtil.strDateToStartDate(DateUtil.formatToDay()));
             log.info("loanSuccess end time :{} ",  DateUtil.strDateToEndDate(DateUtil.formatToDay()));
 
-            List<SaExt> list = saRepository.loanSuccessList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+            List<SaExt> list = saRepository.loanSuccessList(DateUtil.dateAddDay(DateUtil.strDateToStartDate(DateUtil.formatToDay()), -3), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
 
             log.info("loanSuccess list , list:{} list.size:{} " , list,  list.size());
             for (SaExt saExt : list) {
@@ -161,7 +161,7 @@ public class SaService {
                 return;
             }
 
-            List<SaExt> pushList = saRepository.pushLoanSuccessList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+            List<SaExt> pushList = saRepository.pushLoanSuccessList(DateUtil.dateAddDay(DateUtil.strDateToStartDate(DateUtil.formatToDay()), -3), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
             if (!ObjectUtils.isEmpty(pushList)){
                 for (SaExt info : pushList) {
                     pushLoanSuccess(info);

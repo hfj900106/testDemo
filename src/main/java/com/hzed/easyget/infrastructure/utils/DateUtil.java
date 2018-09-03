@@ -257,4 +257,31 @@ public final class DateUtil {
 
         return false;
     }
+
+    /**
+     * 日期加上天数的时间
+     * @param date
+     * @param day
+     * @return
+     */
+    public static Date dateAddDay(Date date,int day){
+        return add(date,Calendar.DAY_OF_YEAR,day);
+    }
+
+    private static Date add(Date date,int type,int value){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(type, value);
+        return calendar.getTime();
+    }
+
+    public static void main(String[] args)
+    {
+        //Thu Aug 30 00:00:00 CST 2018
+        System.out.println( DateUtil.dateAddDay(DateUtil.strDateToStartDate(DateUtil.formatToDay()), -4));
+        //Fri Aug 31 00:00:00 CST 2018
+        System.out.println( DateUtil.dateAddDay(DateUtil.strDateToStartDate(DateUtil.formatToDay()), -3));
+        //Mon Sep 03 23:59:59 CST 2018
+        System.out.println( DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+    }
 }

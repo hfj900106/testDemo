@@ -45,13 +45,14 @@
     </update>
 
     <select id="loanSuccessList" resultType="com.hzed.easyget.persistence.ext.entity.SaExt">
-      SELECT bid.id as bid_id, bid.status as bid_status, bid.user_id, date_add(bill.repayment_time, INTERVAL - 1 DAY) as real_repayment_time, bid.apply_amount, bid.period
+      SELECT bid.id as bid_id, bid.status as bid_status, bid.user_id, bill.repayment_time as real_repayment_time, bid.apply_amount, bid.period
       FROM t_loan_bid bid
       LEFT JOIN t_loan_bid_progress prog on bid.id = prog.bid_id
       LEFT JOIN t_loan_user users ON bid.user_id = users.id
       LEFT JOIN t_loan_bill bill ON bid.id = bill.bid_id
       WHERE bid.status = 5 AND prog.type = 2 AND prog.handle_time IS NOT NULL
-      AND (date_add(bill.repayment_time, INTERVAL - 14 DAY)  BETWEEN #{startDate} AND #{endDate})
+      AND (date_add(bill.repayment_time, INTERVAL - 13 DAY)  BETWEEN #{startDate} AND #{endDate})
+      AND bill.create_time > '2018-08-30 23:59:59'
       ORDER BY prog.handle_time ASC
     </select>
 
@@ -70,15 +71,16 @@
     </insert>
 
     <select id="pushLoanSuccessList"   resultType="com.hzed.easyget.persistence.ext.entity.SaExt">
-      SELECT bid.id as bid_id, bid.status as bid_status, bid.user_id, date_add(bill.repayment_time, INTERVAL - 1 DAY) as real_repayment_time, bid.apply_amount, bid.period
+      SELECT bid.id as bid_id, bid.status as bid_status, bid.user_id, bill.repayment_time as real_repayment_time, bid.apply_amount, bid.period
       FROM t_loan_bid bid
       LEFT JOIN t_loan_bid_progress prog on bid.id = prog.bid_id
       LEFT JOIN t_loan_user users ON bid.user_id = users.id
       LEFT JOIN t_loan_bill bill ON bid.id = bill.bid_id
       LEFT JOIN t_sa_loan_succee_order loan ON bid.id = loan.bid_id
       WHERE bid.status = 5 AND prog.type = 2 AND prog.handle_time IS NOT NULL
-      AND (date_add(bill.repayment_time, INTERVAL - 14 DAY)  BETWEEN #{startDate} AND #{endDate})
+      AND (date_add(bill.repayment_time, INTERVAL - 13 DAY)  BETWEEN #{startDate} AND #{endDate})
       AND loan.status = 100
+      AND bill.create_time > '2018-08-30 23:59:59'
       ORDER BY prog.handle_time ASC
     </select>
 

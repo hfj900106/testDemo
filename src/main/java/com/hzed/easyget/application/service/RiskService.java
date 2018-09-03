@@ -178,7 +178,7 @@ public class RiskService {
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
-            throw new WarnException(BizCodeEnum.FAIL_FACE_RECOGNITION);
+            throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
         return response;
     }

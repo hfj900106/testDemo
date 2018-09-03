@@ -42,12 +42,8 @@ public class BootTest {
 
     @Test
     public void redisTest() {
-//        GlobalUser user = new GlobalUser(123L, "1888888888");
-//        redisService.setCache("gui-test6", user, 100L);
-//        GlobalUser cache = redisService.getCache("gui-test6");
-//        redisService.setCache("gui-test2","test", 100L);
-//        System.out.println(cache);
-//        System.out.println("done");
+        String token = redisService.getCache("token:134856317369327616:869242033512631");
+        System.out.println(token);
     }
 
     @Test

@@ -48,8 +48,6 @@ public class BootTest {
 //        redisService.setCache("gui-test2","test", 100L);
 //        System.out.println(cache);
 //        System.out.println("done");
-
-        redisService.getUser(888888L);
     }
 
     @Test

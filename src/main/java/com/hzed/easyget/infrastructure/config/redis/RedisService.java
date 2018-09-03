@@ -2,9 +2,7 @@ package com.hzed.easyget.infrastructure.config.redis;
 
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
-import com.hzed.easyget.infrastructure.model.GlobalUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.concurrent.TimeUnit;
@@ -22,6 +20,10 @@ public class RedisService {
 
     public void setCache(String key, Object value, Long seconds) {
         redisTemplate.opsForValue().set(key, value, seconds, TimeUnit.SECONDS);
+    }
+
+    public void setCache(String key, Object value) {
+        redisTemplate.opsForValue().set(key, value);
     }
 
     public Boolean setIfAbsent(String key, Object value) {
@@ -67,11 +69,5 @@ public class RedisService {
         }
         return true;
     }
-
-    @Cacheable(value = "easy-get:dev",key = "#userId + 'findById'")
-    public GlobalUser getUser(long userId) {
-        return new GlobalUser(userId, "guichang");
-    }
-
 
 }

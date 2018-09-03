@@ -1,12 +1,9 @@
 package com.hzed.easyget.infrastructure.config.redis;
 
-import com.hzed.easyget.infrastructure.consts.RedisConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,56 +15,27 @@ import java.util.concurrent.TimeUnit;
  */
 public class RedisService {
 
-    @Value("${spring.profiles.active}")
-    private String env;
-    @Value("${spring.application.name}")
-    private String appName;
-
-    @Autowired
-    private StringRedisTemplate sTemplate;
     @Autowired
     private RedisTemplate redisTemplate;
 
-    public void setCache(String key, String value, Long seconds) {
-        sTemplate.opsForValue().set(getKey(key), value, seconds, TimeUnit.SECONDS);
+    public void setCache(String key, Object value, Long seconds) {
+        redisTemplate.opsForValue().set(key, value, seconds, TimeUnit.SECONDS);
     }
 
-    public void setObjCache(String key, Object value, Long seconds) {
-        redisTemplate.opsForValue().set(getKey(key), value, seconds, TimeUnit.SECONDS);
+    public Boolean setIfAbsent(String key, Object value) {
+        return redisTemplate.opsForValue().setIfAbsent(key, value);
     }
 
-    public void setCache(String key, String value) {
-        sTemplate.opsForValue().set(getKey(key), value);
-    }
-
-    public void incrCache(String key, long delta) {
-        sTemplate.opsForValue().increment(getKey(key), delta);
-    }
-
-    public Boolean setIfAbsent(String key, String value) {
-        return sTemplate.opsForValue().setIfAbsent(getKey(key), value);
-    }
-
-    public String getCache(String key) {
-        return sTemplate.opsForValue().get(getKey(key));
-    }
-
-    public <T> T getObjCache(String key) {
-        Object o = redisTemplate.opsForValue().get(getKey(key));
-        return (T) o;
+    public <T> T getCache(String key) {
+        return (T) redisTemplate.opsForValue().get(key);
     }
 
     public void expire(String key, long timeout, TimeUnit unit) {
-        sTemplate.expire(getKey(key), timeout, unit);
+        redisTemplate.expire(key, timeout, unit);
     }
 
     public void clearCache(String key) {
-        sTemplate.delete(getKey(key));
-        redisTemplate.delete(getKey(key));
-    }
-
-    private String getKey(String key) {
-        return appName + RedisConsts.SPLIT + env + RedisConsts.SPLIT + key;
+        redisTemplate.delete(key);
     }
 
     /**
@@ -90,12 +58,13 @@ public class RedisService {
      * @return true-存在 false-不存在
      */
     public boolean exists(String key) {
-        if (setIfAbsent(key, String.valueOf(0))) {
+        if (setIfAbsent(key, 0)) {
             // 设置超时时间
             expire(key, 3, TimeUnit.MINUTES);
             return false;
         }
         return true;
     }
+
 
 }

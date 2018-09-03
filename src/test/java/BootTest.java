@@ -5,9 +5,9 @@ import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.ProductService;
 import com.hzed.easyget.controller.model.PictureCodeResponse;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
+import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.utils.PicUtil;
-import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.Bill;
 import com.hzed.easyget.persistence.auto.entity.BillLedger;
@@ -43,8 +43,12 @@ public class BootTest {
 
     @Test
     public void redisTest() {
-//        redisService.setCache("aaa", "1234", 30L);
-        System.out.println(IDGenerator.nextId());
+        GlobalUser user = new GlobalUser(123L, "1888888888");
+        redisService.setCache("gui-test5", user, 100L);
+        GlobalUser cache = redisService.getCache("gui-test5");
+//        redisService.setCache("gui-test2","test", 100L);
+        System.out.println(cache);
+        System.out.println("done");
     }
 
     @Test

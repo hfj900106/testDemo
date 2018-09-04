@@ -29,12 +29,20 @@ public class RedisConfig {
     @Autowired
     private JedisConnectionFactory jedisConnectionFactory;
 
-    @Bean
-    public RedisTemplate redisTemplate() {
+    @Bean("redisTemplateNew")
+    public RedisTemplate redisTemplateNew() {
         RedisTemplate redisTemplate = new RedisTemplate();
         redisTemplate.setConnectionFactory(jedisConnectionFactory);
         redisTemplate.setKeySerializer(new MyStringSerializer(prefix));
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return redisTemplate;
+    }
+
+    @Bean("redisTemplateOld")
+    public RedisTemplate redisTemplateOld() {
+        RedisTemplate redisTemplate = new RedisTemplate();
+        redisTemplate.setConnectionFactory(jedisConnectionFactory);
+        redisTemplate.setKeySerializer(new MyStringSerializer(prefix));
         return redisTemplate;
     }
 

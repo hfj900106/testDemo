@@ -3,6 +3,7 @@ package com.hzed.easyget.infrastructure.config.redis;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.SerializationException;
@@ -18,38 +19,48 @@ import java.util.concurrent.TimeUnit;
 public class RedisService {
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    @Qualifier("redisTemplateNew")
+    private RedisTemplate redisTemplateNew;
+
+    @Autowired
+    @Qualifier("redisTemplateOld")
+    private RedisTemplate redisTemplateOld;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
     public void setCache(String key, Object value, Long seconds) {
-        redisTemplate.opsForValue().set(key, value, seconds, TimeUnit.SECONDS);
+        redisTemplateNew.opsForValue().set(key, value, seconds, TimeUnit.SECONDS);
     }
 
     public void setCache(String key, Object value) {
-        redisTemplate.opsForValue().set(key, value);
+        redisTemplateNew.opsForValue().set(key, value);
     }
 
     public Boolean setIfAbsent(String key, Object value) {
-        return redisTemplate.opsForValue().setIfAbsent(key, value);
+        return redisTemplateNew.opsForValue().setIfAbsent(key, value);
     }
 
     public <T> T getCache(String key) {
         try {
-            return (T) redisTemplate.opsForValue().get(key);
+            return (T) redisTemplateNew.opsForValue().get(key);
         } catch (SerializationException ex) {
-            // 兼容旧数据
-            return (T) stringRedisTemplate.opsForValue().get(key);
+            if (ex.getMessage().indexOf("Unrecognized token") > -1) {
+                // 兼容旧字符串数据
+                return (T) stringRedisTemplate.opsForValue().get(key);
+            } else {
+                // 兼容旧对象
+                return (T) redisTemplateOld.opsForValue().get(key);
+            }
         }
     }
 
     public void expire(String key, long timeout, TimeUnit unit) {
-        redisTemplate.expire(key, timeout, unit);
+        redisTemplateNew.expire(key, timeout, unit);
     }
 
     public void clearCache(String key) {
-        redisTemplate.delete(key);
+        redisTemplateNew.delete(key);
     }
 
     /**

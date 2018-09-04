@@ -95,7 +95,7 @@ public class AuthService {
         String remark2;
         if (LocaleEnum.en_US.getI18n().equals(i18n)) {
             remark1 = "Basic certification";
-            remark2 = "Social authentication";
+            remark2 = "Social certification";
         } else if (LocaleEnum.zh_CN.getI18n().equals(i18n)) {
             remark1 = "基本认证";
             remark2 = "社交认证";

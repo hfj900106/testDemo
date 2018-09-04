@@ -17,7 +17,6 @@ import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.utils.AesUtil;
 import com.hzed.easyget.infrastructure.utils.ComUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -200,18 +199,18 @@ public class RiskService {
             throw new WarnException(BizCodeEnum.FAIL_FACE_RECOGNITION);
         }
         // 识别成功缓存结果，用于判断用户身份认证时是否已经人脸识别成功 ，缓存两小时，识别成功后两小时内没有提交认证则重新识别
-        redisService.setCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile(), "face", 7200L);
+//        redisService.setCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile(), "face", 7200L);
     }
 
     public Integer identityInfoAuth() {
         // 默认成功
         Integer status = AuthStatusEnum.HAS_AUTH.getCode();
         GlobalUser user = getGlobalUser();
-        String face = redisService.getCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
-        if (StringUtils.isBlank(face)) {
-            log.info("用户{}需进行人脸识别", user.getMobile());
-            throw new WarnException(BizCodeEnum.FAIL_AUTH);
-        }
+//        String face = redisService.getCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
+//        if (StringUtils.isBlank(face)) {
+//            log.info("用户{}需进行人脸识别", user.getMobile());
+//            throw new WarnException(BizCodeEnum.FAIL_AUTH);
+//        }
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);
         map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
@@ -225,11 +224,11 @@ public class RiskService {
         // 认证失败
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             // 成功后删除redis标志
-            redisService.clearCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
+//            redisService.clearCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
             status =  AuthStatusEnum.FAIl_AUTH.getCode();
         }
         // 成功后删除redis标志
-        redisService.clearCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
+//        redisService.clearCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
         return status;
     }
 

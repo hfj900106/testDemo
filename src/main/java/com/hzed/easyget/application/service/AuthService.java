@@ -452,8 +452,8 @@ public class AuthService {
         GlobalUser user = getGlobalUser();
         String authCode = AuthCodeEnum.ID_CARD.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + user.getUserId();
-        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
+//        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + user.getUserId();
+//        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
 
         // 判断该用户是否已经验证或者认证中、失败
         Long authId = checkAuth(user.getUserId(), AuthCodeEnum.SMS.getCode());

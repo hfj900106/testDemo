@@ -3,7 +3,6 @@ package com.hzed.easyget.infrastructure.config.redis;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.exception.WarnException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.SerializationException;
@@ -19,12 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class RedisService {
 
     @Autowired
-    @Qualifier("redisTemplateNew")
     private RedisTemplate redisTemplateNew;
-
-    @Autowired
-    @Qualifier("redisTemplateOld")
-    private RedisTemplate redisTemplateOld;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -49,8 +43,8 @@ public class RedisService {
                 // 兼容旧字符串数据
                 return (T) stringRedisTemplate.opsForValue().get(key);
             } else {
-                // 兼容旧对象
-                return (T) redisTemplateOld.opsForValue().get(key);
+                // 旧对象重新查询
+                return null;
             }
         }
     }

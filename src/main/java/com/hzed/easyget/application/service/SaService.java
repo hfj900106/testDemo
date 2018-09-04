@@ -161,7 +161,7 @@ public class SaService {
                 return;
             }
 
-            List<SaExt> pushList = saRepository.pushLoanSuccessList(DateUtil.addDays(DateUtil.dayStartTime(), -3), DateUtil.dayEndTime());
+            List<SaExt> pushList = saRepository.pushLoanSuccessList(DateUtil.addDays(DateUtil.dayStartTime(), -4), DateUtil.dayEndTime());
             if (!ObjectUtils.isEmpty(pushList)){
                 for (SaExt info : pushList) {
                     pushLoanSuccess(info);

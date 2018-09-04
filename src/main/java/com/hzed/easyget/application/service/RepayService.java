@@ -171,7 +171,6 @@ public class RepayService {
         }
 
         repayDetailResponse.setTotalRepayAmount(totalRepayAmount);
-        repayDetailResponse.setPeriod(bid.getPeriod());
         repayDetailResponse.setLoanTime(DateUtil.localDateTimeToStr2(bidProgress.getHandleTime()));
         return repayDetailResponse;
     }

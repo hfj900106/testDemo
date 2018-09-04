@@ -469,7 +469,8 @@ public class AuthService {
         Integer gender = request.getGender();
         // 查询身份证是否已存在
         User user1 = userRepository.findByIdCardNo(idCardNo);
-        if (!ObjectUtils.isEmpty(user1)) {
+        UserAuthStatus userAuthStatus1 = authStatusRepository.findEnableAuthStatusByUserId(user.getUserId(), String.valueOf(AuthCodeEnum.ID_CARD.getCode()));
+        if (!ObjectUtils.isEmpty(user1) && !userAuthStatus1.getAuthStatus().equals(AuthStatusEnum.FAIl_AUTH.getCode())) {
             throw new WarnException(BizCodeEnum.IDCARD_EXIST);
         }
         // 本次认证-风控是否认证成功
@@ -511,7 +512,7 @@ public class AuthService {
             workRepository.updateIdentityInfo(list, userAuthStatus, userObj);
         }
         // 失败返回前台
-        if(statusCode.equals(AuthStatusEnum.FAIl_AUTH.getCode())){
+        if (statusCode.equals(AuthStatusEnum.FAIl_AUTH.getCode())) {
             throw new WarnException(BizCodeEnum.FAIL_IDENTITY_AUTH);
         }
 

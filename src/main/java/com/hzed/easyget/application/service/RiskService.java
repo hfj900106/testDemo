@@ -15,6 +15,7 @@ import com.hzed.easyget.infrastructure.exception.WarnException;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.utils.AesUtil;
+import com.hzed.easyget.infrastructure.utils.ComUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -297,9 +298,9 @@ public class RiskService {
     private RiskResponse getRiskResponse(Map<String, Object> map, String url) {
         log.info("============================请求风控开始===============================");
         log.info("请求风控URL：{}", url);
-        log.info("请求风控参数：{}", JSON.toJSONString(map));
+        log.info("请求风控参数：{}", ComUtil.subJsonString(JSON.toJSONString(map),300));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}", JSON.toJSONString(response));
+        log.info("风控返回数据：{}", ComUtil.subJsonString(JSON.toJSONString(response),300));
         log.info("============================请求风控结束===============================");
         return response;
     }

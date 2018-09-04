@@ -7,10 +7,10 @@ import com.hzed.easyget.controller.model.PictureCodeResponse;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.utils.PicUtil;
-import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
 import com.hzed.easyget.persistence.auto.entity.Bid;
 import com.hzed.easyget.persistence.auto.entity.Bill;
 import com.hzed.easyget.persistence.auto.entity.BillLedger;
+import com.hzed.easyget.persistence.auto.entity.Dict;
 import org.apache.commons.codec.binary.Base64;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
@@ -43,8 +43,9 @@ public class BootTest {
 
     @Test
     public void redisTest() {
-//        redisService.setCache("aaa", "1234", 30L);
-        System.out.println(IDGenerator.nextId());
+        String key = "easy-get:test:dict_code:facebook_sms";
+        Dict token = redisService.getCache(key);
+        System.out.println(token);
     }
 
     @Test

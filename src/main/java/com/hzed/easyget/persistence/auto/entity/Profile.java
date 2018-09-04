@@ -47,7 +47,7 @@ public class Profile implements Serializable {
     /**
      * 孩子个数
      */
-    private Byte childrenNumber;
+    private String childrenNumber;
 
     /**
      * 婚姻状态
@@ -155,12 +155,12 @@ public class Profile implements Serializable {
         this.email = email == null ? null : email.trim();
     }
 
-    public Byte getChildrenNumber() {
+    public String getChildrenNumber() {
         return childrenNumber;
     }
 
-    public void setChildrenNumber(Byte childrenNumber) {
-        this.childrenNumber = childrenNumber;
+    public void setChildrenNumber(String childrenNumber) {
+        this.childrenNumber = childrenNumber == null ? null : childrenNumber.trim();
     }
 
     public String getMaritalStatus() {
@@ -315,7 +315,7 @@ public class Profile implements Serializable {
             return this;
         }
 
-        public Builder childrenNumber(Byte childrenNumber) {
+        public Builder childrenNumber(String childrenNumber) {
             obj.setChildrenNumber(childrenNumber);
             return this;
         }

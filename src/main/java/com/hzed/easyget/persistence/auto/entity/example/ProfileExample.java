@@ -711,52 +711,62 @@ public class ProfileExample {
             return (Criteria) this;
         }
 
-        public Criteria andChildrenNumberEqualTo(Byte value) {
+        public Criteria andChildrenNumberEqualTo(String value) {
             addCriterion("children_number =", value, "childrenNumber");
             return (Criteria) this;
         }
 
-        public Criteria andChildrenNumberNotEqualTo(Byte value) {
+        public Criteria andChildrenNumberNotEqualTo(String value) {
             addCriterion("children_number <>", value, "childrenNumber");
             return (Criteria) this;
         }
 
-        public Criteria andChildrenNumberGreaterThan(Byte value) {
+        public Criteria andChildrenNumberGreaterThan(String value) {
             addCriterion("children_number >", value, "childrenNumber");
             return (Criteria) this;
         }
 
-        public Criteria andChildrenNumberGreaterThanOrEqualTo(Byte value) {
+        public Criteria andChildrenNumberGreaterThanOrEqualTo(String value) {
             addCriterion("children_number >=", value, "childrenNumber");
             return (Criteria) this;
         }
 
-        public Criteria andChildrenNumberLessThan(Byte value) {
+        public Criteria andChildrenNumberLessThan(String value) {
             addCriterion("children_number <", value, "childrenNumber");
             return (Criteria) this;
         }
 
-        public Criteria andChildrenNumberLessThanOrEqualTo(Byte value) {
+        public Criteria andChildrenNumberLessThanOrEqualTo(String value) {
             addCriterion("children_number <=", value, "childrenNumber");
             return (Criteria) this;
         }
 
-        public Criteria andChildrenNumberIn(List<Byte> values) {
+        public Criteria andChildrenNumberLike(String value) {
+            addCriterion("children_number like", value, "childrenNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberNotLike(String value) {
+            addCriterion("children_number not like", value, "childrenNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberIn(List<String> values) {
             addCriterion("children_number in", values, "childrenNumber");
             return (Criteria) this;
         }
 
-        public Criteria andChildrenNumberNotIn(List<Byte> values) {
+        public Criteria andChildrenNumberNotIn(List<String> values) {
             addCriterion("children_number not in", values, "childrenNumber");
             return (Criteria) this;
         }
 
-        public Criteria andChildrenNumberBetween(Byte value1, Byte value2) {
+        public Criteria andChildrenNumberBetween(String value1, String value2) {
             addCriterion("children_number between", value1, value2, "childrenNumber");
             return (Criteria) this;
         }
 
-        public Criteria andChildrenNumberNotBetween(Byte value1, Byte value2) {
+        public Criteria andChildrenNumberNotBetween(String value1, String value2) {
             addCriterion("children_number not between", value1, value2, "childrenNumber");
             return (Criteria) this;
         }
@@ -1378,6 +1388,11 @@ public class ProfileExample {
 
         public Criteria andEmailLikeInsensitive(String value) {
             addCriterion("upper(email) like", value.toUpperCase(), "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andChildrenNumberLikeInsensitive(String value) {
+            addCriterion("upper(children_number) like", value.toUpperCase(), "childrenNumber");
             return (Criteria) this;
         }
 

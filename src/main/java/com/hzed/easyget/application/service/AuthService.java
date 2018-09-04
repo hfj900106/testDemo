@@ -349,7 +349,7 @@ public class AuthService {
         profile.setCompanyTel(request.getCompanyTel());
         profile.setEmail(request.getEmail());
         profile.setBirthMotherName(request.getBirthMotherName());
-        profile.setChildrenNumber(request.getChildrenNumber().byteValue());
+        profile.setChildrenNumber(request.getChildrenNumber());
         profile.setMaritalStatus(request.getMaritalStatus());
         profile.setRelationship1(relationship1 + ":" + personName1 + ":" + personTel1);
         profile.setRelationship2(relationship2 + ":" + personName2 + ":" + personTel2);

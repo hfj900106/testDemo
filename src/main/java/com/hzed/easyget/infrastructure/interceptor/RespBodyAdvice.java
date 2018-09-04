@@ -5,6 +5,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.hzed.easyget.application.service.I18nService;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.model.Response;
+import com.hzed.easyget.infrastructure.utils.ComUtil;
 import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class RespBodyAdvice implements ResponseBodyAdvice<Object> {
             resp.setMessageCN(i18nService.getBizCodeMessage(resp.getCode(), Locale.CHINA));
             result = resp;
         }
-        log.info("返回报文：{}", JSON.toJSONString(result, SerializerFeature.WriteMapNullValue));
+        log.info("返回报文：{}", ComUtil.subJsonString(JSON.toJSONString(result, SerializerFeature.WriteMapNullValue), 300)) ;
         return result;
     }
 

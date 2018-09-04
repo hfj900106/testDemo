@@ -48,7 +48,6 @@ public class AuthController {
         authService.authPersonInfo(request);
     }
 
-
     @ModuleFunc(value = "身份证识别", printParameterLength = 300)
     @PostMapping("/idCardRecognition")
     public IdCardRecognitionResponse idCardRecognition(@Valid @RequestBody IdCardRecognitionRequest request) {

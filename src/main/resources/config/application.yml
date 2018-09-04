@@ -20,6 +20,8 @@ spring:
     host: 10.10.30.37
     port: 3037
     password: masterpass
+    # key的前缀
+    prefix: ${spring.application.name}:${spring.profiles.active}
   # 国际化配置
   messages:
     basename: i18n/messages

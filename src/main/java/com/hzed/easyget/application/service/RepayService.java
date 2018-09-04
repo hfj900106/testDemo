@@ -160,17 +160,17 @@ public class RepayService {
         if ((BidStatusEnum.CLEARED.getCode().toString()).equals(bid.getStatus().toString())) {
             repayDetailResponse.setStatus(RepayStatusEnum.CLEAR_REPAY.getCode());
             totalRepayAmount = bill.getRealRepaymentAmount();
+            repayDetailResponse.setPeriod(bid.getPeriod());
         } else {
             int days = DateUtil.daysBetweenNoHMS(bill.getRepaymentTime(), LocalDateTime.now());
             repayDetailResponse.setStatus(days > 0 ? RepayStatusEnum.OVDUE_UN_REPAY.getCode() : RepayStatusEnum.UN_REPAY.getCode());
+            repayDetailResponse.setPeriod(days);
             // 标的待还总费用
             totalRepayAmount = comService.getBidNoRepayFee(bidId, LocalDateTime.now());
 
         }
 
-
         repayDetailResponse.setTotalRepayAmount(totalRepayAmount);
-        repayDetailResponse.setPeriod(bid.getPeriod());
         repayDetailResponse.setLoanTime(DateUtil.localDateTimeToStr2(bidProgress.getHandleTime()));
         return repayDetailResponse;
     }

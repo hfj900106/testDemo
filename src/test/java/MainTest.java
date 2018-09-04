@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -23,9 +22,11 @@ import java.util.Optional;
 
 @Slf4j
 public class MainTest {
-    public static void main(String[] args) throws InvocationTargetException, IllegalAccessException {
-        String str = MessageFormat.format("{1}{0}{2}", 1, 2, 3);
-        System.out.println(str);
+    public static void main(String[] args) {
+        String str = "easy-get:dev:3423432";
+        String pat = "";
+        System.out.println(str.indexOf(pat));
+        System.out.println(str.substring(pat.length()));
     }
 
     public static void test(String str) {

@@ -6,7 +6,7 @@ import com.hzed.easyget.persistence.ext.mapper.SaExtMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -20,7 +20,7 @@ public class SaRepository {
     @Autowired
     private SaExtMapper saExtMapper;
 
-    public List<SaExt> inDataList(Date startDate, Date endDate) {
+    public List<SaExt> inDataList(LocalDateTime startDate, LocalDateTime endDate) {
         return saExtMapper.queryInDataInfo(startDate, endDate);
     }
 
@@ -28,7 +28,7 @@ public class SaRepository {
         saExtMapper.batchSaveInData(list);
     }
 
-    public List<SaExt> pushInDataList(Date startDate, Date endDate) {
+    public List<SaExt> pushInDataList(LocalDateTime startDate, LocalDateTime endDate) {
         return saExtMapper.pushInDataList(startDate, endDate);
     }
 
@@ -40,7 +40,7 @@ public class SaRepository {
         saExtMapper.updateToDbInDataDetail(bidId, userId, loanTimes);
     }
 
-    public List<SaExt> loanSuccessList(Date startDate, Date endDate) {
+    public List<SaExt> loanSuccessList(LocalDateTime startDate, LocalDateTime endDate) {
         return saExtMapper.loanSuccessList(startDate, endDate);
     }
 
@@ -48,7 +48,7 @@ public class SaRepository {
         saExtMapper.batchSaveLoanSuccess(list);
     }
 
-    public List<SaExt> pushLoanSuccessList(Date startDate, Date endDate) {
+    public List<SaExt> pushLoanSuccessList(LocalDateTime startDate, LocalDateTime endDate) {
         return saExtMapper.pushLoanSuccessList(startDate, endDate);
     }
 
@@ -56,7 +56,7 @@ public class SaRepository {
         saExtMapper.updateToDbLoanSuccessDetail(bidId, userId, loanTimes);
     }
 
-    public List<SaExt> repaymentSuccessList(Date startDate, Date endDate) {
+    public List<SaExt> repaymentSuccessList(LocalDateTime startDate, LocalDateTime endDate) {
         return saExtMapper.repaymentSuccessList(startDate, endDate);
     }
 
@@ -64,7 +64,7 @@ public class SaRepository {
         saExtMapper.batchSaveRepaymentSuccess(list);
     }
 
-    public List<SaExt> pushRepaymentSuccessList(Date startDate, Date endDate) {
+    public List<SaExt> pushRepaymentSuccessList(LocalDateTime startDate, LocalDateTime endDate) {
         return saExtMapper.pushRepaymentSuccessList(startDate, endDate);
     }
 

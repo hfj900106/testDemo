@@ -510,6 +510,10 @@ public class AuthService {
             userAuthStatus = buildUserAuthStatus(authId, user.getUserId(), authCode, statusCode, "身份信息认证");
             workRepository.updateIdentityInfo(list, userAuthStatus, userObj);
         }
+        // 失败返回前台
+        if(statusCode.equals(AuthStatusEnum.FAIl_AUTH.getCode())){
+            throw new WarnException(BizCodeEnum.FAIL_IDENTITY_AUTH);
+        }
 
     }
 

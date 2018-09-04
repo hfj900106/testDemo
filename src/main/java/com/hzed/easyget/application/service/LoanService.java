@@ -102,7 +102,7 @@ public class LoanService {
         }
         log.info("================申请借款=======校验用户银行卡信息通过===================");*/
         // 调风控
-        riskService.checkRiskEnableBorrow(user.getMobileAccount(), RequestUtil.getGlobalHead().getImei(), "1");
+//        riskService.checkRiskEnableBorrow(user.getMobileAccount(), RequestUtil.getGlobalHead().getImei(), "1");
 
         Bid bid = new Bid();
         Long bidId = IDGenerator.nextId();

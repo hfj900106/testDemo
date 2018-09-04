@@ -224,6 +224,8 @@ public class RiskService {
         }
         // 认证失败
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
+            // 成功后删除redis标志
+            redisService.clearCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
             status =  AuthStatusEnum.FAIl_AUTH.getCode();
         }
         // 成功后删除redis标志

@@ -42,8 +42,8 @@ public class PersonInfoAuthRequest {
 
     @NotBlank(message = "{param.auth.companyTel.isNotEmpty}")
     private String companyTel;
-    @NotNull(message = "{param.auth.childrenNumber.isNotEmpty}")
-    private Integer childrenNumber;
+    @NotBlank(message = "{param.auth.childrenNumber.isNotEmpty}")
+    private String childrenNumber;
     @NotBlank(message = "{param.auth.maritalStatus.isNotEmpty}")
     private String maritalStatus;
     @NotBlank(message = "{param.auth.birthMotherName.isNotEmpty}")

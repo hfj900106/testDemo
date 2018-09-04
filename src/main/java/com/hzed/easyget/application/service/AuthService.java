@@ -95,7 +95,7 @@ public class AuthService {
         String remark2;
         if (LocaleEnum.en_US.getI18n().equals(i18n)) {
             remark1 = "Basic certification";
-            remark2 = "Social authentication";
+            remark2 = "Social certification";
         } else if (LocaleEnum.zh_CN.getI18n().equals(i18n)) {
             remark1 = "基本认证";
             remark2 = "社交认证";
@@ -349,7 +349,7 @@ public class AuthService {
         profile.setCompanyTel(request.getCompanyTel());
         profile.setEmail(request.getEmail());
         profile.setBirthMotherName(request.getBirthMotherName());
-        profile.setChildrenNumber(request.getChildrenNumber().byteValue());
+        profile.setChildrenNumber(request.getChildrenNumber());
         profile.setMaritalStatus(request.getMaritalStatus());
         profile.setRelationship1(relationship1 + ":" + personName1 + ":" + personTel1);
         profile.setRelationship2(relationship2 + ":" + personName2 + ":" + personTel2);

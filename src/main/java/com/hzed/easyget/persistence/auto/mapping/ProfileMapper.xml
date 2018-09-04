@@ -10,7 +10,7 @@
     <result column="company_addr" jdbcType="VARCHAR" property="companyAddr" />
     <result column="company_addr_detail" jdbcType="VARCHAR" property="companyAddrDetail" />
     <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="children_number" jdbcType="TINYINT" property="childrenNumber" />
+    <result column="children_number" jdbcType="VARCHAR" property="childrenNumber" />
     <result column="marital_status" jdbcType="VARCHAR" property="maritalStatus" />
     <result column="birth_mother_name" jdbcType="VARCHAR" property="birthMotherName" />
     <result column="relationship_1" jdbcType="VARCHAR" property="relationship1" />
@@ -156,7 +156,7 @@
       )
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{education,jdbcType=VARCHAR}, 
       #{companyName,jdbcType=VARCHAR}, #{companyTel,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, 
-      #{companyAddrDetail,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{childrenNumber,jdbcType=TINYINT}, 
+      #{companyAddrDetail,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{childrenNumber,jdbcType=VARCHAR}, 
       #{maritalStatus,jdbcType=VARCHAR}, #{birthMotherName,jdbcType=VARCHAR}, #{relationship1,jdbcType=VARCHAR}, 
       #{relationship2,jdbcType=VARCHAR}, #{createBy,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateBy,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}
@@ -246,7 +246,7 @@
         #{email,jdbcType=VARCHAR},
       </if>
       <if test="childrenNumber != null">
-        #{childrenNumber,jdbcType=TINYINT},
+        #{childrenNumber,jdbcType=VARCHAR},
       </if>
       <if test="maritalStatus != null">
         #{maritalStatus,jdbcType=VARCHAR},
@@ -311,7 +311,7 @@
         email = #{record.email,jdbcType=VARCHAR},
       </if>
       <if test="record.childrenNumber != null">
-        children_number = #{record.childrenNumber,jdbcType=TINYINT},
+        children_number = #{record.childrenNumber,jdbcType=VARCHAR},
       </if>
       <if test="record.maritalStatus != null">
         marital_status = #{record.maritalStatus,jdbcType=VARCHAR},
@@ -355,7 +355,7 @@
       company_addr = #{record.companyAddr,jdbcType=VARCHAR},
       company_addr_detail = #{record.companyAddrDetail,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
-      children_number = #{record.childrenNumber,jdbcType=TINYINT},
+      children_number = #{record.childrenNumber,jdbcType=VARCHAR},
       marital_status = #{record.maritalStatus,jdbcType=VARCHAR},
       birth_mother_name = #{record.birthMotherName,jdbcType=VARCHAR},
       relationship_1 = #{record.relationship1,jdbcType=VARCHAR},
@@ -394,7 +394,7 @@
         email = #{email,jdbcType=VARCHAR},
       </if>
       <if test="childrenNumber != null">
-        children_number = #{childrenNumber,jdbcType=TINYINT},
+        children_number = #{childrenNumber,jdbcType=VARCHAR},
       </if>
       <if test="maritalStatus != null">
         marital_status = #{maritalStatus,jdbcType=VARCHAR},
@@ -435,7 +435,7 @@
       company_addr = #{companyAddr,jdbcType=VARCHAR},
       company_addr_detail = #{companyAddrDetail,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
-      children_number = #{childrenNumber,jdbcType=TINYINT},
+      children_number = #{childrenNumber,jdbcType=VARCHAR},
       marital_status = #{maritalStatus,jdbcType=VARCHAR},
       birth_mother_name = #{birthMotherName,jdbcType=VARCHAR},
       relationship_1 = #{relationship1,jdbcType=VARCHAR},
@@ -482,7 +482,7 @@
     <foreach collection="list" item="item" separator=",">
       (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=BIGINT}, #{item.education,jdbcType=VARCHAR}, 
         #{item.companyName,jdbcType=VARCHAR}, #{item.companyTel,jdbcType=VARCHAR}, #{item.companyAddr,jdbcType=VARCHAR}, 
-        #{item.companyAddrDetail,jdbcType=VARCHAR}, #{item.email,jdbcType=VARCHAR}, #{item.childrenNumber,jdbcType=TINYINT}, 
+        #{item.companyAddrDetail,jdbcType=VARCHAR}, #{item.email,jdbcType=VARCHAR}, #{item.childrenNumber,jdbcType=VARCHAR}, 
         #{item.maritalStatus,jdbcType=VARCHAR}, #{item.birthMotherName,jdbcType=VARCHAR}, 
         #{item.relationship1,jdbcType=VARCHAR}, #{item.relationship2,jdbcType=VARCHAR}, 
         #{item.createBy,jdbcType=BIGINT}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateBy,jdbcType=BIGINT}, 
@@ -524,7 +524,7 @@
           #{item.email,jdbcType=VARCHAR}
         </if>
         <if test="'children_number' == column.value">
-          #{item.childrenNumber,jdbcType=TINYINT}
+          #{item.childrenNumber,jdbcType=VARCHAR}
         </if>
         <if test="'marital_status' == column.value">
           #{item.maritalStatus,jdbcType=VARCHAR}

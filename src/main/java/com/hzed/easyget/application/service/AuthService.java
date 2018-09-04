@@ -456,7 +456,7 @@ public class AuthService {
 //        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
 
         // 判断该用户是否已经验证或者认证中、失败
-        Long authId = checkAuth(user.getUserId(), AuthCodeEnum.SMS.getCode());
+        Long authId = checkAuth(user.getUserId(), AuthCodeEnum.ID_CARD.getCode());
         // 认证失败
         boolean isNewAuth = false;
         if (ObjectUtils.isEmpty(authId)) {

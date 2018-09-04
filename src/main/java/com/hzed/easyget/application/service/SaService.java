@@ -141,7 +141,7 @@ public class SaService {
         try {
             log.info("SensorsAnalytics loanSuccess begin.");
 
-            List<SaExt> list = saRepository.loanSuccessList(DateUtil.addDays(DateUtil.dayStartTime(), -3), DateUtil.dayEndTime());
+            List<SaExt> list = saRepository.loanSuccessList(DateUtil.addDays(DateUtil.dayStartTime(), -4), DateUtil.dayEndTime());
 
             log.info("loanSuccess list , list:{} list.size:{} " , list,  list.size());
             for (SaExt saExt : list) {

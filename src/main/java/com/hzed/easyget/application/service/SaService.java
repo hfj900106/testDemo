@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+
+import java.time.ZoneId;
 import java.util.*;
 
 /**
@@ -35,7 +37,7 @@ public class SaService {
         try {
             log.info("SensorsAnalytics inData begin.");
 
-            List<SaExt> list = saRepository.inDataList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+            List<SaExt> list = saRepository.inDataList(DateUtil.dayStartTime(), DateUtil.dayEndTime());
             if (!ObjectUtils.isEmpty(list)){
                 List<SaExt> insert = distinctInDataInfo(list);
                 if (!ObjectUtils.isEmpty(insert)) {
@@ -50,7 +52,7 @@ public class SaService {
                 return;
             }
 
-            List<SaExt> pushList = saRepository.pushInDataList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+            List<SaExt> pushList = saRepository.pushInDataList(DateUtil.dayStartTime(), DateUtil.dayEndTime());
             if (!ObjectUtils.isEmpty(pushList)){
                 for (SaExt info : pushList) {
                     pushInData(info);
@@ -138,7 +140,14 @@ public class SaService {
     public void saLoanSuccess() {
         try {
             log.info("SensorsAnalytics loanSuccess begin.");
-            List<SaExt> list = saRepository.loanSuccessList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+
+            List<SaExt> list = saRepository.loanSuccessList(DateUtil.addDays(DateUtil.dayStartTime(), -4), DateUtil.dayEndTime());
+
+            log.info("loanSuccess list , list:{} list.size:{} " , list,  list.size());
+            for (SaExt saExt : list) {
+                log.info("loanSuccess list saExt.getBidId: {}, saExt.toString:{}" , saExt.getBidId(), saExt.toString());
+            }
+
             if (!ObjectUtils.isEmpty(list)) {
                 List<SaExt> insert = distinctLoanSuccess(list);
                 if (!ObjectUtils.isEmpty(insert)) {
@@ -152,7 +161,7 @@ public class SaService {
                 return;
             }
 
-            List<SaExt> pushList = saRepository.pushLoanSuccessList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+            List<SaExt> pushList = saRepository.pushLoanSuccessList(DateUtil.addDays(DateUtil.dayStartTime(), -4), DateUtil.dayEndTime());
             if (!ObjectUtils.isEmpty(pushList)){
                 for (SaExt info : pushList) {
                     pushLoanSuccess(info);
@@ -187,7 +196,7 @@ public class SaService {
         // ProductType	产品名称	字符串    //1:立借、2:爱分期    ProductType	产品名称	字符串
         properties.put("ProductType",  SaConsts.APPLY_AMOUNT + info.getApplyAmount().intValue() + SaConsts.APPLY_SPLIT + info.getPeriod() + SaConsts.APPLY_PERIOD);
         // RepaymentTime 合约还款日期	日期
-        properties.put("RepaymentTime", info.getRealRepaymentTime());
+        properties.put("RepaymentTime", Date.from(info.getRealRepaymentTime().atZone(ZoneId.systemDefault()).toInstant()));
         int loanTimes = calculateLoanTimes(info.getUserId());
         // LoanTimes	第几次借款	数值
         properties.put("LoanTimes", loanTimes);
@@ -215,7 +224,7 @@ public class SaService {
     public void saRepaymentSuccess() {
         try {
             log.info("SensorsAnalytics repaymentSuccess begin.");
-            List<SaExt> list = saRepository.repaymentSuccessList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+            List<SaExt> list = saRepository.repaymentSuccessList(DateUtil.dayStartTime(), DateUtil.dayEndTime());
             if (!ObjectUtils.isEmpty(list)) {
                 List<SaExt> insert = distinctRepaymentSuccess(list);
                 if (!ObjectUtils.isEmpty(insert)) {
@@ -230,7 +239,7 @@ public class SaService {
                 return;
             }
 
-            List<SaExt> pushList = saRepository.pushRepaymentSuccessList(DateUtil.strDateToStartDate(DateUtil.formatToDay()), DateUtil.strDateToEndDate(DateUtil.formatToDay()));
+            List<SaExt> pushList = saRepository.pushRepaymentSuccessList(DateUtil.dayStartTime(), DateUtil.dayEndTime());
             if (!ObjectUtils.isEmpty(pushList)){
                 for (SaExt info : pushList) {
                     pushRepaymentSuccess(info);
@@ -267,7 +276,7 @@ public class SaService {
         //    RepaymentMethod	还款方式	字符串  全额还款、部分还款
         properties.put("RepaymentMethod", isAlreadyRepayment(info));
         //    RepaymentTime	合约还款日期	日期
-        properties.put("RepaymentTime", info.getRealRepaymentTime());
+        properties.put("RepaymentTime", Date.from(info.getRealRepaymentTime().atZone(ZoneId.systemDefault()).toInstant()));
         //    IsUnpaid	是否有未还金额	BOOL
         properties.put("IsUnpaid", isUnpaid(info));
         //    IsOverdue	是否逾期	BOOL

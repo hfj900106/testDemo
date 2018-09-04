@@ -2,7 +2,7 @@ package com.hzed.easyget.persistence.ext.mapper;
 
 import com.hzed.easyget.persistence.ext.entity.SaExt;
 import org.apache.ibatis.annotations.Param;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SaExtMapper {
@@ -13,7 +13,7 @@ public interface SaExtMapper {
      * @param endDate
      * @return
      */
-    List<SaExt> queryInDataInfo(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    List<SaExt> queryInDataInfo(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     /**
      * 批量初始化当天进件记录
@@ -27,7 +27,7 @@ public interface SaExtMapper {
      * @param endDate
      * @return
      */
-    List<SaExt> pushInDataList(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    List<SaExt> pushInDataList(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     /**
      * 统计用户贷款的次数
@@ -50,7 +50,7 @@ public interface SaExtMapper {
      * @param endDate
      * @return
      */
-    List<SaExt> loanSuccessList(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    List<SaExt> loanSuccessList(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     /**
      * 批量初始化当天借款成功记录
@@ -64,7 +64,7 @@ public interface SaExtMapper {
      * @param endDate
      * @return
      */
-    List<SaExt> pushLoanSuccessList(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    List<SaExt> pushLoanSuccessList(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     /**
      * 更新当天已经推送的借款成功数据
@@ -80,7 +80,7 @@ public interface SaExtMapper {
      * @param endDate
      * @return
      */
-    List<SaExt> repaymentSuccessList(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    List<SaExt> repaymentSuccessList(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     /**
      * 批量初始化当天还款记录
@@ -94,7 +94,7 @@ public interface SaExtMapper {
      * @param endDate
      * @return
      */
-    List<SaExt> pushRepaymentSuccessList(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    List<SaExt> pushRepaymentSuccessList(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
     /**
      * 更新当天已经推送的还款成功数据

@@ -2,12 +2,15 @@ import com.hzed.BootApplication;
 import com.hzed.easyget.application.service.FileService;
 import com.hzed.easyget.application.service.LoginService;
 import com.hzed.easyget.application.service.product.ProductFactory;
-import com.hzed.easyget.application.service.product.model.AbstractProduct;
+import com.hzed.easyget.application.service.product.ProductService;
 import com.hzed.easyget.controller.model.PictureCodeResponse;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.repository.BidRepository;
 import com.hzed.easyget.infrastructure.utils.PicUtil;
-import com.hzed.easyget.infrastructure.utils.id.IDGenerator;
+import com.hzed.easyget.persistence.auto.entity.Bid;
+import com.hzed.easyget.persistence.auto.entity.Bill;
+import com.hzed.easyget.persistence.auto.entity.BillLedger;
+import com.hzed.easyget.persistence.auto.entity.Dict;
 import org.apache.commons.codec.binary.Base64;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.Test;
@@ -20,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.math.BigDecimal;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BootApplication.class)
@@ -40,8 +43,9 @@ public class BootTest {
 
     @Test
     public void redisTest() {
-//        redisService.setCache("aaa", "1234", 30L);
-        System.out.println(IDGenerator.nextId());
+        String key = "easy-get:test:dict_code:facebook_sms";
+        Dict token = redisService.getCache(key);
+        System.out.println(token);
     }
 
     @Test
@@ -72,9 +76,12 @@ public class BootTest {
 
     @Test
     public void factoryTest() {
-        AbstractProduct product = ProductFactory.getProduct().createProduct(new BigDecimal(60000), 14);
-        System.out.println(product.getHeadFee());
-        System.out.println(product.getInterest());
+        Bid bid = bidRepository.findById(113107770437672967L);
+        ProductService product = ProductFactory.getProduct();
+        List<Bill> bills = product.createBills(bid);
+        System.out.println(bills);
+        List<BillLedger> billLedger = product.createBillLedger(bills, bid.getLoanAmount(), bid.getPeriod());
+        System.out.println(billLedger);
     }
 
 

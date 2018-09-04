@@ -1,8 +1,6 @@
 package com.hzed.easyget.infrastructure.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
@@ -202,46 +200,6 @@ public final class DateUtil {
     }
 
     /**
-     * 按照格式：yyyy-MM-dd格式化日期
-     * 当前日期
-     * @return
-     */
-    public static String formatToDay(){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String formatDate = format.format(new Date());
-        return formatDate;
-    }
-
-    /**
-     * 将yyyy-MM-dd拼接成yyyy-MM-dd :HH:mm:ss
-     * @param startDateStr
-     * @return
-     */
-    public static Date strDateToStartDate(String startDateStr){
-        return DateUtil.strToDate(startDateStr + " 00:00:00");
-    }
-
-    /**
-     * 将yyyy-MM-dd拼接成yyyy-MM-dd :HH:mm:ss
-     * @param endDateStr
-     * @return
-     */
-    public static Date strDateToEndDate(String endDateStr){
-        return DateUtil.strToDate(endDateStr + " 23:59:59");
-    }
-
-    public static Date strToDate(String dateString){
-        if(null == dateString) {
-            return new Date();
-        }
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateString);
-        } catch (ParseException e) {
-            return new Date();
-        }
-    }
-
-    /**
      * 判断一个时间是不是今天的时间范围内
      * @param localTime
      * @return
@@ -257,4 +215,25 @@ public final class DateUtil {
 
         return false;
     }
+
+    /**
+     * 每天的开始时间
+     * 格式： yyyy-MM-dd HH:mm:ss  如： yyyy-MM-dd 00:00:00
+     * @return
+     */
+    public static LocalDateTime dayStartTime() {
+        LocalDateTime startTime = LocalDate.now().atTime(0, 0, 0);
+        return startTime;
+    }
+
+    /**
+     * 每天的结束时间
+     * 格式： yyyy-MM-dd HH:mm:ss  如： yyyy-MM-dd 23:59:59
+     * @return
+     */
+    public static LocalDateTime dayEndTime() {
+        LocalDateTime endTime = LocalDate.now().atTime(23, 59, 59);
+        return endTime;
+    }
+
 }

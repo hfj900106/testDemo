@@ -42,7 +42,7 @@ public class AuthController {
         authService.authMessages(request);
     }
 
-    @ModuleFunc("个人信息认证")
+    @ModuleFunc(value ="个人信息认证", printParameterLength = 200)
     @PostMapping("/personInfo")
     public void personInfoAuth(@Valid @RequestBody PersonInfoAuthRequest request) {
         authService.authPersonInfo(request);

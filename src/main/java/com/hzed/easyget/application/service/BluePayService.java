@@ -44,7 +44,7 @@ public class BluePayService {
     @Autowired
     private SystemProp systemProp;
 
-    private static final List<String> LISTCODE = Arrays.asList(BizCodeEnum.PROCESS_LENDING.getCode(), BizCodeEnum.SUCCESS.getCode(), BizCodeEnum.REPAYMENTS.getCode());
+    private static final List<String> LISTCODE = Arrays.asList("0000", "0001", "0002");
 
     /**
      * 获取还款码
@@ -129,7 +129,7 @@ public class BluePayService {
     /**
      * 校验用户银行卡信息
      */
-    public PayResponse checkAccount(String bankName,String accountNo, String phoneNum, String CustomerName) {
+    public PayResponse checkAccount(String bankName, String accountNo, String phoneNum, String CustomerName) {
 
         CheckAccountRequest checkAccountRequest = new CheckAccountRequest();
         checkAccountRequest.setPhoneNum(phoneNum);

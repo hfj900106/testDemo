@@ -244,7 +244,7 @@ public class HomeService {
         Long userId = RequestUtil.getGlobalUser().getUserId();
         Bid bid = bidRepository.findOneByUserId(userId);
         // 不存在标的或已结清不弹窗提示
-        if (ObjectUtils.isEmpty(bid) || BidStatusEnum.CLEARED.getCode().byteValue() == bid.getStatus()) {
+        if (ObjectUtils.isEmpty(bid) || BidStatusEnum.CLEARED.getCode().byteValue() == bid.getStatus() || BidStatusEnum.AUDIT_FAIL.getCode().byteValue() == bid.getStatus()) {
             return bidProgressResponse;
         }
 
@@ -262,6 +262,7 @@ public class HomeService {
                 bidProgressResponse.setOverdueDay(days > 0 ? days : 0);
                 bidProgressResponse.setRepayTime(DateUtil.localDateTimeToTimestamp(bill.getRepaymentTime()));
                 bidProgressResponse.setTotalRepayAmount(comService.getBidNoRepayFee(bidId, LocalDateTime.now()));
+                bidProgressResponse.setReviewStatus(4);
 
                 // 放款日期
                 BidProgress bidProgress = bidProgressRepository.findByBidIdAndType(bidId, BidProgressTypeEnum.LOAN.getCode().byteValue());
@@ -277,7 +278,7 @@ public class HomeService {
         if (BidStatusEnum.RISK_ING.getCode().byteValue() == bid.getStatus() || BidStatusEnum.MANMADE_ING.getCode().byteValue() == bid.getStatus()) {
             bidProgressResponse.setReviewStatus(BidProgressTypeEnum.AUDIT.getCode());
         }
-        bidProgressResponse.setReviewStatus(Integer.valueOf(bid.getStatus()));
+        bidProgressResponse.setReviewStatus(1);
 
         BidProgress bidProgresses = bidProgressRepository.findByBidIdAndType(bidId, BidProgressTypeEnum.AUDIT.getCode().byteValue());
         if (!ObjectUtils.isEmpty(bidProgresses)) {

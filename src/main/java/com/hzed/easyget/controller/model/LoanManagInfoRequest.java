@@ -1,7 +1,6 @@
 package com.hzed.easyget.controller.model;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
@@ -13,9 +12,7 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class LoanManagInfoRequest {
-    /**
-     * 交易流水id
-     */
-    @NotNull(message = "{param.loan.payId.isNotEmpty}")
+
+    @NotNull(message = "[payId]交易流水id不能为空")
     private Long payId;
 }

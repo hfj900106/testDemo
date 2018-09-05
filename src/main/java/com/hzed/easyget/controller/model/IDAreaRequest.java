@@ -12,6 +12,6 @@ import org.hibernate.validator.constraints.NotBlank;
 @Data
 public class IDAreaRequest {
 
-    @NotBlank(message = "{param.dict.parent.isNotEmpty}")
+    @NotBlank(message = "[parent]不能为空")
     private String parent;
 }

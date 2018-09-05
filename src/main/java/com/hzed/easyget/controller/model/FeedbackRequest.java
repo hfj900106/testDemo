@@ -15,12 +15,12 @@ import java.util.List;
 
 @Data
 public class FeedbackRequest {
-    @NotBlank(message = "{param.auth.questionType.isNotEmpty}")
+    @NotBlank(message = "[questionType]不能为空")
     private String questionType;
-    @NotBlank(message = "{param.auth.questionDesc.isNotEmpty}")
+    @NotBlank(message = "[questionDesc]不能为空")
     private String questionDesc;
-    @NotNull(message = "{param.auth.images.isNotEmpty}")
+    @NotNull(message = "[images]不能为空")
     private List<String> images;
-    @NotBlank(message = "{param.auth.picSuffix.isNotEmpty}")
+    @NotBlank(message = "[picSuffix]不能为空")
     private String picSuffix;
 }

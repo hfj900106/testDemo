@@ -12,16 +12,10 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class InsRequest {
-    /**
-     * 用户id
-     */
-    @NotNull(message = "{param.auth.userId.isNotEmpty}")
-    private Long userId ;
 
-    /**
-     * 认证结果"ok"认证成功
-     */
-    @NotBlank(message = "{param.auth.resultCode.isNotEmpty}")
+    @NotNull(message = "[userId]不能为空")
+    private Long userId ;
+    @NotBlank(message = "[resultCode]不能为空，ok 认证成功")
     private String resultCode ;
 
 }

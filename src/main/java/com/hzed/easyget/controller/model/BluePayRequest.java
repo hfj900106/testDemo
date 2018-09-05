@@ -16,29 +16,29 @@ import java.io.Serializable;
 public class BluePayRequest implements Serializable {
     private static final long serialVersionUID = 3030045793860365162L;
 
-    @NotBlank(message = "cmd不能为空")
+    @NotBlank(message = "[cmd]不能为空")
     private String cmd;
-    @NotBlank(message = "手机号码不能为空")
+    @NotBlank(message = "[msisdn]不能为空")
     private String msisdn;
-    @NotBlank(message = "选择的银行不能为空")
+    @NotBlank(message = "[operator]不能为空")
     private String operator;
-    @NotBlank(message = "partner在调用接口时传来的transactionID不能为空")
+    @NotBlank(message = "[t_id]不能为空")
     private String t_id;
-    @NotBlank(message = "BluePay在交易过程中生成的id不能为空")
+    @NotBlank(message = "[bt_id]不能为空")
     private String bt_id;
-    @NotBlank(message = "交易状态不能为空")
+    @NotBlank(message = "[status]不能为空")
     private String status;
-    @NotNull(message = "交易金额不能为空")
+    @NotNull(message = "[price]不能为空")
     private Integer price;
-    @Pattern(regexp = "^cashout|bank$", message = "值只能为cashout|bank")
+    @Pattern(regexp = "^cashout|bank$", message = "[interfacetype]值只能为cashout|bank")
     private String interfacetype;
-    @NotBlank(message = "用户手机号类型不能为空")
+    @NotBlank(message = "[paytype]不能为空")
     private String paytype;
-    @NotBlank(message = "交易币种不能为空")
+    @NotBlank(message = "[currency]不能为空")
     private String currency;
-    @NotNull(message = "产品id不能为空")
+    @NotNull(message = "[productid]不能为空")
     private Integer productid;
-    @NotBlank(message = "加密方式不能为空")
+    @NotBlank(message = "[encrypt]不能为空")
     private String encrypt;
 
 

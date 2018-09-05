@@ -9,6 +9,6 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class PictureCodeRequest {
-    @NotBlank(message = "{param.login.mobile.isNotEmpty}")
+    @NotBlank(message = "[mobile]不能为空")
     private String mobile;
 }

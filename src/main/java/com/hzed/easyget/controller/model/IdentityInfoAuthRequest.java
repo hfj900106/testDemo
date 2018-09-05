@@ -16,18 +16,18 @@ import javax.validation.constraints.NotNull;
 @Data
 public class IdentityInfoAuthRequest {
 
-    @Length(min = 1, max = 32, message = "{param.auth.realName.extraLong}")
+    @Length(min = 1, max = 32, message = "[realName]长度在1-32之间")
     private String realName;
-    @NotBlank(message = "{param.auth.idCardNo.isNotEmpty}")
+    @NotBlank(message = "[idCardNo]不能为空")
     private String idCardNo;
-    @NotNull(message = "{param.auth.gender.isNotEmpty}")
+    @NotNull(message = "[gender]不能为空")
     private Integer gender;
-    @NotBlank(message = "{param.auth.idCardBase64ImgStr.isNotEmpty}")
+    @NotBlank(message = "[idCardBase64ImgStr]不能为空")
     private String idCardBase64ImgStr;
-    @NotBlank(message = "{param.auth.faceBase64ImgStr.isNotEmpty}")
+    @NotBlank(message = "[faceBase64ImgStr]不能为空")
     private String faceBase64ImgStr;
-    @NotBlank(message = "{param.auth.picSuffix.isNotEmpty}")
+    @NotBlank(message = "[picSuffix]不能为空")
     private String picSuffix;
-    @NotNull(message = "{param.auth.religion.isNotEmpty}")
+    @NotNull(message = "[religion]不能为空")
     private String religion;
 }

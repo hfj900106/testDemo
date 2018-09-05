@@ -11,10 +11,10 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class UserMessageRequest {
-    @NotBlank(message = "title不能为空")
+    @NotBlank(message = "[title]不能为空")
     private String title;
-    @NotBlank(message = "appMessage不能为空")
+    @NotBlank(message = "[appMessage]不能为空")
     private String appMessage;
-    @NotBlank(message = "message不能为空")
+    @NotBlank(message = "[message]不能为空")
     private String message;
 }

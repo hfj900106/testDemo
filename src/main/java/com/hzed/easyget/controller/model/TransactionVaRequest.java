@@ -1,9 +1,7 @@
 package com.hzed.easyget.controller.model;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.ParameterScriptAssert;
 
-import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -17,25 +15,15 @@ import java.math.BigDecimal;
  */
 @Data
 public class TransactionVaRequest {
-    /**
-     * 标的id
-     */
-    @NotNull(message = "{param.repay.bidId.isNotEmpty}")
+
+    @NotNull(message = "[bidId]不能为空")
     private Long bidId;
-    /**
-     * 交易方式 BNI ATM|Mandiri ATM|Permata ATM|OTC
-     */
-    @Pattern(regexp = "^BNI ATM|Mandiri ATM|Permata ATM|OTC$", message = "{param.repay.mode.must}")
+    @Pattern(regexp = "^BNI ATM|Mandiri ATM|Permata ATM|OTC$", message = "[mode]不能为空，交易方式支持 BNI ATM、Mandiri ATM、Permata ATM、OTC")
     private String mode;
-    /**
-     * 交易金额
-     */
-    @NotNull(message = "{param.repay.amount.isNotEmpty}")
+    @NotNull(message = "[amount]不能为空，最小值10000")
     @Min(value = 10_000)
     private BigDecimal amount;
-    /**
-     * 全部结清标识
-     */
-    @NotNull(message = "{param.repay.flag.isNotEmpty}")
+    @NotNull(message = "[flag]全部结清标识不能为空")
     private boolean flag;
+
 }

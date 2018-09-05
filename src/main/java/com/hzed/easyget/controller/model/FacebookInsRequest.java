@@ -13,9 +13,9 @@ public class FacebookInsRequest {
     /**
      * taskId
      */
-    @NotBlank
+    @NotBlank(message = "[taskId]不能为空")
     private String taskId ;
-    @NotBlank
+    @NotBlank(message = "[facebookOrIns]不能为空，填 facebook 或者 ins")
     private String facebookOrIns ;
 
 }

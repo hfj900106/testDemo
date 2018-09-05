@@ -13,21 +13,17 @@ import java.math.BigDecimal;
  */
 @Data
 public class PushBidCallbackRequest {
-    @NotNull(message = "{param.callback.bidId.isNotEmpty}")
+    @NotNull(message = "[bidId]不能为空")
     private Long bidId;
-    /** 审核金额，不通过设为0 */
-    @NotNull(message = "{param.callback.loanAmount.isNotEmpty}")
+    @NotNull(message = "[loanAmount]不能为空，不通过设为0")
     private BigDecimal loanAmount;
-    /** 4-通过 3-失败 2-人审 8-撤销 */
-    @NotBlank(message = "{param.callback.resultCode.isNotEmpty}")
+    @NotBlank(message = "[resultCode]不能为空，4-通过 3-失败 2-人审 8-撤销")
     private String resultCode;
-    @NotNull(message = "{param.callback.handleTime.isNotEmpty}")
+    @NotNull(message = "[handleTime]不能为空")
     private Long handleTime;
-
     private String message;
     /** 人审标识 */
     private Integer manual;
-
     private Long updateBy;
 
 }

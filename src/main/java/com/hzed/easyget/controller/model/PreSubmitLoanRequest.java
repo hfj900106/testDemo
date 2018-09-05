@@ -13,8 +13,8 @@ import java.math.BigDecimal;
  */
 @Data
 public class PreSubmitLoanRequest {
-    @NotNull(message = "{param.loan.loanAmount.isNotEmpty}")
+    @NotNull(message = "[loanAmount]不能为空")
     private BigDecimal loanAmount;
-    @NotNull(message = "{param.loan.period.isNotEmpty}")
+    @NotNull(message = "[period]不能为空")
     private Integer period;
 }

@@ -12,6 +12,6 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class LoanDetailRequest {
-    @NotNull(message = "{param.loan.bid.isNotEmpty}")
+    @NotNull(message = "[bid]不能为空")
     private Long bid;
 }

@@ -3,8 +3,6 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 验证码认证运营商
  *
@@ -15,6 +13,6 @@ import javax.validation.constraints.NotNull;
 @Data
 public class PeratorAuthRequest {
 
-    @NotBlank(message = "{param.auth.smsCode.isNotEmpty}")
+    @NotBlank(message = "[smsCode]不能为空")
     private String smsCode;
 }

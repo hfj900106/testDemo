@@ -11,6 +11,6 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class AuthStatusRequest {
-    @NotBlank(message = "{param.auth.code.isNotEmpty}")
+    @NotBlank(message = "[code]不能为空")
     private String code;
 }

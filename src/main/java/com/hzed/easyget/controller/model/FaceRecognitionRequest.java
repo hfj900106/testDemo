@@ -3,8 +3,6 @@ package com.hzed.easyget.controller.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 人脸识别
  *
@@ -15,6 +13,6 @@ import javax.validation.constraints.NotNull;
 @Data
 public class FaceRecognitionRequest {
 
-    @NotBlank(message = "{param.auth.faceBase64ImgStr.isNotEmpty}")
+    @NotBlank(message = "[faceBase64ImgStr]不能为空")
     private String faceBase64ImgStr;
 }

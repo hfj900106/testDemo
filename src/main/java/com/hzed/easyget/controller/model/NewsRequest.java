@@ -13,9 +13,9 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class NewsRequest {
-    @Min(0L) @NotNull(message = "{param.home.pageNo.isNotEmpty}")
+    @Min(0L) @NotNull(message = "[pageNo]不能为空，最小值0")
     private Integer pageNo;
-    @Min(1L) @NotNull(message = "{param.home.pageSize.isNotEmpty}")
+    @Min(1L) @NotNull(message = "[pageSize]不能为空，最小值1")
     private Integer pageSize;
 
 }

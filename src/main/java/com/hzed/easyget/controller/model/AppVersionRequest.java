@@ -13,8 +13,8 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class AppVersionRequest {
-    @NotBlank(message = "{param.home.channel.isNotEmpty}")
+    @NotBlank(message = "[channel]不能为空")
     private String channel;
-    @NotNull(message = "{param.home.versionCode.isNotEmpty}")
+    @NotNull(message = "[versionCode]不能为空")
     private Integer versionCode;
 }

@@ -11,6 +11,6 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class DictRequest {
-    @NotBlank(message = "{param.dict.moduleCode.isNotEmpty}")
+    @NotBlank(message = "[moduleCode]不能为空")
     private String moduleCode;
 }

@@ -14,33 +14,16 @@ import javax.validation.constraints.Size;
 @Data
 public class UploadPicEvidenceRequest {
 
-    /**
-     * va码
-     */
-    @NotBlank(message = "{param.repay.va.isNotEmpty}")
+    @NotBlank(message = "[va]不能为空")
     private String va;
-
-    /**
-     * 交易方式 ATM OTC
-     */
-    @Pattern(regexp = "^BNI ATM|Mandiri ATM|Permata ATM|OTC$", message = "{param.repay.mode.must}")
+    @Pattern(regexp = "^BNI ATM|Mandiri ATM|Permata ATM|OTC$", message = "[mode]不能为空，交易方式支持 BNI ATM、Mandiri ATM、Permata ATM、OTC")
     private String mode;
-
-    /**
-     * 标的id
-     */
-    @NotNull(message = "{param.repay.bidId.isNotEmpty}")
+    @NotNull(message = "[bidId]不能为空")
     private Long bidId;
-    /**
-     * base64Img 图片数组
-     */
-    @NotNull(message = "{param.repay.base64Imgs.isNotEmpty}")
+    @NotNull(message = "[base64Imgs]图片数组不能为空，只能传1-3张")
     @Size(min = 1,max = 3)
     private String[] base64Imgs;
-    /**
-     * 对应的图片后缀
-     */
-    @NotNull(message = "{param.repay.picSuffixs.isNotEmpty}")
+    @NotNull(message = "[picSuffixs]对应的图片后缀不能为空，1-3张图片后缀")
     @Size(min = 1,max = 3)
     private String[] picSuffixs;
 }

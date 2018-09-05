@@ -15,10 +15,10 @@ import javax.validation.constraints.NotNull;
 @Data
 public class IdCardRecognitionRequest {
 
-    @NotBlank(message = "{param.auth.idCardBase64ImgStr.isNotEmpty}")
+    @NotBlank(message = "[idCardBase64ImgStr]不能为空")
     private String idCardBase64ImgStr;
-    @NotBlank(message = "{param.auth.bizToken.isNotEmpty}")
+    @NotBlank(message = "[bizToken]不能为空")
     private String bizToken;
-    @NotNull(message = "{param.auth.ocrData.isNotEmpty}")
+    @NotNull(message = "[ocrData]不能为空")
     private byte[] ocrData;
 }

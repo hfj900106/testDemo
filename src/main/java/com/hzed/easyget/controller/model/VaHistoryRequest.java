@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class VaHistoryRequest extends PageModel {
 
-    @NotNull(message = "{param.repay.bidId.isNotEmpty}")
+    @NotNull(message = "[bidId]不能为空")
     private Long bidId;
 
 }

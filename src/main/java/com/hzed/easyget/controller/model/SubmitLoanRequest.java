@@ -14,21 +14,21 @@ import java.math.BigDecimal;
  */
 @Data
 public class SubmitLoanRequest {
-    @NotNull(message = "{param.loan.applyAmount.isNotEmpty}")
+    @NotNull(message = "[applyAmount]不能为空")
     private BigDecimal applyAmount;
-    @NotNull(message = "{param.loan.period.isNotEmpty}")
+    @NotNull(message = "[period]不能为空")
     private Integer period;
-    @NotBlank(message = "{param.loan.inBank.isNotEmpty}")
+    @NotBlank(message = "[inBank]不能为空")
     private String inBank;
-    @NotBlank(message = "{param.loan.inAccount.isNotEmpty}")
+    @NotBlank(message = "[inAccount]不能为空")
     private String inAccount;
-    @NotBlank(message = "{param.loan.purposeId.isNotEmpty}")
+    @NotBlank(message = "[purposeId]不能为空")
     private String purposeId;
-    @NotNull(message = "{param.loan.authFee.isNotEmpty}")
+    @NotNull(message = "[authFee]不能为空")
     private BigDecimal authFee;
-    @NotNull(message = "{param.loan.reviewFee.isNotEmpty}")
+    @NotNull(message = "[reviewFee]不能为空")
     private BigDecimal reviewFee;
-    @NotNull(message = "{param.loan.handlingFee.isNotEmpty}")
+    @NotNull(message = "[handlingFee]不能为空")
     private BigDecimal handlingFee;
 
 

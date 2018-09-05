@@ -12,14 +12,9 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class RefreshPaymentRequest {
-    /**
-     * 交易流水id(非交易id)
-     */
-    @NotNull(message = "{param.repay.payId.isNotEmpty}")
+
+    @NotNull(message = "[payId]交易流水不能为空")
     private Long payId;
-    /**
-     * 到计时是否到期
-     */
-    @NotNull(message = "{param.repay.expire.isNotEmpty}")
+    @NotNull(message = "[expire]不能为空")
     private boolean expire;
 }

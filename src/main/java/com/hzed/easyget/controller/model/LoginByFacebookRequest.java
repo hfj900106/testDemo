@@ -10,12 +10,12 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class LoginByFacebookRequest {
-    @NotBlank(message = "{param.login.mobile.isNotEmpty}")
+    @NotBlank(message = "[mobile]不能为空")
     private String mobile;
-    @NotBlank(message = "{param.login.aesString.isNotEmpty}")
+    @NotBlank(message = "[md5]加密串不能为空")
     private String md5;
-    @NotBlank(message = "{param.login.device.isNotEmpty}")
+    @NotBlank(message = "[device]不能为空")
     private String device;
-    @NotBlank
+    @NotBlank(message = "[anonymousId]匿名id不能为空")
     private String anonymousId;
 }

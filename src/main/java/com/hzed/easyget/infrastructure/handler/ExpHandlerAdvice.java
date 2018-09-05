@@ -34,7 +34,13 @@ public class ExpHandlerAdvice {
         List<ObjectError> errors = ex.getBindingResult().getAllErrors();
         StringBuffer errorMsg = new StringBuffer();
         errors.stream().forEach(x -> errorMsg.append(x.getDefaultMessage()).append(";"));
-        return new Response(BizCodeEnum.ILLEGAL_PARAM.getCode(), errorMsg.toString());
+
+        // 错误代码
+        String code = BizCodeEnum.ILLEGAL_PARAM.getCode();
+        // 错误描述国际化
+        String message = i18nService.getBizCodeMessage(code);
+
+        return new Response(code, message, errorMsg.toString(), null);
     }
 
     @ExceptionHandler(ComBizException.class)

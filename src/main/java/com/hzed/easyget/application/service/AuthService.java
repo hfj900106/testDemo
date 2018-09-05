@@ -470,7 +470,10 @@ public class AuthService {
         // 查询身份证是否已存在
         User user1 = userRepository.findByIdCardNo(idCardNo);
         UserAuthStatus userAuthStatus1 = authStatusRepository.findEnableAuthStatusByUserId(user.getUserId(), String.valueOf(AuthCodeEnum.ID_CARD.getCode()));
-        if (!ObjectUtils.isEmpty(user1) && !userAuthStatus1.getAuthStatus().equals(AuthStatusEnum.FAIl_AUTH.getCode())) {
+        // failAuth = true 实名认证失败
+        boolean failAuth = !ObjectUtils.isEmpty(userAuthStatus1) && userAuthStatus1.getAuthStatus().equals(AuthStatusEnum.FAIl_AUTH.getCode());
+        // 认证成功校验身份证已被使用
+        if (!ObjectUtils.isEmpty(user1) && !failAuth) {
             throw new WarnException(BizCodeEnum.IDCARD_EXIST);
         }
         // 本次认证-风控是否认证成功
@@ -676,8 +679,11 @@ public class AuthService {
             boolean isContactOrMessage = authCode.equals(AuthCodeEnum.CONTACTS.getCode()) || authCode.equals(AuthCodeEnum.MESSAGE.getCode());
             // 通讯录和短信认证即使认证成功还可以再更新，不拦截
             if (!isContactOrMessage && code.equals(AuthStatusEnum.HAS_AUTH.getCode())) {
-                log.info("该用户id，{} 已认证，不能重新认证", userId);
-                throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
+                // ins 、facebook 不拦截
+                if(!(authCode.equals(AuthCodeEnum.INS.getCode())||authCode.equals(AuthCodeEnum.FACEBOOK.getCode()))){
+                    log.info("该用户id，{} 已认证，不能重新认证", userId);
+                    throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
+                }
             } else if (code.equals(AuthStatusEnum.TO_AUTH.getCode())) {
                 log.info("该用户id，{} 在认证中，不能重新认证", userId);
                 throw new WarnException(BizCodeEnum.AUTH_RISK_ING);

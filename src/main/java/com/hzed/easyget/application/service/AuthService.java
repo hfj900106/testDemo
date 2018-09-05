@@ -675,15 +675,15 @@ public class AuthService {
             Integer code = userAuthStatusHas.getAuthStatus();
             boolean isContactOrMessage = authCode.equals(AuthCodeEnum.CONTACTS.getCode()) || authCode.equals(AuthCodeEnum.MESSAGE.getCode());
             // 通讯录和短信认证即使认证成功还可以再更新，不拦截
-            if (!isContactOrMessage && code.equals(AuthStatusEnum.HAS_AUTH.getCode())){
+            if (!isContactOrMessage && code.equals(AuthStatusEnum.HAS_AUTH.getCode())) {
                 log.info("该用户id，{} 已认证，不能重新认证", userId);
                 throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
             } else if (code.equals(AuthStatusEnum.TO_AUTH.getCode())) {
                 log.info("该用户id，{} 在认证中，不能重新认证", userId);
                 throw new WarnException(BizCodeEnum.AUTH_RISK_ING);
             }
-            // 认证失败，可以重新认证
-            else if (code.equals(AuthStatusEnum.FAIl_AUTH.getCode())) {
+            // 认证失败或者成功，可以重新认证
+            else if (code.equals(AuthStatusEnum.FAIl_AUTH.getCode()) || code.equals(AuthStatusEnum.HAS_AUTH.getCode())) {
                 authId = userAuthStatusHas.getId();
             }
         }

@@ -162,7 +162,7 @@ public class AuthService {
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
 
         // 判断该用户是否已经验证或者认证中、失败
-        Long authId = checkAuth(user.getUserId(), AuthCodeEnum.SMS.getCode());
+        Long authId = checkAuth(user.getUserId(), AuthCodeEnum.CONTACTS.getCode());
         // 有认证失败记录
         boolean isNewAuth = false;
         // 未认证
@@ -206,7 +206,7 @@ public class AuthService {
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
 
         // 判断该用户是否已经验证或者认证中、失败
-        Long authId = checkAuth(user.getUserId(), AuthCodeEnum.SMS.getCode());
+        Long authId = checkAuth(user.getUserId(), AuthCodeEnum.MESSAGE.getCode());
         // 有认证失败记录
         boolean isNewAuth = false;
         // 未认证

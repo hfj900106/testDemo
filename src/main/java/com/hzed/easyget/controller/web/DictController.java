@@ -66,7 +66,7 @@ public class DictController {
     @ModuleFunc("切换短信通道")
     @GetMapping("/switchSmsChannel/{channel}")
     public void switchSmsChannel(@PathVariable String channel) {
-        log.info("请求报文：{}", channel);
+        log.info("请求参数：{}", channel);
         dictService.switchSmsChannel(channel);
     }
 
@@ -74,8 +74,16 @@ public class DictController {
     @ModuleFunc("修改版本号")
     @GetMapping("/updateVersion/{channel}/{newVersion}/{minVersionCode}")
     public void updateVersion(@PathVariable String channel, @PathVariable String newVersion, @PathVariable String minVersionCode) {
-        log.info("请求报文，channel：{}, newVersion：{}, minVersionCode：{}", channel, newVersion, minVersionCode);
+        log.info("请求参数，channel：{}, newVersion：{}, minVersionCode：{}", channel, newVersion, minVersionCode);
         dictService.updateVersion(channel, newVersion, minVersionCode);
+    }
+
+    @IgnoreHeader
+    @ModuleFunc("查看字典值")
+    @GetMapping("/queryDict/{dictCode}")
+    public List<DictResponse> queryDict(@PathVariable String dictCode) {
+        log.info("请求参数：{}", dictCode);
+        return dictService.getDictListByCode(dictCode);
     }
 
 }

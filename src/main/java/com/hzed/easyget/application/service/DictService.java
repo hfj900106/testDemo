@@ -41,107 +41,126 @@ public class DictService {
     private final String dictKey = RedisConsts.DICT_CODE + RedisConsts.SPLIT;
 
     public Dict getDictByCode(String dictCode) {
-        Dict dict = redisService.getCache(dictKey + dictCode);
+        String key = dictKey + dictCode;
+        Dict dict = redisService.getCache(key);
         if (dict != null) {
             return dict;
         }
         dict = dictRepository.findOneByCodeWithExp(dictCode);
-        redisService.setCache(dictKey + dictCode, dict);
+        redisService.setCache(key, dict);
         return dict;
     }
 
     public Dict getDictByCodeAndLanguage(String dicCode, String language) {
-        // 获取缓存数据,缓存没有，才查询数据库
-        Dict dict = redisService.getCache(dictKey + dicCode + RedisConsts.SPLIT + language);
+        String key = dictKey + dicCode + RedisConsts.SPLIT + language;
+        Dict dict = redisService.getCache(key);
         if (dict != null) {
             return dict;
         }
         dict = dictRepository.findOneByCodeAndLanguage(dicCode, language);
-        redisService.setCache(dictKey + dicCode + RedisConsts.SPLIT + language, dict);
+        redisService.setCache(key, dict);
         return dict;
     }
 
-    public List<DictResponse> getDictByModuleCodeAndLanguage(String moduleCode, String language) {
-        // 获取缓存数据，缓存没有才查询数据库
-        List<DictResponse> respList = redisService.getCache(dictKey + moduleCode + RedisConsts.SPLIT + language);
+    public List<DictResponse> getDictListByCode(String dictCode) {
+        String key = dictKey + dictCode + "list";
+        List<DictResponse> respList = redisService.getCache(key);
         if (respList != null) {
             return respList;
         }
+        respList = buildDictResponseList(dictRepository.findListByCode(dictCode));
+        redisService.setCache(key, respList);
+        return respList;
+    }
 
-        List<Dict> dictList = dictRepository.findByModuleCodeAndLanguage(moduleCode, language);
-        List<DictResponse> dictResponseList = buildDictResponseList(dictList);
-        redisService.setCache(dictKey + moduleCode + RedisConsts.SPLIT + language, dictResponseList);
-        return dictResponseList;
+    public List<DictResponse> getDictByModuleCodeAndLanguage(String moduleCode, String language) {
+        String key = dictKey + moduleCode + RedisConsts.SPLIT + language;
+        List<DictResponse> respList = redisService.getCache(key);
+        if (respList != null) {
+            return respList;
+        }
+        respList = buildDictResponseList(dictRepository.findByModuleCodeAndLanguage(moduleCode, language));
+        redisService.setCache(key, respList);
+        return respList;
     }
 
     /**
      * 不根据国际化查询的字典列表
      */
     public List<DictResponse> getDictByModuleCode(String moduleCode) {
-        // 获取缓存数据,缓存没有，才查询数据库
-        List<DictResponse> dictResponseListCache = redisService.getCache(dictKey + moduleCode);
-        if (dictResponseListCache != null) {
-            return dictResponseListCache;
+        String key = dictKey + moduleCode;
+        List<DictResponse> respList = redisService.getCache(key);
+        if (respList != null) {
+            return respList;
         }
-
-        List<Dict> dictList = dictRepository.findByModuleCode(moduleCode);
-        List<DictResponse> dictResponseList = buildDictResponseList(dictList);
-        redisService.setCache(dictKey + moduleCode, dictResponseList);
-        return dictResponseList;
+        respList = buildDictResponseList(dictRepository.findByModuleCode(moduleCode));
+        redisService.setCache(key, respList);
+        return respList;
     }
 
     /**
      * 获取下级地市列表
      */
     public List<IDAreaResponse> getIDAreaList(String parent) {
-        List<IDAreaResponse> idAreaResponseList = Lists.newArrayList();
-
-        List<IDAreaResponse> idAreaResponseCache = redisService.getCache(dictKey + parent);
-        if (idAreaResponseCache != null) {
-            return idAreaResponseCache;
+        String key = dictKey + parent;
+        List<IDAreaResponse> respList = redisService.getCache(key);
+        if (respList != null) {
+            return respList;
         }
-
         List<IDArea> idAreaList = idAreaRepository.findByParent(parent);
         idAreaList.forEach(idArea -> {
             IDAreaResponse idAreaResponse = new IDAreaResponse();
             idAreaResponse.setName(idArea.getName());
-            idAreaResponseList.add(idAreaResponse);
+            respList.add(idAreaResponse);
         });
-        redisService.setCache(dictKey + parent, idAreaResponseList);
-        return idAreaResponseList;
+        redisService.setCache(key, respList);
+        return respList;
     }
 
     private List<DictResponse> buildDictResponseList(List<Dict> dictList) {
-        List<DictResponse> dictResponseList = Lists.newArrayList();
+        List<DictResponse> respList = Lists.newArrayList();
         dictList.forEach(dict -> {
             DictResponse dictResponse = new DictResponse();
             dictResponse.setDictCode(dict.getDicCode());
             dictResponse.setDictValue(dict.getDicValue());
             dictResponse.setDictName(dict.getDicName());
-            dictResponseList.add(dictResponse);
+            respList.add(dictResponse);
         });
-        return dictResponseList;
+        return respList;
     }
 
     public void clearCodeCache(String code) {
-        Object obj = redisService.getCache(dictKey + code);
-        if (ObjectUtils.isEmpty(obj)) {
-            log.info("code：{} 无缓存，不做清理操作", code);
-            return;
+        String key = dictKey + code;
+        Object obj = redisService.getCache(key);
+        if (obj == null) {
+            log.info("key：{} 无缓存，不做清理操作", key);
+        } else {
+            log.info("开始清理缓存，{}：{}", key, JSON.toJSONString(obj));
+            redisService.clearCache(key);
         }
-        log.info("开始清理缓存，{}：{}", code, JSON.toJSONString(obj));
-        redisService.clearCache(dictKey + code);
+
+        String key2 = dictKey + code + "list";
+        Object obj2 = redisService.getCache(key2);
+        if (obj2 == null) {
+            log.info("key2：{} 无缓存，不做清理操作", key2);
+        } else {
+            log.info("开始清理缓存，{}：{}", key2, JSON.toJSONString(obj2));
+            redisService.clearCache(key2);
+        }
+
+        redisService.clearCache(key);
         log.info("清理缓存完毕");
     }
 
     public void clearCodeAndLanguageCache(String code, String language) {
-        Object obj = redisService.getCache(dictKey + code + RedisConsts.SPLIT + language);
+        String key = dictKey + code + RedisConsts.SPLIT + language;
+        Object obj = redisService.getCache(key);
         if (ObjectUtils.isEmpty(obj)) {
             log.info("code：{} 无缓存，不做清理操作", code);
             return;
         }
         log.info("开始清理缓存，{}，{}：{}", code, language, JSON.toJSONString(obj));
-        redisService.clearCache(dictKey + code + RedisConsts.SPLIT + language);
+        redisService.clearCache(key);
         log.info("清理缓存完毕");
     }
 
@@ -176,4 +195,6 @@ public class DictService {
         clearCodeCache(channel);
         log.info("版本更新成功");
     }
+
+
 }

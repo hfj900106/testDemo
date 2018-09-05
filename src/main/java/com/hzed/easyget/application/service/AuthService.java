@@ -152,7 +152,7 @@ public class AuthService {
     }
 
     /**
-     * 通讯录认证通讯录和通话记录都可能为空
+     * 通讯录认证通讯录和通话记录都可能为空，已认证的通讯录还会更新，获取最新通讯录
      */
     public void authContacts(ContactsRequest request) {
         GlobalUser user = getGlobalUser();
@@ -161,9 +161,9 @@ public class AuthService {
         String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
 
-        // 判断该用户是否已经验证或者认证中、失败
+        // authId不为空那说明通讯录认证失败 或者 成功，可以再更新
         Long authId = checkAuth(user.getUserId(), AuthCodeEnum.CONTACTS.getCode());
-        // 有认证失败记录
+        // 可更新
         boolean isNewAuth = false;
         // 未认证
         if (ObjectUtils.isEmpty(authId)) {
@@ -196,7 +196,7 @@ public class AuthService {
     }
 
     /**
-     * 短信认证
+     * 短信认证，已认证的短信还会更新，获取最新短信
      */
     public void authMessages(MessagesRequest request) {
         GlobalUser user = getGlobalUser();
@@ -205,9 +205,9 @@ public class AuthService {
         String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
 
-        // 判断该用户是否已经验证或者认证中、失败
+        // authId不为空那说明短信认证失败 或者 成功，可以再更新
         Long authId = checkAuth(user.getUserId(), AuthCodeEnum.MESSAGE.getCode());
-        // 有认证失败记录
+        // 可更新
         boolean isNewAuth = false;
         // 未认证
         if (ObjectUtils.isEmpty(authId)) {
@@ -673,7 +673,9 @@ public class AuthService {
         Long authId = null;
         if (!ObjectUtils.isEmpty(userAuthStatusHas)) {
             Integer code = userAuthStatusHas.getAuthStatus();
-            if (code.equals(AuthStatusEnum.HAS_AUTH.getCode())) {
+            boolean isContactOrMessage = authCode.equals(AuthCodeEnum.CONTACTS.getCode()) || authCode.equals(AuthCodeEnum.MESSAGE.getCode());
+            // 通讯录和短信认证即使认证成功还可以再更新，不拦截
+            if (!isContactOrMessage && code.equals(AuthStatusEnum.HAS_AUTH.getCode())){
                 log.info("该用户id，{} 已认证，不能重新认证", userId);
                 throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
             } else if (code.equals(AuthStatusEnum.TO_AUTH.getCode())) {

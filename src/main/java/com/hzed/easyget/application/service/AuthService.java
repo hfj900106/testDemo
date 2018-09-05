@@ -700,18 +700,23 @@ public class AuthService {
     public Long isInAuth(Long userId, String authCode) {
         // 判断该用户是否已经验证
         UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
+        Long authId = null;
         if (ObjectUtils.isEmpty(userAuthStatusHas)) {
+
             // 非运营商插入认证中数据
             if (!authCode.equals(AuthCodeEnum.SMS.getCode())) {
                 // 插入 认证中 状态
-                UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, AuthStatusEnum.TO_AUTH.getCode(), "");
+                authId = IDGenerator.nextId();
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, authCode, AuthStatusEnum.TO_AUTH.getCode(), "");
                 authStatusRepository.insertSelective(userAuthStatus);
             }
         } else if (!(userAuthStatusHas.getAuthStatus().equals(AuthStatusEnum.TO_AUTH.getCode()))) {
             log.info("该用户id，{} ，不在认证中，不能处理回调", userId);
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
+        } else {
+            authId = userAuthStatusHas.getId();
         }
-        return userAuthStatusHas.getId();
+        return authId;
     }
 
 }

@@ -703,10 +703,10 @@ public class AuthService {
         // 判断该用户是否已经验证
         UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
         if (ObjectUtils.isEmpty(userAuthStatusHas)) {
-            log.info("该用户id，{} ，未认证，不能处理回调");
+            log.info("该用户id，{} ，未认证，不能处理回调", userId);
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         } else if (!(userAuthStatusHas.getAuthStatus().equals(AuthStatusEnum.TO_AUTH.getCode()))) {
-            log.info("该用户id，{} ，不在认证中，不能处理回调");
+            log.info("该用户id，{} ，不在认证中，不能处理回调", userId);
             throw new WarnException(BizCodeEnum.FAIL_AUTH);
         }
         return userAuthStatusHas.getId();

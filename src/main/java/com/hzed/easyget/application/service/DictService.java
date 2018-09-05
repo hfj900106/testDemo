@@ -65,23 +65,23 @@ public class DictService {
     public List<DictResponse> getDictListByCode(String dictCode) {
         String key = dictKey + dictCode + "list";
         List<DictResponse> respList = redisService.getCache(key);
-        if (respList != null) {
+        if (!ObjectUtils.isEmpty(respList)) {
             return respList;
         }
-        respList = buildDictResponseList(dictRepository.findListByCode(dictCode));
-        redisService.setCache(key, respList);
-        return respList;
+        List<DictResponse> list = buildDictResponseList(dictRepository.findListByCode(dictCode));
+        redisService.setCache(key, list);
+        return list;
     }
 
     public List<DictResponse> getDictByModuleCodeAndLanguage(String moduleCode, String language) {
         String key = dictKey + moduleCode + RedisConsts.SPLIT + language;
         List<DictResponse> respList = redisService.getCache(key);
-        if (respList != null) {
+        if (!ObjectUtils.isEmpty(respList)) {
             return respList;
         }
-        respList = buildDictResponseList(dictRepository.findByModuleCodeAndLanguage(moduleCode, language));
-        redisService.setCache(key, respList);
-        return respList;
+        List<DictResponse> list = buildDictResponseList(dictRepository.findByModuleCodeAndLanguage(moduleCode, language));
+        redisService.setCache(key, list);
+        return list;
     }
 
     /**
@@ -90,12 +90,12 @@ public class DictService {
     public List<DictResponse> getDictByModuleCode(String moduleCode) {
         String key = dictKey + moduleCode;
         List<DictResponse> respList = redisService.getCache(key);
-        if (respList != null) {
+        if (!ObjectUtils.isEmpty(respList)) {
             return respList;
         }
-        respList = buildDictResponseList(dictRepository.findByModuleCode(moduleCode));
-        redisService.setCache(key, respList);
-        return respList;
+        List<DictResponse> list = buildDictResponseList(dictRepository.findByModuleCode(moduleCode));
+        redisService.setCache(key, list);
+        return list;
     }
 
     /**
@@ -104,17 +104,18 @@ public class DictService {
     public List<IDAreaResponse> getIDAreaList(String parent) {
         String key = dictKey + parent;
         List<IDAreaResponse> respList = redisService.getCache(key);
-        if (respList != null) {
+        if (!ObjectUtils.isEmpty(respList)) {
             return respList;
         }
+        List<IDAreaResponse> list = Lists.newArrayList();
         List<IDArea> idAreaList = idAreaRepository.findByParent(parent);
         idAreaList.forEach(idArea -> {
             IDAreaResponse idAreaResponse = new IDAreaResponse();
             idAreaResponse.setName(idArea.getName());
-            respList.add(idAreaResponse);
+            list.add(idAreaResponse);
         });
-        redisService.setCache(key, respList);
-        return respList;
+        redisService.setCache(key, list);
+        return list;
     }
 
     private List<DictResponse> buildDictResponseList(List<Dict> dictList) {

@@ -308,8 +308,7 @@ public class AuthService {
         // 请求防重
         String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
-
-        // 已认证成功，拦截
+        // 拦截已认证
         UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
         if (!ObjectUtils.isEmpty(userAuthStatusHas)) {
             if (userAuthStatusHas.getAuthStatus().equals(AuthStatusEnum.HAS_AUTH.getCode())) {
@@ -317,10 +316,10 @@ public class AuthService {
                 throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
             }
         }
-
+        // 处理数据
         List<UserAuthStatus> listAuthStatus = Lists.newArrayList();
-        listAuthStatus.add(buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PERSON_INFO.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), "个人信息认证"));
-        listAuthStatus.add(buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PROFESSIONAL.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), "专业信息认证"));
+        listAuthStatus.add(buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PERSON_INFO.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), AuthCodeEnum.PERSON_INFO.getMsg()));
+        listAuthStatus.add(buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PROFESSIONAL.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), AuthCodeEnum.PROFESSIONAL.getMsg()));
 
         String relationship1 = request.getRelationship1();
         String personName1 = request.getPersonName1();
@@ -344,13 +343,13 @@ public class AuthService {
         profile.setMaritalStatus(request.getMaritalStatus());
         profile.setRelationship1(relationship1 + ":" + personName1 + ":" + personTel1);
         profile.setRelationship2(relationship2 + ":" + personName2 + ":" + personTel2);
-        profile.setRemark("个人信息认证");
+        profile.setRemark(AuthCodeEnum.PERSON_INFO.getMsg());
 
         //组装pic对象
         List<String> listBase64 = request.getPicTypeAndPathBase64Str();
-        List<UserPic> listPic = Lists.newArrayList();
         String suffix = request.getPicSuffix();
 
+        List<UserPic> listPic = Lists.newArrayList();
         listBase64.forEach(base64Str -> {
             String workplacePhotoPath = getPhotoPath(base64Str.substring(11), suffix);
             listPic.add(UserPic.builder().id(IDGenerator.nextId()).userId(userId).type(base64Str.substring(0, 11)).picUrl(workplacePhotoPath).build());
@@ -364,22 +363,23 @@ public class AuthService {
         work.setMonthlyIncome(request.getMonthlyIncome());
         work.setIndustry(request.getIndustry());
         work.setPayday(request.getPayday());
-        work.setRemark("专业信息认证");
+        work.setRemark(AuthCodeEnum.PROFESSIONAL.getMsg());
+
+        // 保存认证信息
         profileRepository.insertProfileAuth(work, profile, listAuthStatus, listPic);
 
+        // 个人信息推风控
         List<Map<String, String>> objectList = Lists.newArrayList();
         Map<String, String> stringMap1 = Maps.newHashMap();
         stringMap1.put("relationship", relationship1);
         stringMap1.put("contact", personName1);
         stringMap1.put("phone", personTel1);
         objectList.add(stringMap1);
-
         Map<String, String> stringMap2 = Maps.newHashMap();
         stringMap2.put("relationship", relationship2);
         stringMap2.put("contact", personName2);
         stringMap2.put("phone", personTel2);
         objectList.add(stringMap2);
-        // 个人信息推风控
         riskService.pushProfile(objectList, userId);
     }
 

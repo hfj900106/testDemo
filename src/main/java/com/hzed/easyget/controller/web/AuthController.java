@@ -30,7 +30,6 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-
     @ModuleFunc("用户认证项信息")
     @PostMapping("/getAuthStatus")
     public List<AuthStatusResponse> getAuthStatus(@Valid @RequestBody AuthStatusRequest request) {

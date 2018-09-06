@@ -565,19 +565,22 @@ public class AuthService {
 
         String authCode = "ins".equals(request.getFacebookOrIns()) ? AuthCodeEnum.INS.getCode() : AuthCodeEnum.FACEBOOK.getCode();
 
-        // 判断该用户是否已经验证或者认证中、失败
-        Long authId = checkAuth(userId, authCode);
+        try {
+            // 判断该用户是否已经验证或者认证中、失败
+            Long authId = checkAuth(userId, authCode);
 
-        if (ObjectUtils.isEmpty(authId)) {
-            // 没有认证记录，插入认证中状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, AuthStatusEnum.TO_AUTH.getCode(), "");
-            authStatusRepository.insertSelective(userAuthStatus);
-        } else {
-            // 认证失败，需要重新认证，修改状态为认证中
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, authCode, AuthStatusEnum.TO_AUTH.getCode(), "");
-            authStatusRepository.updateSelective(userAuthStatus);
+            if (ObjectUtils.isEmpty(authId)) {
+                // 没有认证记录，插入认证中状态
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, AuthStatusEnum.TO_AUTH.getCode(), "");
+                authStatusRepository.insertSelective(userAuthStatus);
+            } else {
+                // 认证失败，需要重新认证，修改状态为认证中
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, authCode, AuthStatusEnum.TO_AUTH.getCode(), "");
+                authStatusRepository.updateSelective(userAuthStatus);
+            }
+        } catch (WarnException ex) {
+            // 已认证和认证中报错不做处理
         }
-
     }
 
     /**
@@ -594,12 +597,12 @@ public class AuthService {
         Integer code = userAuthStatus.getAuthStatus();
         // 已认证成功，拦截
         if (code.equals(AuthStatusEnum.HAS_AUTH.getCode())) {
-            log.info("该用户id，{} 已认证成功，不能重新认证", userId);
+            log.warn("该用户id，{} 已认证成功，不能重新认证", userId);
             throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
         }
         // 在认证中(身份认证没有)，拦截
         else if (code.equals(AuthStatusEnum.TO_AUTH.getCode())) {
-            log.info("该用户id，{} 在认证中，不能重新认证", userId);
+            log.warn("该用户id，{} 在认证中，不能重新认证", userId);
             throw new WarnException(BizCodeEnum.AUTH_RISK_ING);
         }
         // 认证失败，可以重新认证，返回id用于更新
@@ -624,7 +627,6 @@ public class AuthService {
             }
             return null;
         } else if (!(uas.getAuthStatus().equals(AuthStatusEnum.TO_AUTH.getCode()))) {
-            log.error("该用户id，{} ，不在认证中，不能处理回调", userId);
             return null;
         } else {
             return uas.getId();

@@ -23,12 +23,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 
 /**
  * 与风控交互
@@ -53,38 +50,24 @@ public class RiskService {
      * 通讯录认证
      */
     public RiskResponse authContacts(Object contacts, Object callRecord) {
-        GlobalUser user = getGlobalUser();
-        Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
+        Map<String, Object> map = getRiskMap(RequestUtil.getGlobalUser().getUserId());
         map.put("contacts", contacts);
         map.put("callRecord", callRecord);
         map.put("source", getSource());
         return getRiskResponse(map, riskProp.getContactsUrl());
     }
 
-    public RiskResponse authMessages(Object messages, Integer source) {
-        GlobalUser user = getGlobalUser();
-        Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
+    public RiskResponse authMessages(Object messages) {
+        Map<String, Object> map = getRiskMap(RequestUtil.getGlobalUser().getUserId());
         map.put("sms", messages);
-        map.put("source", source);
+        map.put("source", getSource());
         return getRiskResponse(map, riskProp.getMessagesUrl());
     }
 
-    public void operatorSendSmsCode(Integer source) {
-        GlobalUser user = getGlobalUser();
-        Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
-        map.put("source", source);
+    public void operatorSendSmsCode() {
+        GlobalUser user = RequestUtil.getGlobalUser();
+        Map<String, Object> map = getRiskMap(user.getUserId());
+        map.put("source", getSource());
         RiskResponse response = getRiskResponse(map, riskProp.getOperatorSendSmsCodeUrl());
         if (ObjectUtils.isEmpty(response)) {
             saService.saOperator(user, false, BizCodeEnum.ERROR_RISK_RESULT.getMessage());
@@ -119,12 +102,8 @@ public class RiskService {
 
 
     public RiskResponse operatorAuth(String smsCode) {
-        GlobalUser user = getGlobalUser();
-        Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
+        GlobalUser user = RequestUtil.getGlobalUser();
+        Map<String, Object> map = getRiskMap(user.getUserId());
         map.put("smsCode", smsCode);
         RiskResponse response = getRiskResponse(map, riskProp.getOperatorAuthUrl());
         if (ObjectUtils.isEmpty(response)) {
@@ -160,12 +139,7 @@ public class RiskService {
     }
 
     public RiskResponse idCardRecognition(IdCardRecognitionRequest request) {
-        GlobalUser user = getGlobalUser();
-        Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
+        Map<String, Object> map = getRiskMap(RequestUtil.getGlobalUser().getUserId());
         map.put("imageFile", request.getIdCardBase64ImgStr());
         map.put("bizToken", request.getBizToken());
         map.put("ocrData", new String(request.getOcrData()));
@@ -180,12 +154,8 @@ public class RiskService {
     }
 
     public void faceRecognition(String faceBase64ImgStr) {
-        GlobalUser user = getGlobalUser();
         Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
+        Map<String, Object> map = getRiskMap(RequestUtil.getGlobalUser().getUserId());
         map.put("imageFile", faceBase64ImgStr);
         RiskResponse response = getRiskResponse(map, riskProp.getFaceRecognitionUrl());
         if (ObjectUtils.isEmpty(response)) {
@@ -201,18 +171,14 @@ public class RiskService {
     public Integer identityInfoAuth() {
         // 默认成功
         Integer status = AuthStatusEnum.HAS_AUTH.getCode();
-        GlobalUser user = getGlobalUser();
+        GlobalUser user = RequestUtil.getGlobalUser();
 //        String face = redisService.getCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
 //        if (StringUtils.isBlank(face)) {
 //            log.info("用户{}需进行人脸识别", user.getMobile());
 //            throw new WarnException(BizCodeEnum.FAIL_AUTH);
 //        }
-        Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
-        map.put("userId", user.getUserId());
-        map.put("timeStamp", timeStamp);
-        map.put("mobile", getGlobalUser().getMobile());
+        Map<String, Object> map = getRiskMap(user.getUserId());
+        map.put("mobile", user.getMobile());
         RiskResponse response = getRiskResponse(map, riskProp.getIdentityInfoUrl());
         if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
@@ -221,7 +187,7 @@ public class RiskService {
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             // 成功后删除redis标志
 //            redisService.clearCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
-            status =  AuthStatusEnum.FAIl_AUTH.getCode();
+            status = AuthStatusEnum.FAIl_AUTH.getCode();
         }
         // 成功后删除redis标志
 //        redisService.clearCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
@@ -259,14 +225,10 @@ public class RiskService {
         }
     }
 
-    public void facebookAndIns(Long userId, String taskId, Integer source) {
-        Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("sign", AesUtil.aesEncode(userId, timeStamp));
-        map.put("userId", userId);
-        map.put("timeStamp", timeStamp);
+    public void facebookAndIns(Long userId, String taskId) {
+        Map<String, Object> map = getRiskMap(userId);
         map.put("taskId", taskId);
-        map.put("source", source);
+        map.put("source", getSource());
         RiskResponse response = getRiskResponse(map, riskProp.getFacebookAndInsUrl());
         if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
@@ -278,11 +240,9 @@ public class RiskService {
 
     /**
      * 个人信息推风控
-     * @param list
-     * @param userId
      */
     @Async
-    public void pushProfile(List<Map<String,String>> list, Long userId){
+    public void pushProfile(List<Map<String, String>> list, Long userId) {
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = Maps.newHashMap();
         map.put("sign", AesUtil.aesEncode(userId, timeStamp));
@@ -292,18 +252,21 @@ public class RiskService {
         getRiskResponse(map, riskProp.getAuthPersonInfoUrl());
     }
 
-    private Map<String, Object> getRiskMap() {
+    private Map<String, Object> getRiskMap(Long userId) {
+        Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = Maps.newHashMap();
-        map.
-
+        map.put("sign", AesUtil.aesEncode(userId, timeStamp));
+        map.put("userId", userId);
+        map.put("timeStamp", timeStamp);
+        return map;
     }
 
     private RiskResponse getRiskResponse(Map<String, Object> map, String url) {
         log.info("============================请求风控开始===============================");
         log.info("请求风控URL：{}", url);
-        log.info("请求风控参数：{}", ComUtil.subJsonString(JSON.toJSONString(map),300));
+        log.info("请求风控参数：{}", ComUtil.subJsonString(JSON.toJSONString(map), 300));
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
-        log.info("风控返回数据：{}", ComUtil.subJsonString(JSON.toJSONString(response),300));
+        log.info("风控返回数据：{}", ComUtil.subJsonString(JSON.toJSONString(response), 300));
         log.info("============================请求风控结束===============================");
         return response;
     }

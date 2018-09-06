@@ -210,9 +210,7 @@ public class AuthService {
             isNewAuth = true;
         }
 
-        String platForm = RequestUtil.getGlobalHead().getPlatform();
-        int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
-        RiskResponse response = riskService.authMessages(request.getMessage(), source);
+        RiskResponse response = riskService.authMessages(request.getMessage());
         afterResponse(authId, response, user.getUserId(), auth_code, isNewAuth);
     }
 
@@ -235,9 +233,7 @@ public class AuthService {
             saService.saOperator(user, false, BizCodeEnum.UN_IDENTITY_AUTH.getMessage());
             throw new WarnException(BizCodeEnum.UN_IDENTITY_AUTH);
         }
-        String platForm = RequestUtil.getGlobalHead().getPlatform();
-        int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
-        riskService.operatorSendSmsCode(source);
+        riskService.operatorSendSmsCode();
 
         saService.saOperator(user, true, BizCodeEnum.SUCCESS_AUTH.getMessage());
         //redis存一个发送标识，要等输入验证认证结束才可以重新发送，第三方接口要求
@@ -636,9 +632,8 @@ public class AuthService {
      */
     public void facebookAndIns(FacebookInsRequest request) {
         String taskId = request.getTaskId();
-        int source = "android".equals(RequestUtil.getGlobalHead().getPlatform()) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
         GlobalUser user = RequestUtil.getGlobalUser();
-        riskService.facebookAndIns(user.getUserId(), taskId, source);
+        riskService.facebookAndIns(user.getUserId(), taskId);
 
         Long userId = RequestUtil.getGlobalUser().getUserId();
         // 默认Facebook

@@ -406,22 +406,12 @@ public class AuthService {
         String birthday = obj.getString("birthday");
         String religion = obj.getString("religion");
         String idcardImage = obj.getString("idcardImage");
-        if (!StringUtils.isBlank(birthday)) {
-            // 注意有空格
-            int strLength = birthday.length();
-            if (strLength < 10) {
-                // 识别生日数据有错则直接给空串
-                recognitionResponse.setBirthday("");
-            } else {
-                recognitionResponse.setBirthday(birthday);
-            }
-        }
+
+        // 识别生日数据有错则直接给空串
+        recognitionResponse.setBirthday((StringUtils.isBlank(birthday) && birthday.length() < 10) ? "" : birthday);
         recognitionResponse.setName(name);
-        int genderInt = 1;
-        if (!ObjectUtils.isEmpty(gender) && ComConsts.FEMALE.equalsIgnoreCase(gender)) {
-            genderInt = 2;
-        }
-        recognitionResponse.setGender(genderInt);
+        // 性别 1-男 2-女
+        recognitionResponse.setGender(ComConsts.FEMALE.equalsIgnoreCase(gender) ? 2 : 1);
         recognitionResponse.setIdNumber(idNumber);
         recognitionResponse.setReligion(religion);
         recognitionResponse.setIdcardImage(idcardImage);
@@ -431,8 +421,7 @@ public class AuthService {
     /**
      * 人脸识别
      */
-    public void faceRecognition(FaceRecognitionRequest request) {
-        String faceBase64ImgStr = request.getFaceBase64ImgStr();
+    public void faceRecognition(String faceBase64ImgStr) {
         riskService.faceRecognition(faceBase64ImgStr);
     }
 

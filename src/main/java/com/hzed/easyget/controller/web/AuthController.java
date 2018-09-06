@@ -57,7 +57,7 @@ public class AuthController {
     @ModuleFunc(value = "人脸识别", printParameterLength = 300)
     @PostMapping("/faceRecognition")
     public void faceRecognition(@Valid @RequestBody FaceRecognitionRequest request) {
-        authService.faceRecognition(request);
+        authService.faceRecognition(request.getFaceBase64ImgStr());
     }
 
     @ModuleFunc(value = "身份信息认证", printParameterLength = 300)

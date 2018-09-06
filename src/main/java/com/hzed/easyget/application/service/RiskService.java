@@ -49,25 +49,19 @@ public class RiskService {
     @Autowired
     private RedisService redisService;
 
-    int source = "android".equals(RequestUtil.getGlobalHead().getPlatform()) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
-
     /**
      * 通讯录认证
-     *
-     * @param contacts
-     * @param callRecord
-     * @return
      */
     public RiskResponse authContacts(Object contacts, Object callRecord) {
         GlobalUser user = getGlobalUser();
         Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = new HashMap<>(16);
+        Map<String, Object> map = Maps.newHashMap();
         map.put("sign", AesUtil.aesEncode(user.getUserId(), timeStamp));
         map.put("userId", user.getUserId());
         map.put("timeStamp", timeStamp);
         map.put("contacts", contacts);
         map.put("callRecord", callRecord);
-        map.put("source", source);
+        map.put("source", getSource());
         return getRiskResponse(map, riskProp.getContactsUrl());
     }
 
@@ -298,6 +292,12 @@ public class RiskService {
         getRiskResponse(map, riskProp.getAuthPersonInfoUrl());
     }
 
+    private Map<String, Object> getRiskMap() {
+        Map<String, Object> map = Maps.newHashMap();
+        map.
+
+    }
+
     private RiskResponse getRiskResponse(Map<String, Object> map, String url) {
         log.info("============================请求风控开始===============================");
         log.info("请求风控URL：{}", url);
@@ -306,6 +306,10 @@ public class RiskService {
         log.info("风控返回数据：{}", ComUtil.subJsonString(JSON.toJSONString(response),300));
         log.info("============================请求风控结束===============================");
         return response;
+    }
+
+    private int getSource() {
+        return "android".equals(RequestUtil.getGlobalHead().getPlatform()) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
     }
 
 }

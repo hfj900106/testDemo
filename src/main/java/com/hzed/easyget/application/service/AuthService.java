@@ -152,11 +152,7 @@ public class AuthService {
      * 通讯录认证通讯录和通话记录都可能为空，已认证的通讯录还会更新，获取最新通讯录
      */
     public void authContacts(ContactsRequest request) {
-        RiskResponse response1 = riskService.authContacts(request.getContacts(), request.getCallLogs());
-        if(true) return;
-
         Long userId = RequestUtil.getGlobalUser().getUserId();
-        String platForm = RequestUtil.getGlobalHead().getPlatform();
 
         String auth_code = AuthCodeEnum.CONTACTS.getCode();
         // 请求防重

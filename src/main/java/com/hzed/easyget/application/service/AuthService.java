@@ -171,8 +171,8 @@ public class AuthService {
      * 短信认证，已认证的短信还会更新，获取最新短信
      */
     public void authMessages(MessagesRequest request) {
-        GlobalUser user = RequestUtil.getGlobalUser();
         LocalDateTime startTime = LocalDateTime.now();
+        GlobalUser user = RequestUtil.getGlobalUser();
         Long userId = user.getUserId();
         String authCode = AuthCodeEnum.MESSAGE.getCode();
         // 请求防重
@@ -182,7 +182,7 @@ public class AuthService {
         RiskResponse response = riskService.authMessages(request.getMessage());
         // 保存或更新
         saveOrUpdateContactsAndSmsAuth(userId, authCode, response);
-        saService.saCommonOperator(RequestUtil.getGlobalUser(), startTime, response, SaConsts.SMS_DATA);
+        saService.saCommonOperator(user, startTime, response, SaConsts.SMS_DATA);
     }
 
     /**

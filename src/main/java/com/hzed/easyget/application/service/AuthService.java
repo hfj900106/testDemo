@@ -480,45 +480,70 @@ public class AuthService {
         // 本次认证-风控是否认证成功
         Integer statusCode = riskService.identityInfoAuth();
 
-        String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
-        String faceBase64ImgStr = request.getFaceBase64ImgStr();
-        String picSuffix = request.getPicSuffix();
-        String idCardPhotoPath = getPhotoPath(idCardBase64ImgStr, picSuffix);
-        String facePhotoPath = getPhotoPath(faceBase64ImgStr, picSuffix);
-
-        //根据拿到json串组装对象
-        User userObj = new User();
-        //组装user对象
-        userObj.setId(user.getUserId());
-        userObj.setRealName(realName);
-        userObj.setIdCardNo(idCardNo);
-        userObj.setGender(gender.byteValue());
-        userObj.setUpdateTime(LocalDateTime.now());
-
         // 获取UserAuthStatus对象
         UserAuthStatus userAuthStatus;
 
-        // 组装pic对象
-        List<UserPic> list = Lists.newArrayList();
-        if (isNewAuth) {
+        // 本次认证失败
+        if(statusCode.equals( AuthStatusEnum.FAIl_AUTH.getCode())){
             // 新认证
-            list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
-            list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
-            // 获取UserAuthStatus对象，创建
-            userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), user.getUserId(), authCode, statusCode, "身份信息认证");
-            workRepository.insertIdentityInfo(list, userAuthStatus, userObj);
-        } else {
+            if (isNewAuth) {
+                // 插入失败记录
+                userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), user.getUserId(), authCode, statusCode, "身份信息认证");
+                authStatusRepository.insertSelective(userAuthStatus);
+                // 反馈APP认证失败
+                throw new WarnException(BizCodeEnum.FAIL_IDENTITY_AUTH);
+            }
             // 更新认证
-            list.add(UserPic.builder().id(authId).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
-            list.add(UserPic.builder().id(authId).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
-            // 获取UserAuthStatus对象，更新
-            userAuthStatus = buildUserAuthStatus(authId, user.getUserId(), authCode, statusCode, "身份信息认证");
-            workRepository.updateIdentityInfo(list, userAuthStatus, userObj);
+            else {
+                // 更新失败记录
+                userAuthStatus = buildUserAuthStatus(authId, user.getUserId(), authCode, statusCode, "身份信息认证");
+                authStatusRepository.updateSelective(userAuthStatus);
+                // 反馈APP认证失败
+                throw new WarnException(BizCodeEnum.FAIL_IDENTITY_AUTH);
+            }
         }
-        // 失败返回前台
-        if (statusCode.equals(AuthStatusEnum.FAIl_AUTH.getCode())) {
-            throw new WarnException(BizCodeEnum.FAIL_IDENTITY_AUTH);
+        // 本次认证成功
+        else {
+            String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
+            String faceBase64ImgStr = request.getFaceBase64ImgStr();
+            String picSuffix = request.getPicSuffix();
+            String idCardPhotoPath = getPhotoPath(idCardBase64ImgStr, picSuffix);
+            String facePhotoPath = getPhotoPath(faceBase64ImgStr, picSuffix);
+
+            //根据拿到json串组装对象
+            User userObj = new User();
+            //组装user对象
+            userObj.setId(user.getUserId());
+            userObj.setRealName(realName);
+            userObj.setIdCardNo(idCardNo);
+            userObj.setGender(gender.byteValue());
+            userObj.setUpdateTime(LocalDateTime.now());
+
+            // 组装pic对象
+            List<UserPic> list = Lists.newArrayList();
+            // 新认证
+            if (isNewAuth) {
+                list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
+                list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
+                // 获取UserAuthStatus对象，创建
+                userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), user.getUserId(), authCode, statusCode, "身份信息认证");
+                workRepository.insertIdentityInfo(list, userAuthStatus, userObj);
+            }
+            // 更新认证
+            else {
+                list.add(UserPic.builder().id(authId).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
+                list.add(UserPic.builder().id(authId).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
+                // 获取UserAuthStatus对象，更新
+                userAuthStatus = buildUserAuthStatus(authId, user.getUserId(), authCode, statusCode, "身份信息认证");
+                workRepository.updateIdentityInfo(list, userAuthStatus, userObj);
+            }
+
+
         }
+
+
+
+
 
     }
 
@@ -686,7 +711,7 @@ public class AuthService {
                 log.info("该用户id，{} 在认证中，不能重新认证", userId);
                 throw new WarnException(BizCodeEnum.AUTH_RISK_ING);
             }
-            // 认证失败或者成功，可以重新认证
+            // 认证失败或者(通讯录、短信)成功，可以重新认证
             else if (code.equals(AuthStatusEnum.FAIl_AUTH.getCode()) || code.equals(AuthStatusEnum.HAS_AUTH.getCode())) {
                 authId = userAuthStatusHas.getId();
             }

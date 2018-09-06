@@ -445,7 +445,7 @@ public class AuthService {
             } else {
                 UserAuthStatus uasQuery = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
                 // 身份认证成功不可重复认证
-                if (!ObjectUtils.isEmpty(uasQuery) && successAuthCode.equals(uasQuery.getAuthStatus())) {
+                if (!ObjectUtils.isEmpty(uasQuery) || !failAuthCode.equals(uasQuery.getAuthStatus())) {
                     throw new WarnException(BizCodeEnum.IDCARD_EXIST);
                 }
             }

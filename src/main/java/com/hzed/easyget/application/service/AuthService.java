@@ -434,14 +434,11 @@ public class AuthService {
     public void identityInfoAuth(IdentityInfoAuthRequest request) {
         // 身份证号
         String idCardNo = request.getIdCardNo();
-
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String authCode = AuthCodeEnum.ID_CARD.getCode();
 
-        // 判断该用户是否已经验证成功、失败
+        // 判断该用户是否已经认证成功、失败
         Long authId = checkAuth(userId, authCode);
-        // 认证失败
-        boolean isNewAuth = ObjectUtils.isEmpty(authId) ? true : false;
 
         Integer failAuthCode = AuthStatusEnum.FAIl_AUTH.getCode();
         Integer successAuthCode = AuthStatusEnum.HAS_AUTH.getCode();
@@ -460,35 +457,23 @@ public class AuthService {
         RiskResponse response = riskService.identityInfoAuth();
         // 认证状态
         Integer statusCode = response.getHead().getStatus().equals(ComConsts.RISK_OK) ? successAuthCode : failAuthCode;
-        // 获取UserAuthStatus对象
-        UserAuthStatus userAuthStatus;
 
         // 本次认证失败
         if (statusCode.equals(failAuthCode)) {
-            // 新认证
-            if (isNewAuth) {
-                // 插入失败记录
-                userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, statusCode, "身份信息认证");
+            // 插入或更新
+            if (ObjectUtils.isEmpty(authId)) {
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, statusCode, "身份信息认证");
                 authStatusRepository.insertSelective(userAuthStatus);
-                // 反馈APP认证失败
-                throw new WarnException(BizCodeEnum.FAIL_IDENTITY_AUTH);
-            }
-            // 更新认证
-            else {
-                // 更新失败记录
-                userAuthStatus = buildUserAuthStatus(authId, userId, authCode, statusCode, "身份信息认证");
+            } else {
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, authCode, statusCode, "身份信息认证");
                 authStatusRepository.updateSelective(userAuthStatus);
-                // 反馈APP认证失败
-                throw new WarnException(BizCodeEnum.FAIL_IDENTITY_AUTH);
             }
-        }
-        // 本次认证成功
-        else {
-            String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
-            String faceBase64ImgStr = request.getFaceBase64ImgStr();
+            // 反馈APP认证失败
+            throw new WarnException(BizCodeEnum.FAIL_IDENTITY_AUTH);
+        } else {
             String picSuffix = request.getPicSuffix();
-            String idCardPhotoPath = getPhotoPath(idCardBase64ImgStr, picSuffix);
-            String facePhotoPath = getPhotoPath(faceBase64ImgStr, picSuffix);
+            String idCardPhotoPath = getPhotoPath(request.getIdCardBase64ImgStr(), picSuffix);
+            String facePhotoPath = getPhotoPath(request.getFaceBase64ImgStr(), picSuffix);
 
             //组装user对象
             User userUpdate = new User();
@@ -498,26 +483,23 @@ public class AuthService {
             userUpdate.setGender(request.getGender().byteValue());
             userUpdate.setUpdateTime(LocalDateTime.now());
 
-            // 新认证
-            if (isNewAuth) {
+            // 插入或更新
+            if (ObjectUtils.isEmpty(authId)) {
                 List<UserPic> list = Lists.newArrayList();
                 list.add(UserPic.builder().id(IDGenerator.nextId()).userId(userId).type("idCard").picUrl(idCardPhotoPath).build());
                 list.add(UserPic.builder().id(IDGenerator.nextId()).userId(userId).type("face").picUrl(facePhotoPath).build());
                 // 获取UserAuthStatus对象，创建
-                userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, statusCode, "身份信息认证");
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, statusCode, "身份信息认证");
                 workRepository.insertIdentityInfo(list, userAuthStatus, userUpdate);
-            }
-            // 更新认证
-            else {
+            } else {
                 List<UserPic> list = Lists.newArrayList();
                 list.add(UserPic.builder().id(authId).userId(userId).type("idCard").picUrl(idCardPhotoPath).build());
                 list.add(UserPic.builder().id(authId).userId(userId).type("face").picUrl(facePhotoPath).build());
                 // 获取UserAuthStatus对象，更新
-                userAuthStatus = buildUserAuthStatus(authId, userId, authCode, statusCode, "身份信息认证");
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, authCode, statusCode, "身份信息认证");
                 workRepository.updateIdentityInfo(list, userAuthStatus, userUpdate);
             }
         }
-
     }
 
 
@@ -635,28 +617,27 @@ public class AuthService {
      */
     public Long checkAuth(Long userId, String authCode) {
         // 判断该用户是否已经验证
-        UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
-        Long authId = null;
+        UserAuthStatus userAuthStatus = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
+        if (ObjectUtils.isEmpty(userAuthStatus)) {
+            return null;
+        }
 
         // 认证记录不为空
-        if (!ObjectUtils.isEmpty(userAuthStatusHas)) {
-            Integer code = userAuthStatusHas.getAuthStatus();
-            // 已认证成功，拦截
-            if (code.equals(AuthStatusEnum.HAS_AUTH.getCode())) {
-                log.info("该用户id，{} 已认证成功，不能重新认证", userId);
-                throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
-            }
-            // 在认证中(身份认证没有)，拦截
-            else if (code.equals(AuthStatusEnum.TO_AUTH.getCode())) {
-                log.info("该用户id，{} 在认证中，不能重新认证", userId);
-                throw new WarnException(BizCodeEnum.AUTH_RISK_ING);
-            }
-            // 认证失败，可以重新认证，返回id用于更新
-            else if (code.equals(AuthStatusEnum.FAIl_AUTH.getCode())) {
-                authId = userAuthStatusHas.getId();
-            }
+        Integer code = userAuthStatus.getAuthStatus();
+        // 已认证成功，拦截
+        if (code.equals(AuthStatusEnum.HAS_AUTH.getCode())) {
+            log.info("该用户id，{} 已认证成功，不能重新认证", userId);
+            throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
         }
-        return authId;
+        // 在认证中(身份认证没有)，拦截
+        else if (code.equals(AuthStatusEnum.TO_AUTH.getCode())) {
+            log.info("该用户id，{} 在认证中，不能重新认证", userId);
+            throw new WarnException(BizCodeEnum.AUTH_RISK_ING);
+        }
+        // 认证失败，可以重新认证，返回id用于更新
+        else {
+            return userAuthStatus.getId();
+        }
     }
 
     /**
@@ -705,9 +686,6 @@ public class AuthService {
 
     /**
      * 构建UserAuthStatus对象
-     *
-     * @param userId
-     * @param remark
      */
     public UserAuthStatus buildUserAuthStatus(Long authId, Long userId, String code, Integer statusCode, String remark) {
         //保存到数据库短信记录表

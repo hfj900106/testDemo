@@ -154,57 +154,15 @@ public class AuthService {
      */
     public void authContacts(ContactsRequest request) {
         Long userId = RequestUtil.getGlobalUser().getUserId();
-        String auth_code = AuthCodeEnum.CONTACTS.getCode();
+        String authCode = AuthCodeEnum.CONTACTS.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
-
-        Long authId = null;
-        // 判断该用户是否已经验证
-        UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, auth_code);
-        // 该用户已经认证过通讯录，可更新
-        if (!ObjectUtils.isEmpty(userAuthStatusHas)) {
-            authId = userAuthStatusHas.getId();
-        }
-
-        // 是否新认证
-        boolean isNewAuth = ObjectUtils.isEmpty(authId) ? true : false;
         // 调风控
         RiskResponse response = riskService.authContacts(request.getContacts(), request.getCallLogs());
+        // 保存或更新
+        saveOrUpdateContactsAndSmsAuth(userId, authCode, response);
 
-        // 处理结果
-        Integer statusCode = response.getHead().getStatus().equals(ComConsts.RISK_OK) ? AuthStatusEnum.HAS_AUTH.getCode() : AuthStatusEnum.FAIl_AUTH.getCode();
-
-        // 保存失败原因，成功的为null
-        if (isNewAuth) {
-            // 新增 认证表的状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, auth_code, statusCode, response.getHead().getError_msg());
-            authStatusRepository.insertSelective(userAuthStatus);
-        } else {
-            // 修改 认证表的状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, auth_code, statusCode, response.getHead().getError_msg());
-            authStatusRepository.updateSelective(userAuthStatus);
-        }
-    }
-
-
-    /**
-     * 构建UserAuthStatus对象
-     *
-     * @param userId
-     * @param remark
-     */
-    public UserAuthStatus buildUserAuthStatus(Long authId, Long userId, String code, Integer statusCode, String remark) {
-        //保存到数据库短信记录表
-        UserAuthStatus userAuthStatus = new UserAuthStatus();
-        userAuthStatus.setId(authId);
-        userAuthStatus.setUserId(userId);
-        userAuthStatus.setAuthCode(code);
-        userAuthStatus.setAuthStatus(Integer.valueOf(statusCode));
-        //过期时间，半年
-        userAuthStatus.setExpireTime(DateUtil.addMonth(LocalDateTime.now(), 6));
-        userAuthStatus.setRemark(remark);
-        return userAuthStatus;
     }
 
     /**
@@ -213,38 +171,14 @@ public class AuthService {
     public void authMessages(MessagesRequest request) {
         GlobalUser user = RequestUtil.getGlobalUser();
         Long userId = user.getUserId();
-        String auth_code = AuthCodeEnum.MESSAGE.getCode();
+        String authCode = AuthCodeEnum.MESSAGE.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + user.getUserId();
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
-
-        // authId不为空那说明短信认证失败 或者 成功，可以再更新
-        Long authId = null;
-        // 判断该用户是否已经验证
-        UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, auth_code);
-        // 该用户已经认证过通讯录，可更新
-        if (!ObjectUtils.isEmpty(userAuthStatusHas)) {
-            authId = userAuthStatusHas.getId();
-        }
-
-        // 是否新认证
-        boolean isNewAuth = ObjectUtils.isEmpty(authId) ? true : false;
         // 调风控
         RiskResponse response = riskService.authMessages(request.getMessage());
-
-        // 处理结果
-        Integer statusCode = response.getHead().getStatus().equals(ComConsts.RISK_OK) ? AuthStatusEnum.HAS_AUTH.getCode() : AuthStatusEnum.FAIl_AUTH.getCode();
-
-        // 保存失败原因，成功的为null
-        if (isNewAuth) {
-            // 新增 认证表的状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, auth_code, statusCode, response.getHead().getError_msg());
-            authStatusRepository.insertSelective(userAuthStatus);
-        } else {
-            // 修改 认证表的状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, auth_code, statusCode, response.getHead().getError_msg());
-            authStatusRepository.updateSelective(userAuthStatus);
-        }
+        // 保存或更新
+        saveOrUpdateContactsAndSmsAuth(userId, authCode, response);
     }
 
     /**
@@ -340,12 +274,12 @@ public class AuthService {
      */
     public void operatorAuthCallback(PeratorAuthCallbackRequest request) {
         Long userId = request.getUserId();
-        String auth_code = AuthCodeEnum.SMS.getCode();
+        String authCode = AuthCodeEnum.SMS.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
         // 返回认证中的id
-        Long authId = isInAuth(userId, auth_code);
+        Long authId = isInAuth(userId, authCode);
 
         // 判断该用户是否在认证中
         if (!ObjectUtils.isEmpty(authId)) {
@@ -617,12 +551,12 @@ public class AuthService {
      */
     public void facebookAuth(FacebookRequest request) {
         Long userId = request.getUserId();
-        String auth_code = AuthCodeEnum.FACEBOOK.getCode();
+        String authCode = AuthCodeEnum.FACEBOOK.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
         // 返回认证中的id
-        Long authId = isInAuth(userId, auth_code);
+        Long authId = isInAuth(userId, authCode);
 
         // 判断该用户是否在认证中
         if (!ObjectUtils.isEmpty(authId)) {
@@ -647,13 +581,13 @@ public class AuthService {
      */
     public void insAuth(InsRequest request) {
         Long userId = request.getUserId();
-        String auth_code = AuthCodeEnum.INS.getCode();
+        String authCode = AuthCodeEnum.INS.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
 
         // 判断该用户是否在认证中,返回认证中的id
-        Long authId = isInAuth(userId, auth_code);
+        Long authId = isInAuth(userId, authCode);
 
         if (!ObjectUtils.isEmpty(authId)) {
 
@@ -758,6 +692,44 @@ public class AuthService {
             authId = userAuthStatusHas.getId();
         }
         return authId;
+    }
+
+
+    public void saveOrUpdateContactsAndSmsAuth(Long userId, String authCode, RiskResponse response) {
+        // 处理结果
+        RiskResponse.RiskHead head = response.getHead();
+        Integer statusCode = head.getStatus().equals(ComConsts.RISK_OK) ? AuthStatusEnum.HAS_AUTH.getCode() : AuthStatusEnum.FAIl_AUTH.getCode();
+        // 判断该用户是否已经验证
+        UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
+
+        if (ObjectUtils.isEmpty(userAuthStatusHas)) {
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, statusCode, head.getError_msg());
+            authStatusRepository.insertSelective(userAuthStatus);
+        } else {
+            // 修改 认证表的状态
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(userAuthStatusHas.getId(), userId, authCode, statusCode, head.getError_msg());
+            authStatusRepository.updateSelective(userAuthStatus);
+        }
+    }
+
+
+    /**
+     * 构建UserAuthStatus对象
+     *
+     * @param userId
+     * @param remark
+     */
+    public UserAuthStatus buildUserAuthStatus(Long authId, Long userId, String code, Integer statusCode, String remark) {
+        //保存到数据库短信记录表
+        UserAuthStatus userAuthStatus = new UserAuthStatus();
+        userAuthStatus.setId(authId);
+        userAuthStatus.setUserId(userId);
+        userAuthStatus.setAuthCode(code);
+        userAuthStatus.setAuthStatus(Integer.valueOf(statusCode));
+        //过期时间，半年
+        userAuthStatus.setExpireTime(DateUtil.addMonth(LocalDateTime.now(), 6));
+        userAuthStatus.setRemark(remark);
+        return userAuthStatus;
     }
 
 }

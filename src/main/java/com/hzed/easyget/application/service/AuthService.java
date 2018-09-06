@@ -9,6 +9,7 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
+import com.hzed.easyget.infrastructure.consts.SaConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.enums.LocaleEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
@@ -153,6 +154,7 @@ public class AuthService {
      * 通讯录认证通讯录和通话记录都可能为空，已认证的通讯录还会更新，获取最新通讯录
      */
     public void authContacts(ContactsRequest request) {
+        LocalDateTime startTime = LocalDateTime.now();
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String authCode = AuthCodeEnum.CONTACTS.getCode();
         // 请求防重
@@ -162,7 +164,7 @@ public class AuthService {
         RiskResponse response = riskService.authContacts(request.getContacts(), request.getCallLogs());
         // 保存或更新
         saveOrUpdateContactsAndSmsAuth(userId, authCode, response);
-
+        saService.saCommonOperator(RequestUtil.getGlobalUser(), startTime, response, SaConsts.CONTACTS_DATA);
     }
 
     /**
@@ -170,6 +172,7 @@ public class AuthService {
      */
     public void authMessages(MessagesRequest request) {
         GlobalUser user = RequestUtil.getGlobalUser();
+        LocalDateTime startTime = LocalDateTime.now();
         Long userId = user.getUserId();
         String authCode = AuthCodeEnum.MESSAGE.getCode();
         // 请求防重
@@ -179,6 +182,7 @@ public class AuthService {
         RiskResponse response = riskService.authMessages(request.getMessage());
         // 保存或更新
         saveOrUpdateContactsAndSmsAuth(userId, authCode, response);
+        saService.saCommonOperator(RequestUtil.getGlobalUser(), startTime, response, SaConsts.SMS_DATA);
     }
 
     /**

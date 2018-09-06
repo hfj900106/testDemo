@@ -87,4 +87,13 @@ public class SaRepository {
     public void saOperator(SaExt saExt) {
         saExtMapper.saOperator(saExt);
     }
+
+    public void saveContactsData(SaExt saExt) {
+        saExtMapper.saveContactsData(saExt);
+    }
+
+    public void saveSMSData(SaExt saExt) {
+        saExtMapper.saveSMSData(saExt);
+    }
+
 }

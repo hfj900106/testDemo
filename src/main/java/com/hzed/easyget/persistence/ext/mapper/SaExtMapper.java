@@ -132,4 +132,16 @@ public interface SaExtMapper {
      * @param saExt
      */
     void saOperator(SaExt saExt);
+
+    /**
+     * 神策-通讯录授权
+     * @param saExt
+     */
+    void saveContactsData(SaExt saExt);
+
+    /**
+     * 神策-短信认证
+     * @param saExt
+     */
+    void saveSMSData(SaExt saExt);
 }

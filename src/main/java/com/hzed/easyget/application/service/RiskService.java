@@ -127,9 +127,7 @@ public class RiskService {
     }
 
     public RiskResponse identityInfoAuth() {
-
         GlobalUser user = RequestUtil.getGlobalUser();
-
         Map<String, Object> map = getRiskMap(user.getUserId());
         map.put("mobile", user.getMobile());
         return getRiskResponse(map, riskProp.getAbsIdentityInfoUrl());

@@ -16,6 +16,7 @@ import com.hzed.easyget.infrastructure.model.GlobalUser;
 import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.utils.AesUtil;
 import com.hzed.easyget.infrastructure.utils.ComUtil;
+import com.hzed.easyget.infrastructure.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -48,15 +49,16 @@ public class RiskService {
     @Autowired
     private RedisService redisService;
 
+    int source = "android".equals(RequestUtil.getGlobalHead().getPlatform()) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
+
     /**
      * 通讯录认证
      *
      * @param contacts
      * @param callRecord
-     * @param source
      * @return
      */
-    public RiskResponse authContacts(Object contacts, Object callRecord, Integer source) {
+    public RiskResponse authContacts(Object contacts, Object callRecord) {
         GlobalUser user = getGlobalUser();
         Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = new HashMap<>(16);

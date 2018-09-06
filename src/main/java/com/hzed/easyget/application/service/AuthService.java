@@ -30,9 +30,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalHead;
-import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
-
 /**
  * 认证信息公用
  *
@@ -155,14 +152,19 @@ public class AuthService {
      * 通讯录认证通讯录和通话记录都可能为空，已认证的通讯录还会更新，获取最新通讯录
      */
     public void authContacts(ContactsRequest request) {
-        GlobalUser user = getGlobalUser();
+        RiskResponse response1 = riskService.authContacts(request.getContacts(), request.getCallLogs());
+        if(true) return;
+
+        Long userId = RequestUtil.getGlobalUser().getUserId();
+        String platForm = RequestUtil.getGlobalHead().getPlatform();
+
         String auth_code = AuthCodeEnum.CONTACTS.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
 
         // authId不为空那说明通讯录认证失败 或者 成功，可以再更新
-        Long authId = checkAuth(user.getUserId(), AuthCodeEnum.CONTACTS.getCode());
+        Long authId = checkAuth(userId, AuthCodeEnum.CONTACTS.getCode());
         // 可更新
         boolean isNewAuth = false;
         // 未认证
@@ -170,10 +172,8 @@ public class AuthService {
             isNewAuth = true;
         }
 
-        String platForm = getGlobalHead().getPlatform();
-        int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
-        RiskResponse response = riskService.authContacts(request.getContacts(), request.getCallLogs(), source);
-        afterResponse(authId, response, user.getUserId(), auth_code, isNewAuth);
+        RiskResponse response = riskService.authContacts(request.getContacts(), request.getCallLogs());
+        afterResponse(authId, response, userId, auth_code, isNewAuth);
     }
 
     /**
@@ -199,7 +199,7 @@ public class AuthService {
      * 短信认证，已认证的短信还会更新，获取最新短信
      */
     public void authMessages(MessagesRequest request) {
-        GlobalUser user = getGlobalUser();
+        GlobalUser user = RequestUtil.getGlobalUser();
         String auth_code = AuthCodeEnum.MESSAGE.getCode();
         // 请求防重
         String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
@@ -214,7 +214,7 @@ public class AuthService {
             isNewAuth = true;
         }
 
-        String platForm = getGlobalHead().getPlatform();
+        String platForm = RequestUtil.getGlobalHead().getPlatform();
         int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
         RiskResponse response = riskService.authMessages(request.getMessage(), source);
         afterResponse(authId, response, user.getUserId(), auth_code, isNewAuth);
@@ -224,7 +224,7 @@ public class AuthService {
      * 运营商认证 - 发送验证码接口
      */
     public void operatorSendSmsCode() {
-        GlobalUser user = getGlobalUser();
+        GlobalUser user = RequestUtil.getGlobalUser();
         String isSend = redisService.getCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
         if (StringUtils.isNotBlank(isSend)) {
             //发送过于频繁,不打error
@@ -239,7 +239,7 @@ public class AuthService {
             saService.saOperator(user, false, BizCodeEnum.UN_IDENTITY_AUTH.getMessage());
             throw new WarnException(BizCodeEnum.UN_IDENTITY_AUTH);
         }
-        String platForm = getGlobalHead().getPlatform();
+        String platForm = RequestUtil.getGlobalHead().getPlatform();
         int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
         riskService.operatorSendSmsCode(source);
 
@@ -253,7 +253,7 @@ public class AuthService {
      * 运营商认证 - 输入验证码认证运行商，创建一条认证中的记录
      */
     public void operatorAuth(PeratorAuthRequest request) {
-        GlobalUser user = getGlobalUser();
+        GlobalUser user = RequestUtil.getGlobalUser();
         Long userId = user.getUserId();
 
         RiskResponse response = riskService.operatorAuth(request.getSmsCode());
@@ -317,7 +317,7 @@ public class AuthService {
      * 个人信息认证
      */
     public void authPersonInfo(PersonInfoAuthRequest request) {
-        Long userId = getGlobalUser().getUserId();
+        Long userId = RequestUtil.getGlobalUser().getUserId();
         String auth_code = AuthCodeEnum.PERSON_INFO.getCode();
         // 请求防重
         String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
@@ -449,7 +449,7 @@ public class AuthService {
      * 身份信息认证，信息分3个表存（用户表、身份信息认证表，认证状态表）
      */
     public void identityInfoAuth(IdentityInfoAuthRequest request) {
-        GlobalUser user = getGlobalUser();
+        GlobalUser user = RequestUtil.getGlobalUser();
         String authCode = AuthCodeEnum.ID_CARD.getCode();
         // 请求防重
 //        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + user.getUserId();
@@ -640,11 +640,11 @@ public class AuthService {
      */
     public void facebookAndIns(FacebookInsRequest request) {
         String taskId = request.getTaskId();
-        int source = "android".equals(getGlobalHead().getPlatform()) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
-        GlobalUser user = getGlobalUser();
+        int source = "android".equals(RequestUtil.getGlobalHead().getPlatform()) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
+        GlobalUser user = RequestUtil.getGlobalUser();
         riskService.facebookAndIns(user.getUserId(), taskId, source);
 
-        Long userId = getGlobalUser().getUserId();
+        Long userId = RequestUtil.getGlobalUser().getUserId();
         // 默认Facebook
         String authCode = AuthCodeEnum.FACEBOOK.getCode();
         if ("ins".equals(request.getFacebookOrIns())) {

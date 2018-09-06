@@ -27,16 +27,48 @@ public class RiskProp {
     private String facebookAndInsUrl;
     private String authPersonInfoUrl;
 
-    public String getAbsCheckRiskEnableBorrowUrl(){ return this.domain + this.checkRiskEnableBorrowUrl; }
-    public String getIdCardRecognitionUrl(){ return this.domain + this.idCardRecognitionUrl; }
-    public String getFaceRecognitionUrl(){ return this.domain + this.faceRecognitionUrl; }
-    public String getContactsUrl(){ return this.domain + this.contactsUrl; }
-    public String getMessagesUrl(){ return this.domain + this.messagesUrl; }
-    public String getOperatorSendSmsCodeUrl(){ return this.domain + this.operatorSendSmsCodeUrl; }
-    public String getOperatorAuthUrl(){ return this.domain + this.operatorAuthUrl; }
-    public String getIdentityInfoUrl(){ return this.domain + this.identityInfoUrl; }
-    public String getPushBidUrl(){ return this.domain + this.pushBidUrl; }
-    public String getFacebookAndInsUrl(){ return this.domain + this.facebookAndInsUrl; }
-    public String getAuthPersonInfoUrl(){ return this.domain + this.authPersonInfoUrl; }
+    public String getAbsCheckRiskEnableBorrowUrl() {
+        return this.domain + this.checkRiskEnableBorrowUrl;
+    }
+
+    public String getAbsIdCardRecognitionUrl() {
+        return this.domain + this.idCardRecognitionUrl;
+    }
+
+    public String getAbsFaceRecognitionUrl() {
+        return this.domain + this.faceRecognitionUrl;
+    }
+
+    public String getAbsContactsUrl() {
+        return this.domain + this.contactsUrl;
+    }
+
+    public String getAbsMessagesUrl() {
+        return this.domain + this.messagesUrl;
+    }
+
+    public String getAbsOperatorSendSmsCodeUrl() {
+        return this.domain + this.operatorSendSmsCodeUrl;
+    }
+
+    public String getAbsOperatorAuthUrl() {
+        return this.domain + this.operatorAuthUrl;
+    }
+
+    public String getAbsIdentityInfoUrl() {
+        return this.domain + this.identityInfoUrl;
+    }
+
+    public String getAbsPushBidUrl() {
+        return this.domain + this.pushBidUrl;
+    }
+
+    public String getAbsFacebookAndInsUrl() {
+        return this.domain + this.facebookAndInsUrl;
+    }
+
+    public String getAbsAuthPersonInfoUrl() {
+        return this.domain + this.authPersonInfoUrl;
+    }
 
 }

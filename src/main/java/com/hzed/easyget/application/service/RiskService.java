@@ -54,21 +54,21 @@ public class RiskService {
         map.put("contacts", contacts);
         map.put("callRecord", callRecord);
         map.put("source", getSource());
-        return getRiskResponse(map, riskProp.getContactsUrl());
+        return getRiskResponse(map, riskProp.getAbsContactsUrl());
     }
 
     public RiskResponse authMessages(Object messages) {
         Map<String, Object> map = getRiskMap(RequestUtil.getGlobalUser().getUserId());
         map.put("sms", messages);
         map.put("source", getSource());
-        return getRiskResponse(map, riskProp.getMessagesUrl());
+        return getRiskResponse(map, riskProp.getAbsMessagesUrl());
     }
 
     public void operatorSendSmsCode() {
         GlobalUser user = RequestUtil.getGlobalUser();
         Map<String, Object> map = getRiskMap(user.getUserId());
         map.put("source", getSource());
-        RiskResponse response = getRiskResponse(map, riskProp.getOperatorSendSmsCodeUrl());
+        RiskResponse response = getRiskResponse(map, riskProp.getAbsOperatorSendSmsCodeUrl());
         if (ObjectUtils.isEmpty(response)) {
             saService.saOperator(user, false, BizCodeEnum.ERROR_RISK_RESULT.getMessage());
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
@@ -100,12 +100,11 @@ public class RiskService {
         }
     }
 
-
     public RiskResponse operatorAuth(String smsCode) {
         GlobalUser user = RequestUtil.getGlobalUser();
         Map<String, Object> map = getRiskMap(user.getUserId());
         map.put("smsCode", smsCode);
-        RiskResponse response = getRiskResponse(map, riskProp.getOperatorAuthUrl());
+        RiskResponse response = getRiskResponse(map, riskProp.getAbsOperatorAuthUrl());
         if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
@@ -143,7 +142,7 @@ public class RiskService {
         map.put("imageFile", request.getIdCardBase64ImgStr());
         map.put("bizToken", request.getBizToken());
         map.put("ocrData", new String(request.getOcrData()));
-        RiskResponse response = getRiskResponse(map, riskProp.getIdCardRecognitionUrl());
+        RiskResponse response = getRiskResponse(map, riskProp.getAbsIdCardRecognitionUrl());
         if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
@@ -154,10 +153,9 @@ public class RiskService {
     }
 
     public void faceRecognition(String faceBase64ImgStr) {
-        Long timeStamp = System.currentTimeMillis();
         Map<String, Object> map = getRiskMap(RequestUtil.getGlobalUser().getUserId());
         map.put("imageFile", faceBase64ImgStr);
-        RiskResponse response = getRiskResponse(map, riskProp.getFaceRecognitionUrl());
+        RiskResponse response = getRiskResponse(map, riskProp.getAbsFaceRecognitionUrl());
         if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
@@ -179,7 +177,7 @@ public class RiskService {
 //        }
         Map<String, Object> map = getRiskMap(user.getUserId());
         map.put("mobile", user.getMobile());
-        RiskResponse response = getRiskResponse(map, riskProp.getIdentityInfoUrl());
+        RiskResponse response = getRiskResponse(map, riskProp.getAbsIdentityInfoUrl());
         if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
@@ -202,8 +200,7 @@ public class RiskService {
         map.put("mobile", mobile);
         map.put("imei", imei);
         map.put("flag", flag);
-        String url = riskProp.getAbsCheckRiskEnableBorrowUrl();
-        RiskResponse response = getRiskResponse(map, url);
+        RiskResponse response = getRiskResponse(map, riskProp.getAbsCheckRiskEnableBorrowUrl());
         if (ObjectUtils.isEmpty(response)) {
             throw new ComBizException(BizCodeEnum.ERROR_RISK_RESULT);
         }
@@ -229,7 +226,7 @@ public class RiskService {
         Map<String, Object> map = getRiskMap(userId);
         map.put("taskId", taskId);
         map.put("source", getSource());
-        RiskResponse response = getRiskResponse(map, riskProp.getFacebookAndInsUrl());
+        RiskResponse response = getRiskResponse(map, riskProp.getAbsFacebookAndInsUrl());
         if (ObjectUtils.isEmpty(response)) {
             throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
         }
@@ -243,13 +240,9 @@ public class RiskService {
      */
     @Async
     public void pushProfile(List<Map<String, String>> list, Long userId) {
-        Long timeStamp = System.currentTimeMillis();
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("sign", AesUtil.aesEncode(userId, timeStamp));
-        map.put("userId", userId);
-        map.put("timeStamp", timeStamp);
+        Map<String, Object> map = getRiskMap(userId);
         map.put("contacts", list);
-        getRiskResponse(map, riskProp.getAuthPersonInfoUrl());
+        getRiskResponse(map, riskProp.getAbsAuthPersonInfoUrl());
     }
 
     private Map<String, Object> getRiskMap(Long userId) {

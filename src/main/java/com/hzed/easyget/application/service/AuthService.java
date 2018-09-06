@@ -438,18 +438,9 @@ public class AuthService {
 
         // 查询身份证是否已存在
         User user = userRepository.findByIdCardNo(idCardNo);
-        if (!ObjectUtils.isEmpty(user)) {
-            // 比较已有记录的userId和当前userId是否相同，不同则直接拦截，相同则查认证数据是否是认证失败，否则拦截
-            if (!user.getId().equals(userId)) {
-                throw new WarnException(BizCodeEnum.IDCARD_EXIST);
-            } else {
-                UserAuthStatus uasQuery = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
-                // 身份认证成功不可重复认证
-                if (!ObjectUtils.isEmpty(uasQuery) || !failAuthCode.equals(uasQuery.getAuthStatus())) {
-                    throw new WarnException(BizCodeEnum.IDCARD_EXIST);
-                }
-            }
-
+        if (!ObjectUtils.isEmpty(user) && !user.getId().equals(userId)) {
+            // 比较已有记录的userId和当前userId是否相同，不同则直接拦截
+            throw new WarnException(BizCodeEnum.IDCARD_EXIST);
         }
 
         // 调风控

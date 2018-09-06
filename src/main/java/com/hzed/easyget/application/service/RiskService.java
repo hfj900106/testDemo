@@ -105,9 +105,6 @@ public class RiskService {
         Map<String, Object> map = getRiskMap(user.getUserId());
         map.put("smsCode", smsCode);
         RiskResponse response = getRiskResponse(map, riskProp.getAbsOperatorAuthUrl());
-        if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
-        }
         Object bodyObj = response.getBody();
         if (ObjectUtils.isEmpty(bodyObj)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
@@ -261,6 +258,7 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", ComUtil.subJsonString(JSON.toJSONString(response), 300));
         log.info("============================请求风控结束===============================");
+
         return response;
     }
 

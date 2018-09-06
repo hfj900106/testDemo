@@ -153,14 +153,13 @@ public class AuthService {
      */
     public void authContacts(ContactsRequest request) {
         Long userId = RequestUtil.getGlobalUser().getUserId();
-
         String auth_code = AuthCodeEnum.CONTACTS.getCode();
         // 请求防重
         String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
 
         // authId不为空那说明通讯录认证失败 或者 成功，可以再更新
-        Long authId = checkAuth(userId, AuthCodeEnum.CONTACTS.getCode());
+        Long authId = checkAuth(userId, auth_code);
         // 可更新
         boolean isNewAuth = false;
         // 未认证

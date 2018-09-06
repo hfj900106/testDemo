@@ -2,7 +2,6 @@ package com.hzed.easyget.application.service;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
-import com.hzed.easyget.application.enums.AuthStatusEnum;
 import com.hzed.easyget.controller.model.IdCardRecognitionRequest;
 import com.hzed.easyget.infrastructure.config.RiskProp;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
@@ -64,40 +63,11 @@ public class RiskService {
         return getRiskResponse(map, riskProp.getAbsMessagesUrl());
     }
 
-    public void operatorSendSmsCode() {
+    public RiskResponse operatorSendSmsCode() {
         GlobalUser user = RequestUtil.getGlobalUser();
         Map<String, Object> map = getRiskMap(user.getUserId());
         map.put("source", getSource());
-        RiskResponse response = getRiskResponse(map, riskProp.getAbsOperatorSendSmsCodeUrl());
-        if (ObjectUtils.isEmpty(response)) {
-            saService.saOperator(user, false, BizCodeEnum.ERROR_RISK_RESULT.getMessage());
-            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
-        }
-        if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
-            saService.saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
-            throw new WarnException(BizCodeEnum.FAIL_AUTH);
-        }
-        Object bodyObj = response.getBody();
-        if (ObjectUtils.isEmpty(bodyObj)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
-        }
-
-        Object codeObj = ((LinkedHashMap) bodyObj).get(ComConsts.RISK_CODE);
-        if (codeObj.equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
-            //已经认证过
-            saService.saOperator(user, false, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
-            throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
-        }
-        if (codeObj.equals(ComConsts.RISK_OPERATOR_PARAMS_ERROR)) {
-            //认证数据不正确，数据从数据库取，一般不出现
-            saService.saOperator(user, false, BizCodeEnum.PARAMS_AUTH_RISK.getMessage());
-            throw new WarnException(BizCodeEnum.PARAMS_AUTH_RISK);
-        }
-        if (codeObj.equals(ComConsts.RISK_OPERATOR_ERROR)) {
-            //认证失败
-            saService.saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
-            throw new WarnException(BizCodeEnum.FAIL_AUTH);
-        }
+        return getRiskResponse(map, riskProp.getAbsOperatorSendSmsCodeUrl());
     }
 
     public RiskResponse operatorAuth(String smsCode) {
@@ -106,6 +76,7 @@ public class RiskService {
         map.put("smsCode", smsCode);
         RiskResponse response = getRiskResponse(map, riskProp.getAbsOperatorAuthUrl());
         Object bodyObj = response.getBody();
+
         if (ObjectUtils.isEmpty(bodyObj)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
@@ -140,9 +111,6 @@ public class RiskService {
         map.put("bizToken", request.getBizToken());
         map.put("ocrData", new String(request.getOcrData()));
         RiskResponse response = getRiskResponse(map, riskProp.getAbsIdCardRecognitionUrl());
-        if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
-        }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             throw new WarnException(BizCodeEnum.FAIL_IDCARD_RECOGNITION);
         }
@@ -153,40 +121,18 @@ public class RiskService {
         Map<String, Object> map = getRiskMap(RequestUtil.getGlobalUser().getUserId());
         map.put("imageFile", faceBase64ImgStr);
         RiskResponse response = getRiskResponse(map, riskProp.getAbsFaceRecognitionUrl());
-        if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
-        }
         if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
             throw new WarnException(BizCodeEnum.FAIL_FACE_RECOGNITION);
         }
-        // 识别成功缓存结果，用于判断用户身份认证时是否已经人脸识别成功 ，缓存两小时，识别成功后两小时内没有提交认证则重新识别
-//        redisService.setCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile(), "face", 7200L);
     }
 
-    public Integer identityInfoAuth() {
-        // 默认成功
-        Integer status = AuthStatusEnum.HAS_AUTH.getCode();
+    public RiskResponse identityInfoAuth() {
+
         GlobalUser user = RequestUtil.getGlobalUser();
-//        String face = redisService.getCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
-//        if (StringUtils.isBlank(face)) {
-//            log.info("用户{}需进行人脸识别", user.getMobile());
-//            throw new WarnException(BizCodeEnum.FAIL_AUTH);
-//        }
+
         Map<String, Object> map = getRiskMap(user.getUserId());
         map.put("mobile", user.getMobile());
-        RiskResponse response = getRiskResponse(map, riskProp.getAbsIdentityInfoUrl());
-        if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
-        }
-        // 认证失败
-        if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
-            // 成功后删除redis标志
-//            redisService.clearCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
-            status = AuthStatusEnum.FAIl_AUTH.getCode();
-        }
-        // 成功后删除redis标志
-//        redisService.clearCache(RedisConsts.FACE + RedisConsts.SPLIT + user.getMobile());
-        return status;
+        return getRiskResponse(map, riskProp.getAbsIdentityInfoUrl());
     }
 
     /**
@@ -258,7 +204,9 @@ public class RiskService {
         RiskResponse response = restService.postJson(url, map, RiskResponse.class);
         log.info("风控返回数据：{}", ComUtil.subJsonString(JSON.toJSONString(response), 300));
         log.info("============================请求风控结束===============================");
-
+        if (ObjectUtils.isEmpty(response)) {
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
+        }
         return response;
     }
 

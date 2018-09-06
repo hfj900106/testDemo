@@ -244,7 +244,8 @@ public class HomeService {
         Long userId = RequestUtil.getGlobalUser().getUserId();
         Bid bid = bidRepository.findOneByUserId(userId);
         // 不存在标的或已结清不弹窗提示
-        if (ObjectUtils.isEmpty(bid) || BidStatusEnum.CLEARED.getCode().byteValue() == bid.getStatus() || BidStatusEnum.AUDIT_FAIL.getCode().byteValue() == bid.getStatus()) {
+        if (ObjectUtils.isEmpty(bid) || BidStatusEnum.CLEARED.getCode().byteValue() == bid.getStatus() || BidStatusEnum.AUDIT_FAIL.getCode().byteValue() == bid.getStatus()
+                || BidStatusEnum.LOAN_FAIL.getCode().byteValue() == bid.getStatus() || BidStatusEnum.CANCEL.getCode().byteValue() == bid.getStatus()) {
             return bidProgressResponse;
         }
 

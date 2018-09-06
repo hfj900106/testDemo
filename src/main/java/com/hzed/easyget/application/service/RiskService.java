@@ -163,7 +163,6 @@ public class RiskService {
         }
     }
 
-    @Async
     public void facebookAndIns(Long userId, String taskId) {
         Map<String, Object> map = getRiskMap(userId);
         map.put("taskId", taskId);

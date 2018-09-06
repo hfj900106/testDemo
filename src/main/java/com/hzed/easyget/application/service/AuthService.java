@@ -560,7 +560,7 @@ public class AuthService {
      */
     public void facebookAndIns(FacebookInsRequest request) {
         Long userId = RequestUtil.getGlobalUser().getUserId();
-        // 异步通知风控
+        // 通知风控
         riskService.facebookAndIns(userId, request.getTaskId());
 
         String authCode = "ins".equals(request.getFacebookOrIns()) ? AuthCodeEnum.INS.getCode() : AuthCodeEnum.FACEBOOK.getCode();

@@ -10,12 +10,9 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Data
 public class FacebookInsRequest {
-    /**
-     * taskId
-     */
     @NotBlank(message = "[taskId]不能为空")
     private String taskId ;
-    @NotBlank(message = "[facebookOrIns]不能为空，填 facebook 或者 ins")
+    @NotBlank(message = "[facebookOrIns]不能为空，facebook|ins")
     private String facebookOrIns ;
 
 }

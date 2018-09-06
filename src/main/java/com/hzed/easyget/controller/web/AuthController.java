@@ -30,6 +30,19 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+
+    @ModuleFunc("用户认证项信息")
+    @PostMapping("/getAuthStatus")
+    public List<AuthStatusResponse> getAuthStatus(@Valid @RequestBody AuthStatusRequest request) {
+        return authService.getAuthStatus(request);
+    }
+
+    @ModuleFunc("用户认证分组信息")
+    @PostMapping("/getAuthGroupStatus")
+    public List<AuthGroupStatusResponse> getAuthGroupStatus(@Valid @RequestBody AuthStatusRequest request) {
+        return authService.getAuthGroupStatus(request);
+    }
+
     @ModuleFunc(value = "通讯录认证", printParameterLength = 300)
     @PostMapping("/contacts")
     public void contacts(@Valid @RequestBody ContactsRequest request) {
@@ -66,18 +79,6 @@ public class AuthController {
         authService.identityInfoAuth(request);
     }
 
-    @ModuleFunc("用户认证项信息")
-    @PostMapping("/getAuthStatus")
-    public List<AuthStatusResponse> getAuthStatus(@Valid @RequestBody AuthStatusRequest request) {
-        return authService.getAuthStatus(request);
-    }
-
-    @ModuleFunc("用户认证分组信息")
-    @PostMapping("/getAuthGroupStatus")
-    public List<AuthGroupStatusResponse> getAuthGroupStatus(@Valid @RequestBody AuthStatusRequest request) {
-        return authService.getAuthGroupStatus(request);
-    }
-
     @ModuleFunc("运营商认证-发送验证码")
     @PostMapping("/operatorSendSmsCode")
     public void operatorSendSmsCode() {
@@ -97,6 +98,12 @@ public class AuthController {
         authService.operatorAuthCallback(request);
     }
 
+    @ModuleFunc("facebook和ins认证时数据推风控")
+    @PostMapping("/facebookAndIns")
+    public void facebookAndIns(@Valid @RequestBody FacebookInsRequest request){
+        authService.facebookAndIns(request);
+    }
+
     @IgnoreHeader
     @ModuleFunc("facebook认证")
     @PostMapping("/facebook")
@@ -110,11 +117,4 @@ public class AuthController {
     public void insAuth(@Valid @RequestBody InsRequest request) {
         authService.insAuth(request);
     }
-
-    @ModuleFunc("facebook和ins认证时数据推风控")
-    @PostMapping("/facebookAndIns")
-    public void facebookAndIns(@Valid @RequestBody FacebookInsRequest request){
-        authService.facebookAndIns(request);
-    }
-
 }

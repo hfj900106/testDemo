@@ -1,6 +1,7 @@
 import com.hzed.BootApplication;
 import com.hzed.easyget.application.service.FileService;
 import com.hzed.easyget.application.service.LoginService;
+import com.hzed.easyget.application.service.RiskService;
 import com.hzed.easyget.application.service.product.ProductFactory;
 import com.hzed.easyget.application.service.product.ProductService;
 import com.hzed.easyget.controller.model.PictureCodeResponse;
@@ -40,6 +41,8 @@ public class BootTest {
     private StringEncryptor stringEncryptor;
     @Autowired
     private BidRepository bidRepository;
+    @Autowired
+    private RiskService riskService;
 
     @Test
     public void redisTest() {
@@ -90,6 +93,11 @@ public class BootTest {
         // java -cp jasypt-1.9.2.jar org.jasypt.intf.cli.JasyptPBEStringEncryptionCLI input=原文 password=123456 algorithm=PBEWithMD5AndDES
         System.out.println(stringEncryptor.encrypt("root"));
         System.out.println(stringEncryptor.encrypt("rootroot"));
+    }
+
+    @Test
+    public void riskTest() {
+        riskService.authContacts(null, null);
     }
 
 }

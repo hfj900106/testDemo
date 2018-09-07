@@ -9,6 +9,7 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.config.redis.RedisService;
 import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.RedisConsts;
+import com.hzed.easyget.infrastructure.consts.SaConsts;
 import com.hzed.easyget.infrastructure.enums.BizCodeEnum;
 import com.hzed.easyget.infrastructure.enums.LocaleEnum;
 import com.hzed.easyget.infrastructure.exception.ComBizException;
@@ -27,11 +28,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalHead;
-import static com.hzed.easyget.infrastructure.utils.RequestUtil.getGlobalUser;
 
 /**
  * 认证信息公用
@@ -155,97 +154,92 @@ public class AuthService {
      * 通讯录认证通讯录和通话记录都可能为空，已认证的通讯录还会更新，获取最新通讯录
      */
     public void authContacts(ContactsRequest request) {
-        GlobalUser user = getGlobalUser();
-        String auth_code = AuthCodeEnum.CONTACTS.getCode();
+        LocalDateTime startTime = LocalDateTime.now();
+        Long userId = RequestUtil.getGlobalUser().getUserId();
+        String authCode = AuthCodeEnum.CONTACTS.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
-
-        // authId不为空那说明通讯录认证失败 或者 成功，可以再更新
-        Long authId = checkAuth(user.getUserId(), AuthCodeEnum.CONTACTS.getCode());
-        // 可更新
-        boolean isNewAuth = false;
-        // 未认证
-        if (ObjectUtils.isEmpty(authId)) {
-            isNewAuth = true;
-        }
-
-        String platForm = getGlobalHead().getPlatform();
-        int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
-        RiskResponse response = riskService.authContacts(request.getContacts(), request.getCallLogs(), source);
-        afterResponse(authId, response, user.getUserId(), auth_code, isNewAuth);
-    }
-
-    /**
-     * 构建UserAuthStatus对象
-     *
-     * @param userId
-     * @param remark
-     */
-    public UserAuthStatus buildUserAuthStatus(Long authId, Long userId, String code, Integer statusCode, String remark) {
-        //保存到数据库短信记录表
-        UserAuthStatus userAuthStatus = new UserAuthStatus();
-        userAuthStatus.setId(authId);
-        userAuthStatus.setUserId(userId);
-        userAuthStatus.setAuthCode(code);
-        userAuthStatus.setAuthStatus(Integer.valueOf(statusCode));
-        //过期时间，半年
-        userAuthStatus.setExpireTime(DateUtil.addMonth(LocalDateTime.now(), 6));
-        userAuthStatus.setRemark(remark);
-        return userAuthStatus;
+        // 调风控
+        RiskResponse response = riskService.authContacts(request.getContacts(), request.getCallLogs());
+        // 保存或更新
+        saveOrUpdateContactsAndSmsAuth(userId, authCode, response);
+        saService.saCommonOperator(RequestUtil.getGlobalUser(), startTime, response, SaConsts.CONTACTS_DATA);
     }
 
     /**
      * 短信认证，已认证的短信还会更新，获取最新短信
      */
     public void authMessages(MessagesRequest request) {
-        GlobalUser user = getGlobalUser();
-        String auth_code = AuthCodeEnum.MESSAGE.getCode();
+        LocalDateTime startTime = LocalDateTime.now();
+        GlobalUser user = RequestUtil.getGlobalUser();
+        Long userId = user.getUserId();
+        String authCode = AuthCodeEnum.MESSAGE.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + user.getUserId();
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + user.getUserId();
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
-
-        // authId不为空那说明短信认证失败 或者 成功，可以再更新
-        Long authId = checkAuth(user.getUserId(), AuthCodeEnum.MESSAGE.getCode());
-        // 可更新
-        boolean isNewAuth = false;
-        // 未认证
-        if (ObjectUtils.isEmpty(authId)) {
-            isNewAuth = true;
-        }
-
-        String platForm = getGlobalHead().getPlatform();
-        int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
-        RiskResponse response = riskService.authMessages(request.getMessage(), source);
-        afterResponse(authId, response, user.getUserId(), auth_code, isNewAuth);
+        // 调风控
+        RiskResponse response = riskService.authMessages(request.getMessage());
+        // 保存或更新
+        saveOrUpdateContactsAndSmsAuth(userId, authCode, response);
+        saService.saCommonOperator(user, startTime, response, SaConsts.SMS_DATA);
     }
 
     /**
-     * 运营商认证 - 发送验证码接口
+     * 运营商认证-发送验证码接口
      */
     public void operatorSendSmsCode() {
-        GlobalUser user = getGlobalUser();
-        String isSend = redisService.getCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId());
+        GlobalUser user = RequestUtil.getGlobalUser();
+        Long userId = user.getUserId();
+        String key = RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + userId;
+        String isSend = redisService.getCache(key);
         if (StringUtils.isNotBlank(isSend)) {
-            //发送过于频繁,不打error
+            // 发送过于频繁
             saService.saOperator(user, false, BizCodeEnum.NOT_END_AUTH_RISK.getMessage());
             throw new WarnException(BizCodeEnum.NOT_END_AUTH_RISK);
         }
-        User userInfo = userRepository.findById(user.getUserId());
+
+        User userInfo = userRepository.findById(userId);
         String realName = userInfo.getRealName();
         String identityCode = userInfo.getIdCardNo();
         if (StringUtils.isBlank(realName) || StringUtils.isBlank(identityCode)) {
-            //未进行身份验证
+            // 未进行身份验证
             saService.saOperator(user, false, BizCodeEnum.UN_IDENTITY_AUTH.getMessage());
             throw new WarnException(BizCodeEnum.UN_IDENTITY_AUTH);
         }
-        String platForm = getGlobalHead().getPlatform();
-        int source = "android".equals(platForm) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
-        riskService.operatorSendSmsCode(source);
+        // 调风控创建发送验证码任务
+        RiskResponse response = riskService.operatorSendSmsCode();
+
+        if (!response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
+            saService.saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
+            throw new WarnException(BizCodeEnum.FAIL_AUTH);
+        }
+
+        Object bodyObj = response.getBody();
+        if (ObjectUtils.isEmpty(bodyObj)) {
+            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
+        }
+
+        Object codeObj = ((LinkedHashMap) bodyObj).get(ComConsts.RISK_CODE);
+        if (codeObj.equals(ComConsts.RISK_OPERATOR_HAVE_AUTH)) {
+            // 已经认证过
+            saService.saOperator(user, false, BizCodeEnum.HAVE_AUTH_RISK.getMessage());
+            throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
+        }
+        if (codeObj.equals(ComConsts.RISK_OPERATOR_PARAMS_ERROR)) {
+            // 认证数据不正确，数据从数据库取，一般不出现
+            saService.saOperator(user, false, BizCodeEnum.PARAMS_AUTH_RISK.getMessage());
+            throw new WarnException(BizCodeEnum.PARAMS_AUTH_RISK);
+        }
+        if (codeObj.equals(ComConsts.RISK_OPERATOR_ERROR)) {
+            // 认证失败
+            saService.saOperator(user, false, BizCodeEnum.FAIL_AUTH.getMessage());
+            throw new WarnException(BizCodeEnum.FAIL_AUTH);
+        }
 
         saService.saOperator(user, true, BizCodeEnum.SUCCESS_AUTH.getMessage());
-        //redis存一个发送标识，要等输入验证认证结束才可以重新发送，第三方接口要求
-        redisService.setCache(RedisConsts.IDENTITY_SMS_CODE_SEND + RedisConsts.SPLIT + user.getUserId(), "operatorAuth", 180L);
+        // redis存一个发送标识，要等输入验证认证结束才可以重新发送，第三方接口要求
+        redisService.setCache(key, "operatorAuth", 180L);
 
     }
 
@@ -253,27 +247,23 @@ public class AuthService {
      * 运营商认证 - 输入验证码认证运行商，创建一条认证中的记录
      */
     public void operatorAuth(PeratorAuthRequest request) {
-        GlobalUser user = getGlobalUser();
+        GlobalUser user = RequestUtil.getGlobalUser();
         Long userId = user.getUserId();
-
+        // 验证码验证
         RiskResponse response = riskService.operatorAuth(request.getSmsCode());
 
-        String code = AuthCodeEnum.SMS.getCode();
+        String authCode = AuthCodeEnum.SMS.getCode();
         // 认证中
         Integer statusCode = AuthStatusEnum.TO_AUTH.getCode();
-
         // 判断该用户是否已经验证或者认证中、失败
-        Long authId = checkAuth(userId, AuthCodeEnum.SMS.getCode());
-        // 未认证
+        Long authId = checkAuth(userId, authCode);
         if (ObjectUtils.isEmpty(authId)) {
-            // 新增 认证表的状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, code, statusCode, response.getHead().getError_msg());
+            // 未认证新增认证中的状态
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, statusCode, response.getHead().getError_msg());
             authStatusRepository.insertSelective(userAuthStatus);
-        }
-        // 认证失败，可重新认证，重新改为认证中
-        else {
-            // 修改 认证表的状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, code, statusCode, response.getHead().getError_msg());
+        } else {
+            // 认证失败，可重新认证，重新改为认证中
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, authCode, statusCode, response.getHead().getError_msg());
             authStatusRepository.updateSelective(userAuthStatus);
         }
 
@@ -284,52 +274,49 @@ public class AuthService {
     }
 
     /**
-     * 运营商认证 - 风控回调
+     * 运营商认证-风控回调
      */
     public void operatorAuthCallback(PeratorAuthCallbackRequest request) {
         Long userId = request.getUserId();
-        String auth_code = AuthCodeEnum.SMS.getCode();
+        String authCode = AuthCodeEnum.SMS.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
         // 返回认证中的id
-        Long authId = isInAuth(userId, auth_code);
+        Long authId = isInAuth(userId, authCode);
 
-        // 判断该用户是否在认证中
-        if (!ObjectUtils.isEmpty(authId)) {
-            // 未认证
-            Integer code = AuthStatusEnum.UN_AUTH.getCode();
-            // 认证失败
-            if (!ComConsts.RISK_OK.equals(request.getResultCode())) {
-                code = AuthStatusEnum.FAIl_AUTH.getCode();
-            }
-            // 认证成功
-            else if (ComConsts.RISK_OK.equals(request.getResultCode())) {
-                code = AuthStatusEnum.HAS_AUTH.getCode();
-            }
-            // 更新状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, AuthCodeEnum.SMS.getCode(), code, "运营商认证");
-            authStatusRepository.updateSelective(userAuthStatus);
+        // 不是认证中的状态直接终止
+        if (ObjectUtils.isEmpty(authId)) {
+            return;
         }
+
+        // 更新状态
+        Integer code = ComConsts.RISK_OK.equals(request.getResultCode()) ? AuthStatusEnum.HAS_AUTH.getCode() : AuthStatusEnum.FAIl_AUTH.getCode();
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, AuthCodeEnum.SMS.getCode(), code, "运营商认证");
+        authStatusRepository.updateSelective(userAuthStatus);
     }
 
     /**
      * 个人信息认证
      */
     public void authPersonInfo(PersonInfoAuthRequest request) {
-        Long userId = getGlobalUser().getUserId();
-        String auth_code = AuthCodeEnum.PERSON_INFO.getCode();
+        Long userId = RequestUtil.getGlobalUser().getUserId();
+        String authCode = AuthCodeEnum.PERSON_INFO.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
-
-        // 校验是否已认证或者认证中，不需要回调，只有成功状态
-        checkAuth(userId, AuthCodeEnum.PERSON_INFO.getCode());
-        checkAuth(userId, AuthCodeEnum.PROFESSIONAL.getCode());
-
+        // 拦截已认证
+        UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
+        if (!ObjectUtils.isEmpty(userAuthStatusHas)) {
+            if (userAuthStatusHas.getAuthStatus().equals(AuthStatusEnum.HAS_AUTH.getCode())) {
+                log.info("该用户id，{} 已认证成功，不能重新认证", userId);
+                throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
+            }
+        }
+        // 处理数据
         List<UserAuthStatus> listAuthStatus = Lists.newArrayList();
-        listAuthStatus.add(buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PERSON_INFO.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), "个人信息认证"));
-        listAuthStatus.add(buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PROFESSIONAL.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), "专业信息认证"));
+        listAuthStatus.add(buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PERSON_INFO.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), AuthCodeEnum.PERSON_INFO.getMsg()));
+        listAuthStatus.add(buildUserAuthStatus(IDGenerator.nextId(), userId, AuthCodeEnum.PROFESSIONAL.getCode(), AuthStatusEnum.HAS_AUTH.getCode(), AuthCodeEnum.PROFESSIONAL.getMsg()));
 
         String relationship1 = request.getRelationship1();
         String personName1 = request.getPersonName1();
@@ -353,13 +340,13 @@ public class AuthService {
         profile.setMaritalStatus(request.getMaritalStatus());
         profile.setRelationship1(relationship1 + ":" + personName1 + ":" + personTel1);
         profile.setRelationship2(relationship2 + ":" + personName2 + ":" + personTel2);
-        profile.setRemark("个人信息认证");
+        profile.setRemark(AuthCodeEnum.PERSON_INFO.getMsg());
 
         //组装pic对象
         List<String> listBase64 = request.getPicTypeAndPathBase64Str();
-        List<UserPic> listPic = Lists.newArrayList();
         String suffix = request.getPicSuffix();
 
+        List<UserPic> listPic = Lists.newArrayList();
         listBase64.forEach(base64Str -> {
             String workplacePhotoPath = getPhotoPath(base64Str.substring(11), suffix);
             listPic.add(UserPic.builder().id(IDGenerator.nextId()).userId(userId).type(base64Str.substring(0, 11)).picUrl(workplacePhotoPath).build());
@@ -373,22 +360,23 @@ public class AuthService {
         work.setMonthlyIncome(request.getMonthlyIncome());
         work.setIndustry(request.getIndustry());
         work.setPayday(request.getPayday());
-        work.setRemark("专业信息认证");
+        work.setRemark(AuthCodeEnum.PROFESSIONAL.getMsg());
+
+        // 保存认证信息
         profileRepository.insertProfileAuth(work, profile, listAuthStatus, listPic);
 
+        // 个人信息推风控
         List<Map<String, String>> objectList = Lists.newArrayList();
         Map<String, String> stringMap1 = Maps.newHashMap();
         stringMap1.put("relationship", relationship1);
         stringMap1.put("contact", personName1);
         stringMap1.put("phone", personTel1);
         objectList.add(stringMap1);
-
         Map<String, String> stringMap2 = Maps.newHashMap();
         stringMap2.put("relationship", relationship2);
         stringMap2.put("contact", personName2);
         stringMap2.put("phone", personTel2);
         objectList.add(stringMap2);
-        // 个人信息推风控
         riskService.pushProfile(objectList, userId);
     }
 
@@ -415,22 +403,12 @@ public class AuthService {
         String birthday = obj.getString("birthday");
         String religion = obj.getString("religion");
         String idcardImage = obj.getString("idcardImage");
-        if (!StringUtils.isBlank(birthday)) {
-            // 注意有空格
-            int strLength = birthday.length();
-            if (strLength < 10) {
-                // 识别生日数据有错则直接给空串
-                recognitionResponse.setBirthday("");
-            } else {
-                recognitionResponse.setBirthday(birthday);
-            }
-        }
+
+        // 识别生日数据有错则直接给空串
+        recognitionResponse.setBirthday((StringUtils.isBlank(birthday) && birthday.length() < 10) ? "" : birthday);
         recognitionResponse.setName(name);
-        int genderInt = 1;
-        if (!ObjectUtils.isEmpty(gender) && ComConsts.FEMALE.equalsIgnoreCase(gender)) {
-            genderInt = 2;
-        }
-        recognitionResponse.setGender(genderInt);
+        // 性别 1-男 2-女
+        recognitionResponse.setGender(ComConsts.FEMALE.equalsIgnoreCase(gender) ? 2 : 1);
         recognitionResponse.setIdNumber(idNumber);
         recognitionResponse.setReligion(religion);
         recognitionResponse.setIdcardImage(idcardImage);
@@ -440,148 +418,84 @@ public class AuthService {
     /**
      * 人脸识别
      */
-    public void faceRecognition(FaceRecognitionRequest request) {
-        String faceBase64ImgStr = request.getFaceBase64ImgStr();
+    public void faceRecognition(String faceBase64ImgStr) {
         riskService.faceRecognition(faceBase64ImgStr);
     }
 
     /**
-     * 身份信息认证，信息分3个表存（用户表、身份信息认证表，认证状态表）
+     * 身份信息认证
+     * t_loan_user 修改用户信息
+     * t_loan_user_pic
+     * t_loan_user_auth_status
      */
     public void identityInfoAuth(IdentityInfoAuthRequest request) {
-        GlobalUser user = getGlobalUser();
-        String authCode = AuthCodeEnum.ID_CARD.getCode();
-        // 请求防重
-//        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + user.getUserId();
-//        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
-
-        // 判断该用户是否已经验证或者认证中、失败
-        Long authId = checkAuth(user.getUserId(), AuthCodeEnum.ID_CARD.getCode());
-        // 认证失败
-        boolean isNewAuth = false;
-        if (ObjectUtils.isEmpty(authId)) {
-            // 未认证
-            isNewAuth = true;
-        }
-
-        String realName = request.getRealName().trim();
+        // 身份证号
         String idCardNo = request.getIdCardNo();
-        Integer gender = request.getGender();
-        // 查询身份证是否已存在
-        User user1 = userRepository.findByIdCardNo(idCardNo);
+        Long userId = RequestUtil.getGlobalUser().getUserId();
+        String authCode = AuthCodeEnum.ID_CARD.getCode();
 
-        if (!ObjectUtils.isEmpty(user1)) {
-            UserAuthStatus userAuthStatus1 = authStatusRepository.findEnableAuthStatusByUserId(user.getUserId(), String.valueOf(AuthCodeEnum.ID_CARD.getCode()));
-            if (!ObjectUtils.isEmpty(userAuthStatus1) && userAuthStatus1.getAuthStatus().equals(AuthStatusEnum.FAIl_AUTH.getCode())) {
-                throw new WarnException(BizCodeEnum.IDCARD_EXIST);
-            }
+        // 判断该用户是否已经认证成功、失败
+        Long authId = checkAuth(userId, authCode);
+
+        Integer failAuthCode = AuthStatusEnum.FAIl_AUTH.getCode();
+        Integer successAuthCode = AuthStatusEnum.HAS_AUTH.getCode();
+
+        // 查询身份证是否已存在
+        User user = userRepository.findByIdCardNo(idCardNo);
+        if (!ObjectUtils.isEmpty(user) && !user.getId().equals(userId)) {
+            // 比较已有记录的userId和当前userId是否相同，不同则直接拦截
+            throw new WarnException(BizCodeEnum.IDCARD_EXIST);
         }
 
-        // 本次认证-风控是否认证成功
-        Integer statusCode = riskService.identityInfoAuth();
-
-        // 获取UserAuthStatus对象
-        UserAuthStatus userAuthStatus;
+        // 调风控
+        RiskResponse response = riskService.identityInfoAuth();
+        // 认证状态
+        Integer statusCode = response.getHead().getStatus().equals(ComConsts.RISK_OK) ? successAuthCode : failAuthCode;
 
         // 本次认证失败
-        if(statusCode.equals( AuthStatusEnum.FAIl_AUTH.getCode())){
-            // 新认证
-            if (isNewAuth) {
-                // 插入失败记录
-                userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), user.getUserId(), authCode, statusCode, "身份信息认证");
+        if (statusCode.equals(failAuthCode)) {
+            // 插入或更新
+            if (ObjectUtils.isEmpty(authId)) {
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, statusCode, "身份信息认证");
                 authStatusRepository.insertSelective(userAuthStatus);
-                // 反馈APP认证失败
-                throw new WarnException(BizCodeEnum.FAIL_IDENTITY_AUTH);
-            }
-            // 更新认证
-            else {
-                // 更新失败记录
-                userAuthStatus = buildUserAuthStatus(authId, user.getUserId(), authCode, statusCode, "身份信息认证");
+            } else {
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, authCode, statusCode, "身份信息认证");
                 authStatusRepository.updateSelective(userAuthStatus);
-                // 反馈APP认证失败
-                throw new WarnException(BizCodeEnum.FAIL_IDENTITY_AUTH);
             }
-        }
-        // 本次认证成功
-        else {
-            String idCardBase64ImgStr = request.getIdCardBase64ImgStr();
-            String faceBase64ImgStr = request.getFaceBase64ImgStr();
-            String picSuffix = request.getPicSuffix();
-            String idCardPhotoPath = getPhotoPath(idCardBase64ImgStr, picSuffix);
-            String facePhotoPath = getPhotoPath(faceBase64ImgStr, picSuffix);
-
-            //根据拿到json串组装对象
-            User userObj = new User();
-            //组装user对象
-            userObj.setId(user.getUserId());
-            userObj.setRealName(realName);
-            userObj.setIdCardNo(idCardNo);
-            userObj.setGender(gender.byteValue());
-            userObj.setUpdateTime(LocalDateTime.now());
-
-            // 组装pic对象
-            List<UserPic> list = Lists.newArrayList();
-            // 新认证
-            if (isNewAuth) {
-                list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
-                list.add(UserPic.builder().id(IDGenerator.nextId()).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
-                // 获取UserAuthStatus对象，创建
-                userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), user.getUserId(), authCode, statusCode, "身份信息认证");
-                workRepository.insertIdentityInfo(list, userAuthStatus, userObj);
-            }
-            // 更新认证
-            else {
-                list.add(UserPic.builder().id(authId).userId(user.getUserId()).type("idCard").picUrl(idCardPhotoPath).build());
-                list.add(UserPic.builder().id(authId).userId(user.getUserId()).type("face").picUrl(facePhotoPath).build());
-                // 获取UserAuthStatus对象，更新
-                userAuthStatus = buildUserAuthStatus(authId, user.getUserId(), authCode, statusCode, "身份信息认证");
-                workRepository.updateIdentityInfo(list, userAuthStatus, userObj);
-            }
-
-
-        }
-
-
-
-
-
-    }
-
-
-    /**
-     * 短信认证和通讯录认证用到
-     *
-     * @param authId
-     * @param response
-     * @param userId
-     * @param authCode
-     * @param isNewAuth
-     */
-    private void afterResponse(Long authId, RiskResponse response, Long userId, String authCode, boolean isNewAuth) {
-        if (ObjectUtils.isEmpty(response)) {
-            throw new WarnException(BizCodeEnum.ERROR_RISK_RESULT);
-        }
-
-        Integer statusCode;
-        // 认证成功
-        if (response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
-            statusCode = AuthStatusEnum.HAS_AUTH.getCode();
-        }
-        // 认证失败
-        else {
-            statusCode = AuthStatusEnum.FAIl_AUTH.getCode();
-        }
-        // 保存失败原因，成功的为null
-        if (isNewAuth) {
-            // 新增 认证表的状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, statusCode, response.getHead().getError_msg());
-            authStatusRepository.insertSelective(userAuthStatus);
+            // 反馈APP认证失败
+            throw new WarnException(BizCodeEnum.FAIL_IDENTITY_AUTH);
         } else {
-            // 修改 认证表的状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, authCode, statusCode, response.getHead().getError_msg());
-            authStatusRepository.updateSelective(userAuthStatus);
+            String picSuffix = request.getPicSuffix();
+            String idCardPhotoPath = getPhotoPath(request.getIdCardBase64ImgStr(), picSuffix);
+            String facePhotoPath = getPhotoPath(request.getFaceBase64ImgStr(), picSuffix);
+
+            //组装user对象
+            User userUpdate = new User();
+            userUpdate.setId(userId);
+            userUpdate.setRealName(request.getRealName().trim());
+            userUpdate.setIdCardNo(idCardNo);
+            userUpdate.setGender(request.getGender().byteValue());
+            userUpdate.setUpdateTime(LocalDateTime.now());
+
+            // 插入或更新
+            if (ObjectUtils.isEmpty(authId)) {
+                List<UserPic> list = Lists.newArrayList();
+                list.add(UserPic.builder().id(IDGenerator.nextId()).userId(userId).type("idCard").picUrl(idCardPhotoPath).build());
+                list.add(UserPic.builder().id(IDGenerator.nextId()).userId(userId).type("face").picUrl(facePhotoPath).build());
+                // 获取UserAuthStatus对象，创建
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, statusCode, "身份信息认证");
+                workRepository.insertIdentityInfo(list, userAuthStatus, userUpdate);
+            } else {
+                List<UserPic> list = Lists.newArrayList();
+                list.add(UserPic.builder().id(authId).userId(userId).type("idCard").picUrl(idCardPhotoPath).build());
+                list.add(UserPic.builder().id(authId).userId(userId).type("face").picUrl(facePhotoPath).build());
+                // 获取UserAuthStatus对象，更新
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, authCode, statusCode, "身份信息认证");
+                workRepository.updateIdentityInfo(list, userAuthStatus, userUpdate);
+            }
         }
     }
+
 
     /**
      * 获取图片保存路径
@@ -603,29 +517,22 @@ public class AuthService {
      */
     public void facebookAuth(FacebookRequest request) {
         Long userId = request.getUserId();
-        String auth_code = AuthCodeEnum.FACEBOOK.getCode();
+        String authCode = AuthCodeEnum.FACEBOOK.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
         // 返回认证中的id
-        Long authId = isInAuth(userId, auth_code);
+        Long authId = isInAuth(userId, authCode);
 
-        // 判断该用户是否在认证中
-        if (!ObjectUtils.isEmpty(authId)) {
-            // 未认证
-            Integer code = AuthStatusEnum.UN_AUTH.getCode();
-            // 认证失败
-            if (!ComConsts.RISK_OK.equals(request.getResultCode())) {
-                code = AuthStatusEnum.FAIl_AUTH.getCode();
-            }
-            // 认证成功
-            else if (ComConsts.RISK_OK.equals(request.getResultCode())) {
-                code = AuthStatusEnum.HAS_AUTH.getCode();
-            }
-            // 更新状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, AuthCodeEnum.FACEBOOK.getCode(), code, "Facebook认证");
-            authStatusRepository.updateSelective(userAuthStatus);
+        // 不在认证中直接终止
+        if (ObjectUtils.isEmpty(authId)) {
+            return;
         }
+
+        // 更新状态
+        Integer code = ComConsts.RISK_OK.equals(request.getResultCode()) ? AuthStatusEnum.HAS_AUTH.getCode() : AuthStatusEnum.FAIl_AUTH.getCode();
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, AuthCodeEnum.FACEBOOK.getCode(), code, "Facebook认证");
+        authStatusRepository.updateSelective(userAuthStatus);
     }
 
     /**
@@ -633,115 +540,136 @@ public class AuthService {
      */
     public void insAuth(InsRequest request) {
         Long userId = request.getUserId();
-        String auth_code = AuthCodeEnum.INS.getCode();
+        String authCode = AuthCodeEnum.INS.getCode();
         // 请求防重
-        String key = RedisConsts.AUTH + RedisConsts.SPLIT + auth_code + RedisConsts.SPLIT + userId;
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + userId;
         redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK);
 
         // 判断该用户是否在认证中,返回认证中的id
-        Long authId = isInAuth(userId, auth_code);
+        Long authId = isInAuth(userId, authCode);
 
-        if (!ObjectUtils.isEmpty(authId)) {
-
-            // 未认证
-            Integer code = AuthStatusEnum.UN_AUTH.getCode();
-            // 认证失败
-            if (!ComConsts.RISK_OK.equals(request.getResultCode())) {
-                code = AuthStatusEnum.FAIl_AUTH.getCode();
-            }
-            // 认证成功
-            else if (ComConsts.RISK_OK.equals(request.getResultCode())) {
-                code = AuthStatusEnum.HAS_AUTH.getCode();
-            }
-            // 更新状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, AuthCodeEnum.INS.getCode(), code, "Ins认证");
-            authStatusRepository.updateSelective(userAuthStatus);
+        // 不在认证中直接终止
+        if (ObjectUtils.isEmpty(authId)) {
+            return;
         }
 
+        // 更新状态
+        Integer code = ComConsts.RISK_OK.equals(request.getResultCode()) ? AuthStatusEnum.HAS_AUTH.getCode() : AuthStatusEnum.FAIl_AUTH.getCode();
+        UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, AuthCodeEnum.INS.getCode(), code, "Ins认证");
+        authStatusRepository.updateSelective(userAuthStatus);
     }
 
     /**
-     * facebook和ins认证- 数据推风控，然后写入Facebook或者ins的认证中的记录，等风控回调修改结果
+     * facebook和ins认证-数据推风控，然后写入facebook或者ins的认证中的记录，等风控回调修改结果
      */
     public void facebookAndIns(FacebookInsRequest request) {
-        String taskId = request.getTaskId();
-        int source = "android".equals(getGlobalHead().getPlatform()) ? ComConsts.IS_ANDROID : ComConsts.IS_IOS;
-        GlobalUser user = getGlobalUser();
-        riskService.facebookAndIns(user.getUserId(), taskId, source);
+        Long userId = RequestUtil.getGlobalUser().getUserId();
+        // 通知风控
+        riskService.facebookAndIns(userId, request.getTaskId());
 
-        Long userId = getGlobalUser().getUserId();
-        // 默认Facebook
-        String authCode = AuthCodeEnum.FACEBOOK.getCode();
-        if ("ins".equals(request.getFacebookOrIns())) {
-            authCode = AuthCodeEnum.INS.getCode();
-        }
-        // 判断该用户是否已经验证或者认证中、失败
-        Long authId = checkAuth(userId, authCode);
-        Integer statusCode = AuthStatusEnum.TO_AUTH.getCode();
-        // 没有认证记录
-        if (ObjectUtils.isEmpty(authId)) {
-            // 插入 认证中 状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, statusCode, "");
-            authStatusRepository.insertSelective(userAuthStatus);
-        }
-        // 认证失败，需要重新认证，修改状态为 认证中
-        else {
-            // 修改 认证中 状态
-            UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, authCode, statusCode, "");
-            authStatusRepository.updateSelective(userAuthStatus);
-        }
+        String authCode = "ins".equals(request.getFacebookOrIns()) ? AuthCodeEnum.INS.getCode() : AuthCodeEnum.FACEBOOK.getCode();
 
+        try {
+            // 判断该用户是否已经验证或者认证中、失败
+            Long authId = checkAuth(userId, authCode);
+
+            if (ObjectUtils.isEmpty(authId)) {
+                // 没有认证记录，插入认证中状态
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, AuthStatusEnum.TO_AUTH.getCode(), "");
+                authStatusRepository.insertSelective(userAuthStatus);
+            } else {
+                // 认证失败，需要重新认证，修改状态为认证中
+                UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, authCode, AuthStatusEnum.TO_AUTH.getCode(), "");
+                authStatusRepository.updateSelective(userAuthStatus);
+            }
+        } catch (WarnException ex) {
+            // 已认证和认证中报错不做处理
+        }
     }
 
     /**
-     * 检测用户是否已经认证成功，没有成功则返回id用于更新数据
+     * 检测用户是否已经认证成功，没有成功则返回id用于更新数据，适用于 身份认证、运营商认证、Facebook、ins 认证
      */
     public Long checkAuth(Long userId, String authCode) {
         // 判断该用户是否已经验证
-        UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
-        Long authId = null;
-        if (!ObjectUtils.isEmpty(userAuthStatusHas)) {
-            Integer code = userAuthStatusHas.getAuthStatus();
-            boolean isContactOrMessage = authCode.equals(AuthCodeEnum.CONTACTS.getCode()) || authCode.equals(AuthCodeEnum.MESSAGE.getCode());
-            // 通讯录和短信认证即使认证成功还可以再更新，不拦截
-            if (!isContactOrMessage && code.equals(AuthStatusEnum.HAS_AUTH.getCode())) {
-                log.info("该用户id，{} 已认证，不能重新认证", userId);
-                throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
-            } else if (code.equals(AuthStatusEnum.TO_AUTH.getCode())) {
-                log.info("该用户id，{} 在认证中，不能重新认证", userId);
-                throw new WarnException(BizCodeEnum.AUTH_RISK_ING);
-            }
-            // 认证失败或者(通讯录、短信)成功，可以重新认证
-            else if (code.equals(AuthStatusEnum.FAIl_AUTH.getCode()) || code.equals(AuthStatusEnum.HAS_AUTH.getCode())) {
-                authId = userAuthStatusHas.getId();
-            }
+        UserAuthStatus userAuthStatus = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
+        if (ObjectUtils.isEmpty(userAuthStatus)) {
+            return null;
         }
-        return authId;
+
+        // 认证记录不为空
+        Integer code = userAuthStatus.getAuthStatus();
+        // 已认证成功，拦截
+        if (code.equals(AuthStatusEnum.HAS_AUTH.getCode())) {
+            log.warn("该用户id，{} 已认证成功，不能重新认证", userId);
+            throw new WarnException(BizCodeEnum.HAVE_AUTH_RISK);
+        }
+        // 在认证中(身份认证没有)，拦截
+        else if (code.equals(AuthStatusEnum.TO_AUTH.getCode())) {
+            log.warn("该用户id，{} 在认证中，不能重新认证", userId);
+            throw new WarnException(BizCodeEnum.AUTH_RISK_ING);
+        }
+        // 认证失败，可以重新认证，返回id用于更新
+        else {
+            return userAuthStatus.getId();
+        }
     }
 
     /**
-     * 检测用户是否已在认证总，用于风控回调
+     * 检测用户是否已在认证中，用于风控运营商回调、facebook回调、ins回调
      */
     public Long isInAuth(Long userId, String authCode) {
         // 判断该用户是否已经验证
-        UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
-        Long authId = null;
-        if (ObjectUtils.isEmpty(userAuthStatusHas)) {
-
+        UserAuthStatus uas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
+        if (ObjectUtils.isEmpty(uas)) {
             // 非运营商插入认证中数据
             if (!authCode.equals(AuthCodeEnum.SMS.getCode())) {
-                // 插入 认证中 状态
-                authId = IDGenerator.nextId();
-                UserAuthStatus userAuthStatus = buildUserAuthStatus(authId, userId, authCode, AuthStatusEnum.TO_AUTH.getCode(), "");
-                authStatusRepository.insertSelective(userAuthStatus);
+                Long authId = IDGenerator.nextId();
+                UserAuthStatus uasInsert = buildUserAuthStatus(authId, userId, authCode, AuthStatusEnum.TO_AUTH.getCode(), "");
+                authStatusRepository.insertSelective(uasInsert);
+                return authId;
             }
-        } else if (!(userAuthStatusHas.getAuthStatus().equals(AuthStatusEnum.TO_AUTH.getCode()))) {
-            log.info("该用户id，{} ，不在认证中，不能处理回调", userId);
-            throw new WarnException(BizCodeEnum.FAIL_AUTH);
+            return null;
+        } else if (!(uas.getAuthStatus().equals(AuthStatusEnum.TO_AUTH.getCode()))) {
+            return null;
         } else {
-            authId = userAuthStatusHas.getId();
+            return uas.getId();
         }
-        return authId;
+    }
+
+
+    public void saveOrUpdateContactsAndSmsAuth(Long userId, String authCode, RiskResponse response) {
+        // 处理结果
+        RiskResponse.RiskHead head = response.getHead();
+        Integer statusCode = head.getStatus().equals(ComConsts.RISK_OK) ? AuthStatusEnum.HAS_AUTH.getCode() : AuthStatusEnum.FAIl_AUTH.getCode();
+        // 判断该用户是否已经验证
+        UserAuthStatus userAuthStatusHas = authStatusRepository.findEnableAuthStatusByUserId(userId, authCode);
+
+        if (ObjectUtils.isEmpty(userAuthStatusHas)) {
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(IDGenerator.nextId(), userId, authCode, statusCode, head.getError_msg());
+            authStatusRepository.insertSelective(userAuthStatus);
+        } else {
+            // 修改 认证表的状态
+            UserAuthStatus userAuthStatus = buildUserAuthStatus(userAuthStatusHas.getId(), userId, authCode, statusCode, head.getError_msg());
+            authStatusRepository.updateSelective(userAuthStatus);
+        }
+    }
+
+
+    /**
+     * 构建UserAuthStatus对象
+     */
+    public UserAuthStatus buildUserAuthStatus(Long authId, Long userId, String code, Integer statusCode, String remark) {
+        //保存到数据库短信记录表
+        UserAuthStatus userAuthStatus = new UserAuthStatus();
+        userAuthStatus.setId(authId);
+        userAuthStatus.setUserId(userId);
+        userAuthStatus.setAuthCode(code);
+        userAuthStatus.setAuthStatus(Integer.valueOf(statusCode));
+        //过期时间，半年
+        userAuthStatus.setExpireTime(DateUtil.addMonth(LocalDateTime.now(), 6));
+        userAuthStatus.setRemark(remark);
+        return userAuthStatus;
     }
 
 }

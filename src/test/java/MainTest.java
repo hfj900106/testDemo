@@ -23,10 +23,12 @@ import java.util.Optional;
 @Slf4j
 public class MainTest {
     public static void main(String[] args) {
-        String str = "easy-get:dev:3423432";
-        String pat = "";
-        System.out.println(str.indexOf(pat));
-        System.out.println(str.substring(pat.length()));
+//        String str = "easy-get:dev:3423432";
+//        String pat = "";
+//        System.out.println(str.indexOf(pat));
+//        System.out.println(str.substring(pat.length()));
+
+        JSONObject obj = JSONObject.parseObject(String.valueOf(null), JSONObject.class);
     }
 
     public static void test(String str) {

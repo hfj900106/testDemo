@@ -60,4 +60,6 @@ public class SaExt {
     /** 是否推送成功 */
     private boolean bool;
     private String desc;
+    /** 纳秒 */
+    private long nanos;
 }

@@ -4,8 +4,10 @@ import com.hzed.easyget.application.enums.BidStatusEnum;
 import com.hzed.easyget.application.enums.BillStatusEnum;
 import com.hzed.easyget.application.enums.RepayTypeEnum;
 import com.hzed.easyget.infrastructure.config.SaProp;
+import com.hzed.easyget.infrastructure.consts.ComConsts;
 import com.hzed.easyget.infrastructure.consts.SaConsts;
 import com.hzed.easyget.infrastructure.model.GlobalUser;
+import com.hzed.easyget.infrastructure.model.RiskResponse;
 import com.hzed.easyget.infrastructure.repository.SaRepository;
 import com.hzed.easyget.infrastructure.utils.DateUtil;
 import com.hzed.easyget.persistence.ext.entity.SaExt;
@@ -16,6 +18,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -382,6 +386,74 @@ public class SaService {
             saOperator(saExt);
         } catch (Exception e){
             log.error("SensorsAnalytics DetailedList track method exception, userId:{}, userMobile:{}, info: {}",user.getUserId(), user.getMobile(), e);
+        }
+    }
+
+    /**
+     * 神策通讯录授权、短信认证信息推送
+     * @param user 登陆用户
+     * @param startTime 开始时间
+     * @param desc 认证结果描述
+     */
+    @Async
+    public void saCommonOperator(GlobalUser user, LocalDateTime startTime, RiskResponse response, String method) {
+        try {
+            LocalDateTime endTime = LocalDateTime.now();
+            String desc = " ";
+            boolean bool;
+            long nanos = Duration.between(startTime, endTime).toNanos();
+
+            // 认证成功
+            if (response.getHead().getStatus().equals(ComConsts.RISK_OK)) {
+                desc = SaConsts.AUTHORIZATION_RESULT_SUCCESS;
+                bool = true;
+            } else {// 认证失败
+                desc = SaConsts.AUTHORIZATION_RESULT_FAILURE;
+                bool = false;
+            }
+
+            Map<String, Object> properties = new HashMap<>(16);
+            properties.put("TimeCost", nanos);
+            // IsSuccess	是否成功	BOOL
+            properties.put("IsSuccess", bool);
+            // FailReason	认证失败原因	字符串
+            properties.put("EventResult", desc);
+
+
+            log.info("SensorsAnalytics {} track method begin, userId:{}, userMobile:{}, TimeCost:{}, bool:{}, desc:{}" , method, user.getUserId(), user.getMobile(), nanos, bool, desc);
+            final SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(saProp.getSaLogPath()));
+            sa.track(String.valueOf(user.getUserId()), true, method, properties);
+            sa.flush();
+            log.info("SensorsAnalytics {} track method end.", method);
+
+            saSaveOperatorByMethod(convertSaExt(bool, desc, Long.valueOf(nanos), user), method);
+            log.info("SensorsAnalytics {} track method , save to local DB end.", method);
+
+        } catch (Exception e){
+            log.error("SensorsAnalytics {} track method exception, userId:{}, userMobile:{}, info: {}", method, user.getUserId(), user.getMobile(), e);
+        }
+    }
+
+    public SaExt convertSaExt(boolean bool, String desc, Long nanos, GlobalUser user) {
+        SaExt saExt = new SaExt();
+        saExt.setBool(bool);
+        saExt.setDesc(desc);
+        saExt.setNanos(nanos);
+        saExt.setUserId(user.getUserId());
+        saExt.setUserMobile(user.getMobile());
+        return saExt;
+    }
+
+    /**
+     * 通过事件名称去保存记录
+     * @param saExt
+     */
+    @Async
+    public void saSaveOperatorByMethod(SaExt saExt, String method) {
+        if (SaConsts.CONTACTS_DATA.equals(method)){
+            saRepository.saveContactsData(saExt);
+        } else if (SaConsts.SMS_DATA.equals(method)) {
+            saRepository.saveSMSData(saExt);
         }
     }
 }

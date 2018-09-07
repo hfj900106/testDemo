@@ -13,4 +13,12 @@ public class SaConsts {
     public static final String APPLY_SPLIT = "，";
     /** 产品名称后缀   Rp.500000，7 hari */
     public static final String APPLY_PERIOD = " hari";
+    /** 通讯录授权 */
+    public static final String CONTACTS_DATA = "ContactsData";
+    /** 通讯录授权 */
+    public static final String SMS_DATA = "SMSData";
+    /** 认证成功 */
+    public static final String AUTHORIZATION_RESULT_SUCCESS = "认证成功";
+    /** 认证失败 */
+    public static final String AUTHORIZATION_RESULT_FAILURE = "认证失败";
 }

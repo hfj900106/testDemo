@@ -433,7 +433,9 @@ public class AuthService {
         String idCardNo = request.getIdCardNo();
         Long userId = RequestUtil.getGlobalUser().getUserId();
         String authCode = AuthCodeEnum.ID_CARD.getCode();
-
+        // 请求防重 10秒
+        String key = RedisConsts.AUTH + RedisConsts.SPLIT + authCode + RedisConsts.SPLIT + userId;
+        redisService.defensiveRepet(key, BizCodeEnum.FREQUENTLY_AUTH_RISK, 10L);
         // 判断该用户是否已经认证成功、失败
         Long authId = checkAuth(userId, authCode);
 

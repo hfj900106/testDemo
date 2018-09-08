@@ -35,7 +35,7 @@ public class MqConsumer {
         log.info("============================= MQ交易回调开始 =============================");
         // 防重拦截
         String key = RedisConsts.BLUEPAY_MQ + RedisConsts.SPLIT + request.getT_id().trim() + RedisConsts.SPLIT + request.getStatus();
-        if (redisService.exists(key)) {
+        if (redisService.exists(key, 120L)) {
             log.error("MQ回调消息重复，报文：{}", JSONObject.toJSON(request));
             return;
         }

@@ -5,11 +5,9 @@ import com.hzed.easyget.controller.model.*;
 import com.hzed.easyget.infrastructure.annotation.ExceptionAnno;
 import com.hzed.easyget.infrastructure.annotation.ModuleFunc;
 import com.hzed.easyget.infrastructure.annotation.head.TokenIgnore;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.List;
  * @author wuchengwu
  * @data 2018/5/22
  */
-
+@Slf4j
 @ExceptionAnno
 @RestController
 @RequestMapping("/api/home")
@@ -84,6 +82,14 @@ public class HomeController {
     @PostMapping("/getBidProgress")
     public BidProgressResponse getBidProgress(){
         return homeService.getBidProgress();
+    }
+
+    @TokenIgnore
+    @ModuleFunc("记录APP安装量")
+    @GetMapping("/appInstall")
+    public void appInstall(@RequestParam String device){
+        log.info("请求报文：{}", device);
+        homeService.appInstall(device);
     }
 
 }

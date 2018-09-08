@@ -39,7 +39,7 @@
         <!-- 批量插入插件 -->
         <plugin type="com.itfsw.mybatis.generator.plugins.BatchInsertPlugin"/>
 
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://10.10.30.36:3306/easy_get?useSSL=false" userId="root" password="rootroot"/>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://10.10.30.36:3306/easy_get_test2?useSSL=false" userId="root" password="rootroot"/>
 
         <javaModelGenerator targetPackage="com.hzed.easyget.persistence.auto.entity" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
@@ -196,13 +196,17 @@
         <columnOverride column="content" javaType="java.lang.String" jdbcType="LONGVARCHAR"/>
         </table>-->
 
-        <table tableName="t_loan_work" domainObjectName="Work" >
+        <!--<table tableName="t_loan_work" domainObjectName="Work" >-->
         <!--<table tableName="t_loan_user_message" domainObjectName="UserMessage" >
             <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
             <columnOverride column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
         </table>-->
 
-        <table tableName="t_loan_bid_detail_fee" domainObjectName="BidDetailFee" >
+        <!--<table tableName="t_loan_bid_detail_fee" domainObjectName="BidDetailFee" >
+            <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        </table>-->
+
+        <table tableName="t_loan_app_install" domainObjectName="AppInstall" >
             <columnOverride column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
         </table>
 

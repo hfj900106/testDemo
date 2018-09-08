@@ -22,7 +22,7 @@ public class AppInstallRepository {
         appInstallMapper.insertSelective(appInstall);
     }
 
-    public AppInstall findByImei(String imei) {
+    public AppInstall findOneByImei(String imei) {
         AppInstallExample example = new AppInstallExample();
         example.createCriteria().andImeiEqualTo(imei);
         return appInstallMapper.selectOneByExample(example);

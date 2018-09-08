@@ -294,7 +294,7 @@ public class HomeService {
 
     public void appInstall(String device) {
         String imei = RequestUtil.getGlobalHead().getImei();
-        AppInstall appInstall = appInstallRepository.findByImei(imei);
+        AppInstall appInstall = appInstallRepository.findOneByImei(imei);
         if (!ObjectUtils.isEmpty(appInstall)) {
             return;
         }

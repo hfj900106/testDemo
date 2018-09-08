@@ -68,6 +68,8 @@ public class HomeService {
     private BidProgressRepository bidProgressRepository;
     @Autowired
     private ComService comService;
+    @Autowired
+    private AppInstallRepository appInstallRepository;
 
     public ProductInfoResponse getProductInfo() {
 
@@ -288,5 +290,17 @@ public class HomeService {
         }
         bidProgressResponse.setPopupChoice(2);
         return bidProgressResponse;
+    }
+
+    public void appInstall(String device) {
+        String imei = RequestUtil.getGlobalHead().getImei();
+        AppInstall appInstall = appInstallRepository.findByImei(imei);
+        if (!ObjectUtils.isEmpty(appInstall)) {
+            return;
+        }
+        appInstall = new AppInstall();
+        appInstall.setImei(imei);
+        appInstall.setDevice(device);
+        appInstallRepository.insert(appInstall);
     }
 }

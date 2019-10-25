@@ -1,0 +1,18 @@
+@startuml
+/' 声明：participant 参与者；actor 角色；database 数据库；其他参考百度 '/
+actor 操作员
+database 代运营db
+participant 代运营APP
+
+/' 排序：order '/
+participant 操作员 order 1
+participant 代运营APP order 2
+participant 代运营db order 3
+
+/' 流程 '/
+操作员 -> 代运营APP: 应还总额查询接口请求参数
+代运营APP -> 代运营db: SQL
+代运营db --> 代运营APP: 查询结果
+代运营APP--> 操作员:查询结果
+
+@enduml

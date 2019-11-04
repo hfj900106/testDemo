@@ -1,7 +1,9 @@
 package com.example.demo.sort;
 
+import com.alibaba.fastjson.JSON;
+
 /**
- * 归并
+ * 归并排序
  *
  * @author hfj
  * @date 2019/2/15
@@ -11,17 +13,14 @@ public class MergeSort {
         int[] arr = {12, 3, 2, 1, 4, 6, 5, 8, 7};
         int length = arr.length;
         int[] temp = new int[length];
+        System.out.println("排序之前：" + JSON.toJSONString(arr));
         mergeSort(arr, 0, length - 1, temp);
-
-        System.out.println("排序后的数组为：");
-        for (int num : arr) {
-            System.out.print(num + " ");
-        }
+        System.out.println("排序之后：" + JSON.toJSONString(arr));
     }
 
     public static void mergeSort(int[] arr, int low, int high, int[] tmp) {
+        int mid = (low + high) >>1;
         if (low < high) {
-            int mid = (low + high) / 2;
             //对左边序列进行归并排序
             mergeSort(arr, low, mid, tmp);
             //对右边序列进行归并排序

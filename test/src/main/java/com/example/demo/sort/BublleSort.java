@@ -2,6 +2,7 @@ package com.example.demo.sort;
 
 /**
  * 冒泡
+ * 相邻比较，交换位置，每一轮都会有一个元素冒头，稳定排序，原地排序，最好时间复杂度O(n)，最坏O(n^2)，平均O(n^2)
  *
  * @author hfj
  * @date 2019/2/13

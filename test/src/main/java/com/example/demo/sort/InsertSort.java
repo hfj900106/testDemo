@@ -1,6 +1,7 @@
 package com.example.demo.sort;
 
 /**
+ * 插入排序
  * @author hfj
  * @date 2019/2/14
  */
@@ -11,8 +12,8 @@ public class InsertSort {
         int n = arr.length;
         int target;
 
-        //假定第一个元素被放到了正确的位置上
-        //这样，仅需遍历 1 至 n-1
+        // 假定第一个元素被放到了正确的位置上
+        // 这样，仅需遍历 1 至 n-1
         for (i = 1; i < n; i++) {
             j = i;
             target = arr[i];

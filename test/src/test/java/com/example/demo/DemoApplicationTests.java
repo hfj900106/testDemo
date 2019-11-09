@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
+
 import java.util.*;
 
 @RunWith(SpringRunner.class)
@@ -34,8 +35,8 @@ public class DemoApplicationTests {
     @Test
     public void observer() {
         Subject subject = new Subject();
-        new Observer1(subject);
-        new Observer2(subject);
+//        new Observer1(subject);
+//        new Observer2(subject);
         subject.setState(12);
     }
 
@@ -87,8 +88,9 @@ public class DemoApplicationTests {
     @Test
     public void linkedHashMapTest(){
         Map<String,String > map = new LinkedHashMap();
-        for(int i =10;i>0;i--)
+        for(int i =10;i>0;i--){
             map.put(i+"",i+"str");
+        }
         Iterator<Map.Entry<String, String>> iterator = map.entrySet().iterator();
         while(iterator.hasNext()){
             Map.Entry<String, String> next = iterator.next();
@@ -99,8 +101,9 @@ public class DemoApplicationTests {
     @Test
     public void hashMapTest(){
         Map map = new HashMap();
-        for(int i =10;i>0;i--)
+        for(int i =10;i>0;i--){
             map.put(i,i);
+        }
         Iterator iterator = map.keySet().iterator();
         while(iterator.hasNext()){
             System.out.println(iterator.next());

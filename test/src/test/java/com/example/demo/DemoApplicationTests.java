@@ -1,8 +1,6 @@
 package com.example.demo;
 
-import com.example.demo.test.DemoApplication;
-import com.example.demo.test.Observer1;
-import com.example.demo.test.Observer2;
+import com.example.demo.algorithm.Graph;
 import com.example.demo.test.Subject;
 import lombok.SneakyThrows;
 import org.junit.Test;
@@ -45,14 +43,14 @@ public class DemoApplicationTests {
         System.out.println(Integer.MAX_VALUE);
     }
 
-    @Test
-    public void testComponentScan() {
-        AnnotationConfigApplicationContext applicationContext2 = new AnnotationConfigApplicationContext(DemoApplication.class);
-        String[] names = applicationContext2.getBeanDefinitionNames();
-        for (String name : names) {
-            System.out.println(name);
-        }
-    }
+//    @Test
+//    public void testComponentScan() {
+//        AnnotationConfigApplicationContext applicationContext2 = new AnnotationConfigApplicationContext(DemoApplication.class);
+//        String[] names = applicationContext2.getBeanDefinitionNames();
+//        for (String name : names) {
+//            System.out.println(name);
+//        }
+//    }
 
     @Test
     public void linkedList() {
@@ -122,6 +120,20 @@ public class DemoApplicationTests {
         }
 
 
+    }
+
+    @Test
+    public void dijkstraTest(){
+        Graph graph = new Graph(9);
+        graph.addEdge(0,1,1);
+        graph.addEdge(0,2,2);
+        graph.addEdge(1,5,5);
+        graph.addEdge(1,3,3);
+        graph.addEdge(2,3,3);
+        graph.addEdge(5,6,6);
+        graph.addEdge(3,6,6);
+        graph.addEdge(6,7,7);
+        graph.dijkstra(0,3);
     }
 
 }

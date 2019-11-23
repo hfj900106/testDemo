@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.algorithm.BitMap;
 import com.example.demo.algorithm.Graph;
 import com.example.demo.test.Subject;
 import lombok.SneakyThrows;
@@ -136,4 +137,9 @@ public class DemoApplicationTests {
         graph.dijkstra(0,3);
     }
 
+    @Test
+    public void bitMapTest(){
+        BitMap bitMap = new BitMap(5);
+        bitMap.set(0);
+    }
 }

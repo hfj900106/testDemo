@@ -1,8 +1,5 @@
 package com.example.demo.test;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 /**
  * 1.Lock前缀的指令会引起处理器缓存写回内存；
  * 2.一个处理器的缓存回写到内存会导致其他处理器的缓存失效；
@@ -13,46 +10,30 @@ import java.util.concurrent.Executors;
  * @date 2018/10/23
  */
 public class VolatileTest {
+    private static volatile boolean initFlag = false;
 
-
-    //    static volatile Integer x = 0;
-    static Integer x = 0;
-
-    public static void main(String[] args) {
-        ExecutorService service = Executors.newCachedThreadPool();
-        TestThread1 thread1 = new TestThread1();
-        service.execute(thread1);
-        try {
-            thread1.wait(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }finally {
-            TestThread2 thread2 = new TestThread2();
-            service.execute(thread2);
-            thread1.notifyAll();
-            service.shutdown();
-        }
-    }
-
-    static class TestThread1 implements Runnable {
-
-        @Override
-        public void run() {
-            for (int i = 0; i < 1000; i++) {
-                x++;
-                System.out.println("thread1 is " + "time is " + i + "result is " + x);
+    public static void main(String[] args) throws Exception {
+        new Thread(() -> {
+            System.out.println("线程1： running");
+            while (!initFlag) {
+                // 一直进不来，直到initFlag的值被修改
             }
-        }
-    }
+            System.out.println("线程1： done");
+        }, "线程1").start();
 
-    static class TestThread2 implements Runnable {
+        Thread.sleep(1000);
 
-        @Override
-        public void run() {
-            for (int i = 0; i < 1000; i++) {
-                x++;
-                System.out.println("thread2 is " + "time is " + i + "result is " + x);
+        new Thread(() -> {
+            System.out.println("线程2：want to change initFlag value ");
+            initFlag = true;
+            try {
+                // 说明initFlag被修改之后就立刻同步会主内存，并没有等线程结束才同步
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        }
+            System.out.println("线程2：done ");
+        }, "线程2").start();
     }
+
 }

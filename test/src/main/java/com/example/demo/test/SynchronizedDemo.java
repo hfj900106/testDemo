@@ -2,7 +2,9 @@ package com.example.demo.test;
 
 /**
  * 如果synchronized所修饰的是静态方法, 则其所用的锁为Class对象
- * 如果synchronized所修饰的是非静态方法, 则其所用的锁为方法调用所在的对象；this = 方法调用所在的对象
+ * 如果synchronized所修饰的是非静态方法, 则其所用的锁为方法调用所在的对象；
+ * this = 方法调用所在的对象
+ *
  * @author hfj
  * @date 2018/10/24
  */

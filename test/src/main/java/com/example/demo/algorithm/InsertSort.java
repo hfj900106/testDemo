@@ -8,7 +8,7 @@ package com.example.demo.sort;
 public class InsertSort {
     public static void main(String[] args) {
         int[] arr = {2, 7, 3, 8, 4, 5, 6, 0, 1};
-        int i, j;
+        int i, j; // i 需要排序的数据长度；j 待排序的当前元素向前遍历的长度
         int n = arr.length;
         int target;
 

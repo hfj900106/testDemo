@@ -2,22 +2,21 @@ package com.example.demo.test;
 
 /**
  * 单例
- * 饱汉模式
+ * 枚举
+ * 优点：能避免多线程同步问题，而且还自动支持序列化机制，防止反序列化重新创建新的对象，绝对防止多次实例化
  * @author hfj
  * @date 2018/10/23
  */
-public class Singleton3 {
+public enum Singleton3 {
 
-    private Singleton3(){}
+   INSTANCE;
 
-    /**
-     * 主要是使用了 嵌套类可以访问外部类的静态属性和静态方法 的特性
-     */
-    private static class innerSingleton3{
-        private static Singleton3 singleton3 = new Singleton3();
+   public void getOne(){
+       System.out.println("getOne");
+   }
+
+    public static void main(String[] args) {
+        Singleton3.INSTANCE.getOne();
     }
 
-    public static Singleton3 getSingleton3(){
-        return innerSingleton3.singleton3;
-    }
 }

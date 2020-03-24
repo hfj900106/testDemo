@@ -44,9 +44,14 @@ public class ThreadOrderPrint {
 
     public static void main(String[] args) throws InterruptedException {
         new Thread(new OrderedThread("A", "B", "aaa"), "A线程").start();
+        System.out.println("睡眠"+Thread.currentThread().getName());
         Thread.sleep(100);
+
         new Thread(new OrderedThread("B", "C", "bbb"), "B线程").start();
+        System.out.println("睡眠"+Thread.currentThread().getName());
         Thread.sleep(100);
+
         new Thread(new OrderedThread("C", "A", "ccc"), "C线程").start();
+        System.out.println("睡眠"+Thread.currentThread().getName());
     }
 }

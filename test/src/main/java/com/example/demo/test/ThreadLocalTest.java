@@ -31,14 +31,12 @@ public class ThreadLocalTest {
         System.out.println(test.getString());
 
 
-        Thread thread1 = new Thread(){
-            @Override
-            public void run() {
-                test.set();
-                System.out.println(test.getLong());
-                System.out.println(test.getString());
-            }
-        };
+        Thread thread1 = new Thread(() -> {
+            test.set();
+            System.out.println(test.getLong());
+            System.out.println(test.getString());
+        },"线程1");
+
         thread1.start();
         thread1.join();
 

@@ -25,7 +25,7 @@ public class ThreadPoolTest {
          * 　　3）synchronousQueue：这个队列比较特殊，它不会保存提交的任务，而是将直接新建一个线程来执行新来的任务。
          */
         ThreadPoolExecutor executor = new ThreadPoolExecutor(5, 10, 200, TimeUnit.MILLISECONDS,
-                new ArrayBlockingQueue<Runnable>(5),handler);
+                new ArrayBlockingQueue<>(5),handler);
 
         for (int i = 0; i < 15; i++) {
             MyTask myTask = new MyTask(i);

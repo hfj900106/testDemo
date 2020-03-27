@@ -27,6 +27,11 @@ public class ForkJoinTest {
             this.end = end;
         }
 
+        /**
+         * 代码中定义了一个阀值10，也就是说我们会把1-n拆分成1-10、10-20...这样的长度小于10的分段(代码中fork出子任务)，
+         * 然后分别计算这些分段和，然后再不断汇总(通过join来获取子任务的结果)，得到最终的结果。
+          * @return
+         */
         @Override
         protected Long compute() {
             long sum = 0;

@@ -1,6 +1,9 @@
 package test.src.main.java.com.example.demo.test;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 信号灯
@@ -12,12 +15,26 @@ public class SemaphoreTest {
 
 
     public static void main(String[] args) {
+        Semaphore semaphore = new Semaphore(5,true);
+        for (int i = 1; i <= 6; i++) {
+            new Thread(() -> {
+                try {
+                    if (semaphore.tryAcquire(1,10, TimeUnit.SECONDS)) {
+                        System.out.println(Thread.currentThread().getName() + "被秦国灭");
+                    }else {
+                        System.out.println(Thread.currentThread().getName() + "拿不到锁");
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-        // 公平锁的信号量
-        Semaphore semaphore = new Semaphore(10, true);
-
-
-
+            }, test.src.main.java.com.example.demo.test.CountryEnum.getName(i)).start();
+        }
     }
 
+
 }
+
+
+
+

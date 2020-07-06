@@ -1,4 +1,4 @@
-package test.src.main.java.com.example.demo.test;
+package com.example.demo.test;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -14,7 +14,7 @@ public class CountDownLatchTest {
             new Thread(() -> {
                 System.out.println(Thread.currentThread().getName() + "被秦国灭");
                 downLatch.countDown();
-            }, CountryEnum.getName(i)).start();
+            }, test.src.main.java.com.example.demo.test.CountryEnum.getName(i)).start();
         }
         downLatch.await();
         System.out.println("六国统一");

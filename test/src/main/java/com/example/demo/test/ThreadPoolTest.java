@@ -1,5 +1,7 @@
 package com.example.demo.test;
 
+import com.alibaba.fastjson.JSON;
+
 import java.util.concurrent.*;
 
 /**
@@ -25,20 +27,31 @@ public class ThreadPoolTest {
          * 　　3）synchronousQueue：这个队列比较特殊，它不会保存提交的任务，而是将直接新建一个线程来执行新来的任务。
          */
         ThreadPoolExecutor executor = new ThreadPoolExecutor(5, 10, 200, TimeUnit.MILLISECONDS,
-                new ArrayBlockingQueue<>(5),handler);
+                new ArrayBlockingQueue<>(5), handler);
 
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 1; i++) {
             MyTask myTask = new MyTask(i);
-            executor.execute(myTask);
+
+            Future<String> future = executor.submit(myTask);
+            try {
+                String s = future.get();
+                System.out.println("get的结果："+s);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            System.out.println(JSON.toJSONString(future));
+
             System.out.println("线程池中线程数目：" + executor.getPoolSize() + "，队列中等待执行的任务数目：" +
                     executor.getQueue().size() + "，已执行完任务数目：" + executor.getCompletedTaskCount());
         }
-        executor.shutdown();
+        executor.shutdownNow();
     }
 
 }
 
-class MyTask implements Runnable {
+class MyTask implements Callable<String> {
     private int taskNum;
 
     public MyTask(int taskNum) {
@@ -46,14 +59,14 @@ class MyTask implements Runnable {
     }
 
     @Override
-    public void run() {
+    public String call() {
         System.out.println("正在执行task " + taskNum);
         try {
-            Thread.sleep(8000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("task " + taskNum + "执行完毕");
+        return "call 返回值：task " + taskNum + " 执行完毕";
     }
 }
 
